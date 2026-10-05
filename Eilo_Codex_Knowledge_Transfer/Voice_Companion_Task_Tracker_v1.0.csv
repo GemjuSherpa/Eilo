@@ -105,7 +105,7 @@ VC-LOCK-03,LOCK,Authenticated unlock re-entry,F18,VC-LOCK-01;VC-KEY-03,planned,n
 VC-LOCK-04,LOCK,Private UI snapshot protection,S04,VC-MEM-04;VC-LOCK-01;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
 VC-LOCK-05,LOCK,Android backup/transfer exclusions,F19;S02;A09,VC-STORE-01;VC-INBOX-02;VC-KEY-02,planned,not_requested,not_started,not_run,,,,,,
 VC-LOCK-06,LOCK,iOS backup/transfer exclusions,F19;S02;A09,VC-STORE-01;VC-INBOX-02;VC-KEY-01,planned,not_requested,not_started,not_run,,,,,,
-VC-LOCK-07,LOCK,Content-free diagnostics,S02;S03,VC-BASE-03,planned,not_requested,not_started,not_run,,,,,,
+VC-LOCK-07,LOCK,Content-free diagnostics,S02;S03,VC-BASE-03,awaiting_review,awaiting_human_review,implemented,partial,,task/s02-vc-lock-07,,,Physical-device and later real-audio/storage integration not verified.,"Eilo/docs/sprints/S02_REVIEW.md — Bounded volatile typed diagnostics; Swift compiler/XCTest3 and Kotlin compiler/JUnit3 pass. No content, persistent log or upload sink."
 VC-BEHAV-01,BEHAV,AI identity and supportive persona,F06;F07,VC-LLM-02,planned,not_requested,not_started,not_run,,,,,,
 VC-BEHAV-02,BEHAV,Uncertainty and capability boundaries,F06;F14;F15,VC-BEHAV-01,planned,not_requested,not_started,not_run,,,,,,
 VC-BEHAV-03,BEHAV,Imminent-danger response policy,F07,VC-BEHAV-01,planned,not_requested,not_started,not_run,,,,,,

@@ -3993,17 +3993,20 @@
       "scope": "native diagnostics",
       "acceptance_criterion": "Only bounded volatile state/error/resource codes exist; no transcript/prompt/keys or uploaded logs.",
       "focused_test": "Synthetic markers across errors/crash paths and sinks; no content or persistent behavioral trail.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Bounded volatile typed diagnostics; Swift compiler/XCTest3 and Kotlin compiler/JUnit3 pass. No content, persistent log or upload sink."
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s02-vc-lock-07",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Physical-device and later real-audio/storage integration not verified.",
+      "next_action": "Review S02 evidence; no release assurance inferred.",
+      "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
     },
     {
       "id": "VC-BEHAV-01",
