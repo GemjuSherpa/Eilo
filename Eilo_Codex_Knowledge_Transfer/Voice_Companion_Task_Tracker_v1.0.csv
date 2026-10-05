@@ -171,6 +171,6 @@ VC-SURFACE-04,SURFACE,iOS generic notification fallback,OR04,VC-SURFACE-03;VC-VI
 VC-SURFACE-05,SURFACE,Outside app lock and consent enforcement,OR05,VC-SURFACE-02;VC-SURFACE-04,planned,not_requested,not_started,not_run,,,,,,[]
 VC-SURFACE-06,SURFACE,Native visual acceptance matrix,OR06,VC-VIS-10;VC-SEARCH-06;VC-SURFACE-05,planned,not_requested,not_started,not_run,,,,,,[]
 VC-DEVOPS-01,DEVOPS,Repository and board baseline,DP01,,approved,approved,implemented,pass,,sprint/s01-foundation,c4c6a10b8f2b91a12c2d9262a6a8315ae91b24f2,,,Eilo/docs/sprints/S01_REVIEW.md
-VC-DEVOPS-02,DEVOPS,Focused pull request checks,DP02,VC-DEVOPS-01,awaiting_review,awaiting_human_review,implemented,partial,,sprint/s01-workflows,,,First hosted trusted/fork PR runs and failed-check evidence require owner push/PR.,Eilo/docs/sprints/S01_WORKFLOW_REVIEW.md
+VC-DEVOPS-02,DEVOPS,Focused pull request checks,DP02,VC-DEVOPS-01,awaiting_review,awaiting_human_review,implemented,partial,,sprint/s01-workflows,,,Fork PR execution and required-check branch protection not verified.,Eilo/docs/sprints/S01_WORKFLOW_REVIEW.md; hosted PR run 37302758642 passed at 64b79de
 VC-DEVOPS-03,DEVOPS,Mobile build signing and staging,DP03,VC-DEVOPS-02,planned,not_requested,not_started,not_run,,,,,,[]
 VC-DEVOPS-04,DEVOPS,Owner controlled release gates,DP04,VC-DEVOPS-03,planned,not_requested,not_started,not_run,,,,,,[]
