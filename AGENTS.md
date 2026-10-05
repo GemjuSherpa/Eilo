@@ -2,9 +2,9 @@
 
 Read PRD.md, ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, ai-instructions.md and EXECUTION_PLAN.md before acting. docs/baseline contains the complete current project source package and stable task tracker. Eilo_Codex_Knowledge_Handoff.md records conversation decisions and history boundaries.
 
-The owner's current authorization is DOCUMENTATION/CONTEXT ONLY. Do not start scaffolding, install dependencies, implement, provision services, run development experiments, deploy or publish. Acknowledge context and wait for a specifically authorized task.
+The owner authorizes the explicitly selected sprint (currently S01) for local implementation and testing. Before each authorized sprint, create a separate branch. Complete dependency-ready tasks within that sprint, record truthful tests/evidence, then STOP for human review. Do not start another sprint, provision services, deploy or publish without further authorization.
 
-When authorized: one small dependency-ready task, immediate relevant lint/compiler checks plus meaningful tests, truthful tracker/evidence, review summary, then STOP for human review before further work.
+Work in small dependency-ready changes with immediate relevant lint/compiler checks and meaningful tests. The latest owner workflow permits completing the selected sprint before its human review gate. The human verifies, commits and pushes.
 
 Never stage, commit, push, merge, tag or rewrite Git history. The human verifies and commits/merges. Preserve their existing changes. Read-only diff/status/log is permitted.
 

@@ -1,0 +1,90 @@
+name: S01 foundation checks
+on:
+  pull_request:
+    paths: ['Eilo/**', '.github/workflows/**', '.gitleaks.toml']
+  push:
+    branches: [main, 'sprint/**']
+    paths: ['Eilo/**', '.github/workflows/**', '.gitleaks.toml']
+permissions:
+  contents: read
+concurrency:
+  group: foundation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  javascript:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: Eilo
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24.11.1'
+      - run: npm ci --no-audit --no-fund
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+  android:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: Eilo
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.11.1'
+      - run: npm ci --no-audit --no-fund
+      - name: Build and native unit tests
+        shell: bash
+        run: |
+          export JAVA_HOME="$JAVA_HOME_17_X64"
+          sdkmanager 'platforms;android-37.0' 'build-tools;37.0.0' 'ndk;27.1.12297006' 'cmake;3.22.1' < <(yes)
+          cd apps/mobile/android
+          ./gradlew :app:assembleDebug :app:assembleRelease :app:testDebugUnitTest --max-workers=2
+  ios-and-history:
+    # Public repo: standard hosted runners. Private use requires a new cost review.
+    if: github.event.repository.private == false
+    runs-on: macos-26
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: Eilo
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.11.1'
+      - run: npm ci --no-audit --no-fund
+      - name: Native tools and history secrets
+        run: |
+          brew install ruby gitleaks
+          echo "$(brew --prefix ruby)/bin" >> "$GITHUB_PATH"
+          gitleaks git .. --redact=100 --no-banner --log-level error --config ../.gitleaks.toml
+      - name: Ruby dependencies
+        run: |
+          gem install bundler -v 4.0.16 --no-document
+          cd apps/mobile
+          bundle install --jobs 4
+          cd ios
+          bundle exec pod install --deployment
+      - name: Swift XCTest adapter fixtures
+        working-directory: Eilo/packages/native-test-seam
+        run: swift test
+      - name: Unsigned simulator compilation
+        working-directory: Eilo/apps/mobile/ios
+        run: |
+          xcodebuild -version
+          xcodebuild -workspace Eilo.xcworkspace -scheme Eilo -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/CI CODE_SIGNING_ALLOWED=NO -jobs 3

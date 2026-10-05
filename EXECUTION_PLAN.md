@@ -2,6 +2,10 @@
 
 Version 1.0 | 5 October 2026
 
+## Latest owner workflow
+
+The owner now authorizes S01 as a sprint: create a separate branch, complete dependency-ready tasks and tests, then stop for human review. The human verifies, commits and pushes. This supersedes the historical per-task authorization/review wording below for the selected sprint only. No future sprint or remote release action is authorized.
+
 ## This is a plan, not execution permission
 No app setup/development has started through this context package. The owner authorizes one task at a time and commits/merges personally. All detailed baseline IDs/dependencies remain authoritative. Do not renumber tasks or execute this entire document in one turn.
 

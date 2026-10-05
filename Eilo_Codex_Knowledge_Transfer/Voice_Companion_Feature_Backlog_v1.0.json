@@ -1503,20 +1503,21 @@
       "scope": "Android UI shell",
       "acceptance_criterion": "Launch an empty guest screen without capture, account or network activity.",
       "focused_test": "Build/install/launch on Android; inspect manifest permissions and startup traffic.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
-      "implementation_status": "partial",
-      "verification_status": "partial",
+      "status": "approved",
+      "approval_status": "approved",
+      "implementation_status": "implemented",
+      "verification_status": "pass",
       "evidence": [
         "planning/PROJECT_SCAFFOLD_REVIEW.md — local scaffold baseline only; native launch acceptance pending",
-        "planning/PROJECT_SCAFFOLD_REVIEW.md — native debug builds and simulator sample launches passed; full task acceptance remains partial"
+        "planning/PROJECT_SCAFFOLD_REVIEW.md — native debug builds and simulator sample launches passed; full task acceptance remains partial",
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
-      "branch": null,
+      "branch": "sprint/s01-foundation",
       "commit": null,
       "reviewer": null,
-      "blocker": "No setup blocker. Empty guest shell and startup traffic/privacy acceptance not implemented or verified.",
-      "next_action": "Owner review completed scaffold/setup, then authorize platform guest-shell task."
+      "blocker": null,
+      "next_action": "S01 scoped implementation reviewed and merged by owner; future sprint requires explicit selection."
     },
     {
       "id": "VC-BASE-02",
@@ -1530,20 +1531,21 @@
       "scope": "iOS UI shell",
       "acceptance_criterion": "Launch an empty guest screen without capture, account or network activity.",
       "focused_test": "Build/install/launch on iOS; inspect entitlements and startup traffic.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
-      "implementation_status": "partial",
-      "verification_status": "partial",
+      "status": "approved",
+      "approval_status": "approved",
+      "implementation_status": "implemented",
+      "verification_status": "pass",
       "evidence": [
         "planning/PROJECT_SCAFFOLD_REVIEW.md — local scaffold baseline only; native launch acceptance pending",
-        "planning/PROJECT_SCAFFOLD_REVIEW.md — native debug builds and simulator sample launches passed; full task acceptance remains partial"
+        "planning/PROJECT_SCAFFOLD_REVIEW.md — native debug builds and simulator sample launches passed; full task acceptance remains partial",
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
-      "branch": null,
+      "branch": "sprint/s01-foundation",
       "commit": null,
       "reviewer": null,
-      "blocker": "No setup blocker. Empty guest shell and startup traffic/privacy acceptance not implemented or verified.",
-      "next_action": "Owner review completed scaffold/setup, then authorize platform guest-shell task."
+      "blocker": null,
+      "next_action": "S01 scoped implementation reviewed and merged by owner; future sprint requires explicit selection."
     },
     {
       "id": "VC-BASE-03",
@@ -1557,17 +1559,19 @@
       "scope": "shared contract",
       "acceptance_criterion": "State events expose bounded state/error fields and no transcript or keys.",
       "focused_test": "Contract fixture rejects personal fields and invalid state codes.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "approved",
+      "approval_status": "approved",
+      "implementation_status": "implemented",
+      "verification_status": "pass",
+      "evidence": [
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "sprint/s01-foundation",
       "commit": null,
       "reviewer": null,
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "S01 scoped implementation reviewed and merged by owner; future sprint requires explicit selection."
     },
     {
       "id": "VC-BASE-04",
@@ -1583,17 +1587,19 @@
       "scope": "test seam",
       "acceptance_criterion": "Controller can use fake capture, ASR, model, TTS and memory adapters without downloading weights.",
       "focused_test": "One synthetic turn uses fakes; assert no real capture, files or network.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "approved",
+      "approval_status": "approved",
+      "implementation_status": "implemented",
+      "verification_status": "pass",
+      "evidence": [
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "sprint/s01-foundation",
       "commit": null,
       "reviewer": null,
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "S01 scoped implementation reviewed and merged by owner; future sprint requires explicit selection."
     },
     {
       "id": "VC-CTRL-01",
@@ -4301,17 +4307,19 @@
       "scope": "test planning",
       "acceptance_criterion": "Declare OS/devices/routes/datasets/sample counts and scoring before measuring targets.",
       "focused_test": "Review reproducible workload definitions; untested hardware stays untested.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "blocked",
+      "approval_status": "approved",
+      "implementation_status": "partial",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "sprint/s01-foundation",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Exact physical device and frozen fixture inventory pending; physical Android unavailable.",
+      "next_action": "Owner reviewed protocol; exact device/fixture freeze remains pending."
     },
     {
       "id": "VC-VERIFY-02",
@@ -5861,10 +5869,10 @@
       "scope": "Set up project management only when task authorized.",
       "acceptance_criterion": "GitHub confirmed public initially/private later; create board mapping stable IDs, dependencies and approval fields; no secrets or user data in public history.",
       "focused_test": "Review board import and rules, secret scan and owner-only release authority.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
-      "verification_status": "partial",
+      "verification_status": "pass",
       "evidence": [
         {
           "type": "repository",
@@ -5881,14 +5889,15 @@
         {
           "type": "sprint_plan",
           "artifact": "https://github.com/GemjuSherpa/Eilo/blob/main/planning/SPRINT_PLAN.md"
-        }
+        },
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
-      "branch": null,
+      "branch": "sprint/s01-foundation",
       "commit": "c4c6a10b8f2b91a12c2d9262a6a8315ae91b24f2",
       "reviewer": null,
       "blocker": null,
-      "next_action": "Owner review of repository/project/sprint setup. Secret scanning and technical release authority verification remain pending CI/release-controls tasks; no further task authorized.",
+      "next_action": "Existing board setup reviewed previously; owner reviews additional S01 secret scan evidence.",
       "evidence_scope": "Design specified; no native implementation or device verification"
     },
     {
@@ -5904,17 +5913,20 @@
       "scope": "Configure CI scoped to affected components.",
       "acceptance_criterion": "Actions runs relevant lint/type/tests and native compile checks; sanitized synthetic artifacts only; no production credentials in pull-request jobs.",
       "focused_test": "Trusted/untrusted PR checks, failed-check prevention and minimum permission review.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit",
+        "Eilo/docs/sprints/S01_WORKFLOW_REVIEW.md"
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "sprint/s01-workflows",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Authorize this one implementation task after dependency evidence and owner review.",
+      "blocker": "First hosted trusted/fork PR runs and failed-check evidence require owner push/PR.",
+      "next_action": "Validate hosted workflow completion; stop for owner PR review.",
       "evidence_scope": "Design specified; no native implementation or device verification"
     },
     {

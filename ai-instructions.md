@@ -1,7 +1,7 @@
 # Eilo — AI Coding Instructions
 
 ## Current task boundary
-This package contains instructions only. Read and wait. Do not scaffold, install dependencies, implement, provision, deploy or publish until the owner explicitly selects/authorizes a task. Approval of these files does not authorize all 175 backlog tasks.
+The owner explicitly authorized S01 implementation and testing. Create a separate branch before each authorized sprint; complete the selected sprint and stop for human review. No future sprint, provisioning, deployment or publication is authorized. The human verifies, commits and pushes.
 
 ## Read before an authorized change
 Read AGENTS.md, PRD.md, ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, EXECUTION_PLAN.md and the selected task plus dependencies in docs/baseline/Voice_Companion_Feature_Backlog_v1.0.json. Read relevant design tokens/contracts and actual repository instructions. New owner instructions prevail. Stop and report a material scope/privacy conflict rather than silently weaken the specification.
@@ -27,7 +27,7 @@ After each code-producing change, run the relevant package lint and compiler/typ
 Run meaningful focused tests for changed behavior/security boundaries; use synthetic data. Validate native integration on the required environment/devices when a task needs it. If dependencies/toolchains/devices are missing, state NOT RUN/BLOCKED and the exact reason. Do not bypass gates, fabricate output or mark a task fully verified. Documentation-only changes require link/consistency checks, not unnecessary app builds.
 
 ## Human review — mandatory
-Complete one authorized dependency-ready task. Produce a review summary: task/requirement IDs; behavior before/after; changed files; checks with actual commands/results; unrun tests; evidence; risks/limitations; suggested next task. Update tracker truthfully to awaiting human review. Then stop. Do not interpret silence or success as approval to continue. Human review of one task does not authorize the whole roadmap.
+Complete dependency-ready tasks within the explicitly selected sprint, in small verifiable changes. Produce a review summary: task/requirement IDs; behavior before/after; changed files; checks with actual commands/results; unrun tests; evidence; risks/limitations; suggested next task. Update tracker truthfully to awaiting human review. Then stop. Do not interpret silence or success as approval to continue. Human review of one task does not authorize the whole roadmap.
 
 ## Source-control and release rules — explicit owner instruction
 DO NOT commit anything. Do not stage (git add), push, merge, create tags or rewrite history. The human verifies, stages, commits and merges. Read-only git diff/status/log are allowed. Do not discard/revert the human's changes, force-push or alter remotes. Leave changes in the working tree for review.
