@@ -1,0 +1,176 @@
+id,feature,title,requirement_ids,depends_on,status,approval_status,implementation_status,verification_status,owner,branch,commit,reviewer,blocker,evidence
+VC-UX-01,UX,UX brief and navigation,F05;F13;F16;F17,,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-02,UX,Voice interaction specification,F02;F07;F08;F09;F10;F12;F15,VC-UX-01,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-03,UX,User journey and state map,F01;F04;F16;F17;F18;A01;A04;A06;A13;A15,VC-UX-01;VC-UX-02,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-04,UX,Onboarding wireframes,F01;F13;F14;F16;F17;S07,VC-UX-03,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-05,UX,Home wireframes,F02;F05;F09;F12;F15,VC-UX-03,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-06,UX,Memory wireframes,F16;F18;S04;S10,VC-UX-03,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-07,UX,Settings and recovery wireframes,F05;F14;F16;F17;F18;A11;N10,VC-UX-03,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-08,UX,Interface and privacy copy,F07;F08;F14;F16;F17;F18;S04,VC-UX-02;VC-UX-04;VC-UX-05;VC-UX-06;VC-UX-07,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-09,UX,Visual tokens and components,F02;F05,VC-UX-04;VC-UX-05;VC-UX-06;VC-UX-07,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-10,UX,Accessibility and platform adaptations,F05;F17;S04,VC-UX-08;VC-UX-09,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""semantic_contrast"",""artifact"":""Companion_Contrast_Checks.json""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-11,UX,Clickable UI prototype,F01;F02;F05;F16;F18,VC-UX-08;VC-UX-09;VC-UX-10,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""synthetic_browser_checks"",""artifact"":""Companion_Prototype_Checks.json""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-12,UX,Prototype usability review,F05;F16;F17;F18,VC-UX-11,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""synthetic_browser_checks"",""artifact"":""Companion_Prototype_Checks.json""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-13,UX,Design corrections,F05;F16;F17;F18,VC-UX-12,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""synthetic_browser_checks"",""artifact"":""Companion_Prototype_Checks.json""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-UX-14,UX,Design handoff and approval gate,F02;F05;F16;F17;F18;S04,VC-UX-13,approved,approved,implemented,pass,,,,Product owner,,"[{""type"":""design_handoff"",""artifact"":""Companion_Design_Handoff.md""},{""type"":""interactive_design"",""artifact"":""Companion_Prototype.html""},{""type"":""heuristic_and_limitations"",""artifact"":""Companion_Design_Review.md""},{""type"":""authentication_amendment"",""artifact"":""Eilo_Authentication_Review.md""},{""type"":""owner_approval"",""artifact"":""Companion_Design_Review.md"",""date"":""2026-10-02""}]"
+VC-BASE-01,BASE,Versioned Android launch shell,F13;A10,,awaiting_review,awaiting_human_review,partial,partial,,,,,No setup blocker; guest shell/startup traffic acceptance pending.,planning/PROJECT_SCAFFOLD_REVIEW.md — native builds/sample launches passed; task partial
+VC-BASE-02,BASE,Versioned iOS launch shell,F13;A10,,awaiting_review,awaiting_human_review,partial,partial,,,,,No setup blocker; guest shell/startup traffic acceptance pending.,planning/PROJECT_SCAFFOLD_REVIEW.md — native builds/sample launches passed; task partial
+VC-BASE-03,BASE,Native state contract,F02;S04,,planned,not_requested,not_started,not_run,,,,,,
+VC-BASE-04,BASE,Native adapter substitution,F13;S01,VC-BASE-03,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-01,CTRL,Deterministic state transitions,F02;F12,VC-BASE-03;VC-BASE-04,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-02,CTRL,Stop transaction,F12;F15;A06,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-03,CTRL,Generation cancellation token,F09;S04;A05,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-04,CTRL,Privacy epoch guard,S02;S04;S10,VC-CTRL-03,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-05,CTRL,Idle session timeout,F04;F12;A06,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-06,CTRL,End-conversation command,F04;F12,VC-CTRL-05,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-07,CTRL,Voice Stop command,F12;A15,VC-CTRL-02,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-08,CTRL,Safe restart state,F15;A14,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-SET-01,SET,Guest onboarding disclosure,F13;S07;A10,VC-BASE-01;VC-BASE-02;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-SET-02,SET,History consent setting,F16;S07,VC-SET-01;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-SET-03,SET,Background consent setting,F17;A06,VC-SET-01;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-SET-04,SET,Android permission gate,F01;A01,VC-BASE-01;VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-SET-05,SET,iOS permission gate,F01;A01,VC-BASE-02;VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-SET-06,SET,Home Start/Stop control,F02;F05,VC-CTRL-02;VC-SET-04;VC-SET-05;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-SET-07,SET,Private-session selector,F16;A04,VC-SET-02;VC-CTRL-04;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-SET-08,SET,Settings volume control,F05,VC-SET-06;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-01,PACK,BF16 conversion intermediate,S05,,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-02,PACK,Q4 conversion artifact,S05,VC-PACK-01,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-03,PACK,Trusted pack manifest schema,S05;S06,,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-04,PACK,Manifest signature verifier,S05;S06,VC-PACK-03,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-05,PACK,Model download transport,S01;S06;S07,VC-PACK-04,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-06,PACK,Artifact hash verifier,S05;S06,VC-PACK-05,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-07,PACK,Interrupted download recovery,F14;S05,VC-PACK-06,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-08,PACK,Atomic pack activation,F14;S05,VC-PACK-06,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-09,PACK,Model readiness gate,F14;A11,VC-PACK-08,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-10,PACK,Distribution privacy review,S01;S06;S08,VC-PACK-05,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-01,AUDIO,Android foreground capture owner,F01;F17,VC-SET-04;VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-02,AUDIO,Android notification Stop,F02;F12;A15,VC-AUDIO-01;VC-CTRL-02,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-03,AUDIO,Android background consent enforcement,F17;A06,VC-AUDIO-01;VC-SET-03,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-04,AUDIO,Android interruption handler,F12;A06,VC-AUDIO-01,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-05,AUDIO,iOS foreground audio owner,F01;F17,VC-SET-05;VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-06,AUDIO,iOS background consent enforcement,F17;A06,VC-AUDIO-05;VC-SET-03,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-07,AUDIO,iOS interruption handler,F12;A06,VC-AUDIO-05,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-08,AUDIO,Private audio route guard,F12;A11,VC-AUDIO-01;VC-AUDIO-05,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-09,AUDIO,Android locked audio feasibility,F17;A13;A14,VC-AUDIO-03;VC-AUDIO-04,planned,not_requested,not_started,not_run,,,,,,
+VC-AUDIO-10,AUDIO,iOS locked audio feasibility,F17;A13;A14,VC-AUDIO-06;VC-AUDIO-07,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-01,TURN,Bounded standby audio buffer,F03;S02,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-02,TURN,Wake detector adapter,F03;A02,VC-TURN-01,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-03,TURN,Wake-plus-question handoff,F04;A03,VC-TURN-02,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-04,TURN,Endpoint detector,F08,VC-TURN-03,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-05,TURN,Streaming ASR adapter,F05;F08;S01,VC-TURN-04,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-06,TURN,Recognition clarification,F08,VC-TURN-05,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-07,TURN,Self-playback rejection,F10;A05,VC-TURN-02,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-08,TURN,Confirmed-speech interruption,F09;A05;N02,VC-CTRL-03;VC-TURN-04,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-09,TURN,Wake accuracy trial,N03;A12,VC-TURN-02,planned,not_requested,not_started,not_run,,,,,,
+VC-TURN-10,TURN,ASR quality trial,N04;A12,VC-TURN-05,planned,not_requested,not_started,not_run,,,,,,
+VC-LLM-01,LLM,In-process CPU model adapter,F06;F13;S01,VC-PACK-02;VC-PACK-09,planned,not_requested,not_started,not_run,,,,,,
+VC-LLM-02,LLM,Non-thinking template configuration,F06,VC-LLM-01,planned,not_requested,not_started,not_run,,,,,,
+VC-LLM-03,LLM,Prompt context budget,F04;F11;N09,VC-LLM-02,planned,not_requested,not_started,not_run,,,,,,
+VC-LLM-04,LLM,Untrusted memory section,F06;S10,VC-LLM-03,planned,not_requested,not_started,not_run,,,,,,
+VC-LLM-05,LLM,Bounded continuation,F05;N09,VC-LLM-03,planned,not_requested,not_started,not_run,,,,,,
+VC-LLM-06,LLM,CPU model comparison trial,N05;N08;A12,VC-LLM-01;VC-LLM-02,planned,not_requested,not_started,not_run,,,,,,
+VC-VOICE-01,VOICE,Offline voice readiness contract,F14;S01;A11,VC-BASE-03,planned,not_requested,not_started,not_run,,,,,,
+VC-VOICE-02,VOICE,Android offline system TTS adapter,F05;S01,VC-VOICE-01;VC-BASE-01,planned,not_requested,not_started,not_run,,,,,,
+VC-VOICE-03,VOICE,iOS offline system TTS adapter,F05;S01,VC-VOICE-01;VC-BASE-02,planned,not_requested,not_started,not_run,,,,,,
+VC-VOICE-04,VOICE,Clause-to-speech queue,F05;F09,VC-VOICE-02;VC-VOICE-03;VC-CTRL-03,planned,not_requested,not_started,not_run,,,,,,
+VC-VOICE-05,VOICE,Playback progress contract,F16;A05,VC-VOICE-04,planned,not_requested,not_started,not_run,,,,,,
+VC-VOICE-06,VOICE,Offline voice quality trial,F05;A12,VC-VOICE-02;VC-VOICE-03,planned,not_requested,not_started,not_run,,,,,,
+VC-KEY-01,KEY,iOS protected key provider,S06;S09;F18,VC-BASE-02,planned,not_requested,not_started,not_run,,,,,,
+VC-KEY-02,KEY,Android protected key provider,S06;S09;F18,VC-BASE-01,planned,not_requested,not_started,not_run,,,,,,
+VC-KEY-03,KEY,Authenticated memory session,F18;S07,VC-KEY-01;VC-KEY-02;VC-CTRL-04,planned,not_requested,not_started,not_run,,,,,,
+VC-KEY-04,KEY,Lock key release,S09;F18,VC-KEY-03,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-01,STORE,SQLCipher store configuration,F16;S02;S09,VC-KEY-03;VC-GATE-04,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-02,STORE,Final message write,F16,VC-STORE-01;VC-SET-07,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-03,STORE,Interrupted reply write,F16;A05,VC-STORE-02;VC-VOICE-05,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-04,STORE,History read pagination,F16;S04,VC-STORE-02,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-05,STORE,Retention filter,F16;S10;N10,VC-STORE-02,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-06,STORE,Retention physical cleanup,F16;S02;N10,VC-STORE-05,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-07,STORE,Storage quota accounting,F16;N10,VC-STORE-01,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-08,STORE,History write reservation,F16;N10,VC-STORE-07;VC-STORE-02,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-09,STORE,Delete source transaction,F16;S10;A04,VC-STORE-02,planned,not_requested,not_started,not_run,,,,,,
+VC-STORE-10,STORE,Delete-all key reset,F16;S09;A09,VC-STORE-09;VC-CTRL-04,planned,not_requested,not_started,not_run,,,,,,
+VC-INBOX-01,INBOX,Vetted sealing composition review,F18;S09,VC-KEY-01;VC-KEY-02,planned,not_requested,not_started,not_run,,,,,,
+VC-INBOX-02,INBOX,Public-key sealed write,F16;F18;S09,VC-INBOX-01;VC-SET-07;VC-STORE-07,planned,not_requested,not_started,not_run,,,,,,
+VC-INBOX-03,INBOX,Authenticated inbox import,F16;S09,VC-INBOX-02;VC-STORE-02,planned,not_requested,not_started,not_run,,,,,,
+VC-INBOX-04,INBOX,Inbox expiry and reset,F16;S10;N10,VC-INBOX-02;VC-STORE-05;VC-STORE-10,planned,not_requested,not_started,not_run,,,,,,
+VC-MEM-01,MEM,Provenance-linked confirmed facts,F11;F16;S10,VC-STORE-02,planned,not_requested,not_started,not_run,,,,,,
+VC-MEM-02,MEM,Bounded lexical retrieval,F04;F11;S10,VC-MEM-01;VC-STORE-05;VC-STORE-09,planned,not_requested,not_started,not_run,,,,,,
+VC-MEM-03,MEM,Fact correction,F16;S10,VC-MEM-01;VC-KEY-03,planned,not_requested,not_started,not_run,,,,,,
+VC-MEM-04,MEM,Memory UI review,F16;S04,VC-STORE-04;VC-MEM-01;VC-SET-06;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-MEM-05,MEM,Memory UI corrective actions,F16;A15,VC-MEM-03;VC-MEM-04;VC-STORE-09;VC-STORE-10;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-MEM-06,MEM,Recall quality trial,F11;A04;A12,VC-MEM-02;VC-MEM-03,planned,not_requested,not_started,not_run,,,,,,
+VC-LOCK-01,LOCK,Generic lock transition,F18;A13;S04,VC-CTRL-04;VC-KEY-04,planned,not_requested,not_started,not_run,,,,,,
+VC-LOCK-02,LOCK,Locked memory/privilege denial,F18;A15;S07,VC-LOCK-01;VC-KEY-03,planned,not_requested,not_started,not_run,,,,,,
+VC-LOCK-03,LOCK,Authenticated unlock re-entry,F18,VC-LOCK-01;VC-KEY-03,planned,not_requested,not_started,not_run,,,,,,
+VC-LOCK-04,LOCK,Private UI snapshot protection,S04,VC-MEM-04;VC-LOCK-01;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
+VC-LOCK-05,LOCK,Android backup/transfer exclusions,F19;S02;A09,VC-STORE-01;VC-INBOX-02;VC-KEY-02,planned,not_requested,not_started,not_run,,,,,,
+VC-LOCK-06,LOCK,iOS backup/transfer exclusions,F19;S02;A09,VC-STORE-01;VC-INBOX-02;VC-KEY-01,planned,not_requested,not_started,not_run,,,,,,
+VC-LOCK-07,LOCK,Content-free diagnostics,S02;S03,VC-BASE-03,planned,not_requested,not_started,not_run,,,,,,
+VC-BEHAV-01,BEHAV,AI identity and supportive persona,F06;F07,VC-LLM-02,planned,not_requested,not_started,not_run,,,,,,
+VC-BEHAV-02,BEHAV,Uncertainty and capability boundaries,F06;F14;F15,VC-BEHAV-01,planned,not_requested,not_started,not_run,,,,,,
+VC-BEHAV-03,BEHAV,Imminent-danger response policy,F07,VC-BEHAV-01,planned,not_requested,not_started,not_run,,,,,,
+VC-BEHAV-04,BEHAV,Pre-speech clause policy,F06;S10,VC-BEHAV-01;VC-BEHAV-02;VC-BEHAV-03;VC-VOICE-04,planned,not_requested,not_started,not_run,,,,,,
+VC-BEHAV-05,BEHAV,Multi-turn quality trial,N05;A12,VC-BEHAV-04;VC-MEM-02,planned,not_requested,not_started,not_run,,,,,,
+VC-JOIN-01,JOIN,One offline generic spoken turn,F05;F06;F13;A07,VC-TURN-05;VC-LLM-03;VC-VOICE-04;VC-BEHAV-04,planned,not_requested,not_started,not_run,,,,,,
+VC-JOIN-02,JOIN,Spoken follow-up session,F04;A03,VC-JOIN-01;VC-TURN-03;VC-CTRL-05,planned,not_requested,not_started,not_run,,,,,,
+VC-JOIN-03,JOIN,Interrupt-and-replace turn,F09;F10;A05,VC-JOIN-01;VC-TURN-07;VC-TURN-08,planned,not_requested,not_started,not_run,,,,,,
+VC-JOIN-04,JOIN,Unlocked history integration,F16;A04,VC-JOIN-02;VC-STORE-03;VC-MEM-02;VC-KEY-03,planned,not_requested,not_started,not_run,,,,,,
+VC-JOIN-05,JOIN,Locked generic/inbox integration,F18;A13;A15,VC-JOIN-01;VC-INBOX-03;VC-INBOX-04;VC-LOCK-01;VC-LOCK-02;VC-LOCK-03,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-01,VERIFY,Freeze device/workload matrix,A12;N01;N02;N03;N04;N05;N06;N07;N08,,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-02,VERIFY,Meaningful-audio latency trial,N01;A12,VC-VERIFY-01;VC-JOIN-01,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-03,VERIFY,Interruption latency trial,N02;A05;A12,VC-VERIFY-01;VC-JOIN-03,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-04,VERIFY,Foreground60min active trial,N06;N08;A12,VC-VERIFY-01;VC-JOIN-02,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-05,VERIFY,Screen-off60min active trial,N06;N08;A13,VC-VERIFY-01;VC-JOIN-05;VC-AUDIO-09;VC-AUDIO-10,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-06,VERIFY,Screen-off8h standby trial,N03;N07;N08;A13;A14,VC-VERIFY-01;VC-TURN-02;VC-AUDIO-09;VC-AUDIO-10,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-07,VERIFY,Offline network/privacy audit,S01;S07;S08;A07;A10;A16,VC-JOIN-04;VC-JOIN-05;VC-PACK-05,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-08,VERIFY,Persistence/backup privacy audit,S02;S03;S04;S08;S09;A08;A09,VC-JOIN-05;VC-LOCK-04;VC-LOCK-05;VC-LOCK-06;VC-LOCK-07,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-09,VERIFY,Resource-failure safety trial,F12;F14;N08,VC-JOIN-04;VC-STORE-08,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-10,VERIFY,Requirement evidence closure,F01;F02;F03;F04;F05;F06;F07;F08;F09;F10;F11;F12;F13;F14;F15;F16;F17;F18;F19;S01;S02;S03;S04;S05;S06;S07;S08;S09;S10;A01;A02;A03;A04;A05;A06;A07;A08;A09;A10;A11;A12;A13;A14;A15;A16,VC-VERIFY-07;VC-VERIFY-08;VC-AUTH-12,planned,not_requested,not_started,not_run,,,,,,
+VC-VERIFY-11,VERIFY,Release package preparation,S05;S06;S08,VC-VERIFY-10;VC-PACK-10,planned,not_requested,not_started,not_run,,,,,,
+VC-GATE-01,GATE,Generic foreground60min feasibility,N06;N08;A12,VC-VERIFY-01;VC-JOIN-02,planned,not_requested,not_started,not_run,,,,,,
+VC-GATE-02,GATE,Generic screen-off60min feasibility,N06;N08;A13,VC-VERIFY-01;VC-JOIN-02;VC-AUDIO-09;VC-AUDIO-10,planned,not_requested,not_started,not_run,,,,,,
+VC-GATE-03,GATE,Generic standby8h feasibility,N03;N07;N08;A13;A14,VC-VERIFY-01;VC-TURN-02;VC-AUDIO-09;VC-AUDIO-10,planned,not_requested,not_started,not_run,,,,,,
+VC-GATE-04,GATE,Generic companion feasibility decision,F17;A12;A13;N01;N02;N03;N04;N05;N06;N07;N08,VC-GATE-01;VC-GATE-02;VC-GATE-03;VC-VERIFY-02;VC-VERIFY-03;VC-TURN-09;VC-TURN-10;VC-LLM-06;VC-VOICE-06,planned,not_requested,not_started,not_run,,,,,,
+VC-AUTH-01,AUTH,Neon/native auth feasibility and provider configuration,F21;F22,VC-UX-14,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-02,AUTH,Optional identity screen,F21,VC-AUTH-01,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-03,AUTH,Apple native identity adapter,F22;S11,VC-AUTH-01,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-04,AUTH,Google native identity adapter,F22;S11,VC-AUTH-01,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-05,AUTH,Better Auth account service,F22;S11;A18,VC-AUTH-01,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-06,AUTH,Secure identity credential storage,F23;S11;A18,VC-AUTH-03;VC-AUTH-04;VC-AUTH-05,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-07,AUTH,Offline expiry and revocation state,F13;F23,VC-AUTH-06,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-08,AUTH,Authenticated sign-out,F23;A19,VC-AUTH-06,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-09,AUTH,Identity switch and reset,F24;A19,VC-AUTH-08,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-10,AUTH,Remote account deletion and provider revocation,F24;A19;S11,VC-AUTH-06;VC-AUTH-05,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-11,AUTH,Identity privacy and store disclosures,F21;S11,VC-AUTH-02;VC-AUTH-10,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-12,AUTH,Provider integration verification,A17;A18;A19,VC-AUTH-03;VC-AUTH-04;VC-AUTH-05;VC-AUTH-07;VC-AUTH-08;VC-AUTH-09;VC-AUTH-10;VC-AUTH-11;VC-AUTH-14;VC-AUTH-15;VC-AUTH-16;VC-AUTH-17,not_started,pending_owner_review,not_started,not_run,,,,,,
+VC-AUTH-13,AUTH,Neon identity schema/migrations,F25;A20,VC-AUTH-01;VC-AUTH-05,planned,not_requested,not_started,not_run,,,,,,
+VC-AUTH-14,AUTH,Account API authorization,F25;S12;A20,VC-AUTH-13,planned,not_requested,not_started,not_run,,,,,,
+VC-AUTH-15,AUTH,Email sign-up verification and recovery,F21;F22;A21,VC-AUTH-05;VC-AUTH-13,planned,not_requested,not_started,not_run,,,,,,
+VC-AUTH-16,AUTH,Account retention deletion and restore,F24;S12;A21,VC-AUTH-10;VC-AUTH-13,planned,not_requested,not_started,not_run,,,,,,
+VC-AUTH-17,AUTH,Provider/privacy release assessment,S12;A20;A21,VC-AUTH-13;VC-AUTH-16,planned,not_requested,not_started,not_run,,,,,,
+VC-VIS-01,VIS,Controller driven ripple states,VR01,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-02,VIS,Accessible motion and theme tokens,VR02,VC-VIS-01,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-03,VIS,Spoken response text fallback,VR03,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-04,VIS,Independent display preferences,VR04,VC-SET-07,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-05,VIS,Result card selection and sources,VR05,VC-VIS-03;VC-VIS-04,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-06,VIS,Visual inactivity controller,VR06,VC-VIS-05,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-07,VIS,Pin dismiss and stale result cancellation,VR07,VC-VIS-06,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-08,VIS,User initiated media playback,VR08,VC-VIS-05,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-09,VIS,Platform navigation and accessible controls,VR09,VC-VIS-04,planned,not_requested,not_started,not_run,,,,,,[]
+VC-VIS-10,VIS,Visual memory and snapshot boundary,VR10,VC-VIS-07,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SEARCH-01,SEARCH,Provider license privacy and cost assessment,SR01,,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SEARCH-02,SEARCH,Explicit search authorization and query preview,SR02,VC-SEARCH-01;VC-VIS-04,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SEARCH-03,SEARCH,Ephemeral query gateway,SR03,VC-SEARCH-02,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SEARCH-04,SEARCH,Untrusted result normalization,SR04,VC-SEARCH-03,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SEARCH-05,SEARCH,Safe media retrieval,SR05,VC-SEARCH-04;VC-VIS-08,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SEARCH-06,SEARCH,Offline and budget fallback,SR06,VC-SEARCH-04,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SURFACE-01,SURFACE,Android overlay feasibility,OR01,VC-AUDIO-09;VC-VIS-05,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SURFACE-02,SURFACE,Android overlay presentation,OR02,VC-SURFACE-01;VC-VIS-07;VC-VIS-10,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SURFACE-03,SURFACE,iOS supported surface feasibility,OR03,VC-AUDIO-10,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SURFACE-04,SURFACE,iOS generic notification fallback,OR04,VC-SURFACE-03;VC-VIS-10,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SURFACE-05,SURFACE,Outside app lock and consent enforcement,OR05,VC-SURFACE-02;VC-SURFACE-04,planned,not_requested,not_started,not_run,,,,,,[]
+VC-SURFACE-06,SURFACE,Native visual acceptance matrix,OR06,VC-VIS-10;VC-SEARCH-06;VC-SURFACE-05,planned,not_requested,not_started,not_run,,,,,,[]
+VC-DEVOPS-01,DEVOPS,Repository and board baseline,DP01,,awaiting_review,awaiting_human_review,implemented,partial,,,c4c6a10b8f2b91a12c2d9262a6a8315ae91b24f2,,,"[{""type"": ""repository"", ""artifact"": ""https://github.com/GemjuSherpa/Eilo""}, {""type"": ""project"", ""artifact"": ""https://github.com/users/GemjuSherpa/projects/4""}, {""type"": ""setup_review"", ""artifact"": ""../planning/VC-DEVOPS-01-REVIEW.md""}, {""type"": ""sprint_plan"", ""artifact"": ""https://github.com/GemjuSherpa/Eilo/blob/main/planning/SPRINT_PLAN.md""}]"
+VC-DEVOPS-02,DEVOPS,Focused pull request checks,DP02,VC-DEVOPS-01,planned,not_requested,not_started,not_run,,,,,,[]
+VC-DEVOPS-03,DEVOPS,Mobile build signing and staging,DP03,VC-DEVOPS-02,planned,not_requested,not_started,not_run,,,,,,[]
+VC-DEVOPS-04,DEVOPS,Owner controlled release gates,DP04,VC-DEVOPS-03,planned,not_requested,not_started,not_run,,,,,,[]

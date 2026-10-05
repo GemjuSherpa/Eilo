@@ -1,0 +1,2047 @@
+{
+  "task_count": 175,
+  "feature_count": 23,
+  "sprints": [
+    {
+      "id": "S00",
+      "title": "Accepted historical UX baseline",
+      "task_ids": [
+        "VC-UX-01",
+        "VC-UX-02",
+        "VC-UX-03",
+        "VC-UX-04",
+        "VC-UX-05",
+        "VC-UX-06",
+        "VC-UX-07",
+        "VC-UX-08",
+        "VC-UX-09",
+        "VC-UX-10",
+        "VC-UX-11",
+        "VC-UX-12",
+        "VC-UX-13",
+        "VC-UX-14"
+      ]
+    },
+    {
+      "id": "S01",
+      "title": "Repository, board and build foundation",
+      "task_ids": [
+        "VC-BASE-01",
+        "VC-BASE-02",
+        "VC-BASE-03",
+        "VC-VERIFY-01",
+        "VC-DEVOPS-01",
+        "VC-BASE-04",
+        "VC-DEVOPS-02"
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "Controller, cancellation and permission gates",
+      "task_ids": [
+        "VC-LOCK-07",
+        "VC-CTRL-01",
+        "VC-CTRL-02",
+        "VC-CTRL-03",
+        "VC-CTRL-05",
+        "VC-CTRL-08",
+        "VC-SET-04",
+        "VC-SET-05",
+        "VC-CTRL-04",
+        "VC-CTRL-06",
+        "VC-CTRL-07"
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "Model preparation and verified installation",
+      "task_ids": [
+        "VC-PACK-01",
+        "VC-PACK-03",
+        "VC-PACK-02",
+        "VC-PACK-04",
+        "VC-PACK-05",
+        "VC-PACK-06",
+        "VC-PACK-10",
+        "VC-PACK-07",
+        "VC-PACK-08",
+        "VC-PACK-09"
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "Guest consent and native audio lifecycle",
+      "task_ids": [
+        "VC-AUDIO-01",
+        "VC-AUDIO-05",
+        "VC-AUDIO-02",
+        "VC-AUDIO-04",
+        "VC-AUDIO-07",
+        "VC-AUDIO-08",
+        "VC-SET-01",
+        "VC-SET-06",
+        "VC-SET-02",
+        "VC-SET-03",
+        "VC-SET-08",
+        "VC-SET-07",
+        "VC-AUDIO-03",
+        "VC-AUDIO-06",
+        "VC-AUDIO-09",
+        "VC-AUDIO-10"
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "Wake detection, turn boundaries and recognition",
+      "task_ids": [
+        "VC-TURN-01",
+        "VC-TURN-02",
+        "VC-TURN-03",
+        "VC-TURN-07",
+        "VC-TURN-09",
+        "VC-TURN-04",
+        "VC-TURN-05",
+        "VC-TURN-08",
+        "VC-TURN-06",
+        "VC-TURN-10"
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "Local reply generation and offline speech",
+      "task_ids": [
+        "VC-VOICE-01",
+        "VC-VOICE-02",
+        "VC-VOICE-03",
+        "VC-VOICE-06",
+        "VC-VOICE-04",
+        "VC-VOICE-05",
+        "VC-LLM-01",
+        "VC-LLM-02",
+        "VC-LLM-03",
+        "VC-LLM-06",
+        "VC-LLM-04",
+        "VC-LLM-05"
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "Safe generic conversation integration",
+      "task_ids": [
+        "VC-BEHAV-01",
+        "VC-BEHAV-02",
+        "VC-BEHAV-03",
+        "VC-BEHAV-04",
+        "VC-JOIN-01",
+        "VC-JOIN-02",
+        "VC-JOIN-03"
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "Physical-device voice feasibility decision",
+      "task_ids": [
+        "VC-VERIFY-02",
+        "VC-VERIFY-03",
+        "VC-GATE-01",
+        "VC-GATE-02",
+        "VC-GATE-03",
+        "VC-GATE-04"
+      ]
+    },
+    {
+      "id": "S09",
+      "title": "Protected keys and generic locked operation",
+      "task_ids": [
+        "VC-KEY-01",
+        "VC-KEY-02",
+        "VC-INBOX-01",
+        "VC-KEY-03",
+        "VC-KEY-04",
+        "VC-LOCK-01",
+        "VC-LOCK-02",
+        "VC-LOCK-03"
+      ]
+    },
+    {
+      "id": "S10",
+      "title": "Encrypted history, retention and deletion",
+      "task_ids": [
+        "VC-STORE-01",
+        "VC-STORE-02",
+        "VC-STORE-07",
+        "VC-STORE-03",
+        "VC-STORE-04",
+        "VC-STORE-05",
+        "VC-STORE-08",
+        "VC-STORE-09",
+        "VC-STORE-06",
+        "VC-STORE-10"
+      ]
+    },
+    {
+      "id": "S11",
+      "title": "Sealed locked-write inbox",
+      "task_ids": [
+        "VC-INBOX-02",
+        "VC-INBOX-03",
+        "VC-INBOX-04"
+      ]
+    },
+    {
+      "id": "S12",
+      "title": "Local recall and protected continuity integration",
+      "task_ids": [
+        "VC-MEM-01",
+        "VC-MEM-02",
+        "VC-MEM-03",
+        "VC-MEM-04",
+        "VC-LOCK-05",
+        "VC-LOCK-06",
+        "VC-MEM-05",
+        "VC-MEM-06",
+        "VC-LOCK-04",
+        "VC-BEHAV-05",
+        "VC-JOIN-04",
+        "VC-JOIN-05"
+      ]
+    },
+    {
+      "id": "S13",
+      "title": "Optional accounts and lifecycle",
+      "task_ids": [
+        "VC-AUTH-01",
+        "VC-AUTH-02",
+        "VC-AUTH-03",
+        "VC-AUTH-04",
+        "VC-AUTH-05",
+        "VC-AUTH-06",
+        "VC-AUTH-13",
+        "VC-AUTH-07",
+        "VC-AUTH-08",
+        "VC-AUTH-10",
+        "VC-AUTH-14",
+        "VC-AUTH-15",
+        "VC-AUTH-09",
+        "VC-AUTH-11",
+        "VC-AUTH-16",
+        "VC-AUTH-17",
+        "VC-AUTH-12"
+      ]
+    },
+    {
+      "id": "S14",
+      "title": "Accessible visual conversation and cards",
+      "task_ids": [
+        "VC-VIS-01",
+        "VC-VIS-03",
+        "VC-VIS-02",
+        "VC-VIS-04",
+        "VC-VIS-05",
+        "VC-VIS-09",
+        "VC-VIS-06",
+        "VC-VIS-08",
+        "VC-VIS-07",
+        "VC-VIS-10"
+      ]
+    },
+    {
+      "id": "S15",
+      "title": "Confirmed search and safe media",
+      "task_ids": [
+        "VC-SEARCH-01",
+        "VC-SEARCH-02",
+        "VC-SEARCH-03",
+        "VC-SEARCH-04",
+        "VC-SEARCH-05",
+        "VC-SEARCH-06"
+      ]
+    },
+    {
+      "id": "S16",
+      "title": "Outside-app surfaces and native visual acceptance",
+      "task_ids": [
+        "VC-SURFACE-03",
+        "VC-SURFACE-01",
+        "VC-SURFACE-02",
+        "VC-SURFACE-04",
+        "VC-SURFACE-05",
+        "VC-SURFACE-06"
+      ]
+    },
+    {
+      "id": "S17",
+      "title": "Integrated privacy, performance and failure verification",
+      "task_ids": [
+        "VC-VERIFY-04",
+        "VC-VERIFY-06",
+        "VC-VERIFY-09",
+        "VC-VERIFY-05",
+        "VC-VERIFY-07",
+        "VC-VERIFY-08",
+        "VC-VERIFY-10",
+        "VC-VERIFY-11"
+      ]
+    },
+    {
+      "id": "S18",
+      "title": "Build distribution and release readiness",
+      "task_ids": [
+        "VC-DEVOPS-03",
+        "VC-DEVOPS-04"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "VC-UX-01",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "UX brief and navigation",
+      "baseline_status": "approved",
+      "depends_on": "",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BASE-01",
+      "feature": "BASE",
+      "sprint": "S01",
+      "sprint_title": "Repository, board and build foundation",
+      "title": "Versioned Android launch shell",
+      "baseline_status": "planned",
+      "depends_on": "",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BASE-02",
+      "feature": "BASE",
+      "sprint": "S01",
+      "sprint_title": "Repository, board and build foundation",
+      "title": "Versioned iOS launch shell",
+      "baseline_status": "planned",
+      "depends_on": "",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BASE-03",
+      "feature": "BASE",
+      "sprint": "S01",
+      "sprint_title": "Repository, board and build foundation",
+      "title": "Native state contract",
+      "baseline_status": "planned",
+      "depends_on": "",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-01",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "BF16 conversion intermediate",
+      "baseline_status": "planned",
+      "depends_on": "",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-03",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Trusted pack manifest schema",
+      "baseline_status": "planned",
+      "depends_on": "",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-01",
+      "feature": "VERIFY",
+      "sprint": "S01",
+      "sprint_title": "Repository, board and build foundation",
+      "title": "Freeze device/workload matrix",
+      "baseline_status": "planned",
+      "depends_on": "",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SEARCH-01",
+      "feature": "SEARCH",
+      "sprint": "S15",
+      "sprint_title": "Confirmed search and safe media",
+      "title": "Provider license privacy and cost assessment",
+      "baseline_status": "planned",
+      "depends_on": "",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-DEVOPS-01",
+      "feature": "DEVOPS",
+      "sprint": "S01",
+      "sprint_title": "Repository, board and build foundation",
+      "title": "Repository and board baseline",
+      "baseline_status": "planned",
+      "depends_on": "",
+      "authorization": "setup only"
+    },
+    {
+      "task_id": "VC-UX-02",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Voice interaction specification",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BASE-04",
+      "feature": "BASE",
+      "sprint": "S01",
+      "sprint_title": "Repository, board and build foundation",
+      "title": "Native adapter substitution",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-02",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Q4 conversion artifact",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-04",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Manifest signature verifier",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VOICE-01",
+      "feature": "VOICE",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Offline voice readiness contract",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-KEY-01",
+      "feature": "KEY",
+      "sprint": "S09",
+      "sprint_title": "Protected keys and generic locked operation",
+      "title": "iOS protected key provider",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-KEY-02",
+      "feature": "KEY",
+      "sprint": "S09",
+      "sprint_title": "Protected keys and generic locked operation",
+      "title": "Android protected key provider",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LOCK-07",
+      "feature": "LOCK",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Content-free diagnostics",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-DEVOPS-02",
+      "feature": "DEVOPS",
+      "sprint": "S01",
+      "sprint_title": "Repository, board and build foundation",
+      "title": "Focused pull request checks",
+      "baseline_status": "planned",
+      "depends_on": "VC-DEVOPS-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-03",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "User journey and state map",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-01;VC-UX-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-CTRL-01",
+      "feature": "CTRL",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Deterministic state transitions",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-03;VC-BASE-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-05",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Model download transport",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VOICE-02",
+      "feature": "VOICE",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Android offline system TTS adapter",
+      "baseline_status": "planned",
+      "depends_on": "VC-VOICE-01;VC-BASE-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VOICE-03",
+      "feature": "VOICE",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "iOS offline system TTS adapter",
+      "baseline_status": "planned",
+      "depends_on": "VC-VOICE-01;VC-BASE-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-INBOX-01",
+      "feature": "INBOX",
+      "sprint": "S09",
+      "sprint_title": "Protected keys and generic locked operation",
+      "title": "Vetted sealing composition review",
+      "baseline_status": "planned",
+      "depends_on": "VC-KEY-01;VC-KEY-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-DEVOPS-03",
+      "feature": "DEVOPS",
+      "sprint": "S18",
+      "sprint_title": "Build distribution and release readiness",
+      "title": "Mobile build signing and staging",
+      "baseline_status": "planned",
+      "depends_on": "VC-DEVOPS-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-04",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Onboarding wireframes",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-05",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Home wireframes",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-06",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Memory wireframes",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-07",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Settings and recovery wireframes",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-CTRL-02",
+      "feature": "CTRL",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Stop transaction",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-CTRL-03",
+      "feature": "CTRL",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Generation cancellation token",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-CTRL-05",
+      "feature": "CTRL",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Idle session timeout",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-CTRL-08",
+      "feature": "CTRL",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Safe restart state",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SET-04",
+      "feature": "SET",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Android permission gate",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-01;VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SET-05",
+      "feature": "SET",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "iOS permission gate",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-02;VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-06",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Artifact hash verifier",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-10",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Distribution privacy review",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-01",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Bounded standby audio buffer",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VOICE-06",
+      "feature": "VOICE",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Offline voice quality trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-VOICE-02;VC-VOICE-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-01",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Controller driven ripple states",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-03",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Spoken response text fallback",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-DEVOPS-04",
+      "feature": "DEVOPS",
+      "sprint": "S18",
+      "sprint_title": "Build distribution and release readiness",
+      "title": "Owner controlled release gates",
+      "baseline_status": "planned",
+      "depends_on": "VC-DEVOPS-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-08",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Interface and privacy copy",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-02;VC-UX-04;VC-UX-05;VC-UX-06;VC-UX-07",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-09",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Visual tokens and components",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-04;VC-UX-05;VC-UX-06;VC-UX-07",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-CTRL-04",
+      "feature": "CTRL",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Privacy epoch guard",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-CTRL-06",
+      "feature": "CTRL",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "End-conversation command",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-CTRL-07",
+      "feature": "CTRL",
+      "sprint": "S02",
+      "sprint_title": "Controller, cancellation and permission gates",
+      "title": "Voice Stop command",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-07",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Interrupted download recovery",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-06",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-08",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Atomic pack activation",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-06",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-01",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Android foreground capture owner",
+      "baseline_status": "planned",
+      "depends_on": "VC-SET-04;VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-05",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "iOS foreground audio owner",
+      "baseline_status": "planned",
+      "depends_on": "VC-SET-05;VC-CTRL-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-02",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Wake detector adapter",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VOICE-04",
+      "feature": "VOICE",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Clause-to-speech queue",
+      "baseline_status": "planned",
+      "depends_on": "VC-VOICE-02;VC-VOICE-03;VC-CTRL-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-02",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Accessible motion and theme tokens",
+      "baseline_status": "planned",
+      "depends_on": "VC-VIS-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-10",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Accessibility and platform adaptations",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-08;VC-UX-09",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-PACK-09",
+      "feature": "PACK",
+      "sprint": "S03",
+      "sprint_title": "Model preparation and verified installation",
+      "title": "Model readiness gate",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-08",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-02",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Android notification Stop",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-01;VC-CTRL-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-04",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Android interruption handler",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-07",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "iOS interruption handler",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-08",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Private audio route guard",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-01;VC-AUDIO-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-03",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Wake-plus-question handoff",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-07",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Self-playback rejection",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-09",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Wake accuracy trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VOICE-05",
+      "feature": "VOICE",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Playback progress contract",
+      "baseline_status": "planned",
+      "depends_on": "VC-VOICE-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-KEY-03",
+      "feature": "KEY",
+      "sprint": "S09",
+      "sprint_title": "Protected keys and generic locked operation",
+      "title": "Authenticated memory session",
+      "baseline_status": "planned",
+      "depends_on": "VC-KEY-01;VC-KEY-02;VC-CTRL-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-11",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Clickable UI prototype",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-08;VC-UX-09;VC-UX-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-04",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Endpoint detector",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LLM-01",
+      "feature": "LLM",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "In-process CPU model adapter",
+      "baseline_status": "planned",
+      "depends_on": "VC-PACK-02;VC-PACK-09",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-KEY-04",
+      "feature": "KEY",
+      "sprint": "S09",
+      "sprint_title": "Protected keys and generic locked operation",
+      "title": "Lock key release",
+      "baseline_status": "planned",
+      "depends_on": "VC-KEY-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-12",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Prototype usability review",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-11",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-05",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Streaming ASR adapter",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-08",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Confirmed-speech interruption",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-03;VC-TURN-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LLM-02",
+      "feature": "LLM",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Non-thinking template configuration",
+      "baseline_status": "planned",
+      "depends_on": "VC-LLM-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LOCK-01",
+      "feature": "LOCK",
+      "sprint": "S09",
+      "sprint_title": "Protected keys and generic locked operation",
+      "title": "Generic lock transition",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-04;VC-KEY-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-13",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Design corrections",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-12",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-06",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "Recognition clarification",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-TURN-10",
+      "feature": "TURN",
+      "sprint": "S05",
+      "sprint_title": "Wake detection, turn boundaries and recognition",
+      "title": "ASR quality trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LLM-03",
+      "feature": "LLM",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Prompt context budget",
+      "baseline_status": "planned",
+      "depends_on": "VC-LLM-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LLM-06",
+      "feature": "LLM",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "CPU model comparison trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-LLM-01;VC-LLM-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LOCK-02",
+      "feature": "LOCK",
+      "sprint": "S09",
+      "sprint_title": "Protected keys and generic locked operation",
+      "title": "Locked memory/privilege denial",
+      "baseline_status": "planned",
+      "depends_on": "VC-LOCK-01;VC-KEY-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LOCK-03",
+      "feature": "LOCK",
+      "sprint": "S09",
+      "sprint_title": "Protected keys and generic locked operation",
+      "title": "Authenticated unlock re-entry",
+      "baseline_status": "planned",
+      "depends_on": "VC-LOCK-01;VC-KEY-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BEHAV-01",
+      "feature": "BEHAV",
+      "sprint": "S07",
+      "sprint_title": "Safe generic conversation integration",
+      "title": "AI identity and supportive persona",
+      "baseline_status": "planned",
+      "depends_on": "VC-LLM-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-UX-14",
+      "feature": "UX",
+      "sprint": "S00",
+      "sprint_title": "Accepted historical UX baseline",
+      "title": "Design handoff and approval gate",
+      "baseline_status": "approved",
+      "depends_on": "VC-UX-13",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LLM-04",
+      "feature": "LLM",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Untrusted memory section",
+      "baseline_status": "planned",
+      "depends_on": "VC-LLM-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LLM-05",
+      "feature": "LLM",
+      "sprint": "S06",
+      "sprint_title": "Local reply generation and offline speech",
+      "title": "Bounded continuation",
+      "baseline_status": "planned",
+      "depends_on": "VC-LLM-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BEHAV-02",
+      "feature": "BEHAV",
+      "sprint": "S07",
+      "sprint_title": "Safe generic conversation integration",
+      "title": "Uncertainty and capability boundaries",
+      "baseline_status": "planned",
+      "depends_on": "VC-BEHAV-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BEHAV-03",
+      "feature": "BEHAV",
+      "sprint": "S07",
+      "sprint_title": "Safe generic conversation integration",
+      "title": "Imminent-danger response policy",
+      "baseline_status": "planned",
+      "depends_on": "VC-BEHAV-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SET-01",
+      "feature": "SET",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Guest onboarding disclosure",
+      "baseline_status": "planned",
+      "depends_on": "VC-BASE-01;VC-BASE-02;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SET-06",
+      "feature": "SET",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Home Start/Stop control",
+      "baseline_status": "planned",
+      "depends_on": "VC-CTRL-02;VC-SET-04;VC-SET-05;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BEHAV-04",
+      "feature": "BEHAV",
+      "sprint": "S07",
+      "sprint_title": "Safe generic conversation integration",
+      "title": "Pre-speech clause policy",
+      "baseline_status": "planned",
+      "depends_on": "VC-BEHAV-01;VC-BEHAV-02;VC-BEHAV-03;VC-VOICE-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-01",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Neon/native auth feasibility and provider configuration",
+      "baseline_status": "not_started",
+      "depends_on": "VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SET-02",
+      "feature": "SET",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "History consent setting",
+      "baseline_status": "planned",
+      "depends_on": "VC-SET-01;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SET-03",
+      "feature": "SET",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Background consent setting",
+      "baseline_status": "planned",
+      "depends_on": "VC-SET-01;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SET-08",
+      "feature": "SET",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Settings volume control",
+      "baseline_status": "planned",
+      "depends_on": "VC-SET-06;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-JOIN-01",
+      "feature": "JOIN",
+      "sprint": "S07",
+      "sprint_title": "Safe generic conversation integration",
+      "title": "One offline generic spoken turn",
+      "baseline_status": "planned",
+      "depends_on": "VC-TURN-05;VC-LLM-03;VC-VOICE-04;VC-BEHAV-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-02",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Optional identity screen",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-03",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Apple native identity adapter",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-04",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Google native identity adapter",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-05",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Better Auth account service",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SET-07",
+      "feature": "SET",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Private-session selector",
+      "baseline_status": "planned",
+      "depends_on": "VC-SET-02;VC-CTRL-04;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-03",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Android background consent enforcement",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-01;VC-SET-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-06",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "iOS background consent enforcement",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-05;VC-SET-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-JOIN-02",
+      "feature": "JOIN",
+      "sprint": "S07",
+      "sprint_title": "Safe generic conversation integration",
+      "title": "Spoken follow-up session",
+      "baseline_status": "planned",
+      "depends_on": "VC-JOIN-01;VC-TURN-03;VC-CTRL-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-JOIN-03",
+      "feature": "JOIN",
+      "sprint": "S07",
+      "sprint_title": "Safe generic conversation integration",
+      "title": "Interrupt-and-replace turn",
+      "baseline_status": "planned",
+      "depends_on": "VC-JOIN-01;VC-TURN-07;VC-TURN-08",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-02",
+      "feature": "VERIFY",
+      "sprint": "S08",
+      "sprint_title": "Physical-device voice feasibility decision",
+      "title": "Meaningful-audio latency trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-01;VC-JOIN-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-06",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Secure identity credential storage",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-03;VC-AUTH-04;VC-AUTH-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-13",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Neon identity schema/migrations",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUTH-01;VC-AUTH-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-09",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "Android locked audio feasibility",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-03;VC-AUDIO-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUDIO-10",
+      "feature": "AUDIO",
+      "sprint": "S04",
+      "sprint_title": "Guest consent and native audio lifecycle",
+      "title": "iOS locked audio feasibility",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-06;VC-AUDIO-07",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-03",
+      "feature": "VERIFY",
+      "sprint": "S08",
+      "sprint_title": "Physical-device voice feasibility decision",
+      "title": "Interruption latency trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-01;VC-JOIN-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-04",
+      "feature": "VERIFY",
+      "sprint": "S17",
+      "sprint_title": "Integrated privacy, performance and failure verification",
+      "title": "Foreground60min active trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-01;VC-JOIN-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-GATE-01",
+      "feature": "GATE",
+      "sprint": "S08",
+      "sprint_title": "Physical-device voice feasibility decision",
+      "title": "Generic foreground60min feasibility",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-01;VC-JOIN-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-07",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Offline expiry and revocation state",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-06",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-08",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Authenticated sign-out",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-06",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-10",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Remote account deletion and provider revocation",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-06;VC-AUTH-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-14",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Account API authorization",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUTH-13",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-15",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Email sign-up verification and recovery",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUTH-05;VC-AUTH-13",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-04",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Independent display preferences",
+      "baseline_status": "planned",
+      "depends_on": "VC-SET-07",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-06",
+      "feature": "VERIFY",
+      "sprint": "S17",
+      "sprint_title": "Integrated privacy, performance and failure verification",
+      "title": "Screen-off8h standby trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-01;VC-TURN-02;VC-AUDIO-09;VC-AUDIO-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-GATE-02",
+      "feature": "GATE",
+      "sprint": "S08",
+      "sprint_title": "Physical-device voice feasibility decision",
+      "title": "Generic screen-off60min feasibility",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-01;VC-JOIN-02;VC-AUDIO-09;VC-AUDIO-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-GATE-03",
+      "feature": "GATE",
+      "sprint": "S08",
+      "sprint_title": "Physical-device voice feasibility decision",
+      "title": "Generic standby8h feasibility",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-01;VC-TURN-02;VC-AUDIO-09;VC-AUDIO-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-09",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Identity switch and reset",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-08",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-11",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Identity privacy and store disclosures",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-02;VC-AUTH-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-16",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Account retention deletion and restore",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUTH-10;VC-AUTH-13",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-05",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Result card selection and sources",
+      "baseline_status": "planned",
+      "depends_on": "VC-VIS-03;VC-VIS-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-09",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Platform navigation and accessible controls",
+      "baseline_status": "planned",
+      "depends_on": "VC-VIS-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SEARCH-02",
+      "feature": "SEARCH",
+      "sprint": "S15",
+      "sprint_title": "Confirmed search and safe media",
+      "title": "Explicit search authorization and query preview",
+      "baseline_status": "planned",
+      "depends_on": "VC-SEARCH-01;VC-VIS-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SURFACE-03",
+      "feature": "SURFACE",
+      "sprint": "S16",
+      "sprint_title": "Outside-app surfaces and native visual acceptance",
+      "title": "iOS supported surface feasibility",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-GATE-04",
+      "feature": "GATE",
+      "sprint": "S08",
+      "sprint_title": "Physical-device voice feasibility decision",
+      "title": "Generic companion feasibility decision",
+      "baseline_status": "planned",
+      "depends_on": "VC-GATE-01;VC-GATE-02;VC-GATE-03;VC-VERIFY-02;VC-VERIFY-03;VC-TURN-09;VC-TURN-10;VC-LLM-06;VC-VOICE-06",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-17",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Provider/privacy release assessment",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUTH-13;VC-AUTH-16",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-06",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Visual inactivity controller",
+      "baseline_status": "planned",
+      "depends_on": "VC-VIS-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-08",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "User initiated media playback",
+      "baseline_status": "planned",
+      "depends_on": "VC-VIS-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SEARCH-03",
+      "feature": "SEARCH",
+      "sprint": "S15",
+      "sprint_title": "Confirmed search and safe media",
+      "title": "Ephemeral query gateway",
+      "baseline_status": "planned",
+      "depends_on": "VC-SEARCH-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SURFACE-01",
+      "feature": "SURFACE",
+      "sprint": "S16",
+      "sprint_title": "Outside-app surfaces and native visual acceptance",
+      "title": "Android overlay feasibility",
+      "baseline_status": "planned",
+      "depends_on": "VC-AUDIO-09;VC-VIS-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-01",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "SQLCipher store configuration",
+      "baseline_status": "planned",
+      "depends_on": "VC-KEY-03;VC-GATE-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-AUTH-12",
+      "feature": "AUTH",
+      "sprint": "S13",
+      "sprint_title": "Optional accounts and lifecycle",
+      "title": "Provider integration verification",
+      "baseline_status": "not_started",
+      "depends_on": "VC-AUTH-03;VC-AUTH-04;VC-AUTH-05;VC-AUTH-07;VC-AUTH-08;VC-AUTH-09;VC-AUTH-10;VC-AUTH-11;VC-AUTH-14;VC-AUTH-15;VC-AUTH-16;VC-AUTH-17",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-07",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Pin dismiss and stale result cancellation",
+      "baseline_status": "planned",
+      "depends_on": "VC-VIS-06",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SEARCH-04",
+      "feature": "SEARCH",
+      "sprint": "S15",
+      "sprint_title": "Confirmed search and safe media",
+      "title": "Untrusted result normalization",
+      "baseline_status": "planned",
+      "depends_on": "VC-SEARCH-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-02",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "Final message write",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-01;VC-SET-07",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-07",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "Storage quota accounting",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VIS-10",
+      "feature": "VIS",
+      "sprint": "S14",
+      "sprint_title": "Accessible visual conversation and cards",
+      "title": "Visual memory and snapshot boundary",
+      "baseline_status": "planned",
+      "depends_on": "VC-VIS-07",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SEARCH-05",
+      "feature": "SEARCH",
+      "sprint": "S15",
+      "sprint_title": "Confirmed search and safe media",
+      "title": "Safe media retrieval",
+      "baseline_status": "planned",
+      "depends_on": "VC-SEARCH-04;VC-VIS-08",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SEARCH-06",
+      "feature": "SEARCH",
+      "sprint": "S15",
+      "sprint_title": "Confirmed search and safe media",
+      "title": "Offline and budget fallback",
+      "baseline_status": "planned",
+      "depends_on": "VC-SEARCH-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-03",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "Interrupted reply write",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-02;VC-VOICE-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-04",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "History read pagination",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-05",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "Retention filter",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-08",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "History write reservation",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-07;VC-STORE-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-09",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "Delete source transaction",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-INBOX-02",
+      "feature": "INBOX",
+      "sprint": "S11",
+      "sprint_title": "Sealed locked-write inbox",
+      "title": "Public-key sealed write",
+      "baseline_status": "planned",
+      "depends_on": "VC-INBOX-01;VC-SET-07;VC-STORE-07",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-MEM-01",
+      "feature": "MEM",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Provenance-linked confirmed facts",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SURFACE-02",
+      "feature": "SURFACE",
+      "sprint": "S16",
+      "sprint_title": "Outside-app surfaces and native visual acceptance",
+      "title": "Android overlay presentation",
+      "baseline_status": "planned",
+      "depends_on": "VC-SURFACE-01;VC-VIS-07;VC-VIS-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SURFACE-04",
+      "feature": "SURFACE",
+      "sprint": "S16",
+      "sprint_title": "Outside-app surfaces and native visual acceptance",
+      "title": "iOS generic notification fallback",
+      "baseline_status": "planned",
+      "depends_on": "VC-SURFACE-03;VC-VIS-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-06",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "Retention physical cleanup",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-STORE-10",
+      "feature": "STORE",
+      "sprint": "S10",
+      "sprint_title": "Encrypted history, retention and deletion",
+      "title": "Delete-all key reset",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-09;VC-CTRL-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-INBOX-03",
+      "feature": "INBOX",
+      "sprint": "S11",
+      "sprint_title": "Sealed locked-write inbox",
+      "title": "Authenticated inbox import",
+      "baseline_status": "planned",
+      "depends_on": "VC-INBOX-02;VC-STORE-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-MEM-02",
+      "feature": "MEM",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Bounded lexical retrieval",
+      "baseline_status": "planned",
+      "depends_on": "VC-MEM-01;VC-STORE-05;VC-STORE-09",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-MEM-03",
+      "feature": "MEM",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Fact correction",
+      "baseline_status": "planned",
+      "depends_on": "VC-MEM-01;VC-KEY-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-MEM-04",
+      "feature": "MEM",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Memory UI review",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-04;VC-MEM-01;VC-SET-06;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LOCK-05",
+      "feature": "LOCK",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Android backup/transfer exclusions",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-01;VC-INBOX-02;VC-KEY-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LOCK-06",
+      "feature": "LOCK",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "iOS backup/transfer exclusions",
+      "baseline_status": "planned",
+      "depends_on": "VC-STORE-01;VC-INBOX-02;VC-KEY-01",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SURFACE-05",
+      "feature": "SURFACE",
+      "sprint": "S16",
+      "sprint_title": "Outside-app surfaces and native visual acceptance",
+      "title": "Outside app lock and consent enforcement",
+      "baseline_status": "planned",
+      "depends_on": "VC-SURFACE-02;VC-SURFACE-04",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-INBOX-04",
+      "feature": "INBOX",
+      "sprint": "S11",
+      "sprint_title": "Sealed locked-write inbox",
+      "title": "Inbox expiry and reset",
+      "baseline_status": "planned",
+      "depends_on": "VC-INBOX-02;VC-STORE-05;VC-STORE-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-MEM-05",
+      "feature": "MEM",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Memory UI corrective actions",
+      "baseline_status": "planned",
+      "depends_on": "VC-MEM-03;VC-MEM-04;VC-STORE-09;VC-STORE-10;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-MEM-06",
+      "feature": "MEM",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Recall quality trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-MEM-02;VC-MEM-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-LOCK-04",
+      "feature": "LOCK",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Private UI snapshot protection",
+      "baseline_status": "planned",
+      "depends_on": "VC-MEM-04;VC-LOCK-01;VC-UX-14",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-BEHAV-05",
+      "feature": "BEHAV",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Multi-turn quality trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-BEHAV-04;VC-MEM-02",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-JOIN-04",
+      "feature": "JOIN",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Unlocked history integration",
+      "baseline_status": "planned",
+      "depends_on": "VC-JOIN-02;VC-STORE-03;VC-MEM-02;VC-KEY-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-SURFACE-06",
+      "feature": "SURFACE",
+      "sprint": "S16",
+      "sprint_title": "Outside-app surfaces and native visual acceptance",
+      "title": "Native visual acceptance matrix",
+      "baseline_status": "planned",
+      "depends_on": "VC-VIS-10;VC-SEARCH-06;VC-SURFACE-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-JOIN-05",
+      "feature": "JOIN",
+      "sprint": "S12",
+      "sprint_title": "Local recall and protected continuity integration",
+      "title": "Locked generic/inbox integration",
+      "baseline_status": "planned",
+      "depends_on": "VC-JOIN-01;VC-INBOX-03;VC-INBOX-04;VC-LOCK-01;VC-LOCK-02;VC-LOCK-03",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-09",
+      "feature": "VERIFY",
+      "sprint": "S17",
+      "sprint_title": "Integrated privacy, performance and failure verification",
+      "title": "Resource-failure safety trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-JOIN-04;VC-STORE-08",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-05",
+      "feature": "VERIFY",
+      "sprint": "S17",
+      "sprint_title": "Integrated privacy, performance and failure verification",
+      "title": "Screen-off60min active trial",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-01;VC-JOIN-05;VC-AUDIO-09;VC-AUDIO-10",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-07",
+      "feature": "VERIFY",
+      "sprint": "S17",
+      "sprint_title": "Integrated privacy, performance and failure verification",
+      "title": "Offline network/privacy audit",
+      "baseline_status": "planned",
+      "depends_on": "VC-JOIN-04;VC-JOIN-05;VC-PACK-05",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-08",
+      "feature": "VERIFY",
+      "sprint": "S17",
+      "sprint_title": "Integrated privacy, performance and failure verification",
+      "title": "Persistence/backup privacy audit",
+      "baseline_status": "planned",
+      "depends_on": "VC-JOIN-05;VC-LOCK-04;VC-LOCK-05;VC-LOCK-06;VC-LOCK-07",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-10",
+      "feature": "VERIFY",
+      "sprint": "S17",
+      "sprint_title": "Integrated privacy, performance and failure verification",
+      "title": "Requirement evidence closure",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-07;VC-VERIFY-08;VC-AUTH-12",
+      "authorization": "not authorized by sprint planning"
+    },
+    {
+      "task_id": "VC-VERIFY-11",
+      "feature": "VERIFY",
+      "sprint": "S17",
+      "sprint_title": "Integrated privacy, performance and failure verification",
+      "title": "Release package preparation",
+      "baseline_status": "planned",
+      "depends_on": "VC-VERIFY-10;VC-PACK-10",
+      "authorization": "not authorized by sprint planning"
+    }
+  ]
+}

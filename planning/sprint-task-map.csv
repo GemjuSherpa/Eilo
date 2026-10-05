@@ -1,0 +1,176 @@
+task_id,feature,sprint,sprint_title,title,baseline_status,depends_on,authorization
+VC-UX-01,UX,S00,Accepted historical UX baseline,UX brief and navigation,approved,,not authorized by sprint planning
+VC-BASE-01,BASE,S01,"Repository, board and build foundation",Versioned Android launch shell,planned,,not authorized by sprint planning
+VC-BASE-02,BASE,S01,"Repository, board and build foundation",Versioned iOS launch shell,planned,,not authorized by sprint planning
+VC-BASE-03,BASE,S01,"Repository, board and build foundation",Native state contract,planned,,not authorized by sprint planning
+VC-PACK-01,PACK,S03,Model preparation and verified installation,BF16 conversion intermediate,planned,,not authorized by sprint planning
+VC-PACK-03,PACK,S03,Model preparation and verified installation,Trusted pack manifest schema,planned,,not authorized by sprint planning
+VC-VERIFY-01,VERIFY,S01,"Repository, board and build foundation",Freeze device/workload matrix,planned,,not authorized by sprint planning
+VC-SEARCH-01,SEARCH,S15,Confirmed search and safe media,Provider license privacy and cost assessment,planned,,not authorized by sprint planning
+VC-DEVOPS-01,DEVOPS,S01,"Repository, board and build foundation",Repository and board baseline,planned,,setup only
+VC-UX-02,UX,S00,Accepted historical UX baseline,Voice interaction specification,approved,VC-UX-01,not authorized by sprint planning
+VC-BASE-04,BASE,S01,"Repository, board and build foundation",Native adapter substitution,planned,VC-BASE-03,not authorized by sprint planning
+VC-PACK-02,PACK,S03,Model preparation and verified installation,Q4 conversion artifact,planned,VC-PACK-01,not authorized by sprint planning
+VC-PACK-04,PACK,S03,Model preparation and verified installation,Manifest signature verifier,planned,VC-PACK-03,not authorized by sprint planning
+VC-VOICE-01,VOICE,S06,Local reply generation and offline speech,Offline voice readiness contract,planned,VC-BASE-03,not authorized by sprint planning
+VC-KEY-01,KEY,S09,Protected keys and generic locked operation,iOS protected key provider,planned,VC-BASE-02,not authorized by sprint planning
+VC-KEY-02,KEY,S09,Protected keys and generic locked operation,Android protected key provider,planned,VC-BASE-01,not authorized by sprint planning
+VC-LOCK-07,LOCK,S02,"Controller, cancellation and permission gates",Content-free diagnostics,planned,VC-BASE-03,not authorized by sprint planning
+VC-DEVOPS-02,DEVOPS,S01,"Repository, board and build foundation",Focused pull request checks,planned,VC-DEVOPS-01,not authorized by sprint planning
+VC-UX-03,UX,S00,Accepted historical UX baseline,User journey and state map,approved,VC-UX-01;VC-UX-02,not authorized by sprint planning
+VC-CTRL-01,CTRL,S02,"Controller, cancellation and permission gates",Deterministic state transitions,planned,VC-BASE-03;VC-BASE-04,not authorized by sprint planning
+VC-PACK-05,PACK,S03,Model preparation and verified installation,Model download transport,planned,VC-PACK-04,not authorized by sprint planning
+VC-VOICE-02,VOICE,S06,Local reply generation and offline speech,Android offline system TTS adapter,planned,VC-VOICE-01;VC-BASE-01,not authorized by sprint planning
+VC-VOICE-03,VOICE,S06,Local reply generation and offline speech,iOS offline system TTS adapter,planned,VC-VOICE-01;VC-BASE-02,not authorized by sprint planning
+VC-INBOX-01,INBOX,S09,Protected keys and generic locked operation,Vetted sealing composition review,planned,VC-KEY-01;VC-KEY-02,not authorized by sprint planning
+VC-DEVOPS-03,DEVOPS,S18,Build distribution and release readiness,Mobile build signing and staging,planned,VC-DEVOPS-02,not authorized by sprint planning
+VC-UX-04,UX,S00,Accepted historical UX baseline,Onboarding wireframes,approved,VC-UX-03,not authorized by sprint planning
+VC-UX-05,UX,S00,Accepted historical UX baseline,Home wireframes,approved,VC-UX-03,not authorized by sprint planning
+VC-UX-06,UX,S00,Accepted historical UX baseline,Memory wireframes,approved,VC-UX-03,not authorized by sprint planning
+VC-UX-07,UX,S00,Accepted historical UX baseline,Settings and recovery wireframes,approved,VC-UX-03,not authorized by sprint planning
+VC-CTRL-02,CTRL,S02,"Controller, cancellation and permission gates",Stop transaction,planned,VC-CTRL-01,not authorized by sprint planning
+VC-CTRL-03,CTRL,S02,"Controller, cancellation and permission gates",Generation cancellation token,planned,VC-CTRL-01,not authorized by sprint planning
+VC-CTRL-05,CTRL,S02,"Controller, cancellation and permission gates",Idle session timeout,planned,VC-CTRL-01,not authorized by sprint planning
+VC-CTRL-08,CTRL,S02,"Controller, cancellation and permission gates",Safe restart state,planned,VC-CTRL-01,not authorized by sprint planning
+VC-SET-04,SET,S02,"Controller, cancellation and permission gates",Android permission gate,planned,VC-BASE-01;VC-CTRL-01,not authorized by sprint planning
+VC-SET-05,SET,S02,"Controller, cancellation and permission gates",iOS permission gate,planned,VC-BASE-02;VC-CTRL-01,not authorized by sprint planning
+VC-PACK-06,PACK,S03,Model preparation and verified installation,Artifact hash verifier,planned,VC-PACK-05,not authorized by sprint planning
+VC-PACK-10,PACK,S03,Model preparation and verified installation,Distribution privacy review,planned,VC-PACK-05,not authorized by sprint planning
+VC-TURN-01,TURN,S05,"Wake detection, turn boundaries and recognition",Bounded standby audio buffer,planned,VC-CTRL-01,not authorized by sprint planning
+VC-VOICE-06,VOICE,S06,Local reply generation and offline speech,Offline voice quality trial,planned,VC-VOICE-02;VC-VOICE-03,not authorized by sprint planning
+VC-VIS-01,VIS,S14,Accessible visual conversation and cards,Controller driven ripple states,planned,VC-CTRL-01,not authorized by sprint planning
+VC-VIS-03,VIS,S14,Accessible visual conversation and cards,Spoken response text fallback,planned,VC-CTRL-01,not authorized by sprint planning
+VC-DEVOPS-04,DEVOPS,S18,Build distribution and release readiness,Owner controlled release gates,planned,VC-DEVOPS-03,not authorized by sprint planning
+VC-UX-08,UX,S00,Accepted historical UX baseline,Interface and privacy copy,approved,VC-UX-02;VC-UX-04;VC-UX-05;VC-UX-06;VC-UX-07,not authorized by sprint planning
+VC-UX-09,UX,S00,Accepted historical UX baseline,Visual tokens and components,approved,VC-UX-04;VC-UX-05;VC-UX-06;VC-UX-07,not authorized by sprint planning
+VC-CTRL-04,CTRL,S02,"Controller, cancellation and permission gates",Privacy epoch guard,planned,VC-CTRL-03,not authorized by sprint planning
+VC-CTRL-06,CTRL,S02,"Controller, cancellation and permission gates",End-conversation command,planned,VC-CTRL-05,not authorized by sprint planning
+VC-CTRL-07,CTRL,S02,"Controller, cancellation and permission gates",Voice Stop command,planned,VC-CTRL-02,not authorized by sprint planning
+VC-PACK-07,PACK,S03,Model preparation and verified installation,Interrupted download recovery,planned,VC-PACK-06,not authorized by sprint planning
+VC-PACK-08,PACK,S03,Model preparation and verified installation,Atomic pack activation,planned,VC-PACK-06,not authorized by sprint planning
+VC-AUDIO-01,AUDIO,S04,Guest consent and native audio lifecycle,Android foreground capture owner,planned,VC-SET-04;VC-CTRL-01,not authorized by sprint planning
+VC-AUDIO-05,AUDIO,S04,Guest consent and native audio lifecycle,iOS foreground audio owner,planned,VC-SET-05;VC-CTRL-01,not authorized by sprint planning
+VC-TURN-02,TURN,S05,"Wake detection, turn boundaries and recognition",Wake detector adapter,planned,VC-TURN-01,not authorized by sprint planning
+VC-VOICE-04,VOICE,S06,Local reply generation and offline speech,Clause-to-speech queue,planned,VC-VOICE-02;VC-VOICE-03;VC-CTRL-03,not authorized by sprint planning
+VC-VIS-02,VIS,S14,Accessible visual conversation and cards,Accessible motion and theme tokens,planned,VC-VIS-01,not authorized by sprint planning
+VC-UX-10,UX,S00,Accepted historical UX baseline,Accessibility and platform adaptations,approved,VC-UX-08;VC-UX-09,not authorized by sprint planning
+VC-PACK-09,PACK,S03,Model preparation and verified installation,Model readiness gate,planned,VC-PACK-08,not authorized by sprint planning
+VC-AUDIO-02,AUDIO,S04,Guest consent and native audio lifecycle,Android notification Stop,planned,VC-AUDIO-01;VC-CTRL-02,not authorized by sprint planning
+VC-AUDIO-04,AUDIO,S04,Guest consent and native audio lifecycle,Android interruption handler,planned,VC-AUDIO-01,not authorized by sprint planning
+VC-AUDIO-07,AUDIO,S04,Guest consent and native audio lifecycle,iOS interruption handler,planned,VC-AUDIO-05,not authorized by sprint planning
+VC-AUDIO-08,AUDIO,S04,Guest consent and native audio lifecycle,Private audio route guard,planned,VC-AUDIO-01;VC-AUDIO-05,not authorized by sprint planning
+VC-TURN-03,TURN,S05,"Wake detection, turn boundaries and recognition",Wake-plus-question handoff,planned,VC-TURN-02,not authorized by sprint planning
+VC-TURN-07,TURN,S05,"Wake detection, turn boundaries and recognition",Self-playback rejection,planned,VC-TURN-02,not authorized by sprint planning
+VC-TURN-09,TURN,S05,"Wake detection, turn boundaries and recognition",Wake accuracy trial,planned,VC-TURN-02,not authorized by sprint planning
+VC-VOICE-05,VOICE,S06,Local reply generation and offline speech,Playback progress contract,planned,VC-VOICE-04,not authorized by sprint planning
+VC-KEY-03,KEY,S09,Protected keys and generic locked operation,Authenticated memory session,planned,VC-KEY-01;VC-KEY-02;VC-CTRL-04,not authorized by sprint planning
+VC-UX-11,UX,S00,Accepted historical UX baseline,Clickable UI prototype,approved,VC-UX-08;VC-UX-09;VC-UX-10,not authorized by sprint planning
+VC-TURN-04,TURN,S05,"Wake detection, turn boundaries and recognition",Endpoint detector,planned,VC-TURN-03,not authorized by sprint planning
+VC-LLM-01,LLM,S06,Local reply generation and offline speech,In-process CPU model adapter,planned,VC-PACK-02;VC-PACK-09,not authorized by sprint planning
+VC-KEY-04,KEY,S09,Protected keys and generic locked operation,Lock key release,planned,VC-KEY-03,not authorized by sprint planning
+VC-UX-12,UX,S00,Accepted historical UX baseline,Prototype usability review,approved,VC-UX-11,not authorized by sprint planning
+VC-TURN-05,TURN,S05,"Wake detection, turn boundaries and recognition",Streaming ASR adapter,planned,VC-TURN-04,not authorized by sprint planning
+VC-TURN-08,TURN,S05,"Wake detection, turn boundaries and recognition",Confirmed-speech interruption,planned,VC-CTRL-03;VC-TURN-04,not authorized by sprint planning
+VC-LLM-02,LLM,S06,Local reply generation and offline speech,Non-thinking template configuration,planned,VC-LLM-01,not authorized by sprint planning
+VC-LOCK-01,LOCK,S09,Protected keys and generic locked operation,Generic lock transition,planned,VC-CTRL-04;VC-KEY-04,not authorized by sprint planning
+VC-UX-13,UX,S00,Accepted historical UX baseline,Design corrections,approved,VC-UX-12,not authorized by sprint planning
+VC-TURN-06,TURN,S05,"Wake detection, turn boundaries and recognition",Recognition clarification,planned,VC-TURN-05,not authorized by sprint planning
+VC-TURN-10,TURN,S05,"Wake detection, turn boundaries and recognition",ASR quality trial,planned,VC-TURN-05,not authorized by sprint planning
+VC-LLM-03,LLM,S06,Local reply generation and offline speech,Prompt context budget,planned,VC-LLM-02,not authorized by sprint planning
+VC-LLM-06,LLM,S06,Local reply generation and offline speech,CPU model comparison trial,planned,VC-LLM-01;VC-LLM-02,not authorized by sprint planning
+VC-LOCK-02,LOCK,S09,Protected keys and generic locked operation,Locked memory/privilege denial,planned,VC-LOCK-01;VC-KEY-03,not authorized by sprint planning
+VC-LOCK-03,LOCK,S09,Protected keys and generic locked operation,Authenticated unlock re-entry,planned,VC-LOCK-01;VC-KEY-03,not authorized by sprint planning
+VC-BEHAV-01,BEHAV,S07,Safe generic conversation integration,AI identity and supportive persona,planned,VC-LLM-02,not authorized by sprint planning
+VC-UX-14,UX,S00,Accepted historical UX baseline,Design handoff and approval gate,approved,VC-UX-13,not authorized by sprint planning
+VC-LLM-04,LLM,S06,Local reply generation and offline speech,Untrusted memory section,planned,VC-LLM-03,not authorized by sprint planning
+VC-LLM-05,LLM,S06,Local reply generation and offline speech,Bounded continuation,planned,VC-LLM-03,not authorized by sprint planning
+VC-BEHAV-02,BEHAV,S07,Safe generic conversation integration,Uncertainty and capability boundaries,planned,VC-BEHAV-01,not authorized by sprint planning
+VC-BEHAV-03,BEHAV,S07,Safe generic conversation integration,Imminent-danger response policy,planned,VC-BEHAV-01,not authorized by sprint planning
+VC-SET-01,SET,S04,Guest consent and native audio lifecycle,Guest onboarding disclosure,planned,VC-BASE-01;VC-BASE-02;VC-UX-14,not authorized by sprint planning
+VC-SET-06,SET,S04,Guest consent and native audio lifecycle,Home Start/Stop control,planned,VC-CTRL-02;VC-SET-04;VC-SET-05;VC-UX-14,not authorized by sprint planning
+VC-BEHAV-04,BEHAV,S07,Safe generic conversation integration,Pre-speech clause policy,planned,VC-BEHAV-01;VC-BEHAV-02;VC-BEHAV-03;VC-VOICE-04,not authorized by sprint planning
+VC-AUTH-01,AUTH,S13,Optional accounts and lifecycle,Neon/native auth feasibility and provider configuration,not_started,VC-UX-14,not authorized by sprint planning
+VC-SET-02,SET,S04,Guest consent and native audio lifecycle,History consent setting,planned,VC-SET-01;VC-UX-14,not authorized by sprint planning
+VC-SET-03,SET,S04,Guest consent and native audio lifecycle,Background consent setting,planned,VC-SET-01;VC-UX-14,not authorized by sprint planning
+VC-SET-08,SET,S04,Guest consent and native audio lifecycle,Settings volume control,planned,VC-SET-06;VC-UX-14,not authorized by sprint planning
+VC-JOIN-01,JOIN,S07,Safe generic conversation integration,One offline generic spoken turn,planned,VC-TURN-05;VC-LLM-03;VC-VOICE-04;VC-BEHAV-04,not authorized by sprint planning
+VC-AUTH-02,AUTH,S13,Optional accounts and lifecycle,Optional identity screen,not_started,VC-AUTH-01,not authorized by sprint planning
+VC-AUTH-03,AUTH,S13,Optional accounts and lifecycle,Apple native identity adapter,not_started,VC-AUTH-01,not authorized by sprint planning
+VC-AUTH-04,AUTH,S13,Optional accounts and lifecycle,Google native identity adapter,not_started,VC-AUTH-01,not authorized by sprint planning
+VC-AUTH-05,AUTH,S13,Optional accounts and lifecycle,Better Auth account service,not_started,VC-AUTH-01,not authorized by sprint planning
+VC-SET-07,SET,S04,Guest consent and native audio lifecycle,Private-session selector,planned,VC-SET-02;VC-CTRL-04;VC-UX-14,not authorized by sprint planning
+VC-AUDIO-03,AUDIO,S04,Guest consent and native audio lifecycle,Android background consent enforcement,planned,VC-AUDIO-01;VC-SET-03,not authorized by sprint planning
+VC-AUDIO-06,AUDIO,S04,Guest consent and native audio lifecycle,iOS background consent enforcement,planned,VC-AUDIO-05;VC-SET-03,not authorized by sprint planning
+VC-JOIN-02,JOIN,S07,Safe generic conversation integration,Spoken follow-up session,planned,VC-JOIN-01;VC-TURN-03;VC-CTRL-05,not authorized by sprint planning
+VC-JOIN-03,JOIN,S07,Safe generic conversation integration,Interrupt-and-replace turn,planned,VC-JOIN-01;VC-TURN-07;VC-TURN-08,not authorized by sprint planning
+VC-VERIFY-02,VERIFY,S08,Physical-device voice feasibility decision,Meaningful-audio latency trial,planned,VC-VERIFY-01;VC-JOIN-01,not authorized by sprint planning
+VC-AUTH-06,AUTH,S13,Optional accounts and lifecycle,Secure identity credential storage,not_started,VC-AUTH-03;VC-AUTH-04;VC-AUTH-05,not authorized by sprint planning
+VC-AUTH-13,AUTH,S13,Optional accounts and lifecycle,Neon identity schema/migrations,planned,VC-AUTH-01;VC-AUTH-05,not authorized by sprint planning
+VC-AUDIO-09,AUDIO,S04,Guest consent and native audio lifecycle,Android locked audio feasibility,planned,VC-AUDIO-03;VC-AUDIO-04,not authorized by sprint planning
+VC-AUDIO-10,AUDIO,S04,Guest consent and native audio lifecycle,iOS locked audio feasibility,planned,VC-AUDIO-06;VC-AUDIO-07,not authorized by sprint planning
+VC-VERIFY-03,VERIFY,S08,Physical-device voice feasibility decision,Interruption latency trial,planned,VC-VERIFY-01;VC-JOIN-03,not authorized by sprint planning
+VC-VERIFY-04,VERIFY,S17,"Integrated privacy, performance and failure verification",Foreground60min active trial,planned,VC-VERIFY-01;VC-JOIN-02,not authorized by sprint planning
+VC-GATE-01,GATE,S08,Physical-device voice feasibility decision,Generic foreground60min feasibility,planned,VC-VERIFY-01;VC-JOIN-02,not authorized by sprint planning
+VC-AUTH-07,AUTH,S13,Optional accounts and lifecycle,Offline expiry and revocation state,not_started,VC-AUTH-06,not authorized by sprint planning
+VC-AUTH-08,AUTH,S13,Optional accounts and lifecycle,Authenticated sign-out,not_started,VC-AUTH-06,not authorized by sprint planning
+VC-AUTH-10,AUTH,S13,Optional accounts and lifecycle,Remote account deletion and provider revocation,not_started,VC-AUTH-06;VC-AUTH-05,not authorized by sprint planning
+VC-AUTH-14,AUTH,S13,Optional accounts and lifecycle,Account API authorization,planned,VC-AUTH-13,not authorized by sprint planning
+VC-AUTH-15,AUTH,S13,Optional accounts and lifecycle,Email sign-up verification and recovery,planned,VC-AUTH-05;VC-AUTH-13,not authorized by sprint planning
+VC-VIS-04,VIS,S14,Accessible visual conversation and cards,Independent display preferences,planned,VC-SET-07,not authorized by sprint planning
+VC-VERIFY-06,VERIFY,S17,"Integrated privacy, performance and failure verification",Screen-off8h standby trial,planned,VC-VERIFY-01;VC-TURN-02;VC-AUDIO-09;VC-AUDIO-10,not authorized by sprint planning
+VC-GATE-02,GATE,S08,Physical-device voice feasibility decision,Generic screen-off60min feasibility,planned,VC-VERIFY-01;VC-JOIN-02;VC-AUDIO-09;VC-AUDIO-10,not authorized by sprint planning
+VC-GATE-03,GATE,S08,Physical-device voice feasibility decision,Generic standby8h feasibility,planned,VC-VERIFY-01;VC-TURN-02;VC-AUDIO-09;VC-AUDIO-10,not authorized by sprint planning
+VC-AUTH-09,AUTH,S13,Optional accounts and lifecycle,Identity switch and reset,not_started,VC-AUTH-08,not authorized by sprint planning
+VC-AUTH-11,AUTH,S13,Optional accounts and lifecycle,Identity privacy and store disclosures,not_started,VC-AUTH-02;VC-AUTH-10,not authorized by sprint planning
+VC-AUTH-16,AUTH,S13,Optional accounts and lifecycle,Account retention deletion and restore,planned,VC-AUTH-10;VC-AUTH-13,not authorized by sprint planning
+VC-VIS-05,VIS,S14,Accessible visual conversation and cards,Result card selection and sources,planned,VC-VIS-03;VC-VIS-04,not authorized by sprint planning
+VC-VIS-09,VIS,S14,Accessible visual conversation and cards,Platform navigation and accessible controls,planned,VC-VIS-04,not authorized by sprint planning
+VC-SEARCH-02,SEARCH,S15,Confirmed search and safe media,Explicit search authorization and query preview,planned,VC-SEARCH-01;VC-VIS-04,not authorized by sprint planning
+VC-SURFACE-03,SURFACE,S16,Outside-app surfaces and native visual acceptance,iOS supported surface feasibility,planned,VC-AUDIO-10,not authorized by sprint planning
+VC-GATE-04,GATE,S08,Physical-device voice feasibility decision,Generic companion feasibility decision,planned,VC-GATE-01;VC-GATE-02;VC-GATE-03;VC-VERIFY-02;VC-VERIFY-03;VC-TURN-09;VC-TURN-10;VC-LLM-06;VC-VOICE-06,not authorized by sprint planning
+VC-AUTH-17,AUTH,S13,Optional accounts and lifecycle,Provider/privacy release assessment,planned,VC-AUTH-13;VC-AUTH-16,not authorized by sprint planning
+VC-VIS-06,VIS,S14,Accessible visual conversation and cards,Visual inactivity controller,planned,VC-VIS-05,not authorized by sprint planning
+VC-VIS-08,VIS,S14,Accessible visual conversation and cards,User initiated media playback,planned,VC-VIS-05,not authorized by sprint planning
+VC-SEARCH-03,SEARCH,S15,Confirmed search and safe media,Ephemeral query gateway,planned,VC-SEARCH-02,not authorized by sprint planning
+VC-SURFACE-01,SURFACE,S16,Outside-app surfaces and native visual acceptance,Android overlay feasibility,planned,VC-AUDIO-09;VC-VIS-05,not authorized by sprint planning
+VC-STORE-01,STORE,S10,"Encrypted history, retention and deletion",SQLCipher store configuration,planned,VC-KEY-03;VC-GATE-04,not authorized by sprint planning
+VC-AUTH-12,AUTH,S13,Optional accounts and lifecycle,Provider integration verification,not_started,VC-AUTH-03;VC-AUTH-04;VC-AUTH-05;VC-AUTH-07;VC-AUTH-08;VC-AUTH-09;VC-AUTH-10;VC-AUTH-11;VC-AUTH-14;VC-AUTH-15;VC-AUTH-16;VC-AUTH-17,not authorized by sprint planning
+VC-VIS-07,VIS,S14,Accessible visual conversation and cards,Pin dismiss and stale result cancellation,planned,VC-VIS-06,not authorized by sprint planning
+VC-SEARCH-04,SEARCH,S15,Confirmed search and safe media,Untrusted result normalization,planned,VC-SEARCH-03,not authorized by sprint planning
+VC-STORE-02,STORE,S10,"Encrypted history, retention and deletion",Final message write,planned,VC-STORE-01;VC-SET-07,not authorized by sprint planning
+VC-STORE-07,STORE,S10,"Encrypted history, retention and deletion",Storage quota accounting,planned,VC-STORE-01,not authorized by sprint planning
+VC-VIS-10,VIS,S14,Accessible visual conversation and cards,Visual memory and snapshot boundary,planned,VC-VIS-07,not authorized by sprint planning
+VC-SEARCH-05,SEARCH,S15,Confirmed search and safe media,Safe media retrieval,planned,VC-SEARCH-04;VC-VIS-08,not authorized by sprint planning
+VC-SEARCH-06,SEARCH,S15,Confirmed search and safe media,Offline and budget fallback,planned,VC-SEARCH-04,not authorized by sprint planning
+VC-STORE-03,STORE,S10,"Encrypted history, retention and deletion",Interrupted reply write,planned,VC-STORE-02;VC-VOICE-05,not authorized by sprint planning
+VC-STORE-04,STORE,S10,"Encrypted history, retention and deletion",History read pagination,planned,VC-STORE-02,not authorized by sprint planning
+VC-STORE-05,STORE,S10,"Encrypted history, retention and deletion",Retention filter,planned,VC-STORE-02,not authorized by sprint planning
+VC-STORE-08,STORE,S10,"Encrypted history, retention and deletion",History write reservation,planned,VC-STORE-07;VC-STORE-02,not authorized by sprint planning
+VC-STORE-09,STORE,S10,"Encrypted history, retention and deletion",Delete source transaction,planned,VC-STORE-02,not authorized by sprint planning
+VC-INBOX-02,INBOX,S11,Sealed locked-write inbox,Public-key sealed write,planned,VC-INBOX-01;VC-SET-07;VC-STORE-07,not authorized by sprint planning
+VC-MEM-01,MEM,S12,Local recall and protected continuity integration,Provenance-linked confirmed facts,planned,VC-STORE-02,not authorized by sprint planning
+VC-SURFACE-02,SURFACE,S16,Outside-app surfaces and native visual acceptance,Android overlay presentation,planned,VC-SURFACE-01;VC-VIS-07;VC-VIS-10,not authorized by sprint planning
+VC-SURFACE-04,SURFACE,S16,Outside-app surfaces and native visual acceptance,iOS generic notification fallback,planned,VC-SURFACE-03;VC-VIS-10,not authorized by sprint planning
+VC-STORE-06,STORE,S10,"Encrypted history, retention and deletion",Retention physical cleanup,planned,VC-STORE-05,not authorized by sprint planning
+VC-STORE-10,STORE,S10,"Encrypted history, retention and deletion",Delete-all key reset,planned,VC-STORE-09;VC-CTRL-04,not authorized by sprint planning
+VC-INBOX-03,INBOX,S11,Sealed locked-write inbox,Authenticated inbox import,planned,VC-INBOX-02;VC-STORE-02,not authorized by sprint planning
+VC-MEM-02,MEM,S12,Local recall and protected continuity integration,Bounded lexical retrieval,planned,VC-MEM-01;VC-STORE-05;VC-STORE-09,not authorized by sprint planning
+VC-MEM-03,MEM,S12,Local recall and protected continuity integration,Fact correction,planned,VC-MEM-01;VC-KEY-03,not authorized by sprint planning
+VC-MEM-04,MEM,S12,Local recall and protected continuity integration,Memory UI review,planned,VC-STORE-04;VC-MEM-01;VC-SET-06;VC-UX-14,not authorized by sprint planning
+VC-LOCK-05,LOCK,S12,Local recall and protected continuity integration,Android backup/transfer exclusions,planned,VC-STORE-01;VC-INBOX-02;VC-KEY-02,not authorized by sprint planning
+VC-LOCK-06,LOCK,S12,Local recall and protected continuity integration,iOS backup/transfer exclusions,planned,VC-STORE-01;VC-INBOX-02;VC-KEY-01,not authorized by sprint planning
+VC-SURFACE-05,SURFACE,S16,Outside-app surfaces and native visual acceptance,Outside app lock and consent enforcement,planned,VC-SURFACE-02;VC-SURFACE-04,not authorized by sprint planning
+VC-INBOX-04,INBOX,S11,Sealed locked-write inbox,Inbox expiry and reset,planned,VC-INBOX-02;VC-STORE-05;VC-STORE-10,not authorized by sprint planning
+VC-MEM-05,MEM,S12,Local recall and protected continuity integration,Memory UI corrective actions,planned,VC-MEM-03;VC-MEM-04;VC-STORE-09;VC-STORE-10;VC-UX-14,not authorized by sprint planning
+VC-MEM-06,MEM,S12,Local recall and protected continuity integration,Recall quality trial,planned,VC-MEM-02;VC-MEM-03,not authorized by sprint planning
+VC-LOCK-04,LOCK,S12,Local recall and protected continuity integration,Private UI snapshot protection,planned,VC-MEM-04;VC-LOCK-01;VC-UX-14,not authorized by sprint planning
+VC-BEHAV-05,BEHAV,S12,Local recall and protected continuity integration,Multi-turn quality trial,planned,VC-BEHAV-04;VC-MEM-02,not authorized by sprint planning
+VC-JOIN-04,JOIN,S12,Local recall and protected continuity integration,Unlocked history integration,planned,VC-JOIN-02;VC-STORE-03;VC-MEM-02;VC-KEY-03,not authorized by sprint planning
+VC-SURFACE-06,SURFACE,S16,Outside-app surfaces and native visual acceptance,Native visual acceptance matrix,planned,VC-VIS-10;VC-SEARCH-06;VC-SURFACE-05,not authorized by sprint planning
+VC-JOIN-05,JOIN,S12,Local recall and protected continuity integration,Locked generic/inbox integration,planned,VC-JOIN-01;VC-INBOX-03;VC-INBOX-04;VC-LOCK-01;VC-LOCK-02;VC-LOCK-03,not authorized by sprint planning
+VC-VERIFY-09,VERIFY,S17,"Integrated privacy, performance and failure verification",Resource-failure safety trial,planned,VC-JOIN-04;VC-STORE-08,not authorized by sprint planning
+VC-VERIFY-05,VERIFY,S17,"Integrated privacy, performance and failure verification",Screen-off60min active trial,planned,VC-VERIFY-01;VC-JOIN-05;VC-AUDIO-09;VC-AUDIO-10,not authorized by sprint planning
+VC-VERIFY-07,VERIFY,S17,"Integrated privacy, performance and failure verification",Offline network/privacy audit,planned,VC-JOIN-04;VC-JOIN-05;VC-PACK-05,not authorized by sprint planning
+VC-VERIFY-08,VERIFY,S17,"Integrated privacy, performance and failure verification",Persistence/backup privacy audit,planned,VC-JOIN-05;VC-LOCK-04;VC-LOCK-05;VC-LOCK-06;VC-LOCK-07,not authorized by sprint planning
+VC-VERIFY-10,VERIFY,S17,"Integrated privacy, performance and failure verification",Requirement evidence closure,planned,VC-VERIFY-07;VC-VERIFY-08;VC-AUTH-12,not authorized by sprint planning
+VC-VERIFY-11,VERIFY,S17,"Integrated privacy, performance and failure verification",Release package preparation,planned,VC-VERIFY-10;VC-PACK-10,not authorized by sprint planning
