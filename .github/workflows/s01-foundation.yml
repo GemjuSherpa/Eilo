@@ -48,6 +48,7 @@ jobs:
         shell: bash
         run: |
           export JAVA_HOME="$JAVA_HOME_17_X64"
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           sdkmanager 'platforms;android-37.0' 'build-tools;37.0.0' 'ndk;27.1.12297006' 'cmake;3.22.1' < <(yes)
           cd apps/mobile/android
           ./gradlew :app:assembleDebug :app:assembleRelease :app:testDebugUnitTest --max-workers=2
