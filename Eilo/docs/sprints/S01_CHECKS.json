@@ -1,0 +1,21 @@
+{
+  "branch": "sprint/s01-foundation",
+  "js_ui_tests": 1,
+  "contract_tests": 25,
+  "swift_xctest_tests": 2,
+  "kotlin_junit": [
+    {
+      "name": "com.eilo.foundation.TurnTestSeamTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0"
+    }
+  ],
+  "android_release_permissions": [
+    "com.eilo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+  ],
+  "ios_network_observation": "Three one-second per-PID nettop samples; no flow rows. Not comprehensive startup/traffic audit.",
+  "physical_devices_tested": [],
+  "hosted_ci": "not_run",
+  "device_matrix": "provisional"
+}

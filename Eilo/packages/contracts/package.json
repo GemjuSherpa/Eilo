@@ -1,0 +1,15 @@
+{
+  "name": "@eilo/contracts",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "lint": "eslint src --config ../../apps/mobile/.eslintrc.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "5.0.3",
+    "typescript": "6.0.3"
+  }
+}
