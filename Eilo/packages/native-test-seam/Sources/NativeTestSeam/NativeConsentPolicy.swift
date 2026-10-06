@@ -26,6 +26,10 @@ public final class NativeConsentPolicy:@unchecked Sendable {
   var next=record;next.disclosureVersion=1;return save(next)
  }
  public var canStart:Bool { lock.lock();defer { lock.unlock() };return record.disclosureVersion==1 && record.historyChoice != .unselected && (record.historyChoice == .privateMode || privateExplicit || (historyAvailable() && !privateMode)) }
+ @discardableResult public func choosePrivateSession(_ enabled:Bool)->Bool {
+  lock.lock();defer { lock.unlock() };guard enabled else { return false }
+  privateMode=true;privateExplicit=true;return true
+ }
  @discardableResult public func chooseVolume(_ volume:Int)->Bool {
   lock.lock();defer { lock.unlock() };guard (0...100).contains(volume) else { return false }
   var next=record;next.volume=volume;return save(next)

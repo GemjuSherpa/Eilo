@@ -69,6 +69,13 @@ function fakeClient() {
     snapshot: async () => state,
     command: async (name, value) => {
       commands.push(name);
+      if (name === 'volume') {
+        state = {
+          ...state,
+          revision: state.revision + 1,
+          preferences: { ...state.preferences, volume: Number(value) },
+        };
+      }
       if (name === 'background') {
         state = {
           ...state,
@@ -317,5 +324,44 @@ test('background toggle is separate and never requests Start', async () => {
       accessibilityLabel: 'Background listening requested',
     }).props.value,
   ).toBe(true);
+  await act(() => view?.unmount());
+});
+
+test('volume accessibility and private selection issue only native commands', async () => {
+  const fake = fakeClient();
+  let view: ReactTestRenderer.ReactTestRenderer | undefined;
+  await act(() => {
+    view = ReactTestRenderer.create(<App client={fake.client} />);
+  });
+  await act(() =>
+    view?.root
+      .findByProps({ accessibilityLabel: 'Continue as guest' })
+      .props.onPress(),
+  );
+  fake.commands.length = 0;
+  expect(
+    view?.root.findByProps({ accessibilityLabel: 'Reply volume' }).props
+      .accessibilityValue,
+  ).toEqual({ min: 0, max: 100, now: 100 });
+  await act(() =>
+    view?.root
+      .findByProps({ accessibilityLabel: 'Volume down' })
+      .props.onPress(),
+  );
+  await act(() =>
+    view?.root
+      .findByProps({ accessibilityLabel: 'Use a private session' })
+      .props.onPress(),
+  );
+  expect(fake.commands).toEqual(['volume', 'privateSession']);
+  expect(
+    view?.root.findByProps({ accessibilityLabel: 'Reply volume' }).props
+      .accessibilityValue.now,
+  ).toBe(90);
+  expect(
+    view?.root.findByProps({
+      accessibilityLabel: 'Background listening requested',
+    }).props.value,
+  ).toBe(false);
   await act(() => view?.unmount());
 });
