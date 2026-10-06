@@ -42,7 +42,7 @@ VC-PACK-06,PACK,Artifact hash verifier,S05;S06,VC-PACK-05,planned,not_requested,
 VC-PACK-07,PACK,Interrupted download recovery,F14;S05,VC-PACK-06,planned,not_requested,not_started,not_run,,,,,,
 VC-PACK-08,PACK,Atomic pack activation,F14;S05,VC-PACK-06,planned,not_requested,not_started,not_run,,,,,,
 VC-PACK-09,PACK,Model readiness gate,F14;A11,VC-PACK-08,planned,not_requested,not_started,not_run,,,,,,
-VC-PACK-10,PACK,Distribution privacy review,S01;S06;S08,VC-PACK-05,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-10,PACK,Distribution privacy review,S01;S06;S08,VC-PACK-05,blocked,awaiting_review,implemented,partial,,task/s03-vc-pack-10,,Gemju Sherpa,Production hosting has no verified logging/retention configuration; provider selection and infrastructure authorization are required before release.,Eilo/docs/sprints/S03_REVIEW.md — Distribution privacy review completed: official Hugging Face policy reviewed; no production origin/CDN configuration or no-access-history evidence exists. Release remains fail-closed with empty trust/origin/license approval.
 VC-AUDIO-01,AUDIO,Android foreground capture owner,F01;F17,VC-SET-04;VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
 VC-AUDIO-02,AUDIO,Android notification Stop,F02;F12;A15,VC-AUDIO-01;VC-CTRL-02,planned,not_requested,not_started,not_run,,,,,,
 VC-AUDIO-03,AUDIO,Android background consent enforcement,F17;A06,VC-AUDIO-01;VC-SET-03,planned,not_requested,not_started,not_run,,,,,,
