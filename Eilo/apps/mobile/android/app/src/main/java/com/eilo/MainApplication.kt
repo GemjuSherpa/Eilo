@@ -59,6 +59,11 @@ class MainApplication : Application(), ReactApplication {
         }
       },android.os.Handler(android.os.Looper.getMainLooper()))
     }
+    getSystemService(android.media.AudioManager::class.java).registerAudioDeviceCallback(object: android.media.AudioDeviceCallback() {
+      override fun onAudioDevicesRemoved(devices: Array<out android.media.AudioDeviceInfo>) {
+        if (devices.any { it.isSink && (it.type in setOf(android.media.AudioDeviceInfo.TYPE_WIRED_HEADPHONES,android.media.AudioDeviceInfo.TYPE_WIRED_HEADSET,android.media.AudioDeviceInfo.TYPE_BLUETOOTH_SCO,android.media.AudioDeviceInfo.TYPE_BLUETOOTH_A2DP) || (android.os.Build.VERSION.SDK_INT >= 31 && it.type == android.media.AudioDeviceInfo.TYPE_BLE_HEADSET)) }) conversationController.routeDisconnected()
+      }
+    },android.os.Handler(android.os.Looper.getMainLooper()))
     loadReactNative(this)
   }
 }
