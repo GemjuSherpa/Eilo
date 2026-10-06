@@ -7,6 +7,7 @@ public enum ControllerEvent: CaseIterable, Sendable {
 }
 /// Effects are synchronous/nonblocking/idempotent. Async callbacks return through the controller.
 public protocol ControllerEffects: AnyObject {
+  func startCapture() throws -> Bool
   func playClause(_ clause: String) throws
   func cancelWork() throws
   func releaseCapture() throws
@@ -14,6 +15,7 @@ public protocol ControllerEffects: AnyObject {
 }
 public final class NoopControllerEffects: ControllerEffects {
   public init() {}
+  public func startCapture() throws -> Bool { false }
   public func playClause(_ clause: String) throws {}
   public func cancelWork() throws {}
   public func releaseCapture() throws {}
@@ -42,6 +44,36 @@ public final class NativeController: @unchecked Sendable {
   let lock = NSRecursiveLock()
   let diagnostics: SafeDiagnostics
   let effects: any ControllerEffects
+  let permission: any MicrophonePermissionAdapter
+  var startIntent: UUID?
+  var permissionPrompted=false
+  func permissionGranted() -> Bool { permission.status() == .granted }
+  public func permissionChanged() { lock.lock(); defer { lock.unlock() }; if !permissionGranted() { stop() } }
+  func start() -> Bool {
+    guard startIntent == nil, !locked, [.stopped,.permissionRequired,.paused].contains(currentState) else { return false }
+    let intent=UUID(); startIntent=intent
+    switch permission.status() {
+    case .granted: return completeStart(intent,.granted)
+    case .notRequested:
+      guard !permissionPrompted else { startIntent=nil; currentState = .permissionRequired; return false }
+      permissionPrompted=true; currentState = .permissionRequired
+      permission.request { [weak self] result in self?.completeStart(intent,result) }; return true
+    case .denied: startIntent=nil; currentState = .permissionRequired; currentError=nil; return false
+    case .unavailable: stop(); currentState = .error; currentError = .unavailable; return false
+    }
+  }
+  @discardableResult func completeStart(_ intent: UUID, _ result: MicrophonePermission) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    guard startIntent == intent, !locked else { return false }
+    startIntent=nil
+    guard result == .granted, permissionGranted() else { currentState = .permissionRequired; currentError=nil; return false }
+    let beforeGeneration=generation, beforeEpoch=privacyEpoch
+    do {
+      guard try effects.startCapture() else { stop(); currentState = .error; currentError = .unavailable; return false }
+      guard generation == beforeGeneration, privacyEpoch == beforeEpoch, [.stopped,.permissionRequired,.paused].contains(currentState), permissionGranted() else { stop(); return false }
+      issueGeneration(); currentState = .standby; currentError=nil; return true
+    } catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.capture,.unexpected,.error); return false }
+  }
   let clock: any NativeClock
   let scheduler: any IdleScheduler
   var idleTask: (any IdleCancellation)?
@@ -63,6 +95,7 @@ public final class NativeController: @unchecked Sendable {
     endSessionPreservingCapture()
   }
   @discardableResult func endSessionPreservingCapture() -> Bool {
+    guard permissionGranted() else { stop(); return false }
     clearIdle(); invalidateGeneration(); hasConversation=false
     let expectedGeneration=generation, expectedEpoch=privacyEpoch
     do {
@@ -84,16 +117,23 @@ public final class NativeController: @unchecked Sendable {
     if generation == 9_007_199_254_740_991 { sessionID = UUID(); generation = 0 } else { generation += 1 }
   }
   func issueGeneration() { invalidateGeneration(); activeToken = GenerationToken(sessionID,generation,privacyEpoch) }
-  func accepts(_ token: GenerationToken?) -> Bool { guard let token else { return false }; return token === activeToken && !token.cancelled && token.privacyEpoch == privacyEpoch }
+  func accepts(_ token: GenerationToken?) -> Bool {
+    guard let token, token === activeToken, !token.cancelled, token.privacyEpoch == privacyEpoch else { return false }
+    guard permissionGranted() else { stop(); return false }
+    return true
+  }
   var currentState: ControllerState = .stopped
   var currentError: SafeError?
-  public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects(), privateGate: any PrivateEffectGate = DeniedPrivateEffectGate(), clock: any NativeClock = MonotonicClock(), scheduler: any IdleScheduler = NativeIdleScheduler()) { self.diagnostics = diagnostics; self.effects = effects; self.privateGate = privateGate; self.clock=clock; self.scheduler=scheduler }
+  public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects(), privateGate: any PrivateEffectGate = DeniedPrivateEffectGate(), clock: any NativeClock = MonotonicClock(), scheduler: any IdleScheduler = NativeIdleScheduler(), permission: any MicrophonePermissionAdapter = UnavailablePermissionAdapter()) { self.diagnostics = diagnostics; self.effects = effects; self.privateGate = privateGate; self.clock=clock; self.scheduler=scheduler; self.permission=permission }
   public var state: ControllerState { lock.lock(); defer { lock.unlock() }; return currentState }
   public var error: SafeError? { lock.lock(); defer { lock.unlock() }; return currentError }
   @discardableResult public func dispatch(_ event: ControllerEvent, failure: SafeError = .unexpected, token: GenerationToken? = nil) -> Bool {
     lock.lock(); defer { lock.unlock() }
     if locked && [.start,.resume].contains(event) { return false }
     if event == .stop { return stop() }
+    if event == .resume && currentState != .paused { return false }
+    if event == .start && currentState == .paused { return false }
+    if event == .start || event == .resume { return start() }
     if [.speechDetected,.endpoint,.speechReady,.playbackFinished,.failure].contains(event) && !accepts(token) { return false }
     guard let next = Self.nextState(currentState, event) else { return false }
     if event == .start || event == .speechDetected || event == .playbackFinished || event == .resume { issueGeneration() }
@@ -152,11 +192,12 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult public func stop() -> Bool {
     lock.lock(); defer { lock.unlock() }
+    startIntent=nil
     clearIdle(); hasConversation=false
     invalidateGeneration()
     currentState = .stopped; currentError = nil
     var failed = false
-    let cleanups: [() throws -> Void] = [effects.cancelWork, effects.releaseCapture, effects.clearVolatileContext]
+    let cleanups: [() throws -> Void] = [permission.cancelPendingRequests, effects.cancelWork, effects.releaseCapture, effects.clearVolatileContext]
     for cleanup in cleanups { do { try cleanup() } catch { failed = true } }
     diagnostics.clear()
     if failed { currentState = .error; currentError = .unexpected; diagnostics.record(.controller,.unexpected,.error) }
@@ -168,7 +209,7 @@ public final class NativeController: @unchecked Sendable {
     case .failure: return .error
     case .setupRequired: return state == .stopped ? .setup : nil
     case .ready: return [.setup, .error].contains(state) ? .stopped : nil
-    case .start: return state == .stopped ? .standby : nil
+    case .start: return [.stopped,.permissionRequired].contains(state) ? .standby : nil
     case .speechDetected: return state == .standby ? .capturing : nil
     case .endpoint: return state == .capturing ? .thinking : nil
     case .speechReady: return state == .thinking ? .speaking : nil

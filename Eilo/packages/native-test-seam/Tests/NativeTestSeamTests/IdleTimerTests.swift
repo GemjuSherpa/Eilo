@@ -9,7 +9,7 @@ final class FakeTime: NativeClock, IdleScheduler {
 }
 final class IdleTimerTests: XCTestCase {
   func testProcessingPlaybackDeferAndSixtySecondsOfIdle() {
-    let time=FakeTime(), spy=EffectsSpy(); let c=NativeController(effects:spy,clock:time,scheduler:time)
+    let time=FakeTime(), spy=EffectsSpy(); let c=testController(effects:spy,clock:time,scheduler:time)
     c.dispatch(.start); XCTAssertTrue(time.jobs.isEmpty)
     c.dispatch(.speechDetected,token:c.token); c.dispatch(.endpoint,token:c.token)
     time.now=120_000; XCTAssertTrue(time.jobs.isEmpty); XCTAssertEqual(c.state,.thinking)
@@ -20,7 +20,7 @@ final class IdleTimerTests: XCTestCase {
     XCTAssertEqual(c.state,.standby); XCTAssertEqual(spy.committedHistory,[4,5])
   }
   func testResumedSpeechAndStopInvalidateOldTimers() {
-    let time=FakeTime(), spy=EffectsSpy(); let c=NativeController(effects:spy,clock:time,scheduler:time)
+    let time=FakeTime(), spy=EffectsSpy(); let c=testController(effects:spy,clock:time,scheduler:time)
     for e: ControllerEvent in [.start,.speechDetected,.endpoint,.speechReady,.playbackFinished] { c.dispatch(e,token:c.token) }
     let old=time.jobs.last!; c.dispatch(.speechDetected,token:c.token)
     XCTAssertTrue(old.cancelled); time.now=100_000; old.task(); XCTAssertEqual(c.state,.capturing); XCTAssertEqual(spy.cleared,0)

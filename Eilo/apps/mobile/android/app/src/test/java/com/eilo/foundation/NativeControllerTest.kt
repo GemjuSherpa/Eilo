@@ -6,7 +6,7 @@ class NativeControllerTest {
         val edges = mapOf(
             ControllerEvent.SETUP_REQUIRED to setOf(ControllerState.STOPPED),
             ControllerEvent.READY to setOf(ControllerState.SETUP, ControllerState.ERROR),
-            ControllerEvent.START to setOf(ControllerState.STOPPED),
+            ControllerEvent.START to setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED),
             ControllerEvent.SPEECH_DETECTED to setOf(ControllerState.STANDBY),
             ControllerEvent.ENDPOINT to setOf(ControllerState.CAPTURING),
             ControllerEvent.SPEECH_READY to setOf(ControllerState.THINKING),

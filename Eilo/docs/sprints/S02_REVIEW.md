@@ -21,3 +21,5 @@ Native Kotlin/Swift controller work is separate from real capture/ASR/model/TTS/
 - VC-CTRL-07 (task/s02-vc-ctrl-07): Native recognized stop listening routes directly to the same Stop transaction without a model call. Exact bounded command matching rejects stale recognition. Kotlin compile/JUnit18 and Swift compile/XCTest18 pass.
 
 - VC-SET-04 (task/s02-vc-set-04): Android OS permission adapter and native capture gate require explicit Start plus current permission. Denial does not loop; delayed/duplicate grants, revocation and reentrant Stop fail closed. Kotlin compile/JUnit23 pass; physical prompt/permission tests not run.
+
+- VC-SET-05 (task/s02-vc-set-05): iOS AVAudioApplication permission adapter (AVAudioSession fallback) compiles against installed iOS SDK. Native gate matches Android matrix and stale-grant/revocation tests. Swift compile/XCTest23 and Kotlin compile/JUnit23 pass; physical iOS prompts not run.
