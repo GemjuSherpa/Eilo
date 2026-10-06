@@ -3,7 +3,7 @@
 Version 1.0 | 5 October 2026 | Agent-ready current baseline
 
 ## Authority and current status
-This root context consolidates the current merged Eilo requirements. Read with ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, ai-instructions.md and EXECUTION_PLAN.md. Detailed baseline files are in docs/baseline. Current amendments and Design 2.0 supersede conflicting historical sections. The owner’s newest workflow rule overrides any old suggestion to commit: agents never commit; the human commits and merges. This document does not authorize implementation. No native-device feasibility or security pass is claimed.
+This root context consolidates the current merged Eilo requirements. Read with ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, ai-instructions.md and EXECUTION_PLAN.md. Detailed baseline files are in Eilo_Codex_Knowledge_Transfer. Current amendments and Design 2.0 supersede conflicting historical sections. Source control follows the latest owner authorization: scoped workflow/S02 Git commands and task-to-sprint merge order are permitted. Test results are separate from human approval. This document does not authorize implementation. No native-device feasibility or security pass is claimed.
 
 ## Product and audience
 Eilo is an English, voice-first mobile companion for casual, supportive conversation. Tagline: “I am here for you”. Core conversations run on the phone after model setup and are free to use; there is no cloud per-minute inference dependency. Users can speak and hear responses without typing during normal conversation. Accessible touch controls and authentication may still require native interaction. Initial adult/Australia-first pilot is a planning assumption pending owner review, not an established launch restriction.

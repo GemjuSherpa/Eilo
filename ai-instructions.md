@@ -1,10 +1,10 @@
 # Eilo — AI Coding Instructions
 
 ## Current task boundary
-The owner explicitly authorized S01 implementation and testing. Create a separate branch before each authorized sprint; complete the selected sprint and stop for human review. No future sprint, provisioning, deployment or publication is authorized. The human verifies, commits and pushes.
+The owner explicitly authorized completing S02, with scoped Git commands and a root sprint branch plus separate task branches. Merge task branches into the sprint branch before any main merge. Complete relevant tests and present human review evidence; no further sprint, provisioning, deployment or publication is authorized.
 
 ## Read before an authorized change
-Read AGENTS.md, PRD.md, ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, EXECUTION_PLAN.md and the selected task plus dependencies in docs/baseline/Voice_Companion_Feature_Backlog_v1.0.json. Read relevant design tokens/contracts and actual repository instructions. New owner instructions prevail. Stop and report a material scope/privacy conflict rather than silently weaken the specification.
+Read AGENTS.md, PRD.md, ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, EXECUTION_PLAN.md and the selected task plus dependencies in Eilo_Codex_Knowledge_Transfer/Voice_Companion_Feature_Backlog_v1.0.json. Read relevant design tokens/contracts and actual repository instructions. New owner instructions prevail. Stop and report a material scope/privacy conflict rather than silently weaken the specification.
 
 ## Code conventions
 - TypeScript strict mode, no implicit any or unchecked casts to bypass DTO validation. Use unknown and narrow untrusted data. Use strict null handling; document intentional exceptions with evidence.
@@ -30,6 +30,6 @@ Run meaningful focused tests for changed behavior/security boundaries; use synth
 Complete dependency-ready tasks within the explicitly selected sprint, in small verifiable changes. Produce a review summary: task/requirement IDs; behavior before/after; changed files; checks with actual commands/results; unrun tests; evidence; risks/limitations; suggested next task. Update tracker truthfully to awaiting human review. Then stop. Do not interpret silence or success as approval to continue. Human review of one task does not authorize the whole roadmap.
 
 ## Source-control and release rules — explicit owner instruction
-DO NOT commit anything. Do not stage (git add), push, merge, create tags or rewrite history. The human verifies, stages, commits and merges. Read-only git diff/status/log are allowed. Do not discard/revert the human's changes, force-push or alter remotes. Leave changes in the working tree for review.
+The latest owner request permits scoped staging, commits, pushes and task/sprint/main merges for workflow completion and S02. Preserve the per-task branch sequence. No force-push, history rewrite or release tag is authorized. Outside this scope, leave Git writes to the human. Read-only git diff/status/log are allowed. Do not discard/revert the human's changes, force-push or alter remotes. Leave changes in the working tree for review.
 
 No PR publication, staging deployment, production deployment, remote migration, store upload, provider setup or messages to people unless separately explicitly authorized. If staging/deployment is later authorized, prepare and test the concrete candidate before the human gate. Never treat a configuration plan as permission to create external resources or incur costs.

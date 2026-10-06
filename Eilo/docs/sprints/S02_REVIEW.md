@@ -27,3 +27,15 @@ Native Kotlin/Swift controller work is separate from real capture/ASR/model/TTS/
 - VC-CTRL-08 (task/s02-vc-ctrl-08): Process-owned controller always starts stopped; no settings restoration invokes capture. Android activity binding and iOS protected-data/scene callbacks stop work. Opaque metadata snapshots and fresh-process tests pass (Kotlin JUnit25, Swift XCTest25); integrated unsigned iOS Release build passes.
 
 - VC-CTRL-02 (task/s02-vc-ctrl-02-review): Final Stop regression: cleanup cannot reentrantly Start or recurse Stop; cancellation callbacks remain invalid. Kotlin compile/JUnit26 and Swift compile/XCTest26 pass. Original task branch task/s02-vc-ctrl-02 was merged first.
+
+## Combined validation and limits
+
+No dependencies/services/models were added. Production capture effects fail closed until later real adapters are implemented. The UI remains the S01 guest/stopped shell: no working conversation or model is claimed. Swift production controller sources are compiled directly into the iOS target from the existing Swift package; the package’s historical NativeTestSeam name also supplies desktop XCTest. Android compiles the same tested Kotlin controller classes in its app target.
+
+Commands: npm --prefix Eilo run lint; npm --prefix Eilo run typecheck; npm --prefix Eilo test (UI1/contracts25). Native checks: swift test --package-path Eilo/packages/native-test-seam (26 XCTest); Gradle :app:compileDebugKotlin :app:testDebugUnitTest (26 JUnit). App builds: Gradle :app:assembleDebug :app:assembleRelease; xcodebuild unsigned Release iphonesimulator with build/S02 derived data. Native controller effects must be synchronous, nonblocking and idempotent; all later async adapters must return through token/epoch gates and implement real cancellation at their output sink. No raw cause crosses diagnostics.
+
+Physical permission/revocation/reboot/restore, real audio output cancellation, locked/background capture, real protected-store commits, private-mode disk/network audits and secure native plaintext-buffer erasure remain NOT RUN here. Swift clearing drops owned references and does not prove erasure of immutable string/value copies. History access is denied by default; the fake capability seam is not authentication or encrypted storage. Background handling currently stops on loss of foreground access; later consent/platform tasks must revise this explicitly. Fork CI and required-check branch protection remain unverified.
+
+All eleven task implementations are awaiting human review, with verification partial where actual device/later integration evidence is required. No human approval is recorded from successful tests or Git merges.
+
+Final local combined checks PASS: JS lint/strict TypeScript/UI1+contracts25; Swift26/Kotlin26 native tests; Android debug and test-signed Release builds; unsigned iOS simulator Release build after Stop fix; Gitleaks source scan exit0; diff whitespace. Hosted S02 run will provide a separate environment check.
