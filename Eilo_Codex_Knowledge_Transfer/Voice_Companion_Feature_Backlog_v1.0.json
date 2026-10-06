@@ -2141,8 +2141,8 @@
       "scope": "model-build task, verification deferred to development",
       "acceptance_criterion": "Pinned official Qwen input produces BF16 GGUF with recorded recipe, hash, size and metadata.",
       "focused_test": "Execute approved conversion; inspect tensor inventory/tokenizer/template; record RAM check separately.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "pass",
       "evidence": [
@@ -2150,6 +2150,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Official pinned source hashes verified; BF16 conversion executed and GGUF inventory/tokenizer/template inspected. 4,069,679,360 bytes, SHA-256 2fd1d807958fc7352aa39b9d94a04073aa04ee07a735f272876a4b3ee90ac48f. Desktop RAM measured separately; phone inference not tested."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2172,8 +2178,8 @@
       "scope": "model-build task",
       "acceptance_criterion": "Pinned quantizer produces Q4_K_M with output hash/size and complete provenance.",
       "focused_test": "Repeat identical conversion separately and compare; inspect quantization metadata.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "pass",
       "evidence": [
@@ -2181,6 +2187,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Pinned Q4_K_M quantizer executed twice; cmp exit 0 and equal SHA-256 c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120. Each output is 1,282,439,424 bytes. GGUF quantization metadata and unchanged tokenizer/template inspected."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2202,8 +2214,8 @@
       "scope": "native installer contract",
       "acceptance_criterion": "Manifest declares IDs, revisions, origins, hashes, sizes, licenses and runtime compatibility. License evidence for weights/runtimes/voices/phonemizers and dependencies must be reviewable before any pack inclusion.",
       "focused_test": "Reject missing fields, unsafe paths, incompatible versions and unknown algorithms.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2211,6 +2223,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Bounded strict native manifest schema; compiler and malformed/duplicate/path/runtime/platform tests passed on Kotlin and Swift. See docs/models/MANIFEST.md; final native suites45 each. Android platform parser/device evidence remains unverified."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2234,8 +2252,8 @@
       "scope": "native verifier",
       "acceptance_criterion": "Only manifests signed by configured release trust keys are accepted.",
       "focused_test": "Known test key: valid, modified, unknown-key and invalid-signature fixtures.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2243,6 +2261,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "ES256 exact-byte signature verification uses configured native trust. Valid/tampered/unknown-key/algorithm/empty-trust and shared OpenSSL interoperability fixtures pass. Default production trust remains empty."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2267,8 +2291,8 @@
       "scope": "native downloader",
       "acceptance_criterion": "Only allowlisted HTTPS assets/redirects are requested; downloader accepts no personal payload or stable tracking ID.",
       "focused_test": "Fake server checks origin/redirect policy and request schema; reject non-HTTPS/foreign origin.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2276,6 +2300,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Isolated default-trust HTTPS streaming transport, bounded bytes, no cookies/auth/cache/automatic redirects; synthetic server request/foreign-redirect/cancellation/response tests pass. Real CDN traffic audit is not run."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2299,8 +2329,8 @@
       "scope": "native installer",
       "acceptance_criterion": "Incomplete or wrong-hash file never becomes available to inference.",
       "focused_test": "Truncation and bitflip fixtures remain quarantined; exact fixture passes.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2308,6 +2338,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Streaming SHA-256 and exact length verification; truncation, bit-flip, oversize, symlink and cancellation tests pass. No corrupt or partial artifact obtains proof."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2331,8 +2367,8 @@
       "scope": "native installer",
       "acceptance_criterion": "Interrupted generic download resumes safely or restarts without marking partial data ready.",
       "focused_test": "Terminate transfer; resume with changed ETag/content; reverify complete file.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2340,6 +2376,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Checkpoint binds manifest digest/index/strong ETag. Injected interruption safely resumes or restarts on changed ETag/checkpoint; complete file always rehashed. Real device process-kill not run."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2363,8 +2405,8 @@
       "scope": "native installer",
       "acceptance_criterion": "Compatible verified pack activates atomically; failed update preserves previous working pack.",
       "focused_test": "Crash/failure at activation boundaries; no mixed-version pack reaches runtime.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2372,6 +2414,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Whole-pack immutable version directories and atomic synced pointer; startup signature/hash checks; failure-boundary/stale-proof/rollback/corruption/license/trust tests pass. Physical power-loss/filesystem/backup tests not run."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2395,8 +2443,8 @@
       "scope": "native readiness policy",
       "acceptance_criterion": "Missing/incompatible model or unsupported configuration prevents Start with a clear reason; no cloud fallback.",
       "focused_test": "Fake missing/corrupt/unsupported cases keep capture/model calls stopped.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2404,6 +2452,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Native readiness blocks permission/capture/output without valid assets/configuration/offline voice; races and activation cache invalidation tested. Metadata-only modelStatus validated by TypeScript; real speech runtimes remain later work."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2429,7 +2483,7 @@
       "acceptance_criterion": "Hosting choice has reviewable logging/retention evidence compatible with no retained user access history.",
       "focused_test": "Review actual origin/CDN configuration and retention; incompatible/unknown policy blocks hosting release.",
       "status": "blocked",
-      "approval_status": "awaiting_review",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2437,6 +2491,12 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
           "notes": "Distribution privacy review completed: official Hugging Face policy reviewed; no production origin/CDN configuration or no-access-history evidence exists. Release remains fail-closed with empty trust/origin/license approval."
+        },
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S03 reviewed and verified in conversation; existing physical and distribution-hosting blockers remain."
         }
       ],
       "owner": null,
@@ -2461,17 +2521,23 @@
       "scope": "Android native",
       "acceptance_criterion": "Capture starts from permitted visible user action and is owned outside JavaScript.",
       "focused_test": "Physical Android Start/Stop; JS suspension does not falsify actual capture state.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "task_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Async native foreground capture; Kotlin compile and 54 JUnit tests pass. Physical checks not run."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-audio-01",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Physical Android capture/JS-suspension checks unavailable; UI Start and wake/ASR integration are later tasks.",
+      "next_action": "Review by Gemju Sherpa before next task."
     },
     {
       "id": "VC-AUDIO-02",

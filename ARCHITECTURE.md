@@ -61,3 +61,8 @@ Provider outage, quota limit or overlay rejection preserves core offline convers
 
 ## Version and decision discipline
 Record dependency name, exact resolved version, runtime/native compatibility, license and reason in setup evidence. No unpinned latest tags or silently chosen provider. Environment names/settings are documented without secret values. Model/provider replacements, new state systems, remote data classes or privacy changes need a scoped decision and human review before implementation.
+
+## S04 Android foreground capture decision
+Device initialization/start is asynchronous on a process-owned native executor. ControllerEffects.beginCapture reports completion/failure back to the serialized Kotlin controller; an outstanding Start has no generation and never reports standby before confirmation. Stop cancels the request and rejects its late callback. Android AudioRecord uses 16 kHz mono PCM16, a bounded platform buffer and a reused 320-sample native buffer. Nonblocking reads and immediate sample erasure share the capture lifecycle monitor; this task discards samples until separately approved wake/ASR integration. There is no JS PCM event, file sink, upload, startup capture or background service. Foreground visibility, current OS permission, device unlock and the existing model-readiness gate are required. Swift remains unchanged until VC-AUDIO-05.
+
+Android build compatibility minimum is API 26 because the S03 integrity/atomic file operations use java.nio.file; the prior template minimum of 24 was inconsistent. This does not certify performance/privacy/audio behavior on API 26 devices or change the proposed Android 15+/8 GB evaluation cohort.

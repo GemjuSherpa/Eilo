@@ -11,9 +11,9 @@ class MainActivity : ReactActivity() {
     super.onCreate(savedInstanceState)
     controller.bindPermissionAdapter(com.eilo.foundation.AndroidMicrophonePermission(this))
   }
-  override fun onResume() { super.onResume(); controller.permissionChanged() }
-  // Background capture has not been enabled in S02.
-  override fun onPause() { controller.stop(); super.onPause() }
+  override fun onResume() { super.onResume(); (application as MainApplication).foregroundCaptureVisible=true; controller.permissionChanged() }
+  // Foreground-only: exit cancels pending opens and releases native capture.
+  override fun onPause() { (application as MainApplication).foregroundCaptureVisible=false; controller.stop(); super.onPause() }
   override fun onDestroy() {
     controller.bindPermissionAdapter(com.eilo.foundation.UnavailablePermissionAdapter())
     super.onDestroy()
