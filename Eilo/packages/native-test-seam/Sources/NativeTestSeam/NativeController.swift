@@ -174,6 +174,11 @@ public final class NativeController: @unchecked Sendable {
   }
   public var state: ControllerState { lock.lock(); defer { lock.unlock() }; return currentState }
   public var error: SafeError? { lock.lock(); defer { lock.unlock() }; return currentError }
+  /// Detector lease and token/state acceptance share the controller serialization boundary.
+  func wakeDetected(_ token:GenerationToken,active:()->Bool) -> Bool {
+    lock.lock();defer { lock.unlock() };guard active() else { return false }
+    return dispatch(.speechDetected,token:token)
+  }
   @discardableResult public func dispatch(_ event: ControllerEvent, failure: SafeError = .unexpected, token: GenerationToken? = nil) -> Bool {
     lock.lock(); defer { lock.unlock() }
     if stopping && event != .stop { return false }

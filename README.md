@@ -21,6 +21,7 @@ The repository contains a React Native application, shared contracts/design toke
 | S03: model installation | Reviewed; signed-manifest, checksum, staging/resume/activation and readiness mechanisms implemented. Production distribution configuration remains unavailable. |
 | S04: guest/audio setup | Reviewed and merged; explicit consent, native control and capture foundations implemented. Physical/background feasibility blockers remain. |
 | S05 / VC-TURN-01 | Reviewed and approved: bounded native standby audio buffers. Later S05 tasks remain outstanding. |
+| S05 / VC-TURN-02 | Native adapter boundary under review; verified KWS runtime/checkpoint and microphone integration remain blocked. [Evidence](Eilo/docs/sprints/S05_VC_TURN_02_REVIEW.md). |
 | Wake/VAD, streaming ASR, local replies, offline TTS and protected history | Planned pipeline; not a completed integrated voice experience. |
 
 **The current app is not an end-to-end conversation demo.** Production model trust, download origins and license approvals are not configured. Start remains gated by native readiness; do not bypass it to present a synthetic fixture as a working product. History selection does not enable encrypted storage that has not been implemented.
