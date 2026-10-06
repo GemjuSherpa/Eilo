@@ -11,10 +11,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@eilo/contracts": "0.0.1",
+    "@eilo/design-tokens": "0.0.1",
+    "@react-navigation/bottom-tabs": "7.20.0",
+    "@react-navigation/native": "7.5.0",
+    "@react-navigation/native-stack": "7.20.0",
     "react": "19.2.3",
     "react-native": "0.87.1",
     "react-native-safe-area-context": "5.10.1",
-    "@eilo/design-tokens": "0.0.1"
+    "react-native-screens": "4.28.0"
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
@@ -39,5 +44,18 @@
   },
   "engines": {
     "node": "^22.13.0 || ^24.3.0 || >=26.0.0"
+  },
+  "codegenConfig": {
+    "name": "EiloSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "com.eilo"
+    },
+    "ios": {
+      "modulesProvider": {
+        "EiloControl": "EiloControl"
+      }
+    }
   }
 }

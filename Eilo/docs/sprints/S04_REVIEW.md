@@ -55,3 +55,15 @@ Android private-output device removal and iOS old-device-unavailable events stop
 ### VC-SET-01
 
 Accessible English guest disclosure explains AI/adult audience, local processing, unsaved audio, optional encrypted text, unfinished history capability, local-loss limits and separate microphone/background choice. Guest UI reaches setup without identity fields/requests. Workspace lint/types and 34 JS/UI tests pass; physical screen-reader/large-text checks pending.
+
+## S04 dependency and build decisions
+
+React Navigation native 7.5.0, native-stack/bottom-tabs 7.20.0 and react-native-screens 4.28.0 are pinned in the npm lockfile (MIT). Official registry peer requirements accept existing React 19.2.3, RN 0.87.1 and safe-area 5.10.1; actual native builds are checked below. No additional global JS state system was introduced. The native controller remains authoritative.
+
+RN 0.87.1 Codegen uses shell `find` with an unquoted project path when app specs are present. `scripts/patch-codegen-paths.mjs` replaces these calls with `execFileSync` argument arrays, verifies the exact RN version and source anchors, and runs on npm postinstall. It preserves the vendor license and fails for review if upstream changes. CocoaPods regeneration passes at the existing path with spaces.
+
+The current npm audit reports 53 dependency advisories (48 high, five moderate, zero critical); none names the four selected navigation packages. This is not a clean security audit. Full dependency remediation/release assessment remains outstanding; no force-upgrade or security bypass was applied.
+
+### VC-SET-06
+
+Generated TurboModule exposes allowlisted commands and strictly validated metadata only. Home requests native Start/Stop, offers Stop during pending/unknown state, and explicitly confirms speaker output. Monotonic native revisions reject old snapshots; UI detach/reconnect tests read changed native state without owning capture. Workspace lint/typecheck, 39 JS/UI tests, Kotlin 57 tests/lint, Swift 50 tests and unsigned iOS Release build pass. Physical control/VoiceOver/TalkBack checks pending.

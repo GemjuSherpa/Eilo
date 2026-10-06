@@ -46,6 +46,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private var stopping=false
     private var startIntent: UUID? = null
     private var capturePending = false
+    @Synchronized fun captureIsPending() = capturePending
     private var captureIntent: UUID? = null
     private var permissionPrompted=false
     private fun permissionGranted(): Boolean = try { permission.status() == MicrophonePermission.GRANTED } catch (_: Exception) { false }
@@ -56,7 +57,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (currentState == ControllerState.ERROR) result["errorCode"]=(currentError ?: SafeError.UNEXPECTED).name.lowercase(java.util.Locale.ROOT)
         return result.toMap()
     }
-    @Synchronized fun permissionChanged() { if (!permissionGranted()) stop() }
+    @Synchronized fun permissionChanged() { if (!permissionGranted() && (startIntent != null || activeToken != null)) stop() }
     @Synchronized private fun start(): Boolean {
         if (stopping || startIntent != null || locked || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED)) return false
         if(modelStatus()!=ModelStatus.READY) { modelsChanged();return false }
