@@ -14,6 +14,8 @@ internal class ForegroundCapture(
     private val worker: Executor,
     private val eligible: () -> Boolean,
     private val open: () -> CaptureDevice,
+    private val activate: () -> Unit = {},
+    private val deactivate: () -> Unit = {},
 ) : ControllerEffects {
     private val monitor = Any()
     private var run = 0L
@@ -28,6 +30,8 @@ internal class ForegroundCapture(
             val samples = ShortArray(320) // 20 ms at 16 kHz; reused, never retained.
             try {
                 if (!current(expected) || !eligible()) { completion(false); return@execute }
+                val activated = synchronized(monitor) { if (run != expected || !eligible()) false else { activate(); true } }
+                if (!activated) { completion(false); return@execute }
                 val candidate = open()
                 opened = candidate
                 val started = synchronized(monitor) {
@@ -64,7 +68,7 @@ internal class ForegroundCapture(
     private fun current(expected: Long) = synchronized(monitor) { run == expected }
     override fun releaseCapture() {
         val previous = synchronized(monitor) { ++run; val value=device; device=null; value }
-        previous?.close()
+        try { previous?.close() } finally { deactivate() }
     }
     override fun cancelWork() {}
     override fun clearVolatileContext() {} // read buffer is erased on every read, including failure.

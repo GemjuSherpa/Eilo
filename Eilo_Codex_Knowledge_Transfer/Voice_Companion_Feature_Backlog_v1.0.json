@@ -2555,17 +2555,23 @@
       "scope": "Android native notification",
       "acceptance_criterion": "Required ongoing notification shows no personal content and its Stop action releases capture.",
       "focused_test": "Tap notification Stop without opening UI; verify mic released.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Unexported, non-sticky microphone foreground service owns a generic ongoing notification. Its immutable Stop pending intent calls native Stop without opening UI; teardown cancels capture. Kotlin, 55 JUnit tests and Android lint pass. Actual notification tap/microphone release is NOT RUN on physical Android."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-audio-02",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Required physical/accessibility/later-pipeline integration evidence remains pending.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance."
     },
     {
       "id": "VC-AUDIO-03",

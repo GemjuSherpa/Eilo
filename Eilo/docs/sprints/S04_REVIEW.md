@@ -35,3 +35,7 @@ Official platform reference: [Android AudioRecord](https://developer.android.com
 ### VC-AUDIO-05
 
 iOS AVAudioEngine/session capture is process-owned and native-only; asynchronous Start/Stop, stale completion, permission revocation and setup-race fixtures pass. Swift 48 tests and iOS-platform typecheck pass. Hardware Start/Stop and JS-detached capture are NOT RUN.
+
+### VC-AUDIO-02
+
+Unexported, non-sticky microphone foreground service owns a generic ongoing notification. Its immutable Stop pending intent calls native Stop without opening UI; teardown cancels capture. Kotlin, 55 JUnit tests and Android lint pass. Actual notification tap/microphone release is NOT RUN on physical Android.

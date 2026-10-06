@@ -12,6 +12,8 @@ class MainApplication : Application(), ReactApplication {
   // One native authority per process; startup never invokes Start or restores capture.
   private val modelPacks by lazy { com.eilo.foundation.PackStore(java.io.File(noBackupFilesDir,"generic-models"),emptyMap(),"5e03bdd8700948b9c41c54dd1b00f28a2aebc03f",android=android.os.Build.VERSION.SDK_INT) }
   private val modelReadiness by lazy { com.eilo.foundation.PackReadiness(modelPacks) }
+  @Volatile var captureServiceWanted=false
+  @Volatile var captureServiceRunning=false
   @Volatile var foregroundCaptureVisible = false
   private val captureWorker = java.util.concurrent.Executors.newSingleThreadExecutor { task ->
     Thread(task, "eilo-native-capture").apply { isDaemon = true }
@@ -21,7 +23,13 @@ class MainApplication : Application(), ReactApplication {
       foregroundCaptureVisible &&
         checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == android.content.pm.PackageManager.PERMISSION_GRANTED &&
         !getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked
-    }, { com.eilo.foundation.AndroidCaptureDevice(this) })
+    }, { com.eilo.foundation.AndroidCaptureDevice(this) }, {
+      captureServiceWanted=true
+      startForegroundService(android.content.Intent(this,CaptureService::class.java))
+    }, {
+      captureServiceWanted=false
+      stopService(android.content.Intent(this,CaptureService::class.java))
+    })
   }
   val conversationController by lazy { com.eilo.foundation.NativeController(effects=foregroundCapture,models=modelReadiness) }
 
