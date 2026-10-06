@@ -20,6 +20,7 @@
 		B79F1A251651ADCED7B8DF2D /* PackSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67AE1F8F9EE2F427CE3AED7 /* PackSignature.swift */; };
 		C8CFEB8E1E31BB7EF6B3E90F /* PackTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381FD064A1A53657212B570C /* PackTransport.swift */; };
 		35394E758243C0BDFB49C885 /* PackIntegrity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */; };
+		6339113356833115484426CF /* PackRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C2DCEF0EF5C5A7A8E32453 /* PackRecovery.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		D67AE1F8F9EE2F427CE3AED7 /* PackSignature.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackSignature.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackSignature.swift"; sourceTree = "<group>"; };
 		381FD064A1A53657212B570C /* PackTransport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackTransport.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackTransport.swift"; sourceTree = "<group>"; };
 		02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackIntegrity.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift"; sourceTree = "<group>"; };
+		70C2DCEF0EF5C5A7A8E32453 /* PackRecovery.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackRecovery.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackRecovery.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 		30F2448E7B57418BE6C6AAB8 /* NativeController */ = {
 			isa = PBXGroup;
 			children = (
+				70C2DCEF0EF5C5A7A8E32453 /* PackRecovery.swift */,
 				02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */,
 				381FD064A1A53657212B570C /* PackTransport.swift */,
 				D67AE1F8F9EE2F427CE3AED7 /* PackSignature.swift */,
@@ -278,6 +281,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6339113356833115484426CF /* PackRecovery.swift in Sources */,
 				35394E758243C0BDFB49C885 /* PackIntegrity.swift in Sources */,
 				C8CFEB8E1E31BB7EF6B3E90F /* PackTransport.swift in Sources */,
 				B79F1A251651ADCED7B8DF2D /* PackSignature.swift in Sources */,
