@@ -23,14 +23,21 @@ class NoopControllerEffects : ControllerEffects {
     override fun clearVolatileContext() {}
 }
 
-class GenerationToken internal constructor(val sessionId: UUID, val operationId: UUID, val generation: Long) {
+class GenerationToken internal constructor(val sessionId: UUID, val operationId: UUID, val generation: Long, val privacyEpoch: Long) {
     @Volatile var cancelled: Boolean = false
         internal set
 }
 
+enum class PrivacyChange { LOCK, UNLOCK, PRIVATE_SESSION, HISTORY_SESSION, IDENTITY_RESET, DELETE_ALL }
+enum class PrivateEffect { READ_MEMORY, COMMIT_HISTORY, DISPLAY_PRIVATE }
+fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
+
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
-class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects()) {
+class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }) {
     private var sessionId = UUID.randomUUID()
+    private var privacyEpoch = 0L
+    private var locked = false
+    private var privateSession = true
     private var generation = 0L
     private var activeToken: GenerationToken? = null
     @Synchronized fun token(): GenerationToken? = activeToken
@@ -40,14 +47,15 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     private fun issueGeneration() {
         invalidateGeneration()
-        activeToken = GenerationToken(sessionId, UUID.randomUUID(), generation)
+        activeToken = GenerationToken(sessionId, UUID.randomUUID(), generation, privacyEpoch)
     }
-    private fun accepts(token: GenerationToken?): Boolean = token != null && token === activeToken && !token.cancelled
+    private fun accepts(token: GenerationToken?): Boolean = token != null && token === activeToken && !token.cancelled && token.privacyEpoch == privacyEpoch
     private var currentState = ControllerState.STOPPED
     private var currentError: SafeError? = null
     @Synchronized fun state(): ControllerState = currentState
     @Synchronized fun error(): SafeError? = currentError
     @Synchronized fun dispatch(event: ControllerEvent, failure: SafeError = SafeError.UNEXPECTED, token: GenerationToken? = null): Boolean {
+        if (locked && event in setOf(ControllerEvent.START,ControllerEvent.RESUME)) return false
         if (event == ControllerEvent.STOP) return stop()
         if (event in setOf(ControllerEvent.SPEECH_DETECTED, ControllerEvent.ENDPOINT, ControllerEvent.SPEECH_READY, ControllerEvent.PLAYBACK_FINISHED, ControllerEvent.FAILURE) && !accepts(token)) return false
         val next = nextState(currentState, event) ?: return false
@@ -57,6 +65,21 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         currentError = if (next == ControllerState.ERROR) failure else null
         if (next == ControllerState.ERROR) diagnostics.record(SafeComponent.CONTROLLER, failure, SafeSeverity.ERROR)
         return true
+    }
+    @Synchronized fun privacyTransition(change: PrivacyChange): Boolean {
+        if (privacyEpoch == 9007199254740991L) { sessionId=UUID.randomUUID(); privacyEpoch=0 } else privacyEpoch++
+        when (change) {
+            PrivacyChange.LOCK -> locked=true
+            PrivacyChange.UNLOCK -> locked=false
+            PrivacyChange.PRIVATE_SESSION, PrivacyChange.IDENTITY_RESET, PrivacyChange.DELETE_ALL -> privateSession=true
+            PrivacyChange.HISTORY_SESSION -> privateSession=false
+        }
+        return stop()
+    }
+    /** Native-only capability seam. Protected store/auth integration remains separately gated. */
+    @Synchronized fun guardedPrivateEffect(token: GenerationToken, effect: PrivateEffect, action: () -> Unit): Boolean {
+        if (!accepts(token) || locked || privateSession || currentState in setOf(ControllerState.STOPPED,ControllerState.SETUP,ControllerState.ERROR)) return false
+        return try { if (!privateGate.allows(effect) || !accepts(token)) return false; action(); accepts(token) } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.MEMORY,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
     }
     @Synchronized fun releaseSpeech(token: GenerationToken, clause: String): Boolean {
         if (!accepts(token) || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING)) return false
