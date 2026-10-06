@@ -1,8 +1,8 @@
-<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Current supplied AGENTS.md retains a review checkpoint after one dependency-ready task. No deployment or paid services. -->
+<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Gemju Sherpa subsequently authorized continuing all remaining S04 tasks before sprint review. No deployment or paid services. -->
 # Eilo — AI Coding Instructions
 
 ## Current task boundary
-Gemju Sherpa explicitly authorized working on S04, with scoped Git commands and a root sprint branch plus separate task branches. Merge task branches into the sprint branch before any main merge. After one dependency-ready task, complete relevant tests, present review evidence and stop; no further sprint, provisioning, deployment or publication is authorized.
+Gemju Sherpa explicitly authorized working on S04, with scoped Git commands and a root sprint branch plus separate task branches. Merge task branches into the sprint branch before any main merge. Complete the remaining S04 tasks, run relevant tests and present sprint review evidence; no further sprint, provisioning, deployment or publication is authorized.
 
 ## Read before an authorized change
 Read AGENTS.md, PRD.md, ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, EXECUTION_PLAN.md and the selected task plus dependencies in Eilo_Codex_Knowledge_Transfer/Voice_Companion_Feature_Backlog_v1.0.json. Read relevant design tokens/contracts and actual repository instructions. New Gemju Sherpa instructions prevail. Stop and report a material scope/privacy conflict rather than silently weaken the specification.
@@ -28,7 +28,7 @@ After each code-producing change, run the relevant package lint and compiler/typ
 Run meaningful focused tests for changed behavior/security boundaries; use synthetic data. Validate native integration on the required environment/devices when a task needs it. If dependencies/toolchains/devices are missing, state NOT RUN/BLOCKED and the exact reason. Do not bypass gates, fabricate output or mark a task fully verified. Documentation-only changes require link/consistency checks, not unnecessary app builds.
 
 ## Review — mandatory
-Complete one dependency-ready task within the explicitly selected sprint, in a small verifiable change. Produce a review summary: task/requirement IDs; behavior before/after; changed files; checks with actual commands/results; unrun tests; evidence; risks/limitations; suggested next task. Update tracker truthfully to awaiting review. Then stop. Do not interpret silence or success as approval to continue. Review of one task does not authorize the whole roadmap.
+Complete the remaining dependency-ready S04 tasks in small verifiable changes. Produce a review summary: task/requirement IDs; behavior before/after; changed files; checks with actual commands/results; unrun tests; evidence; risks/limitations; suggested next task. Update tracker truthfully to awaiting review. Then stop. Do not interpret silence or success as approval to continue. Review of one task does not authorize the whole roadmap.
 
 ## Source-control and release rules — explicit Gemju Sherpa instruction
 The latest Gemju Sherpa request permits scoped staging, commits, pushes and task/sprint/main merges for workflow completion and S04. Preserve the per-task branch sequence. No force-push, history rewrite or release tag is authorized. Outside this scope, leave Git writes to Gemju Sherpa. Read-only git diff/status/log are allowed. Do not discard/revert Gemju Sherpa's changes, force-push or alter remotes. Leave changes in the working tree for review.

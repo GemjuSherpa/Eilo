@@ -1,4 +1,5 @@
 import UIKit
+import AVFAudio
 import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
@@ -7,7 +8,10 @@ import ReactAppDependencyProvider
 class AppDelegate: UIResponder, UIApplicationDelegate {
   // One process-owned native authority; construction never requests permission/capture.
   // No shipping trust key/origin/license approval. Installer creation is explicit and cannot auto-start capture.
-  let conversationController = NativeController(permission: IOSMicrophonePermission())
+  let captureEffects = IOSCaptureEffects()
+  let captureEligibility=IOSCaptureEligibility()
+  var captureVisible: Bool { get { captureEligibility.visible } set { captureEligibility.visible=newValue } }
+  lazy var conversationController = NativeController(effects:captureEffects,permission: IOSMicrophonePermission())
   func createModelStore() throws -> PackStore {
     guard let base=FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask).first else { throw PackFailure.unavailable }
     var root=base.appendingPathComponent("generic-models",isDirectory:true)
@@ -23,6 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+    captureEligibility.protectedData(application.isProtectedDataAvailable)
+    captureEffects.eligible = { [weak self] in
+      guard let self else { return false }
+      return self.captureEligibility.allowed && AVAudioApplication.shared.recordPermission == .granted
+    }
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()
@@ -32,16 +41,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
-  func applicationProtectedDataWillBecomeUnavailable(_ application: UIApplication) { conversationController.privacyTransition(.lock) }
-  func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) { conversationController.privacyTransition(.unlock) }
+  func applicationProtectedDataWillBecomeUnavailable(_ application: UIApplication) { captureEligibility.protectedData(false); conversationController.privacyTransition(.lock) }
+  func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) { captureEligibility.protectedData(true); conversationController.privacyTransition(.unlock) }
   func applicationWillTerminate(_ application: UIApplication) { conversationController.stop() }
 }
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
   private var controller: NativeController? { (UIApplication.shared.delegate as? AppDelegate)?.conversationController }
-  func sceneWillResignActive(_ scene: UIScene) { controller?.stop() }
-  func sceneDidBecomeActive(_ scene: UIScene) { controller?.permissionChanged() }
+  func sceneWillResignActive(_ scene: UIScene) { (UIApplication.shared.delegate as? AppDelegate)?.captureVisible=false; controller?.stop() }
+  func sceneDidBecomeActive(_ scene: UIScene) { (UIApplication.shared.delegate as? AppDelegate)?.captureVisible=true; controller?.permissionChanged() }
   func sceneDidDisconnect(_ scene: UIScene) { controller?.stop() }
 
   func scene(

@@ -8,10 +8,14 @@ public enum ControllerEvent: CaseIterable, Sendable {
 /// Effects are synchronous/nonblocking/idempotent. Async callbacks return through the controller.
 public protocol ControllerEffects: AnyObject {
   func startCapture() throws -> Bool
+  func beginCapture(completion: @escaping (Bool) -> Void, failure: @escaping () -> Void) throws
   func playClause(_ clause: String) throws
   func cancelWork() throws
   func releaseCapture() throws
   func clearVolatileContext() throws
+}
+public extension ControllerEffects {
+  func beginCapture(completion: @escaping (Bool) -> Void, failure: @escaping () -> Void) throws { completion(try startCapture()) }
 }
 public final class NoopControllerEffects: ControllerEffects {
   public init() {}
@@ -50,6 +54,8 @@ public final class NativeController: @unchecked Sendable {
   public func modelsChanged() { lock.lock();defer { lock.unlock() };if modelStatus != .ready { stop();if currentState == .stopped { currentState = .setup } } else if currentState == .setup { currentState = .stopped } }
   var stopping=false
   var startIntent: UUID?
+  var capturePending=false
+  var captureIntent: UUID?
   var permissionPrompted=false
   func permissionGranted() -> Bool { permission.status() == .granted }
   public func permissionChanged() { lock.lock(); defer { lock.unlock() }; if !permissionGranted() { stop() } }
@@ -69,16 +75,30 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult func completeStart(_ intent: UUID, _ result: MicrophonePermission) -> Bool {
     lock.lock(); defer { lock.unlock() }
-    guard startIntent == intent, !locked else { return false }
-    startIntent=nil
+    guard startIntent == intent, !capturePending, !locked else { return false }
     guard modelStatus == .ready else { modelsChanged();return false }
-    guard result == .granted, permissionGranted() else { currentState = .permissionRequired; currentError=nil; return false }
-    let beforeGeneration=generation, beforeEpoch=privacyEpoch
+    guard result == .granted, permissionGranted() else { startIntent=nil; currentState = .permissionRequired; currentError=nil; return false }
+    capturePending=true
+    let immediate=CaptureCompletionResult()
     do {
-      guard try effects.startCapture() else { stop(); currentState = .error; currentError = .unavailable; return false }
-      guard generation == beforeGeneration, privacyEpoch == beforeEpoch, [.stopped,.permissionRequired,.paused].contains(currentState), permissionGranted(), modelStatus == .ready else { stop(); return false }
-      issueGeneration(); currentState = .standby; currentError=nil; return true
-    } catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.capture,.unexpected,.error); return false }
+      try effects.beginCapture(completion: { [weak self] opened in immediate.set(self?.finishCapture(intent,opened) ?? false) }, failure: { [weak self] in self?.captureFailed(intent) })
+      return immediate.get() ?? true
+    } catch { captureFailed(intent); return false }
+  }
+  func finishCapture(_ intent: UUID, _ opened: Bool) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    guard startIntent == intent, capturePending else { return false }
+    guard opened, !locked, [.stopped,.permissionRequired,.paused].contains(currentState), permissionGranted(), modelStatus == .ready else {
+      stop(); if !opened { currentState = .error; currentError = .unavailable }; return false
+    }
+    guard startIntent == intent, capturePending else { return false }
+    startIntent=nil; capturePending=false; captureIntent=intent
+    issueGeneration(); currentState = .standby; currentError=nil; return true
+  }
+  func captureFailed(_ intent: UUID) {
+    lock.lock(); defer { lock.unlock() }
+    guard startIntent == intent || captureIntent == intent else { return }
+    stop(); currentState = .error; currentError = .unavailable; diagnostics.record(.capture,.unavailable,.error)
   }
   let clock: any NativeClock
   let scheduler: any IdleScheduler
@@ -214,7 +234,7 @@ public final class NativeController: @unchecked Sendable {
     lock.lock(); defer { lock.unlock() }
     if stopping { return true }
     stopping=true; defer { stopping=false }
-    startIntent=nil
+    startIntent=nil; capturePending=false; captureIntent=nil
     clearIdle(); hasConversation=false
     invalidateGeneration()
     currentState = .stopped; currentError = nil
@@ -240,4 +260,10 @@ public final class NativeController: @unchecked Sendable {
     case .resume: return state == .paused ? .standby : nil
     }
   }
+}
+
+private final class CaptureCompletionResult {
+  private let lock=NSLock(); private var value: Bool?
+  func set(_ value: Bool) { lock.lock();defer { lock.unlock() };self.value=value }
+  func get() -> Bool? { lock.lock();defer { lock.unlock() };return value }
 }

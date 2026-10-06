@@ -1,11 +1,11 @@
-<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Current supplied AGENTS.md retains a review checkpoint after one dependency-ready task. No deployment or paid services. -->
+<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Gemju Sherpa subsequently authorized continuing all remaining S04 tasks before sprint review. No deployment or paid services. -->
 # Eilo — Small-Task Execution and Review
 
 Version 1.0 | 5 October 2026
 
 ## Latest Gemju Sherpa workflow
 
-Gemju Sherpa verified S03 and authorized S04 with Git commands, task branches, commits, pushes and PRs. Use sprint/s04-guest-audio as the root and one branch per task. Merge tested task branches into the sprint branch before any main merge. The latest supplied AGENTS.md retains a review checkpoint after one small dependency-ready task. Stop at that checkpoint; main integration follows completion of the reviewed sprint. No provisioning or release action is authorized.
+Gemju Sherpa verified S03 and authorized S04 with Git commands, task branches, commits, pushes and PRs. Use sprint/s04-guest-audio as the root and one branch per task. Merge tested task branches into the sprint branch before any main merge. Gemju Sherpa subsequently requested continuing the remaining S04 tasks before the sprint review. Main integration follows completion of the tested sprint. No provisioning or release action is authorized.
 
 ## This is a plan, not execution permission
 S01 is merged; S02 and S03 are approved by Gemju Sherpa. S03's distribution-hosting privacy gate remains blocked: review approval does not establish infrastructure evidence. S04 is selected. All detailed baseline IDs/dependencies remain authoritative. Do not renumber tasks or execute this entire document in one turn.

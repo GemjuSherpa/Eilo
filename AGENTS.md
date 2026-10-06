@@ -1,11 +1,11 @@
-<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Current supplied AGENTS.md retains a review checkpoint after one dependency-ready task. No deployment or paid services. -->
+<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Gemju Sherpa subsequently authorized continuing all remaining S04 tasks before sprint review. No deployment or paid services. -->
 # Eilo App — Agent Entry Point
 
 Read PRD.md, ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, ai-instructions.md and EXECUTION_PLAN.md before acting. Eilo_Codex_Knowledge_Transfer contains the complete current project source package and stable task tracker. Eilo_Codex_Knowledge_Handoff.md records conversation decisions and history boundaries.
 
 Gemju Sherpa authorizes the explicitly selected sprint (currently S04) for local implementation and testing. Before each authorized sprint, create a separate branch. Complete dependency-ready tasks within that sprint, record truthful tests/evidence, then STOP for review. Do not start another sprint, provision services, deploy or publish without further authorization.
 
-Work in small dependency-ready changes with immediate relevant lint/compiler checks and meaningful tests. The latest supplied AGENTS.md requires one small dependency-ready task, relevant checks and evidence, then STOP for review before further work. Gemju Sherpa’s latest S04 authorization permits scoped Git commands: create the root sprint branch and one branch per task, merge task branches into the sprint branch before any main merge. Tests do not imply approval from Gemju Sherpa.
+Work in small dependency-ready changes with immediate relevant lint/compiler checks and meaningful tests. Gemju Sherpa’s latest request authorizes continuing all remaining S04 tasks, with immediate relevant checks and a review checkpoint after the sprint. Gemju Sherpa’s latest S04 authorization permits scoped Git commands: create the root sprint branch and one branch per task, merge task branches into the sprint branch before any main merge. Tests do not imply approval from Gemju Sherpa.
 
 Outside the explicitly authorized workflow/S04 work, do not stage, commit, push or merge. Never rewrite history or tag a release without separate authorization. Preserve their existing changes. Read-only diff/status/log is permitted.
 
