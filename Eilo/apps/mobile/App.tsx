@@ -312,6 +312,22 @@ export default function App({
                             Changes reply gain only. Spoken replies become
                             available in a later sprint.
                           </Text>
+                          <Action
+                            colors={colors}
+                            label="Use a private session"
+                            disabled={busy || !snapshot}
+                            onPress={() => run('privateSession', 'true')}
+                          />
+                          <Text
+                            style={[
+                              textStyles.body,
+                              { color: colors.secondary_text },
+                            ]}
+                          >
+                            Private sessions do not save conversation history.
+                            Earlier history is preserved. Saved history is not
+                            available yet.
+                          </Text>
                         </ScrollView>
                       </SafeAreaView>
                     )}

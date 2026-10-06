@@ -25,7 +25,8 @@ export type ControlCommand =
   | 'history'
   | 'completeOnboarding'
   | 'background'
-  | 'volume';
+  | 'volume'
+  | 'privateSession';
 export interface ControlClient {
   snapshot(): Promise<ControlSnapshot>;
   command(name: ControlCommand, value?: string): Promise<ControlSnapshot>;

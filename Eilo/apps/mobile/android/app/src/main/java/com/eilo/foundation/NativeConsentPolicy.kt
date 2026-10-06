@@ -16,6 +16,10 @@ class NativeConsentPolicy(private val persistence:ConsentPersistence,private val
  }
  @Synchronized fun completeOnboarding():Boolean = record.historyChoice!=HistoryChoice.NONE && save(record.copy(disclosureVersion=1))
  @Synchronized fun canStart()=record.disclosureVersion==1 && record.historyChoice!=HistoryChoice.NONE && (record.historyChoice==HistoryChoice.PRIVATE || privateExplicit || (historyAvailable() && !privateMode))
+ @Synchronized fun choosePrivateSession(enabled:Boolean):Boolean {
+  if(!enabled) return false // Protected history and its authentication are not available yet.
+  privateMode=true;privateExplicit=true;return true
+ }
  @Synchronized fun chooseVolume(volume:Int):Boolean = volume in 0..100 && save(record.copy(volume=volume))
  @Synchronized fun chooseBackground(enabled:Boolean,authenticated:Boolean):Boolean {
   if(enabled && (!authenticated || record.disclosureVersion!=1 || record.historyChoice==HistoryChoice.NONE)) return false
