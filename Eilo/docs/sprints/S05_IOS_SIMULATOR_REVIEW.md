@@ -32,3 +32,13 @@ python3 scripts/verify-ios-launch.py --udid YOUR_BOOTED_SIMULATOR_UUID
 The script checks only the Eilo app, performs three fresh launches by default, waits five seconds each and verifies each launched PID is still present. It never erases/uninstalls the app or changes consent. It deliberately leaves Eilo running. Use `xcrun simctl list devices booted` to find the UUID. To check module teardown/reinitialization in development, issue one `POST http://localhost:8081/reload` against Eilo's running Metro server and verify the app remains open.
 
 Review scope: event-emitter startup/teardown crash fix and reproducible launch check. Main merge awaits Gemju Sherpa review. The unrelated S02_REVIEW.md change is preserved.
+
+## Follow-up: reliable launch verification
+
+Task branch `task/s05-ios-launch-verification` continues the same simulator-fix sprint and PR #27 under VC-CTRL-08 (F15/A14). Python optimization previously removed both runtime assertions; an unbooted device or missing launched PID could bypass the checks. Replace assertions with explicit failures, validate the Eilo launch response/PID, and bound each simctl command to 30 seconds. Safe failure output excludes captured device diagnostics. Importing the script no longer parses arguments or accesses a simulator.
+
+Five synthetic regression tests cover surviving/exited/replaced processes, unavailable devices, malformed launch responses and command deadlines. They pass under normal Python and `python3 -O`; the existing hosted JavaScript job now runs both modes without simulator access.
+
+Before this follow-up commit: unsigned Debug Xcode build PASS on the same iPhone 18 Pro / iOS 27.0 simulator. Installed that build, verified Metro responds, and ran `python3 -O scripts/verify-ios-launch.py --udid E01AE333-A393-48F6-AAD7-579F0A5DB1F8 --dwell 10`: all three fresh launches PASS after ten seconds each. Screenshot shows Home, Guest, stopped, and the expected model-setup gate. Optimized-mode invocation with an unavailable synthetic UUID exits 1 and emits no PASS. Python compilation and diff checks PASS. No physical/audio/conversation acceptance is established; Release evidence above belongs to the previous startup correction, and was not rerun for this Python-only follow-up. Hosted checks await the updated sprint push.
+
+Review the updated PR #27. Wake recognition and VC-TURN-03 remain blocked by the acoustic and integration gates recorded in the S05 runtime review.

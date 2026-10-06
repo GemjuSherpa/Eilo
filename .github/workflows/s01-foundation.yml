@@ -29,6 +29,10 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+      - name: Simulator verifier regression tests (synthetic)
+        run: |
+          python3 scripts/test_verify_ios_launch.py
+          python3 -O scripts/test_verify_ios_launch.py
   android:
     if: github.event.repository.private == false
     runs-on: ubuntu-24.04
