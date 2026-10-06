@@ -88,6 +88,14 @@ class ForegroundCaptureTest {
         assertTrue(started); assertTrue(failed); assertEquals(1,d.starts); assertEquals(1,d.closes)
         assertTrue(buffer!!.all { it==0.toShort() }); capture.releaseCapture(); assertEquals(1,d.closes)
     }
+    @Test fun serviceLifecycleOnlyActivatesFromEligibleStartAndStopsOnFailure() {
+        val w=QueuedWorker();val d=DeviceSpy();var activated=0;var deactivated=0
+        lateinit var capture:ForegroundCapture
+        capture=ForegroundCapture(w,{true},{d},{activated++},{deactivated++})
+        assertEquals(0,activated)
+        capture.beginCapture({assertTrue(it)},{capture.releaseCapture()});w.next()
+        assertEquals(1,activated);assertEquals(1,deactivated);assertEquals(1,d.closes)
+    }
     @Test fun constructionFailureIsGenericAndNeverReportsStarted() {
         val w=QueuedWorker(); val capture=ForegroundCapture(w,{true},{throw SecurityException()})
         var started=false; var failed=false
