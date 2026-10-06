@@ -58,7 +58,7 @@
       "source": "MVP Spec v1.0"
     },
     "F07": {
-      "text": "The companion responds supportively to expressed feelings without claiming to diagnose emotions or reliably infer a person\u2019s mental state from their voice.",
+      "text": "The companion responds supportively to expressed feelings without claiming to diagnose emotions or reliably infer a person’s mental state from their voice.",
       "source": "MVP Spec v1.0"
     },
     "F08": {
@@ -214,27 +214,27 @@
       "source": "MVP Spec v1.0"
     },
     "N01": {
-      "text": "Meaningful reply audio: median \u22641.5s and p95 \u22643s, measured from annotated end of speech, including endpoint detection; filler excluded.",
+      "text": "Meaningful reply audio: median ≤1.5s and p95 ≤3s, measured from annotated end of speech, including endpoint detection; filler excluded.",
       "source": "Spec v1.0 provisional performance targets / Architecture v1.0 approved planning targets",
       "status": "target, not measured"
     },
     "N02": {
-      "text": "Interruption stops playback p95 \u2264300ms from intelligible speech onset.",
+      "text": "Interruption stops playback p95 ≤300ms from intelligible speech onset.",
       "source": "Spec v1.0 provisional performance targets / Architecture v1.0 approved planning targets",
       "status": "target, not measured"
     },
     "N03": {
-      "text": "Wake detection \u226595% in frozen quiet set; \u22641 false activation per 8h agreed ambient set.",
+      "text": "Wake detection ≥95% in frozen quiet set; ≤1 false activation per 8h agreed ambient set.",
       "source": "Spec v1.0 provisional performance targets / Architecture v1.0 approved planning targets",
       "status": "target, not measured"
     },
     "N04": {
-      "text": "ASR WER \u226410% agreed English set; report accents/names/numbers/noise separately.",
+      "text": "ASR WER ≤10% agreed English set; report accents/names/numbers/noise separately.",
       "source": "Spec v1.0 provisional performance targets / Architecture v1.0 approved planning targets",
       "status": "target, not measured"
     },
     "N05": {
-      "text": "Human conversation rubric \u226590% acceptable across 100 frozen multi-turn conversations; safety/privacy separate gates.",
+      "text": "Human conversation rubric ≥90% acceptable across 100 frozen multi-turn conversations; safety/privacy separate gates.",
       "source": "Spec v1.0 provisional performance targets / Architecture v1.0 approved planning targets",
       "status": "target, not measured"
     },
@@ -249,17 +249,17 @@
       "status": "target, not measured"
     },
     "N08": {
-      "text": "Approved planning budgets: standby \u22642 battery percentage points/h; active \u226415 points/h; app peak RSS <2.5GB; generic model pack <2GB.",
+      "text": "Approved planning budgets: standby ≤2 battery percentage points/h; active ≤15 points/h; app peak RSS <2.5GB; generic model pack <2GB.",
       "source": "Spec v1.0 provisional performance targets / Architecture v1.0 approved planning targets",
       "status": "target, not measured"
     },
     "N09": {
-      "text": "Bounded working context 4096 tokens, retrieved memory \u2264512 tokens, normal reply \u2264256 generated tokens; continuation bounded.",
+      "text": "Bounded working context 4096 tokens, retrieved memory ≤512 tokens, normal reply ≤256 generated tokens; continuation bounded.",
       "source": "Spec v1.0 provisional performance targets / Architecture v1.0 approved planning targets",
       "status": "target, not measured"
     },
     "N10": {
-      "text": "Personal store \u2264250,000,000 bytes incl inbox/journals/indexes; 90day default retention; proposed warning at80%; no silent mode switch/deletion outside selected policy.",
+      "text": "Personal store ≤250,000,000 bytes incl inbox/journals/indexes; 90day default retention; proposed warning at80%; no silent mode switch/deletion outside selected policy.",
       "source": "Spec v1.0 provisional performance targets / Architecture v1.0 approved planning targets",
       "status": "target, not measured"
     },
@@ -1508,9 +1508,9 @@
       "implementation_status": "implemented",
       "verification_status": "pass",
       "evidence": [
-        "planning/PROJECT_SCAFFOLD_REVIEW.md \u2014 local scaffold baseline only; native launch acceptance pending",
-        "planning/PROJECT_SCAFFOLD_REVIEW.md \u2014 native debug builds and simulator sample launches passed; full task acceptance remains partial",
-        "Eilo/docs/sprints/S01_REVIEW.md \u2014 scoped local results; unresolved matrix/hosted-CI gates explicit"
+        "planning/PROJECT_SCAFFOLD_REVIEW.md — local scaffold baseline only; native launch acceptance pending",
+        "planning/PROJECT_SCAFFOLD_REVIEW.md — native debug builds and simulator sample launches passed; full task acceptance remains partial",
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
       "branch": "sprint/s01-foundation",
@@ -1536,9 +1536,9 @@
       "implementation_status": "implemented",
       "verification_status": "pass",
       "evidence": [
-        "planning/PROJECT_SCAFFOLD_REVIEW.md \u2014 local scaffold baseline only; native launch acceptance pending",
-        "planning/PROJECT_SCAFFOLD_REVIEW.md \u2014 native debug builds and simulator sample launches passed; full task acceptance remains partial",
-        "Eilo/docs/sprints/S01_REVIEW.md \u2014 scoped local results; unresolved matrix/hosted-CI gates explicit"
+        "planning/PROJECT_SCAFFOLD_REVIEW.md — local scaffold baseline only; native launch acceptance pending",
+        "planning/PROJECT_SCAFFOLD_REVIEW.md — native debug builds and simulator sample launches passed; full task acceptance remains partial",
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
       "branch": "sprint/s01-foundation",
@@ -1564,7 +1564,7 @@
       "implementation_status": "implemented",
       "verification_status": "pass",
       "evidence": [
-        "Eilo/docs/sprints/S01_REVIEW.md \u2014 scoped local results; unresolved matrix/hosted-CI gates explicit"
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
       "branch": "sprint/s01-foundation",
@@ -1592,7 +1592,7 @@
       "implementation_status": "implemented",
       "verification_status": "pass",
       "evidence": [
-        "Eilo/docs/sprints/S01_REVIEW.md \u2014 scoped local results; unresolved matrix/hosted-CI gates explicit"
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
       "branch": "sprint/s01-foundation",
@@ -1616,17 +1616,23 @@
       "scope": "native controller",
       "acceptance_criterion": "Declared events produce one authoritative setup/stopped/standby/capturing/thinking/speaking/paused/error state.",
       "focused_test": "Table-driven valid/invalid transition tests with fake adapters.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Native deterministic transition tables; 99 state/event pairs per platform plus synthetic turn/failure checks. Kotlin compile/JUnit5 and Swift compile/XCTest5 pass. Capturing maps to existing listening wire state."
+        "Eilo/docs/sprints/S02_REVIEW.md — Native deterministic transition tables; 99 state/event pairs per platform plus synthetic turn/failure checks. Kotlin compile/JUnit5 and Swift compile/XCTest5 pass. Capturing maps to existing listening wire state.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-ctrl-01",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1646,17 +1652,23 @@
       "scope": "native controller",
       "acceptance_criterion": "Stop cancels work, releases capture and clears volatile context without deleting committed history.",
       "focused_test": "Stop in every active state; delayed adapter completion cannot resume capture/output.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Final Stop regression: cleanup cannot reentrantly Start or recurse Stop; cancellation callbacks remain invalid. Kotlin compile/JUnit26 and Swift compile/XCTest26 pass. Original task branch task/s02-vc-ctrl-02 was merged first."
+        "Eilo/docs/sprints/S02_REVIEW.md — Final Stop regression: cleanup cannot reentrantly Start or recurse Stop; cancellation callbacks remain invalid. Kotlin compile/JUnit26 and Swift compile/XCTest26 pass. Original task branch task/s02-vc-ctrl-02 was merged first.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-ctrl-02-review",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1676,17 +1688,23 @@
       "scope": "native controller",
       "acceptance_criterion": "An invalidated generation cannot enqueue or play later audio.",
       "focused_test": "Deliver old tokens/audio after cancellation; output sink remains empty.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Opaque native operation tokens invalidate old callbacks/audio across cancellation, Stop, new turns and controller instances. Reentrant Stop cannot restore speaking. Kotlin compile/JUnit10 and Swift compile/XCTest10 pass."
+        "Eilo/docs/sprints/S02_REVIEW.md — Opaque native operation tokens invalidate old callbacks/audio across cancellation, Stop, new turns and controller instances. Reentrant Stop cannot restore speaking. Kotlin compile/JUnit10 and Swift compile/XCTest10 pass.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-ctrl-03",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1706,17 +1724,23 @@
       "scope": "native controller",
       "acceptance_criterion": "Stale operations cannot emit private output or commit data after policy invalidation.",
       "focused_test": "Race fake completion against lock/private/Stop epochs; reject stale reads/writes/output.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Privacy epochs cancel work on lock/private/identity/reset transitions. Native guarded read/write/display effects deny stale callbacks and default memory access. Thread-delayed lock races, Kotlin compile/JUnit13 and Swift compile/XCTest13 pass."
+        "Eilo/docs/sprints/S02_REVIEW.md — Privacy epochs cancel work on lock/private/identity/reset transitions. Native guarded read/write/display effects deny stale callbacks and default memory access. Thread-delayed lock races, Kotlin compile/JUnit13 and Swift compile/XCTest13 pass.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-ctrl-04",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1736,17 +1760,23 @@
       "scope": "native controller",
       "acceptance_criterion": "After60s with no speech/processing/playback, session context clears and state returns to standby.",
       "focused_test": "Fake-clock test; processing and playback defer timer; finishing playback starts timer.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Native monotonic 60-second idle timer starts after playback, suspends while capturing/thinking/speaking and rejects stale timers. Context expiry preserves capture. Kotlin compile/JUnit15 and Swift compile/XCTest15 pass."
+        "Eilo/docs/sprints/S02_REVIEW.md — Native monotonic 60-second idle timer starts after playback, suspends while capturing/thinking/speaking and rejects stale timers. Context expiry preserves capture. Kotlin compile/JUnit15 and Swift compile/XCTest15 pass.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-ctrl-05",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1765,17 +1795,23 @@
       "scope": "deterministic active command",
       "acceptance_criterion": "End conversation clears active context and returns to standby while keeping explicitly enabled capture.",
       "focused_test": "Active command test distinguishes end-conversation from Stop.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 End conversation invalidates pending output and clears active context while preserving enabled capture; cannot restart stopped/paused state. Kotlin compile/JUnit16 and Swift compile/XCTest16 pass."
+        "Eilo/docs/sprints/S02_REVIEW.md — End conversation invalidates pending output and clears active context while preserving enabled capture; cannot restart stopped/paused state. Kotlin compile/JUnit16 and Swift compile/XCTest16 pass.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-ctrl-06",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1794,17 +1830,23 @@
       "scope": "deterministic active command",
       "acceptance_criterion": "Recognized stop listening invokes the same Stop transaction; no model/tool action required.",
       "focused_test": "Inject recognized command; capture releases even if model adapter fails.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Native recognized stop listening routes directly to the same Stop transaction without a model call. Exact bounded command matching rejects stale recognition. Kotlin compile/JUnit18 and Swift compile/XCTest18 pass."
+        "Eilo/docs/sprints/S02_REVIEW.md — Native recognized stop listening routes directly to the same Stop transaction without a model call. Exact bounded command matching rejects stale recognition. Kotlin compile/JUnit18 and Swift compile/XCTest18 pass.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-ctrl-07",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1823,17 +1865,23 @@
       "scope": "native persistence boundary",
       "acceptance_criterion": "Every process launch begins stopped; restored settings never resume microphone capture.",
       "focused_test": "Relaunch with prior listening preference and simulate reboot/restore; capture count stays zero.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Process-owned controller always starts stopped; no settings restoration invokes capture. Android activity binding and iOS protected-data/scene callbacks stop work. Opaque metadata snapshots and fresh-process tests pass (Kotlin JUnit25, Swift XCTest25); integrated unsigned iOS Release build passes."
+        "Eilo/docs/sprints/S02_REVIEW.md — Process-owned controller always starts stopped; no settings restoration invokes capture. Android activity binding and iOS protected-data/scene callbacks stop work. Opaque metadata snapshots and fresh-process tests pass (Kotlin JUnit25, Swift XCTest25); integrated unsigned iOS Release build passes.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-ctrl-08",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1939,17 +1987,23 @@
       "scope": "Android permission adapter",
       "acceptance_criterion": "Capture is impossible before user Start plus granted permission; denial does not loop prompts.",
       "focused_test": "Permission fake covers not-requested/denied/granted/revoked; capture spy.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Android OS permission adapter and native capture gate require explicit Start plus current permission. Denial does not loop; delayed/duplicate grants, revocation and reentrant Stop fail closed. Kotlin compile/JUnit23 pass; physical prompt/permission tests not run."
+        "Eilo/docs/sprints/S02_REVIEW.md — Android OS permission adapter and native capture gate require explicit Start plus current permission. Denial does not loop; delayed/duplicate grants, revocation and reentrant Stop fail closed. Kotlin compile/JUnit23 pass; physical prompt/permission tests not run.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-set-04",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -1969,17 +2023,23 @@
       "scope": "iOS permission adapter",
       "acceptance_criterion": "Capture is impossible before user Start plus granted permission; denial does not loop prompts.",
       "focused_test": "Same permission matrix against iOS adapter; denial leaves settings usable.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 iOS AVAudioApplication permission adapter (AVAudioSession fallback) compiles against installed iOS SDK. Native gate matches Android matrix and stale-grant/revocation tests. Swift compile/XCTest23 and Kotlin compile/JUnit23 pass; physical iOS prompts not run."
+        "Eilo/docs/sprints/S02_REVIEW.md — iOS AVAudioApplication permission adapter (AVAudioSession fallback) compiles against installed iOS SDK. Native gate matches Android matrix and stale-grant/revocation tests. Swift compile/XCTest23 and Kotlin compile/JUnit23 pass; physical iOS prompts not run.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-set-05",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -2924,7 +2984,7 @@
         "VC-LLM-02"
       ],
       "scope": "native prompt builder",
-      "acceptance_criterion": "4096-token context,\u2264512 recalled tokens and normal\u2264256 output tokens are enforced deterministically.",
+      "acceptance_criterion": "4096-token context,≤512 recalled tokens and normal≤256 output tokens are enforced deterministically.",
       "focused_test": "Token-count fixtures exceed limits; explicit trim policy preserves rules/latest utterance.",
       "status": "planned",
       "approval_status": "not_requested",
@@ -4023,17 +4083,23 @@
       "scope": "native diagnostics",
       "acceptance_criterion": "Only bounded volatile state/error/resource codes exist; no transcript/prompt/keys or uploaded logs.",
       "focused_test": "Synthetic markers across errors/crash paths and sinks; no content or persistent behavioral trail.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_human_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Bounded volatile typed diagnostics; Swift compiler/XCTest3 and Kotlin compiler/JUnit3 pass. No content, persistent log or upload sink."
+        "Eilo/docs/sprints/S02_REVIEW.md — Bounded volatile typed diagnostics; Swift compiler/XCTest3 and Kotlin compiler/JUnit3 pass. No content, persistent log or upload sink.",
+        {
+          "type": "review_approval",
+          "reviewer": "Gemju Sherpa",
+          "date": "2026-10-06",
+          "notes": "S02 approved in conversation; physical/later-integration limitations remain."
+        }
       ],
       "owner": null,
       "branch": "task/s02-vc-lock-07",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
       "next_action": "Review S02 evidence; no release assurance inferred.",
       "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
@@ -4158,7 +4224,7 @@
         "VC-MEM-02"
       ],
       "scope": "human evaluation",
-      "acceptance_criterion": "100 frozen synthetic conversations score relevance/continuity/clarity/tone;\u226590% acceptable target, safety/privacy independent.",
+      "acceptance_criterion": "100 frozen synthetic conversations score relevance/continuity/clarity/tone;≥90% acceptable target, safety/privacy independent.",
       "focused_test": "Human rubric results with sample counts; failures become narrow fix tasks.",
       "status": "planned",
       "approval_status": "not_requested",
@@ -4190,7 +4256,7 @@
       ],
       "scope": "integration seam",
       "acceptance_criterion": "Activated input yields a spoken local reply using real adapters, with no persistent history.",
-      "focused_test": "Synthetic wake/question\u2192reply in airplane mode; trace stage errors and egress.",
+      "focused_test": "Synthetic wake/question→reply in airplane mode; trace stage errors and egress.",
       "status": "planned",
       "approval_status": "not_requested",
       "implementation_status": "not_started",
@@ -4345,7 +4411,7 @@
       "implementation_status": "partial",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S01_REVIEW.md \u2014 scoped local results; unresolved matrix/hosted-CI gates explicit"
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
       "branch": "sprint/s01-foundation",
@@ -4367,8 +4433,8 @@
         "VC-JOIN-01"
       ],
       "scope": "physical-device measurement",
-      "acceptance_criterion": "Report cold/warm complete latency including endpoint; median\u22641.5s/p95\u22643s target.",
-      "focused_test": "Annotated end-of-user-speech\u2192meaningful audio on each route/configuration; filler excluded.",
+      "acceptance_criterion": "Report cold/warm complete latency including endpoint; median≤1.5s/p95≤3s target.",
+      "focused_test": "Annotated end-of-user-speech→meaningful audio on each route/configuration; filler excluded.",
       "status": "planned",
       "approval_status": "not_requested",
       "implementation_status": "not_started",
@@ -4395,7 +4461,7 @@
         "VC-JOIN-03"
       ],
       "scope": "physical-device measurement",
-      "acceptance_criterion": "Report p95 intelligible-user-onset\u2192old-playback-stop;\u2264300ms target.",
+      "acceptance_criterion": "Report p95 intelligible-user-onset→old-playback-stop;≤300ms target.",
       "focused_test": "Repeated annotated interruptions; report misses/noise and distributions.",
       "status": "planned",
       "approval_status": "not_requested",
@@ -5923,7 +5989,7 @@
           "type": "sprint_plan",
           "artifact": "https://github.com/GemjuSherpa/Eilo/blob/main/planning/SPRINT_PLAN.md"
         },
-        "Eilo/docs/sprints/S01_REVIEW.md \u2014 scoped local results; unresolved matrix/hosted-CI gates explicit"
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit"
       ],
       "owner": null,
       "branch": "sprint/s01-foundation",
@@ -5951,7 +6017,7 @@
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S01_REVIEW.md \u2014 scoped local results; unresolved matrix/hosted-CI gates explicit",
+        "Eilo/docs/sprints/S01_REVIEW.md — scoped local results; unresolved matrix/hosted-CI gates explicit",
         "Eilo/docs/sprints/S01_WORKFLOW_REVIEW.md",
         "Hosted PR run 37302758642: all three jobs pass at 64b79de"
       ],

@@ -1,0 +1,80 @@
+{
+  "model": "Qwen/Qwen3-1.7B",
+  "model_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "llama_cpp_revision": "5e03bdd8700948b9c41c54dd1b00f28a2aebc03f",
+  "source_artifacts": [
+    {
+      "path": "LICENSE",
+      "bytes": 11343,
+      "sha256": null,
+      "git_blob": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab"
+    },
+    {
+      "path": "README.md",
+      "bytes": 13963,
+      "sha256": null,
+      "git_blob": "88aaef81cfe31bcdfe47203649a69ff12042826a"
+    },
+    {
+      "path": "config.json",
+      "bytes": 726,
+      "sha256": null,
+      "git_blob": "044a86ecf7cb32238f3fae4184e55d354787edec"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 239,
+      "sha256": null,
+      "git_blob": "20a8a9156fc8c3f25295ca067f61fdf120d517c5"
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 1671853,
+      "sha256": null,
+      "git_blob": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+    },
+    {
+      "path": "model-00001-of-00002.safetensors",
+      "bytes": 3441185608,
+      "sha256": "169ad53ec313c3a34b06c0809216e4fc072cce444a5d4ff2b59690d064130ed5",
+      "git_blob": "1414f1bda72e17b63551d847c05c68e3396ba717"
+    },
+    {
+      "path": "model-00002-of-00002.safetensors",
+      "bytes": 622329984,
+      "sha256": "912becff8d60672aa8628ef08c05898d9adf17c2ad4ae3caf99b065622fdeff9",
+      "git_blob": "4aab3b30a4b8c6c1d0437a2576e0bea08507f12c"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 25605,
+      "sha256": null,
+      "git_blob": "986d7db875b47d21f68530f6baac038f1b297b39"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 11422654,
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "git_blob": "cd71f61a15a522601badb3dc960d800d9cb3766c"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 9732,
+      "sha256": null,
+      "git_blob": "417d038a63fa3de29cfde265caedae14d1a58d92"
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 2776833,
+      "sha256": null,
+      "git_blob": "4783fe10ac3adce15ac8f358ef5462739852c569"
+    }
+  ],
+  "conversion": {
+    "outtype": "bf16",
+    "quantization": "Q4_K_M",
+    "threads": 2
+  },
+  "inclusion": "evaluation-only; no shipping pack or release signing key",
+  "runtime": "llama.cpp later in-process C++; Python build tools only"
+}
