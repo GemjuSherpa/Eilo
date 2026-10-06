@@ -6,7 +6,7 @@ class GenerationTest {
         c.dispatch(ControllerEvent.START); c.dispatch(ControllerEvent.SPEECH_DETECTED,token=c.token()); c.dispatch(ControllerEvent.ENDPOINT,token=c.token()); return c.token()!!
     }
     @Test fun oldAudioRejectedAfterCancelStopAndNewTurn() {
-        val spy=EffectsSpy(); val c=NativeController(effects=spy); val old=thinking(c)
+        val spy=EffectsSpy(); val c=testController(effects=spy); val old=thinking(c)
         c.cancelGeneration(); assertTrue(old.cancelled); assertFalse(c.releaseSpeech(old,"stale")); assertTrue(spy.clauses.isEmpty())
         c.dispatch(ControllerEvent.SPEECH_DETECTED) // no token: no new turn
         assertEquals(ControllerState.STANDBY,c.state())
@@ -15,12 +15,12 @@ class GenerationTest {
         c.stop(); assertFalse(c.releaseSpeech(fresh,"after Stop")); assertEquals(listOf("synthetic approved clause"),spy.clauses)
     }
     @Test fun reentrantStopCannotRestoreSpeaking() {
-        val spy=EffectsSpy(); val c=NativeController(effects=spy); val token=thinking(c)
+        val spy=EffectsSpy(); val c=testController(effects=spy); val token=thinking(c)
         spy.onPlay={ c.stop() }
         assertFalse(c.releaseSpeech(token,"synthetic")); assertEquals(ControllerState.STOPPED,c.state()); assertTrue(token.cancelled)
     }
     @Test fun tokenFromAnotherControllerAndUntokenedCompletionRejected() {
-        val a=NativeController(); val b=NativeController(); val token=thinking(a); thinking(b)
+        val a=testController(); val b=testController(); val token=thinking(a); thinking(b)
         assertFalse(b.releaseSpeech(token,"wrong owner")); assertFalse(b.dispatch(ControllerEvent.SPEECH_READY)); assertEquals(ControllerState.THINKING,b.state())
     }
 }

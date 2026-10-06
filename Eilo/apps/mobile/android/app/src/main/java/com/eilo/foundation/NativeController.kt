@@ -11,12 +11,14 @@ enum class ControllerEvent { SETUP_REQUIRED, READY, START, SPEECH_DETECTED, ENDP
 
 /** Effects must be synchronous, nonblocking and idempotent; async completions return through the controller. */
 interface ControllerEffects {
+    fun startCapture(): Boolean
     fun playClause(clause: String)
     fun cancelWork()
     fun releaseCapture()
     fun clearVolatileContext()
 }
 class NoopControllerEffects : ControllerEffects {
+    override fun startCapture() = false
     override fun playClause(clause: String) {}
     override fun cancelWork() {}
     override fun releaseCapture() {}
@@ -33,7 +35,38 @@ enum class PrivateEffect { READ_MEMORY, COMMIT_HISTORY, DISPLAY_PRIVATE }
 fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
-class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler()) {
+class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private val permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter()) {
+    private var startIntent: UUID? = null
+    private var permissionPrompted=false
+    private fun permissionGranted(): Boolean = try { permission.status() == MicrophonePermission.GRANTED } catch (_: Exception) { false }
+    @Synchronized fun permissionChanged() { if (!permissionGranted()) stop() }
+    @Synchronized private fun start(): Boolean {
+        if (startIntent != null || locked || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED)) return false
+        val intent=UUID.randomUUID(); startIntent=intent
+        return try {
+            when (permission.status()) {
+                MicrophonePermission.GRANTED -> completeStart(intent,MicrophonePermission.GRANTED)
+                MicrophonePermission.NOT_REQUESTED -> {
+                    if (permissionPrompted) { startIntent=null; currentState=ControllerState.PERMISSION_REQUIRED; false }
+                    else { permissionPrompted=true; currentState=ControllerState.PERMISSION_REQUIRED; permission.request { completeStart(intent,it) }; true }
+                }
+                MicrophonePermission.DENIED -> { startIntent=null; currentState=ControllerState.PERMISSION_REQUIRED; currentError=null; false }
+                MicrophonePermission.UNAVAILABLE -> { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNAVAILABLE; false }
+            }
+        } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CAPTURE,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
+    }
+    @Synchronized private fun completeStart(intent: UUID, result: MicrophonePermission): Boolean {
+        if (startIntent != intent || locked) return false
+        startIntent=null
+        if (result != MicrophonePermission.GRANTED || !permissionGranted()) { currentState=ControllerState.PERMISSION_REQUIRED; currentError=null; return false }
+        val beforeGeneration=generation; val beforeEpoch=privacyEpoch
+        return try {
+            if (!effects.startCapture()) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNAVAILABLE; return false }
+            // Stop may have been invoked reentrantly while opening the adapter.
+            if (generation != beforeGeneration || privacyEpoch != beforeEpoch || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED) || !permissionGranted()) { stop(); return false }
+            issueGeneration(); currentState=ControllerState.STANDBY; currentError=null; true
+        } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CAPTURE,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
+    }
     private var idleTask: IdleCancellation? = null
     private var idleStarted: Long? = null
     private var hasConversation = false
@@ -77,7 +110,11 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         invalidateGeneration()
         activeToken = GenerationToken(sessionId, UUID.randomUUID(), generation, privacyEpoch)
     }
-    private fun accepts(token: GenerationToken?): Boolean = token != null && token === activeToken && !token.cancelled && token.privacyEpoch == privacyEpoch
+    private fun accepts(token: GenerationToken?): Boolean {
+        if (token == null || token !== activeToken || token.cancelled || token.privacyEpoch != privacyEpoch) return false
+        if (!permissionGranted()) { stop(); return false }
+        return true
+    }
     private var currentState = ControllerState.STOPPED
     private var currentError: SafeError? = null
     @Synchronized fun state(): ControllerState = currentState
@@ -85,6 +122,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun dispatch(event: ControllerEvent, failure: SafeError = SafeError.UNEXPECTED, token: GenerationToken? = null): Boolean {
         if (locked && event in setOf(ControllerEvent.START,ControllerEvent.RESUME)) return false
         if (event == ControllerEvent.STOP) return stop()
+        if (event == ControllerEvent.START || event == ControllerEvent.RESUME) return start()
         if (event in setOf(ControllerEvent.SPEECH_DETECTED, ControllerEvent.ENDPOINT, ControllerEvent.SPEECH_READY, ControllerEvent.PLAYBACK_FINISHED, ControllerEvent.FAILURE) && !accepts(token)) return false
         val next = nextState(currentState, event) ?: return false
         if (event == ControllerEvent.START || event == ControllerEvent.SPEECH_DETECTED || event == ControllerEvent.PLAYBACK_FINISHED || event == ControllerEvent.RESUME) issueGeneration()
@@ -139,12 +177,13 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (currentState in setOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) { currentState = ControllerState.STANDBY; issueGeneration(); updateIdle() }
     }
     @Synchronized fun stop(): Boolean {
+        startIntent=null
         clearIdle(); hasConversation=false
         invalidateGeneration()
         currentState = ControllerState.STOPPED
         currentError = null
         var failed = false
-        for (cleanup in listOf(effects::cancelWork, effects::releaseCapture, effects::clearVolatileContext)) {
+        for (cleanup in listOf(permission::cancelPendingRequests,effects::cancelWork, effects::releaseCapture, effects::clearVolatileContext)) {
             try { cleanup() } catch (_: Exception) { failed = true }
         }
         diagnostics.clear()
