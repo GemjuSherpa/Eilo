@@ -9,7 +9,8 @@ final class FakePermission: MicrophonePermissionAdapter {
   func request(_ completion: @escaping (MicrophonePermission) -> Void) { requests += 1; callback=completion }
   func complete(_ result: MicrophonePermission) { value=result; callback?(result) }
 }
-func testController(diagnostics: SafeDiagnostics=SafeDiagnostics(),effects: any ControllerEffects=EffectsSpy(),privateGate: any PrivateEffectGate=DeniedPrivateEffectGate(),clock: any NativeClock=FakeTime(),scheduler: any IdleScheduler=FakeTime(),permission: any MicrophonePermissionAdapter=FakePermission()) -> NativeController { NativeController(diagnostics:diagnostics,effects:effects,privateGate:privateGate,clock:clock,scheduler:scheduler,permission:permission) }
+struct ReadyModels: ModelReadinessAdapter { func status() -> ModelStatus { .ready } }
+func testController(diagnostics: SafeDiagnostics=SafeDiagnostics(),effects: any ControllerEffects=EffectsSpy(),privateGate: any PrivateEffectGate=DeniedPrivateEffectGate(),clock: any NativeClock=FakeTime(),scheduler: any IdleScheduler=FakeTime(),permission: any MicrophonePermissionAdapter=FakePermission()) -> NativeController { NativeController(diagnostics:diagnostics,effects:effects,privateGate:privateGate,clock:clock,scheduler:scheduler,permission:permission,models:ReadyModels()) }
 final class PermissionGateTests: XCTestCase {
   func testMatrixExplicitStartAndNoDenialLoop() {
     for status in MicrophonePermission.allCases {

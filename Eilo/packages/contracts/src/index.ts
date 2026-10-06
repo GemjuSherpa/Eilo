@@ -5,6 +5,8 @@ export const controllerStates = [
 export const errorCodes = [
   'permission_denied', 'unavailable', 'timeout', 'quota', 'unexpected',
 ] as const;
+export const modelStatuses = ['ready', 'missing', 'incompatible', 'corrupt', 'incomplete', 'unsupported', 'offline_voice_missing'] as const;
+export type ModelStatus = (typeof modelStatuses)[number];
 export type ControllerState = (typeof controllerStates)[number];
 export type ErrorCode = (typeof errorCodes)[number];
 export interface StateEvent {
@@ -15,6 +17,7 @@ export interface StateEvent {
   generation: number;
   privacyEpoch: number;
   errorCode?: ErrorCode;
+  modelStatus?: ModelStatus;
 }
 const keys = ['version', 'state', 'sessionId', 'operationId', 'generation', 'privacyEpoch'];
 const opaqueId = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
@@ -28,7 +31,7 @@ export function parseStateEvent(input: unknown): StateEvent | null {
   }
   const descriptors = Object.getOwnPropertyDescriptors(input);
   const names = Reflect.ownKeys(input);
-  if (names.some(key => typeof key !== 'string' || (!keys.includes(key) && key !== 'errorCode')) ||
+  if (names.some(key => typeof key !== 'string' || (!keys.includes(key) && key !== 'errorCode' && key !== 'modelStatus')) ||
       keys.some(key => !Object.hasOwn(descriptors, key)) ||
       Object.values(descriptors).some(descriptor => !Object.hasOwn(descriptor, 'value'))) {
     return null;
@@ -40,6 +43,9 @@ export function parseStateEvent(input: unknown): StateEvent | null {
       !boundedCounter(value.generation) || !boundedCounter(value.privacyEpoch)) {
     return null;
   }
+  if (Object.hasOwn(value, 'modelStatus') && !modelStatuses.some(status => status === value.modelStatus)) {
+    return null;
+  }
   if (value.state === 'error' ? !errorCodes.some(code => code === value.errorCode) : Object.hasOwn(value, 'errorCode')) {
     return null;
   }
@@ -47,6 +53,7 @@ export function parseStateEvent(input: unknown): StateEvent | null {
     version: 1, state: value.state as ControllerState,
     sessionId: value.sessionId, operationId: value.operationId,
     generation: value.generation, privacyEpoch: value.privacyEpoch,
+    ...(Object.hasOwn(value, 'modelStatus') ? {modelStatus: value.modelStatus as ModelStatus} : {}),
     ...(value.state === 'error' ? {errorCode: value.errorCode as ErrorCode} : {}),
   };
 }

@@ -45,6 +45,9 @@ public final class NativeController: @unchecked Sendable {
   let diagnostics: SafeDiagnostics
   let effects: any ControllerEffects
   let permission: any MicrophonePermissionAdapter
+  let models: any ModelReadinessAdapter
+  public var modelStatus: ModelStatus { models.status() }
+  public func modelsChanged() { lock.lock();defer { lock.unlock() };if modelStatus != .ready { stop();if currentState == .stopped { currentState = .setup } } else if currentState == .setup { currentState = .stopped } }
   var stopping=false
   var startIntent: UUID?
   var permissionPrompted=false
@@ -52,6 +55,7 @@ public final class NativeController: @unchecked Sendable {
   public func permissionChanged() { lock.lock(); defer { lock.unlock() }; if !permissionGranted() { stop() } }
   func start() -> Bool {
     guard !stopping, startIntent == nil, !locked, [.stopped,.permissionRequired,.paused].contains(currentState) else { return false }
+    guard modelStatus == .ready else { modelsChanged();return false }
     let intent=UUID(); startIntent=intent
     switch permission.status() {
     case .granted: return completeStart(intent,.granted)
@@ -67,11 +71,12 @@ public final class NativeController: @unchecked Sendable {
     lock.lock(); defer { lock.unlock() }
     guard startIntent == intent, !locked else { return false }
     startIntent=nil
+    guard modelStatus == .ready else { modelsChanged();return false }
     guard result == .granted, permissionGranted() else { currentState = .permissionRequired; currentError=nil; return false }
     let beforeGeneration=generation, beforeEpoch=privacyEpoch
     do {
       guard try effects.startCapture() else { stop(); currentState = .error; currentError = .unavailable; return false }
-      guard generation == beforeGeneration, privacyEpoch == beforeEpoch, [.stopped,.permissionRequired,.paused].contains(currentState), permissionGranted() else { stop(); return false }
+      guard generation == beforeGeneration, privacyEpoch == beforeEpoch, [.stopped,.permissionRequired,.paused].contains(currentState), permissionGranted(), modelStatus == .ready else { stop(); return false }
       issueGeneration(); currentState = .standby; currentError=nil; return true
     } catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.capture,.unexpected,.error); return false }
   }
@@ -123,15 +128,16 @@ public final class NativeController: @unchecked Sendable {
   func accepts(_ token: GenerationToken?) -> Bool {
     guard let token, token === activeToken, !token.cancelled, token.privacyEpoch == privacyEpoch else { return false }
     guard permissionGranted() else { stop(); return false }
+    guard modelStatus == .ready else { modelsChanged();return false }
     return true
   }
   var currentState: ControllerState = .stopped
   var currentError: SafeError?
-  public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects(), privateGate: any PrivateEffectGate = DeniedPrivateEffectGate(), clock: any NativeClock = MonotonicClock(), scheduler: any IdleScheduler = NativeIdleScheduler(), permission: any MicrophonePermissionAdapter = UnavailablePermissionAdapter()) { self.diagnostics = diagnostics; self.effects = effects; self.privateGate = privateGate; self.clock=clock; self.scheduler=scheduler; self.permission=permission }
+  public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects(), privateGate: any PrivateEffectGate = DeniedPrivateEffectGate(), clock: any NativeClock = MonotonicClock(), scheduler: any IdleScheduler = NativeIdleScheduler(), permission: any MicrophonePermissionAdapter = UnavailablePermissionAdapter(), models: any ModelReadinessAdapter = MissingModelReadiness()) { self.diagnostics = diagnostics; self.effects = effects; self.privateGate = privateGate; self.clock=clock; self.scheduler=scheduler; self.permission=permission;self.models=models }
   /// Metadata only; no native content/keys/errors can enter this presentation snapshot.
   public func snapshot() -> [String: Any] {
     lock.lock(); defer { lock.unlock() }
-    var result: [String:Any] = ["version":1,"state":currentState.rawValue,"sessionId":sessionID.uuidString.lowercased(),"operationId":(activeToken?.operationID ?? stoppedOperationID).uuidString.lowercased(),"generation":generation,"privacyEpoch":privacyEpoch]
+    var result: [String:Any] = ["modelStatus":modelStatus.rawValue,"version":1,"state":currentState.rawValue,"sessionId":sessionID.uuidString.lowercased(),"operationId":(activeToken?.operationID ?? stoppedOperationID).uuidString.lowercased(),"generation":generation,"privacyEpoch":privacyEpoch]
     if currentState == .error { result["errorCode"] = currentError == .permissionDenied ? "permission_denied" : (currentError ?? .unexpected).rawValue }
     return result
   }

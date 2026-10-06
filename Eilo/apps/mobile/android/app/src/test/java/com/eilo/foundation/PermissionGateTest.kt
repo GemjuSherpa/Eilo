@@ -7,7 +7,7 @@ internal class FakePermission(var value: MicrophonePermission = MicrophonePermis
     override fun request(completion: (MicrophonePermission) -> Unit) { requests++; callback=completion }
     fun complete(value: MicrophonePermission) { this.value=value; callback?.invoke(value) }
 }
-internal fun testController(diagnostics: SafeDiagnostics=SafeDiagnostics(),effects: ControllerEffects=EffectsSpy(),privateGate: PrivateEffectGate=PrivateEffectGate { false },clock: NativeClock=FakeTime(),scheduler: IdleScheduler=FakeTime(),permission: MicrophonePermissionAdapter=FakePermission()) = NativeController(diagnostics,effects,privateGate,clock,scheduler,permission)
+internal fun testController(diagnostics: SafeDiagnostics=SafeDiagnostics(),effects: ControllerEffects=EffectsSpy(),privateGate: PrivateEffectGate=PrivateEffectGate { false },clock: NativeClock=FakeTime(),scheduler: IdleScheduler=FakeTime(),permission: MicrophonePermissionAdapter=FakePermission()) = NativeController(diagnostics,effects,privateGate,clock,scheduler,permission,ModelReadinessAdapter { ModelStatus.READY })
 class PermissionGateTest {
     @Test fun matrixRequiresExplicitStartAndDenialDoesNotLoop() {
         for (status in MicrophonePermission.entries) {

@@ -23,9 +23,11 @@ public struct PackManifest: Equatable, Sendable {
     try check(raw.range(of:#"^(?:[{}\[\]:,]|"[\x20-\x21\x23-\x5b\x5d-\x7e]*"|[0-9]+|[ \t\r\n])+$"#,options:.regularExpression) != nil && raw.range(of:",\\s*[}\\]]",options:.regularExpression)==nil)
     try check(Set(o.keys)==header && number(o,"schema")==1)
     let id=try text(o,"packId"), revision=try number(o,"revision"), rr=try text(o,"runtimeRevision")
-    try check(matches(id,"[a-z0-9][a-z0-9-]{0,63}") && (1...9007199254740991).contains(revision) && matches(rr,"[a-f0-9]{40}") && rr==runtime)
+    try check(matches(id,"[a-z0-9][a-z0-9-]{0,63}") && (1...9007199254740991).contains(revision) && matches(rr,"[a-f0-9]{40}"))
+    if rr != runtime { throw PackFailure.incompatible }
     let a=try number(o,"minAndroid"), i=try number(o,"minIos")
-    try check((35...99).contains(a) && i >= 18 && i <= Int64(ios))
+    try check((35...99).contains(a) && (18...99).contains(i))
+    if i>Int64(ios) { throw PackFailure.incompatible }
     guard let files=o["artifacts"] as? [[String:Any]] else { throw PackFailure.manifest }; try check((1...16).contains(files.count))
     let artifacts=try files.map { f -> PackArtifact in
       try check(Set(f.keys)==fields)
@@ -44,4 +46,4 @@ public struct PackManifest: Equatable, Sendable {
     return PackManifest(packID:id,runtimeRevision:rr,revision:revision,minAndroid:Int(a),minIOS:Int(i),artifacts:artifacts)
   }
 }
-public enum PackFailure: Error { case manifest, signature, origin, transport, cancelled, integrity, activation, unavailable }
+public enum PackFailure: Error { case incompatible, manifest, signature, origin, transport, cancelled, integrity, activation, unavailable }
