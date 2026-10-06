@@ -96,6 +96,15 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (next == ControllerState.ERROR) diagnostics.record(SafeComponent.CONTROLLER, failure, SafeSeverity.ERROR)
         return true
     }
+    /** Recognized native command only; raw ASR text is neither retained nor bridged. */
+    @Synchronized fun recognizedCommand(text: String, token: GenerationToken): Boolean {
+        if (!accepts(token) || text.length > 64 || currentState !in setOf(ControllerState.STANDBY,ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) return false
+        return when (text.trim().lowercase(java.util.Locale.ROOT)) {
+            "stop listening" -> stop()
+            "end conversation" -> endConversation()
+            else -> false
+        }
+    }
     @Synchronized fun endConversation(): Boolean {
         if (currentState !in setOf(ControllerState.STANDBY,ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) return false
         return endSessionPreservingCapture()

@@ -105,6 +105,16 @@ public final class NativeController: @unchecked Sendable {
     if next == .error { diagnostics.record(.controller, failure, .error) }
     return true
   }
+  /// Native ASR input is consumed synchronously, never retained/bridged/logged.
+  @discardableResult public func recognizedCommand(_ text: String, token: GenerationToken) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    guard accepts(token), text.utf8.count <= 64, [.standby,.capturing,.thinking,.speaking].contains(currentState) else { return false }
+    switch text.trimmingCharacters(in:.whitespacesAndNewlines).lowercased() {
+    case "stop listening": return stop()
+    case "end conversation": return endConversation()
+    default: return false
+    }
+  }
   @discardableResult public func endConversation() -> Bool {
     lock.lock(); defer { lock.unlock() }
     guard [.standby,.capturing,.thinking,.speaking].contains(currentState) else { return false }

@@ -17,3 +17,5 @@ Native Kotlin/Swift controller work is separate from real capture/ASR/model/TTS/
 - VC-CTRL-05 (task/s02-vc-ctrl-05): Native monotonic 60-second idle timer starts after playback, suspends while capturing/thinking/speaking and rejects stale timers. Context expiry preserves capture. Kotlin compile/JUnit15 and Swift compile/XCTest15 pass.
 
 - VC-CTRL-06 (task/s02-vc-ctrl-06): End conversation invalidates pending output and clears active context while preserving enabled capture; cannot restart stopped/paused state. Kotlin compile/JUnit16 and Swift compile/XCTest16 pass.
+
+- VC-CTRL-07 (task/s02-vc-ctrl-07): Native recognized stop listening routes directly to the same Stop transaction without a model call. Exact bounded command matching rejects stale recognition. Kotlin compile/JUnit18 and Swift compile/XCTest18 pass.
