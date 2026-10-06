@@ -1,0 +1,67 @@
+{
+  "phrase": "Hey Eilo",
+  "pronunciation": "Ay-loh",
+  "keyword_tokens": [
+    "▁HE",
+    "Y",
+    "▁A",
+    "LO"
+  ],
+  "status": "evaluation only; acoustic acceptance failed",
+  "runtime": {
+    "version": "1.13.8",
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/v1.13.8/sherpa-onnx-v1.13.8-osx-arm64-shared-no-tts.tar.bz2",
+    "sha256": "91b96512c4fa1960f8a9ed5360a6c8dda53a4b5015d0590244f14086a234557a",
+    "digest_source": "publisher GitHub release asset SHA256",
+    "directory": "sherpa-onnx-v1.13.8-osx-arm64-shared-no-tts",
+    "files": [
+      {
+        "path": "include/sherpa-onnx/c-api/c-api.h",
+        "sha256": "2a1b95084be8fd1deb3228fcad2fd3f7f0258b64582f7402281ec174c7b7f4ce"
+      },
+      {
+        "path": "lib/libsherpa-onnx-c-api.dylib",
+        "sha256": "ae729669633008692c670d4e4c942db7ea5bdc38abc2f479516062d48849e9d1"
+      },
+      {
+        "path": "lib/libonnxruntime.dylib",
+        "sha256": "3567d114f7299d559993e536d605a6f46d7bc9d2542004accc80ee9bf5457f0b"
+      }
+    ]
+  },
+  "model": {
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/kws-models/sherpa-onnx-kws-zipformer-gigaspeech-3.3M-2024-01-01.tar.bz2",
+    "sha256": "f170013b4716e41b62b9bfd809687c207cef798ef9bc6534d524e17af9b6561a",
+    "digest_source": "locally observed official-origin download; publisher asset digest unavailable",
+    "directory": "sherpa-onnx-kws-zipformer-gigaspeech-3.3M-2024-01-01",
+    "files": [
+      {
+        "path": "encoder-epoch-12-avg-2-chunk-16-left-64.int8.onnx",
+        "sha256": "1e721676515bcd42a186979733981213c66c80db680e1cc582dfedf3be76e678"
+      },
+      {
+        "path": "decoder-epoch-12-avg-2-chunk-16-left-64.onnx",
+        "sha256": "f61ebd3eed3773a44d088d53dfae92dbb6aec4839f4dcaee2d402414741663a3"
+      },
+      {
+        "path": "joiner-epoch-12-avg-2-chunk-16-left-64.int8.onnx",
+        "sha256": "eae9da0c7e1e6c6a3f4cc42d167899c388f6c6701b94cb96320e4f55df79624c"
+      },
+      {
+        "path": "tokens.txt",
+        "sha256": "fd2ded4050a55d2b1578870ba8697d02371980217806b7558bd0a5cc60f3ba53"
+      },
+      {
+        "path": "bpe.model",
+        "sha256": "c8a2a0129c4ab8e463164c142f82d25649661b122c8cd0b7aab5c9e80b90ad24"
+      },
+      {
+        "path": "README.md",
+        "sha256": "74e42d37d63acd2366b042151d576fcc0c4917a41de339414a37f1e79f4e80e2"
+      }
+    ],
+    "license_declaration": "Apache License 2.0 in archive README.md; distribution review incomplete"
+  },
+  "evaluation_threshold": 0.1,
+  "evaluation_boost": 3.0
+}

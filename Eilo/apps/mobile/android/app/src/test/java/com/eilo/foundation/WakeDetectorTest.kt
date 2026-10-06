@@ -5,6 +5,7 @@ import org.junit.Test
 private class KeywordFixture : WakeKeywordStream {
     var result="";var pending=2;var accepted=0;var decoded=0;var resets=0;var closed=0
     var onAccept:(()->Unit)?=null
+    var onDecode:((Int)->Unit)?=null
     var fail="";var endless=false;var borrowed:FloatArray?=null
     override fun accept(samples:FloatArray,count:Int,sampleRate:Int) {
         accepted++;borrowed=samples;onAccept?.invoke()
@@ -13,7 +14,7 @@ private class KeywordFixture : WakeKeywordStream {
         if(fail=="accept") error("synthetic")
     }
     override fun ready():Boolean { if(fail=="ready") error("synthetic");return endless || pending>0 }
-    override fun decode() { decoded++;pending--;if(fail=="decode") error("synthetic") }
+    override fun decode() { decoded++;pending--;onDecode?.invoke(decoded);if(fail=="decode") error("synthetic") }
     override fun keyword():String { if(fail=="result") error("synthetic");return result }
     override fun reset() { resets++;result="";if(fail=="reset") error("synthetic") }
     override fun close() { closed++;if(fail=="close") error("synthetic") }
@@ -32,6 +33,12 @@ class WakeDetectorTest {
         engine.result="HEY EILO";val event=process(d,t)!!
         assertEquals(ControllerState.STANDBY,c.state());assertTrue(event.apply(c));assertEquals(ControllerState.CAPTURING,c.state());assertFalse(event.apply(c))
         assertEquals(0,effects.clauses.size);assertTrue(engine.borrowed!!.all { it==0f });assertEquals(4,engine.resets);d.close()
+    }
+    @Test fun transientKeywordIsConsumedBeforeNextDecodeOverwritesIt() {
+        val c=testController();c.dispatch(ControllerEvent.START);val t=c.token()!!
+        val engine=KeywordFixture();engine.onDecode={ step -> engine.result=if(step==1) "HEY EILO" else "" }
+        val d=WakeDetector(config,verified={true},open={engine});assertTrue(d.begin(t))
+        assertTrue(process(d,t)!!.apply(c));assertEquals(2,engine.decoded);assertEquals(1,engine.resets);d.close()
     }
     @Test fun stopAndPrivacyTransitionsRejectQueuedWakeAndCancelledInput() {
         for(privacy in listOf<PrivacyChange?>(null,PrivacyChange.LOCK,PrivacyChange.PRIVATE_SESSION,PrivacyChange.IDENTITY_RESET)) {
