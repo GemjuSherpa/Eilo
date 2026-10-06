@@ -52,6 +52,10 @@ public final class NativeController: @unchecked Sendable {
   let models: any ModelReadinessAdapter
   public var modelStatus: ModelStatus { models.status() }
   public func modelsChanged() { lock.lock();defer { lock.unlock() };if modelStatus != .ready { stop();if currentState == .stopped { currentState = .setup } } else if currentState == .setup { currentState = .stopped } }
+  var speakerRequired=false
+  public var speakerConfirmationRequired: Bool { lock.lock();defer { lock.unlock() };return speakerRequired }
+  public func routeDisconnected() { lock.lock();defer { lock.unlock() };speakerRequired=true;stop() }
+  @discardableResult public func confirmSpeaker() -> Bool { lock.lock();defer { lock.unlock() };guard !locked else { return false };speakerRequired=false;return true }
   var stopping=false
   var startIntent: UUID?
   var capturePending=false
@@ -217,7 +221,7 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult public func releaseSpeech(_ token: GenerationToken, clause: String) -> Bool {
     lock.lock(); defer { lock.unlock() }
-    guard accepts(token), [.thinking,.speaking].contains(currentState) else { return false }
+    guard !speakerRequired, accepts(token), [.thinking,.speaking].contains(currentState) else { return false }
     clearIdle()
     do { try effects.playClause(clause); guard accepts(token) else { return false }; currentState = .speaking; return true }
     catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.speech,.unexpected,.error); return false }

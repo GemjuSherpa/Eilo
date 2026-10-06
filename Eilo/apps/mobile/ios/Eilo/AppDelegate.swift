@@ -34,13 +34,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       return self.captureEligibility.allowed && IOSMicrophonePermission().status() == .granted
     }
     let interruptions=AudioInterruptionHandler(conversationController)
-    audioObservers.append(NotificationCenter.default.addObserver(forName:AVAudioSession.interruptionNotification,object:nil,queue:nil) { notification in
+    audioObservers.append(NotificationCenter.default.addObserver(forName:AVAudioSession.interruptionNotification,object:nil,queue:.main) { notification in
       if let type=notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,type == AVAudioSession.InterruptionType.began.rawValue { interruptions.receive(.call) }
       // Interruption end never resumes; an explicit user Start is required.
     })
     for name in [AVAudioSession.mediaServicesWereLostNotification,AVAudioSession.mediaServicesWereResetNotification,Notification.Name.AVAudioEngineConfigurationChange] {
-      audioObservers.append(NotificationCenter.default.addObserver(forName:name,object:nil,queue:nil) { _ in interruptions.receive(.engineReset) })
+      audioObservers.append(NotificationCenter.default.addObserver(forName:name,object:nil,queue:.main) { _ in interruptions.receive(.engineReset) })
     }
+    audioObservers.append(NotificationCenter.default.addObserver(forName:AVAudioSession.routeChangeNotification,object:nil,queue:.main) { [weak self] notification in
+      if let reason=notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,reason == AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue { self?.conversationController.routeDisconnected() }
+    })
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()

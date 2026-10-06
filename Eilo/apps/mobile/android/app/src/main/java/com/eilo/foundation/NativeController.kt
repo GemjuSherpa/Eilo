@@ -39,6 +39,10 @@ fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter(), private val models: ModelReadinessAdapter = MissingModelReadiness()) {
     @Synchronized fun modelStatus(): ModelStatus = try { models.status() } catch (_: Exception) { ModelStatus.CORRUPT }
     @Synchronized fun modelsChanged() { if(modelStatus()!=ModelStatus.READY) { stop();if(currentState==ControllerState.STOPPED)currentState=ControllerState.SETUP } else if(currentState==ControllerState.SETUP) currentState=ControllerState.STOPPED }
+    private var speakerRequired=false
+    @Synchronized fun speakerConfirmationRequired() = speakerRequired
+    @Synchronized fun routeDisconnected() { speakerRequired=true; stop() }
+    @Synchronized fun confirmSpeaker(): Boolean { if (locked) return false; speakerRequired=false; return true }
     private var stopping=false
     private var startIntent: UUID? = null
     private var capturePending = false
@@ -204,7 +208,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         return try { if (!privateGate.allows(effect) || !accepts(token)) return false; action(); accepts(token) } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.MEMORY,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
     }
     @Synchronized fun releaseSpeech(token: GenerationToken, clause: String): Boolean {
-        if (!accepts(token) || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING)) return false
+        if (speakerRequired || !accepts(token) || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING)) return false
         clearIdle()
         return try {
             effects.playClause(clause)
