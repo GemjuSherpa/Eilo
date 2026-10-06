@@ -45,3 +45,7 @@ Gemju Sherpa authorized remaining S04 local implementation and checks. Latest su
 ## Superseding Git authorization — 6 October 2026
 
 Gemju Sherpa overrides the earlier Git-commit prohibition for the remainder of the project. Each sprint uses its own branch, each task uses a subbranch, task commits merge into the sprint branch, and a sprint PR targets main. Commit and push are authorized for GemjuSherpa/Eilo. Main merge follows review approval. Preserve unrelated changes; no force-push/history rewrite, release tags, deployment or paid-service permission is implied. S04 remaining changes are being split into the task branches and published through the existing sprint PR. Physical feasibility blockers and iOS background closure remain unchanged.
+
+## S05 authorization and review boundary — 7 October 2026
+
+Gemju Sherpa reviewed/merged S04 (PR #23, merged main 34a365b) and explicitly authorized S05. Current task VC-TURN-01 uses task/s05-vc-turn-01 and sprint/s05-turn-recognition; commit/push and task-to-sprint merge precede a PR to main. Stop for review after this task. S04 background/physical blockers remain blocked despite review approval. Native two-second volatile audio retention is implemented without wake/ASR, personal storage, JS PCM or model-readiness bypass.

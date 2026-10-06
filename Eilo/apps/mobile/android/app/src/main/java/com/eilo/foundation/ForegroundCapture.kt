@@ -16,6 +16,7 @@ internal class ForegroundCapture(
     private val open: () -> CaptureDevice,
     private val activate: () -> Unit = {},
     private val deactivate: () -> Unit = {},
+    private val standby:StandbyAudioBuffer=StandbyAudioBuffer(),
 ) : ControllerEffects {
     private val monitor = Any()
     private var run = 0L
@@ -26,10 +27,10 @@ internal class ForegroundCapture(
     override fun startCapture() = false
 
     override fun beginCapture(completion: (Boolean) -> Unit, failure: () -> Unit) {
-        val expected = synchronized(monitor) { check(device == null); ++run }
+        val expected = synchronized(monitor) { check(device == null); standby.close(); ++run }
         worker.execute {
             var opened: CaptureDevice? = null
-            val samples = ShortArray(320) // 20 ms at 16 kHz; reused, never retained.
+            val samples = ShortArray(320) // 20 ms at 16 kHz; reused and erased after bounded native retention.
             try {
                 if (!current(expected) || !eligible()) { completion(false); return@execute }
                 val activated = synchronized(monitor) { if (run != expected || !eligible()) false else { activate(); true } }
@@ -41,13 +42,19 @@ internal class ForegroundCapture(
                     else { candidate.start(); device = candidate; true }
                 }
                 if (!started) { completion(false); return@execute }
+                val bufferTicket=synchronized(monitor) { if(run==expected) standby.begin() else null }
                 completion(true)
                 while (current(expected)) {
                     // Nonblocking read and erase share the lifecycle monitor with Stop.
-                    // No sample can remain in the application buffer across Stop's return.
+                    // No sample can remain in either application buffer across Stop's return.
                     val count = synchronized(monitor) {
                         if (run != expected) 0 else {
-                            try { candidate.read(samples) } finally { samples.fill(0) }
+                            try {
+                                standby.expire()
+                                val read=candidate.read(samples)
+                                if(read>0 && bufferTicket!=null && run==expected && eligible()) standby.append(bufferTicket,samples,read)
+                                read
+                            } finally { samples.fill(0) }
                         }
                     }
                     if (count < 0 || !eligible()) throw IllegalStateException()
@@ -58,7 +65,7 @@ internal class ForegroundCapture(
             } finally {
                 samples.fill(0)
                 val closeHere = synchronized(monitor) {
-                    if (device === opened && run == expected) { device=null; ++run; true }
+                    if (device === opened && run == expected) { standby.close();device=null; ++run; true }
                     else device !== opened
                 }
                 // Device close is idempotent, including races with Stop.
@@ -69,10 +76,10 @@ internal class ForegroundCapture(
 
     private fun current(expected: Long) = synchronized(monitor) { run == expected }
     override fun releaseCapture() {
-        val previous = synchronized(monitor) { ++run; val value=device; device=null; value }
+        val previous = synchronized(monitor) { ++run;standby.close(); val value=device; device=null; value }
         try { previous?.close() } finally { deactivate() }
     }
     override fun cancelWork() {}
-    override fun clearVolatileContext() {} // read buffer is erased on every read, including failure.
+    override fun clearVolatileContext() { synchronized(monitor) { standby.clear() } }
     override fun playClause(clause: String) { throw IllegalStateException() } // TTS belongs to S06.
 }

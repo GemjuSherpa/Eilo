@@ -7,6 +7,8 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
   private let lock=NSRecursiveLock()
   private let worker=DispatchQueue(label:"eilo.native.capture")
   private var run: UInt64=0
+  private var standby:StandbyAudioBuffer?
+  private var expiry:DispatchSourceTimer?
   private var engine: AVAudioEngine?
   private var speechGain:Float=1
   public func setOutputGain(_ gain:Float) throws { lock.lock();defer { lock.unlock() };guard gain.isFinite,(0...1).contains(gain) else { throw CaptureFailure.unavailable };speechGain=gain }
@@ -25,10 +27,14 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
         let audio=AVAudioEngine();candidate=audio
         let input=audio.inputNode
         let format=input.outputFormat(forBus:0)
-        guard format.sampleRate > 0,format.channelCount > 0,format.commonFormat == .pcmFormatFloat32 else { throw CaptureFailure.unavailable }
+        guard format.sampleRate.isFinite,format.sampleRate>=8000,format.sampleRate<=192000,format.sampleRate.rounded()==format.sampleRate,format.channelCount > 0,format.commonFormat == .pcmFormatFloat32 else { throw CaptureFailure.unavailable }
+        let retained=StandbyAudioBuffer(sampleRate:Int(format.sampleRate));let ticket=retained.begin()
+        lock.lock();guard run==expected else { lock.unlock();retained.close();try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return };standby=retained;lock.unlock()
         input.installTap(onBus:0,bufferSize:512,format:format) { buffer,_ in
-          // Discard and erase native samples; no persistence or JS event.
+          // Retain at most two seconds in the native ring; erase callback samples.
+          // Ring tickets reject callbacks after Stop or a new capture.
           if let channels=buffer.floatChannelData {
+            retained.append(ticket:ticket,input:UnsafeBufferPointer(start:channels[0],count:Int(buffer.frameLength)))
             for channel in 0..<Int(buffer.format.channelCount) {
               channels[channel].update(repeating:0,count:Int(buffer.frameLength))
             }
@@ -36,11 +42,13 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
         }
         lock.lock()
         do {
-          guard run == expected,eligible() else { lock.unlock();audio.inputNode.removeTap(onBus:0);try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return }
-          try audio.start();engine=audio;lock.unlock()
+          guard run == expected,eligible() else { retained.close();if run==expected {standby=nil};lock.unlock();audio.inputNode.removeTap(onBus:0);try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return }
+          try audio.start();engine=audio
+          let timer=DispatchSource.makeTimerSource(queue:worker);timer.schedule(deadline:.now(),repeating:.milliseconds(50));timer.setEventHandler { [weak retained] in retained?.expire() };expiry=timer;timer.resume();lock.unlock()
           deliver { completion(true) }
         } catch { lock.unlock();throw error }
       } catch {
+        lock.lock();if run==expected { expiry?.cancel();expiry=nil;standby?.close();standby=nil };lock.unlock()
         candidate?.stop();candidate?.inputNode.removeTap(onBus:0)
         try? AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation)
         if current(expected) { deliver(failure) }
@@ -51,10 +59,11 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
   private func current(_ expected: UInt64) -> Bool { lock.lock();defer { lock.unlock() };return run == expected }
   public func releaseCapture() throws {
     lock.lock();defer { lock.unlock() };run &+= 1
+    expiry?.cancel();expiry=nil;standby?.close();standby=nil
     if let audio=engine { engine=nil;audio.stop();audio.inputNode.removeTap(onBus:0);try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation) }
   }
   public func cancelWork() throws {}
-  public func clearVolatileContext() throws {}
+  public func clearVolatileContext() throws { lock.lock();defer { lock.unlock() };standby?.clear() }
   public func playClause(_ clause:String) throws { throw CaptureFailure.unavailable }
   private enum CaptureFailure: Error { case unavailable }
 }
