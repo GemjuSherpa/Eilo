@@ -1,10 +1,10 @@
-<!-- Current authorization: Gemju Sherpa approved S02 on 6 October 2026 and authorized S03, scoped Git/GitHub task-to-sprint-to-main workflow and a final review. No deployment or paid services. -->
+<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Current supplied AGENTS.md retains a review checkpoint after one dependency-ready task. No deployment or paid services. -->
 # Eilo — Product Requirements Document
 
 Version 1.0 | 5 October 2026 | Agent-ready current baseline
 
 ## Authority and current status
-This root context consolidates the current merged Eilo requirements. Read with ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, ai-instructions.md and EXECUTION_PLAN.md. Detailed baseline files are in Eilo_Codex_Knowledge_Transfer. Current amendments and Design 2.0 supersede conflicting historical sections. Source control follows the latest Gemju Sherpa authorization: scoped workflow/S03 Git commands and task-to-sprint merge order are permitted. Test results are separate from approval from Gemju Sherpa. This document does not authorize implementation. No native-device feasibility or security pass is claimed.
+This root context consolidates the current merged Eilo requirements. Read with ARCHITECTURE.md, COMPLIANCE_AND_SECURITY.md, ai-instructions.md and EXECUTION_PLAN.md. Detailed baseline files are in Eilo_Codex_Knowledge_Transfer. Current amendments and Design 2.0 supersede conflicting historical sections. Source control follows the latest Gemju Sherpa authorization: scoped workflow/S04 Git commands and task-to-sprint merge order are permitted. Test results are separate from approval from Gemju Sherpa. This document does not authorize implementation. No native-device feasibility or security pass is claimed.
 
 ## Product and audience
 Eilo is an English, voice-first mobile companion for casual, supportive conversation. Tagline: “I am here for you”. Core conversations run on the phone after model setup and are free to use; there is no cloud per-minute inference dependency. Users can speak and hear responses without typing during normal conversation. Accessible touch controls and authentication may still require native interaction. Initial adult/Australia-first pilot is a planning assumption pending Gemju Sherpa review, not an established launch restriction.

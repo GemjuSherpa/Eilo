@@ -1,14 +1,14 @@
-<!-- Current authorization: Gemju Sherpa approved S02 on 6 October 2026 and authorized S03, scoped Git/GitHub task-to-sprint-to-main workflow and a final review. No deployment or paid services. -->
-# Eilo — Small-Task Execution and Human Review
+<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Current supplied AGENTS.md retains a review checkpoint after one dependency-ready task. No deployment or paid services. -->
+# Eilo — Small-Task Execution and Review
 
 Version 1.0 | 5 October 2026
 
 ## Latest Gemju Sherpa workflow
 
-Gemju Sherpa now authorizes completing S03 and scoped Git commands. Use sprint/s03-model-packs as the root and a separate branch for every task, merge each tested task into the sprint branch before any main merge. Present truthful review evidence afterward. This supersedes historical Git/per-task restrictions for the selected sprint only. No S04, provisioning or release action is authorized.
+Gemju Sherpa verified S03 and authorized S04 with Git commands, task branches, commits, pushes and PRs. Use sprint/s04-guest-audio as the root and one branch per task. Merge tested task branches into the sprint branch before any main merge. The latest supplied AGENTS.md retains a review checkpoint after one small dependency-ready task. Stop at that checkpoint; main integration follows completion of the reviewed sprint. No provisioning or release action is authorized.
 
 ## This is a plan, not execution permission
-S01 is merged and S02 is approved by Gemju Sherpa. S03 is explicitly authorized as a complete sprint, with Git/GitHub task branches, commits, pushes and PRs. Historical one-task gates below are superseded within S03. All detailed baseline IDs/dependencies remain authoritative. Do not renumber tasks or execute this entire document in one turn.
+S01 is merged; S02 and S03 are approved by Gemju Sherpa. S03's distribution-hosting privacy gate remains blocked: review approval does not establish infrastructure evidence. S04 is selected. All detailed baseline IDs/dependencies remain authoritative. Do not renumber tasks or execute this entire document in one turn.
 
 ## Stage 0 — historical context intake
 Read the root context and baseline documents. Acknowledge the product/data boundaries, candidates versus measured evidence, missing artifact/toolchain/device constraints and assumptions. Wait. The next task candidate is VC-DEVOPS-01 repository/board baseline, only after an explicit Gemju Sherpa instruction with target repo/environment. Repository creation, initialization or board mutation is not authorized now.

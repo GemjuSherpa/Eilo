@@ -9,9 +9,10 @@ enum class ControllerState(val wireValue: String) {
 }
 enum class ControllerEvent { SETUP_REQUIRED, READY, START, SPEECH_DETECTED, ENDPOINT, SPEECH_READY, PLAYBACK_FINISHED, PAUSE, RESUME, STOP, FAILURE }
 
-/** Effects must be synchronous, nonblocking and idempotent; async completions return through the controller. */
+/** Lifecycle effects are idempotent. Device opening uses beginCapture off the UI thread. */
 interface ControllerEffects {
     fun startCapture(): Boolean
+    fun beginCapture(completion: (Boolean) -> Unit, failure: () -> Unit) { completion(startCapture()) }
     fun playClause(clause: String)
     fun cancelWork()
     fun releaseCapture()
@@ -40,6 +41,8 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun modelsChanged() { if(modelStatus()!=ModelStatus.READY) { stop();if(currentState==ControllerState.STOPPED)currentState=ControllerState.SETUP } else if(currentState==ControllerState.SETUP) currentState=ControllerState.STOPPED }
     private var stopping=false
     private var startIntent: UUID? = null
+    private var capturePending = false
+    private var captureIntent: UUID? = null
     private var permissionPrompted=false
     private fun permissionGranted(): Boolean = try { permission.status() == MicrophonePermission.GRANTED } catch (_: Exception) { false }
     /** Binding/rebinding an activity never restores listening or prompts. */
@@ -67,17 +70,34 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CAPTURE,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
     }
     @Synchronized private fun completeStart(intent: UUID, result: MicrophonePermission): Boolean {
-        if (startIntent != intent || locked) return false
-        startIntent=null
-        if(modelStatus()!=ModelStatus.READY) { modelsChanged();return false }
-        if (result != MicrophonePermission.GRANTED || !permissionGranted()) { currentState=ControllerState.PERMISSION_REQUIRED; currentError=null; return false }
-        val beforeGeneration=generation; val beforeEpoch=privacyEpoch
+        if (startIntent != intent || capturePending || locked) return false
+        if (modelStatus()!=ModelStatus.READY) { modelsChanged(); return false }
+        if (result != MicrophonePermission.GRANTED || !permissionGranted()) {
+            startIntent=null; currentState=ControllerState.PERMISSION_REQUIRED; currentError=null; return false
+        }
+        capturePending=true
+        // A pending open has no generation and cannot report standby/listening prematurely.
+        val immediate = java.util.concurrent.atomic.AtomicReference<Boolean?>(null)
         return try {
-            if (!effects.startCapture()) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNAVAILABLE; return false }
-            // Stop may have been invoked reentrantly while opening the adapter.
-            if (generation != beforeGeneration || privacyEpoch != beforeEpoch || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED) || !permissionGranted() || modelStatus()!=ModelStatus.READY) { stop(); return false }
-            issueGeneration(); currentState=ControllerState.STANDBY; currentError=null; true
-        } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CAPTURE,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
+            effects.beginCapture({ opened -> immediate.set(finishCapture(intent,opened)) }, { captureFailed(intent) })
+            immediate.get() ?: true
+        } catch (_: Exception) { captureFailed(intent); false }
+    }
+    @Synchronized private fun finishCapture(intent: UUID, opened: Boolean): Boolean {
+        if (startIntent != intent || !capturePending) return false
+        if (!opened || locked || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED) || !permissionGranted() || modelStatus()!=ModelStatus.READY) {
+            stop()
+            if (!opened) { currentState=ControllerState.ERROR; currentError=SafeError.UNAVAILABLE }
+            return false
+        }
+        if (startIntent != intent || !capturePending) return false
+        startIntent=null; capturePending=false; captureIntent=intent
+        issueGeneration(); currentState=ControllerState.STANDBY; currentError=null; return true
+    }
+    @Synchronized private fun captureFailed(intent: UUID) {
+        if (startIntent != intent && captureIntent != intent) return
+        stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNAVAILABLE
+        diagnostics.record(SafeComponent.CAPTURE,SafeError.UNAVAILABLE,SafeSeverity.ERROR)
     }
     private var idleTask: IdleCancellation? = null
     private var idleStarted: Long? = null
@@ -202,7 +222,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun stop(): Boolean {
         if (stopping) return true
         stopping=true
-        startIntent=null
+        startIntent=null; capturePending=false; captureIntent=null
         clearIdle(); hasConversation=false
         invalidateGeneration()
         currentState = ControllerState.STOPPED
