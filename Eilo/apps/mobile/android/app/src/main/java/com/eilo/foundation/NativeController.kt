@@ -131,7 +131,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (token == null || token !== activeToken || token.cancelled || token.privacyEpoch != privacyEpoch) return false
         if (!permissionGranted()) { stop(); return false }
         if(modelStatus()!=ModelStatus.READY) { modelsChanged();return false }
-        return true
+        return token === activeToken && !token.cancelled && token.privacyEpoch==privacyEpoch
     }
     private var currentState = ControllerState.STOPPED
     private var currentError: SafeError? = null

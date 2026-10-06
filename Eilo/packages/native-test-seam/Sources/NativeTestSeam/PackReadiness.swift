@@ -6,10 +6,12 @@ public struct MissingModelReadiness: ModelReadinessAdapter { public init() {};pu
 public final class PackReadiness: ModelReadinessAdapter {
   private let store: PackStore,lock=NSLock()
   private var value: ModelStatus = .missing,epoch: UUID?
+  private var refreshID=UUID()
   public init(store: PackStore) { self.store=store }
   public func status() -> ModelStatus { lock.lock();defer { lock.unlock() };return epoch==store.epoch ? value:.missing }
-  public func invalidate() { lock.lock();epoch=nil;value = .missing;lock.unlock() }
+  public func invalidate() { lock.lock();refreshID=UUID();epoch=nil;value = .missing;lock.unlock() }
   @discardableResult public func refresh(configurationSupported: Bool=false,offlineVoice: Bool=false) -> ModelStatus {
+    lock.lock();let request=UUID();refreshID=request;lock.unlock()
     let before=store.epoch
     let result: ModelStatus
     if !configurationSupported { result = .unsupported }
@@ -21,6 +23,6 @@ public final class PackReadiness: ModelReadinessAdapter {
         } else { result = .missing }
       } catch PackFailure.incompatible { result = .incompatible } catch { result = .corrupt }
     }
-    lock.lock();value=result;epoch=before;lock.unlock();return status()
+    lock.lock();if refreshID==request { value=result;epoch=before };lock.unlock();return status()
   }
 }

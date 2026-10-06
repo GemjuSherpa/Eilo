@@ -11,7 +11,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func createModelStore() throws -> PackStore {
     guard let base=FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask).first else { throw PackFailure.unavailable }
     var root=base.appendingPathComponent("generic-models",isDirectory:true)
-    try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true,attributes:[.protectionKey:FileProtectionType.completeUntilFirstUserAuthentication])
+    root=try PackFiles.directory(root)
+    try FileManager.default.setAttributes([.protectionKey:FileProtectionType.completeUntilFirstUserAuthentication],ofItemAtPath:root.path)
     var values=URLResourceValues();values.isExcludedFromBackup=true;try root.setResourceValues(values)
     return PackStore(root:root,trust:[:],runtime:"5e03bdd8700948b9c41c54dd1b00f28a2aebc03f",ios:ProcessInfo.processInfo.operatingSystemVersion.majorVersion)
   }
