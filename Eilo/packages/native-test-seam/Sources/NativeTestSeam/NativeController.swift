@@ -42,6 +42,33 @@ public final class NativeController: @unchecked Sendable {
   let lock = NSRecursiveLock()
   let diagnostics: SafeDiagnostics
   let effects: any ControllerEffects
+  let clock: any NativeClock
+  let scheduler: any IdleScheduler
+  var idleTask: (any IdleCancellation)?
+  var idleStarted: UInt64?
+  var hasConversation=false
+  func clearIdle() { idleTask?.cancel(); idleTask=nil; idleStarted=nil }
+  func updateIdle() {
+    clearIdle()
+    if currentState == .standby && hasConversation, let expected=activeToken {
+      idleStarted=clock.milliseconds()
+      idleTask=scheduler.schedule(60_000) { [weak self] in self?.expireIdle(expected) }
+    }
+  }
+  func expireIdle(_ expected: GenerationToken) {
+    lock.lock(); defer { lock.unlock() }
+    guard accepts(expected), currentState == .standby, let started=idleStarted else { return }
+    let now=clock.milliseconds(), elapsed=clock.milliseconds() >= started ? now-started : 0
+    if elapsed < 60_000 { idleTask=scheduler.schedule(60_000-elapsed) { [weak self] in self?.expireIdle(expected) }; return }
+    endSessionPreservingCapture()
+  }
+  @discardableResult func endSessionPreservingCapture() -> Bool {
+    clearIdle(); invalidateGeneration(); hasConversation=false
+    do {
+      try effects.cancelWork(); try effects.clearVolatileContext()
+      sessionID=UUID(); currentState = .standby; issueGeneration(); return true
+    } catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.controller,.unexpected,.error); return false }
+  }
   var sessionID = UUID()
   let privateGate: any PrivateEffectGate
   var privacyEpoch: UInt64 = 0
@@ -58,7 +85,7 @@ public final class NativeController: @unchecked Sendable {
   func accepts(_ token: GenerationToken?) -> Bool { guard let token else { return false }; return token === activeToken && !token.cancelled && token.privacyEpoch == privacyEpoch }
   var currentState: ControllerState = .stopped
   var currentError: SafeError?
-  public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects(), privateGate: any PrivateEffectGate = DeniedPrivateEffectGate()) { self.diagnostics = diagnostics; self.effects = effects; self.privateGate = privateGate }
+  public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects(), privateGate: any PrivateEffectGate = DeniedPrivateEffectGate(), clock: any NativeClock = MonotonicClock(), scheduler: any IdleScheduler = NativeIdleScheduler()) { self.diagnostics = diagnostics; self.effects = effects; self.privateGate = privateGate; self.clock=clock; self.scheduler=scheduler }
   public var state: ControllerState { lock.lock(); defer { lock.unlock() }; return currentState }
   public var error: SafeError? { lock.lock(); defer { lock.unlock() }; return currentError }
   @discardableResult public func dispatch(_ event: ControllerEvent, failure: SafeError = .unexpected, token: GenerationToken? = nil) -> Bool {
@@ -69,7 +96,10 @@ public final class NativeController: @unchecked Sendable {
     guard let next = Self.nextState(currentState, event) else { return false }
     if event == .start || event == .speechDetected || event == .playbackFinished || event == .resume { issueGeneration() }
     if (event == .pause || event == .failure) && !stop() { return false }
-    currentState = next; currentError = next == .error ? failure : nil
+    currentState = next
+    if event == .speechDetected { hasConversation=true }
+    updateIdle()
+    currentError = next == .error ? failure : nil
     if next == .error { diagnostics.record(.controller, failure, .error) }
     return true
   }
@@ -94,16 +124,18 @@ public final class NativeController: @unchecked Sendable {
   @discardableResult public func releaseSpeech(_ token: GenerationToken, clause: String) -> Bool {
     lock.lock(); defer { lock.unlock() }
     guard accepts(token), [.thinking,.speaking].contains(currentState) else { return false }
+    clearIdle()
     do { try effects.playClause(clause); guard accepts(token) else { return false }; currentState = .speaking; return true }
     catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.speech,.unexpected,.error); return false }
   }
   public func cancelGeneration() {
     lock.lock(); defer { lock.unlock() }; invalidateGeneration()
     do { try effects.cancelWork() } catch { stop(); currentState = .error; currentError = .unexpected; return }
-    if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration() }
+    if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration(); updateIdle() }
   }
   @discardableResult public func stop() -> Bool {
     lock.lock(); defer { lock.unlock() }
+    clearIdle(); hasConversation=false
     invalidateGeneration()
     currentState = .stopped; currentError = nil
     var failed = false
