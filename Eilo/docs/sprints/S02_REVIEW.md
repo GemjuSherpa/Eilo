@@ -15,3 +15,5 @@ Native Kotlin/Swift controller work is separate from real capture/ASR/model/TTS/
 - VC-CTRL-04 (task/s02-vc-ctrl-04): Privacy epochs cancel work on lock/private/identity/reset transitions. Native guarded read/write/display effects deny stale callbacks and default memory access. Thread-delayed lock races, Kotlin compile/JUnit13 and Swift compile/XCTest13 pass.
 
 - VC-CTRL-05 (task/s02-vc-ctrl-05): Native monotonic 60-second idle timer starts after playback, suspends while capturing/thinking/speaking and rejects stale timers. Context expiry preserves capture. Kotlin compile/JUnit15 and Swift compile/XCTest15 pass.
+
+- VC-CTRL-06 (task/s02-vc-ctrl-06): End conversation invalidates pending output and clears active context while preserving enabled capture; cannot restart stopped/paused state. Kotlin compile/JUnit16 and Swift compile/XCTest16 pass.

@@ -64,8 +64,10 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult func endSessionPreservingCapture() -> Bool {
     clearIdle(); invalidateGeneration(); hasConversation=false
+    let expectedGeneration=generation, expectedEpoch=privacyEpoch
     do {
       try effects.cancelWork(); try effects.clearVolatileContext()
+      guard generation == expectedGeneration, privacyEpoch == expectedEpoch else { return false }
       sessionID=UUID(); currentState = .standby; issueGeneration(); return true
     } catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.controller,.unexpected,.error); return false }
   }
@@ -102,6 +104,11 @@ public final class NativeController: @unchecked Sendable {
     currentError = next == .error ? failure : nil
     if next == .error { diagnostics.record(.controller, failure, .error) }
     return true
+  }
+  @discardableResult public func endConversation() -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    guard [.standby,.capturing,.thinking,.speaking].contains(currentState) else { return false }
+    return endSessionPreservingCapture()
   }
   @discardableResult public func privacyTransition(_ change: PrivacyChange) -> Bool {
     lock.lock(); defer { lock.unlock() }
