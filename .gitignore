@@ -1,0 +1,18 @@
+# Local context and project decision documents (kept on disk, not published)
+/Eilo_Codex_Knowledge_Transfer/
+/Eilo_Codex_Knowledge_Transfer.zip
+/COMPLIANCE_AND_SECURITY
+/COMPLIANCE_AND_SECURITY.*
+/EXECUTION_PLAN
+/EXECUTION_PLAN.*
+/PRD
+/PRD.*
+/AGENTS
+/AGENTS.*
+/ai-instructions
+/ai-instructions.*
+/ARCHITECTURE
+/ARCHITECTURE.*
+
+# Finder metadata at any depth
+.DS_Store

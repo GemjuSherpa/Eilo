@@ -27,3 +27,7 @@ Run the Android JUnit task and `swift test --package-path Eilo/packages/native-t
 Physical capture, allocation/latency measurements, timer behavior during suspension and real routing remain NOT RUN. Android/iPhone availability limitations from S04 remain. iOS background capability stays closed; screen lock still stops capture on both platforms. Approval of S04 does not establish physical feasibility or resolve its three blocked tasks.
 
 Tracker: VC-TURN-01 implemented, partially verified, awaiting review from Gemju Sherpa. Next candidate after review: VC-TURN-02 wake detector adapter. Main merge awaits review. Existing .DS_Store and S02_REVIEW.md changes are preserved and excluded from this task.
+
+## Review outcome — 7 October 2026
+
+Gemju Sherpa explicitly reviewed and approved VC-TURN-01 / PR #24. All six hosted checks passed on sprint head e6307e3. Tracker review state is approved; physical verification remains partial. No main merge or subsequent S05 task execution is claimed. Next candidate: VC-TURN-02 wake detector adapter.
