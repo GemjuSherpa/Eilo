@@ -5,6 +5,8 @@ import ReactAppDependencyProvider
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+  // One process-owned native authority; construction never requests permission/capture.
+  let conversationController = NativeController(permission: IOSMicrophonePermission())
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
@@ -21,10 +23,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
+  func applicationProtectedDataWillBecomeUnavailable(_ application: UIApplication) { conversationController.privacyTransition(.lock) }
+  func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) { conversationController.privacyTransition(.unlock) }
+  func applicationWillTerminate(_ application: UIApplication) { conversationController.stop() }
 }
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
+  private var controller: NativeController? { (UIApplication.shared.delegate as? AppDelegate)?.conversationController }
+  func sceneWillResignActive(_ scene: UIScene) { controller?.stop() }
+  func sceneDidBecomeActive(_ scene: UIScene) { controller?.permissionChanged() }
+  func sceneDidDisconnect(_ scene: UIScene) { controller?.stop() }
 
   func scene(
     _ scene: UIScene,

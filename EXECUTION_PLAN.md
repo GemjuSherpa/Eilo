@@ -2,10 +2,14 @@
 
 Version 1.0 | 5 October 2026
 
+## Latest owner workflow
+
+The owner now authorizes completing S02 and scoped Git commands. Use sprint/s02-controller as the root and a separate branch for every task, merge each tested task into the sprint branch before any main merge. Present truthful human review evidence afterward. This supersedes historical Git/per-task restrictions for the selected sprint only. No S03, provisioning or release action is authorized.
+
 ## This is a plan, not execution permission
 No app setup/development has started through this context package. The owner authorizes one task at a time and commits/merges personally. All detailed baseline IDs/dependencies remain authoritative. Do not renumber tasks or execute this entire document in one turn.
 
-## Stage 0 — context intake only (current phase)
+## Stage 0 — historical context intake
 Read the root context and baseline documents. Acknowledge the product/data boundaries, candidates versus measured evidence, missing artifact/toolchain/device constraints and assumptions. Wait. The next task candidate is VC-DEVOPS-01 repository/board baseline, only after an explicit owner instruction with target repo/environment. Repository creation, initialization or board mutation is not authorized now.
 
 ## Stage 1 — scaffolding, split into independent changes
@@ -29,7 +33,7 @@ Examples, each with its own backlog ID and dependencies: permission explanation;
 UI follows Design 2.0, not old teal prototypes. Auth cannot gate guest/offline conversation. Search/media/native surfaces come later after consent/provider/security feasibility and specific feature approvals. Search gateway, query confirmation, safe result normalization and cache inspection are distinct tasks.
 
 ## Stage 5 — integration, staging and release, all separate approvals
-Integrated native/device regression, privacy/security/provider licensing, accessibility and limited pilot evidence precede staging. Human reviews tested concrete candidates. Staging authorization is separate from a feature approval; production/backend/store publication are separate decisions. GitHub Actions checks do not replace owner review or manufacture private-plan enforcement. Agent never stages Git changes or commits/merges, even after tests pass.
+Integrated native/device regression, privacy/security/provider licensing, accessibility and limited pilot evidence precede staging. Human reviews tested concrete candidates. Staging authorization is separate from a feature approval; production/backend/store publication are separate decisions. GitHub Actions checks do not replace owner review or manufacture private-plan enforcement. Git actions follow the latest explicitly scoped owner authorization; tests do not provide release permission.
 
 ## Per-task procedure
 1. Select one explicitly authorized ID; inspect dependency approval/evidence and relevant files. State scope and objective. If too large for a reviewable diff, propose a documented split preserving parent ID linkage.

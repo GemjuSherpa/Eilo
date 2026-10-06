@@ -1,0 +1,14 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated dependency/build directories and public Android template debug keystore"
+paths = ['''(^|/)(node_modules|Pods|vendor|build|\.build|\.gradle|\.cxx)/''', '''(^|/)debug\.keystore$''']
+
+[[allowlists]]
+description = "CocoaPods public lockfile integrity checksums, not credentials"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''(^|/)Podfile\.lock$''']
+regexTarget = "line"
+regexes = ['''^PODFILE CHECKSUM: [0-9a-f]{40}$''', '''^\s*React-cxxstableapi: [0-9a-f]{40}$''']
