@@ -24,6 +24,7 @@
 		C724B72C5F713E69881597E0 /* PackStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4293C555A89066523319C606 /* PackStore.swift */; };
 		689001362560318A531A755D /* PackReadiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0050AB2287F0FAEBD34F7C /* PackReadiness.swift */; };
 		01FE29C99545AD6A1DC65053 /* IOSCaptureEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */; };
+		06219C35A05D1E3F53BAF6E3 /* AudioInterruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2714425033B445EF7376149 /* AudioInterruption.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		4293C555A89066523319C606 /* PackStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackStore.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackStore.swift"; sourceTree = "<group>"; };
 		DB0050AB2287F0FAEBD34F7C /* PackReadiness.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackReadiness.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackReadiness.swift"; sourceTree = "<group>"; };
 		DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IOSCaptureEffects.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift"; sourceTree = "<group>"; };
+		E2714425033B445EF7376149 /* AudioInterruption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioInterruption.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/AudioInterruption.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 		30F2448E7B57418BE6C6AAB8 /* NativeController */ = {
 			isa = PBXGroup;
 			children = (
+				E2714425033B445EF7376149 /* AudioInterruption.swift */,
 				DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */,
 				DB0050AB2287F0FAEBD34F7C /* PackReadiness.swift */,
 				4293C555A89066523319C606 /* PackStore.swift */,
@@ -290,6 +293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06219C35A05D1E3F53BAF6E3 /* AudioInterruption.swift in Sources */,
 				01FE29C99545AD6A1DC65053 /* IOSCaptureEffects.swift in Sources */,
 				689001362560318A531A755D /* PackReadiness.swift in Sources */,
 				C724B72C5F713E69881597E0 /* PackStore.swift in Sources */,

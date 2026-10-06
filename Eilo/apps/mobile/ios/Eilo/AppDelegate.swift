@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var values=URLResourceValues();values.isExcludedFromBackup=true;try root.setResourceValues(values)
     return PackStore(root:root,trust:[:],runtime:"5e03bdd8700948b9c41c54dd1b00f28a2aebc03f",ios:ProcessInfo.processInfo.operatingSystemVersion.majorVersion)
   }
+  private var audioObservers=[NSObjectProtocol]()
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
@@ -30,7 +31,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     captureEligibility.protectedData(application.isProtectedDataAvailable)
     captureEffects.eligible = { [weak self] in
       guard let self else { return false }
-      return self.captureEligibility.allowed && AVAudioApplication.shared.recordPermission == .granted
+      return self.captureEligibility.allowed && IOSMicrophonePermission().status() == .granted
+    }
+    let interruptions=AudioInterruptionHandler(conversationController)
+    audioObservers.append(NotificationCenter.default.addObserver(forName:AVAudioSession.interruptionNotification,object:nil,queue:nil) { notification in
+      if let type=notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,type == AVAudioSession.InterruptionType.began.rawValue { interruptions.receive(.call) }
+      // Interruption end never resumes; an explicit user Start is required.
+    })
+    for name in [AVAudioSession.mediaServicesWereLostNotification,AVAudioSession.mediaServicesWereResetNotification,Notification.Name.AVAudioEngineConfigurationChange] {
+      audioObservers.append(NotificationCenter.default.addObserver(forName:name,object:nil,queue:nil) { _ in interruptions.receive(.engineReset) })
     }
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
