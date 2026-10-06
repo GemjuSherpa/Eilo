@@ -75,3 +75,5 @@ Versioned native consent metadata requires an unselected-to-explicit history/pri
 ### VC-SET-03
 
 Background choice defaults off, is independently versioned and never starts capture. Enabling requires a current OS credential/LocalAuthentication result plus an unlocked visible context and unchanged privacy epoch; denial/cancellation does not apply it. Failed persistence remains off. Kotlin 62 tests/lint, Swift 55 tests/typecheck, 41 JS/UI tests and iOS Release build pass. Physical device-authentication and background checks not run.
+
+VC-SET-03 follow-up: the iOS Face ID purpose string is declared for the new LocalAuthentication consent flow. Info.plist syntax passes plutil; actual device authentication remains unverified.
