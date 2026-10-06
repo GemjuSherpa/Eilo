@@ -27,6 +27,7 @@
 		C724B72C5F713E69881597E0 /* PackStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4293C555A89066523319C606 /* PackStore.swift */; };
 		C8CFEB8E1E31BB7EF6B3E90F /* PackTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381FD064A1A53657212B570C /* PackTransport.swift */; };
 		F06260405EFD417662348E4C /* SafeDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D762C0DF0FDDBF15B9BC750 /* SafeDiagnostics.swift */; };
+		3D5849C4D5179CAE58CF85D5 /* NativeConsentPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IOSCaptureEffects.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift"; sourceTree = "<group>"; };
 		E2714425033B445EF7376149 /* AudioInterruption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioInterruption.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/AudioInterruption.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeConsentPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeConsentPolicy.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 		30F2448E7B57418BE6C6AAB8 /* NativeController */ = {
 			isa = PBXGroup;
 			children = (
+				49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */,
 				E2714425033B445EF7376149 /* AudioInterruption.swift */,
 				DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */,
 				DB0050AB2287F0FAEBD34F7C /* PackReadiness.swift */,
@@ -299,6 +302,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D5849C4D5179CAE58CF85D5 /* NativeConsentPolicy.swift in Sources */,
 				32178116509279ABCCA559EA /* EiloControl.mm in Sources */,
 				0AF01EE01FDD18F1A05E4825 /* EiloControlHost.swift in Sources */,
 				06219C35A05D1E3F53BAF6E3 /* AudioInterruption.swift in Sources */,

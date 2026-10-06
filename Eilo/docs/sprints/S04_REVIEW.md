@@ -67,3 +67,7 @@ The current npm audit reports 53 dependency advisories (48 high, five moderate, 
 ### VC-SET-06
 
 Generated TurboModule exposes allowlisted commands and strictly validated metadata only. Home requests native Start/Stop, offers Stop during pending/unknown state, and explicitly confirms speaker output. Monotonic native revisions reject old snapshots; UI detach/reconnect tests read changed native state without owning capture. Workspace lint/typecheck, 39 JS/UI tests, Kotlin 57 tests/lint, Swift 50 tests and unsigned iOS Release build pass. Physical control/VoiceOver/TalkBack checks pending.
+
+### VC-SET-02
+
+Versioned native consent metadata requires an unselected-to-explicit history/private choice; microphone permission cannot set it. Native onboarding completion is persisted only after a choice. Failed/unknown-version persistence fails closed. History request never enables unavailable encrypted storage; Start requires a deliberate usable/private choice. Native metadata stays local, iOS file is complete-protected and backup-excluded. Kotlin 60 tests/lint, Swift 53 tests/typecheck, 40 JS/UI tests and unsigned iOS Release build pass. Physical storage/backup/accessibility checks pending.

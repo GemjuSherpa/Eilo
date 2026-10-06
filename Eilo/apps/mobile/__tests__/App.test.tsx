@@ -11,11 +11,11 @@ jest.mock('@react-navigation/native-stack', () => ({createNativeStackNavigator: 
 jest.mock('@react-navigation/bottom-tabs', () => ({createBottomTabNavigator: () => ({Navigator: ({children}: {children: React.ReactNode}) => children, Screen: ({children}: {children: () => React.ReactNode}) => children()})}));
 const fixture = (state: ControlSnapshot['controller']['state']): ControlSnapshot => ({version: 1, revision: 1,
   controller: {version: 1, state, sessionId: '00000000-0000-4000-8000-000000000001', operationId: '00000000-0000-4000-8000-000000000002', generation: 2, privacyEpoch: 0, modelStatus: 'missing'},
-  capturePending: false, speakerConfirmationRequired: false});
+  capturePending: false, speakerConfirmationRequired: false, preferences: {version: 1, historyChoice: 'private', onboardingComplete: false, historyAvailable: false, historyEnabled: false, backgroundConsent: false, privateSession: true, volume: 100}});
 function fakeClient() {
   let state = fixture('stopped'); let receive: ((value: ControlSnapshot) => void) | undefined;
   const commands: string[] = [];
-  const client: ControlClient = {snapshot: async () => state, command: async name => {commands.push(name); return state;}, subscribe: listener => {receive = listener;return () => {receive = undefined;};}};
+  const client: ControlClient = {snapshot: async () => state, command: async name => {commands.push(name);if (name === 'completeOnboarding') {state = {...state, revision: state.revision + 1, preferences: {...state.preferences, onboardingComplete: true}};}return state;}, subscribe: listener => {receive = listener;return () => {receive = undefined;};}};
   return {client, commands, change(value: ControlSnapshot) {state = value;receive?.(value);}};
 }
 test('guest disclosure reaches native setup without account or Start request', async () => {
@@ -25,7 +25,7 @@ test('guest disclosure reaches native setup without account or Start request', a
   const words = view.root.findAllByType(Text).map(node => node.props.children).join(' ');
   expect(words).toContain('AI companion'); expect(words).toContain('audio is not saved or uploaded'); expect(words).toContain('permanently lose');
   await act(() => view?.root.findByProps({accessibilityLabel: 'Continue as guest'}).props.onPress());
-  expect(view.root.findByProps({accessibilityLabel: 'Start'})).toBeDefined();expect(fake.commands).toEqual([]);
+  expect(view.root.findByProps({accessibilityLabel: 'Start'})).toBeDefined();expect(fake.commands).toEqual(['completeOnboarding']);
   await act(() => view?.unmount());
 });
 test('native state changes while detached are read on reconnect, and Stop stays native', async () => {
@@ -35,7 +35,7 @@ test('native state changes while detached are read on reconnect, and Stop stays 
   await act(() => {view = ReactTestRenderer.create(<App client={fake.client} />);});
   await act(() => view?.root.findByProps({accessibilityLabel: 'Continue as guest'}).props.onPress());
   await act(() => view?.root.findByProps({accessibilityLabel: 'Stop'}).props.onPress());
-  expect(fake.commands).toEqual(['stop']); await act(() => view?.unmount());
+  expect(fake.commands).toEqual(['completeOnboarding', 'stop']); await act(() => view?.unmount());
 });
 test('pending Start offers Stop, with an accessible speaker confirmation', async () => {
   const commands: string[] = []; let view: ReactTestRenderer.ReactTestRenderer | undefined;
@@ -56,7 +56,7 @@ test('an older snapshot cannot replace a newer native event', async () => {
   let finish: ((value: ControlSnapshot) => void) | undefined;
   const client: ControlClient = {
     snapshot: () => new Promise(resolve => {finish = resolve;}),
-    command: async () => fixture('stopped'),
+    command: async () => ({...fixture('standby'), revision: 6, preferences: {...fixture('standby').preferences, onboardingComplete: true}}),
     subscribe: listener => {deliver = listener;return () => {};},
   };
   let view: ReactTestRenderer.ReactTestRenderer | undefined;
@@ -72,4 +72,15 @@ test('unknown native state still offers Stop and never Start', async () => {
   await act(() => {view = ReactTestRenderer.create(<Home colors={tokens.colors.light} snapshot={null} busy={false} error={true} run={name => commands.push(name)} />);});
   await act(() => view?.root.findByProps({accessibilityLabel: 'Stop'}).props.onPress());
   expect(commands).toEqual(['stop']);await act(() => view?.unmount());
+});
+
+test('fresh onboarding has neither history nor private choice selected', async () => {
+  const fresh = {...fixture('stopped'), preferences: {...fixture('stopped').preferences, historyChoice: 'none' as const}};
+  const client: ControlClient = {snapshot: async () => fresh, command: async () => fresh, subscribe: () => () => {}};
+  let view: ReactTestRenderer.ReactTestRenderer | undefined;
+  await act(() => {view = ReactTestRenderer.create(<App client={client} />);});
+  expect(view?.root.findByProps({accessibilityLabel: 'Continue as guest'}).props.accessibilityState.disabled).toBe(true);
+  expect(view?.root.findByProps({accessibilityLabel: 'Private sessions — save nothing'}).props.accessibilityState.checked).toBe(false);
+  expect(view?.root.findByProps({accessibilityLabel: 'Request local history'}).props.accessibilityState.checked).toBe(false);
+  await act(() => view?.unmount());
 });

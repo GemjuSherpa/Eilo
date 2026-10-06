@@ -1937,17 +1937,23 @@
       "scope": "local consent policy",
       "acceptance_criterion": "History is off until explicit choice; choice is versioned and separate from microphone permission.",
       "focused_test": "Fresh setup and permission grant cannot enable history; explicit choice can.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Versioned native consent metadata requires an unselected-to-explicit history/private choice; microphone permission cannot set it. Native onboarding completion is persisted only after a choice. Failed/unknown-version persistence fails closed. History request never enables unavailable encrypted storage; Start requires a deliberate usable/private choice. Native metadata stays local, iOS file is complete-protected and backup-excluded. Kotlin 60 tests/lint, Swift 53 tests/typecheck, 40 JS/UI tests and unsigned iOS Release build pass. Physical storage/backup/accessibility checks pending."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-set-02",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval.",
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Required physical/accessibility/later-pipeline integration evidence remains pending.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance.",
       "design_reference": "Approved VC-UX-14 handoff"
     },
     {
