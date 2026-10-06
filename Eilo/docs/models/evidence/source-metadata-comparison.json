@@ -1,0 +1,12 @@
+{
+  "source_architectures": [
+    "Qwen3ForCausalLM"
+  ],
+  "source_tensor_count": 311,
+  "source_vocab_size": 151936,
+  "source_chat_template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+  "bf16_template_matches_source": true,
+  "q4_template_matches_source": true,
+  "tensor_counts_match": true,
+  "vocabulary_sizes_match": true
+}

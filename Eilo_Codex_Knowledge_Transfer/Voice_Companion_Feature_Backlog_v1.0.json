@@ -2202,17 +2202,23 @@
       "scope": "native installer contract",
       "acceptance_criterion": "Manifest declares IDs, revisions, origins, hashes, sizes, licenses and runtime compatibility. License evidence for weights/runtimes/voices/phonemizers and dependencies must be reviewable before any pack inclusion.",
       "focused_test": "Reject missing fields, unsafe paths, incompatible versions and unknown algorithms.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
+          "notes": "Bounded strict native manifest schema; compiler and malformed/duplicate/path/runtime/platform tests passed on Kotlin and Swift. See docs/models/MANIFEST.md; final native suites45 each. Android platform parser/device evidence remains unverified."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s03-vc-pack-03",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "Review by Gemju Sherpa; no release authorization."
     },
     {
       "id": "VC-PACK-04",
@@ -2228,17 +2234,23 @@
       "scope": "native verifier",
       "acceptance_criterion": "Only manifests signed by configured release trust keys are accepted.",
       "focused_test": "Known test key: valid, modified, unknown-key and invalid-signature fixtures.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
+          "notes": "ES256 exact-byte signature verification uses configured native trust. Valid/tampered/unknown-key/algorithm/empty-trust and shared OpenSSL interoperability fixtures pass. Default production trust remains empty."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s03-vc-pack-04",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "Review by Gemju Sherpa; no release authorization."
     },
     {
       "id": "VC-PACK-05",
@@ -2255,17 +2267,23 @@
       "scope": "native downloader",
       "acceptance_criterion": "Only allowlisted HTTPS assets/redirects are requested; downloader accepts no personal payload or stable tracking ID.",
       "focused_test": "Fake server checks origin/redirect policy and request schema; reject non-HTTPS/foreign origin.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
+          "notes": "Isolated default-trust HTTPS streaming transport, bounded bytes, no cookies/auth/cache/automatic redirects; synthetic server request/foreign-redirect/cancellation/response tests pass. Real CDN traffic audit is not run."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s03-vc-pack-05",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "Review by Gemju Sherpa; no release authorization."
     },
     {
       "id": "VC-PACK-06",
@@ -2281,17 +2299,23 @@
       "scope": "native installer",
       "acceptance_criterion": "Incomplete or wrong-hash file never becomes available to inference.",
       "focused_test": "Truncation and bitflip fixtures remain quarantined; exact fixture passes.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
+          "notes": "Streaming SHA-256 and exact length verification; truncation, bit-flip, oversize, symlink and cancellation tests pass. No corrupt or partial artifact obtains proof."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s03-vc-pack-06",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "Review by Gemju Sherpa; no release authorization."
     },
     {
       "id": "VC-PACK-07",
@@ -2307,17 +2331,23 @@
       "scope": "native installer",
       "acceptance_criterion": "Interrupted generic download resumes safely or restarts without marking partial data ready.",
       "focused_test": "Terminate transfer; resume with changed ETag/content; reverify complete file.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
+          "notes": "Checkpoint binds manifest digest/index/strong ETag. Injected interruption safely resumes or restarts on changed ETag/checkpoint; complete file always rehashed. Real device process-kill not run."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s03-vc-pack-07",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "Review by Gemju Sherpa; no release authorization."
     },
     {
       "id": "VC-PACK-08",
@@ -2333,17 +2363,23 @@
       "scope": "native installer",
       "acceptance_criterion": "Compatible verified pack activates atomically; failed update preserves previous working pack.",
       "focused_test": "Crash/failure at activation boundaries; no mixed-version pack reaches runtime.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
+          "notes": "Whole-pack immutable version directories and atomic synced pointer; startup signature/hash checks; failure-boundary/stale-proof/rollback/corruption/license/trust tests pass. Physical power-loss/filesystem/backup tests not run."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s03-vc-pack-08",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "Review by Gemju Sherpa; no release authorization."
     },
     {
       "id": "VC-PACK-09",
@@ -2359,17 +2395,23 @@
       "scope": "native readiness policy",
       "acceptance_criterion": "Missing/incompatible model or unsupported configuration prevents Start with a clear reason; no cloud fallback.",
       "focused_test": "Fake missing/corrupt/unsupported cases keep capture/model calls stopped.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S03_REVIEW.md",
+          "notes": "Native readiness blocks permission/capture/output without valid assets/configuration/offline voice; races and activation cache invalidation tested. Metadata-only modelStatus validated by TypeScript; real speech runtimes remain later work."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s03-vc-pack-09",
       "commit": null,
-      "reviewer": null,
+      "reviewer": "Gemju Sherpa",
       "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "next_action": "Review by Gemju Sherpa; no release authorization."
     },
     {
       "id": "VC-PACK-10",

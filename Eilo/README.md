@@ -1,48 +1,36 @@
 # Eilo
 
-Local React Native New Architecture scaffold, without Expo. Mobile source and native projects are in `apps/mobile`. The launch shell shows Eilo / Guest / Stopped. Conversation features are not implemented.
+React Native CLI mobile workspace. S01 foundation is merged; Gemju Sherpa approved S02. S03 adds verified native model installation and readiness; its review is pending. The current app displays the Guest/Stopped shell. Real voice capture, ASR, wake/VAD, model replies and offline TTS are not integrated. No production model host or signing key is configured.
 
-## Commands
+## Run locally
 
-From this directory:
+From this directory, keep Metro running in one terminal:
 
 ```sh
-npm ci
+npm start
+```
+
+In another terminal:
+
+```sh
+npm run ios -- --simulator="iPhone 18 Pro"
+# Or, after starting an Android emulator:
+npm run android
+```
+
+For a connected iPhone, open apps/mobile/ios/Eilo.xcworkspace in Xcode, select the Eilo scheme/device and configure your signing team, then Run with Metro running. Expo Go is not used. Existing native dependencies are installed; a fresh checkout requires npm ci and the pinned Ruby/CocoaPods setup in apps/mobile. Node 24.11.1 and npm 11.6.2 were used locally.
+
+## Verify
+
+```sh
 npm run lint
 npm run typecheck
-npm test -- --watchman=false
-npm start
+npm test
+swift test --package-path packages/native-test-seam
 ```
 
-## Native development
+Android native builds/tests use JDK17 and the Android SDK, with Gradle in apps/mobile/android. iOS uses Xcode and the installed Pods. Debug builds support Metro; release builds use local test signing on Android and unsigned simulator compilation on iOS. These are not distribution artifacts.
 
-Local debug builds and guest-shell launches passed on Android API 35 ARM64 emulator and iPhone 18 Pro / iOS 27 simulator. Xcode 27 launch wiring uses UIScene. This verifies the guest shell only.
+Native controller and installer own privacy/capture/readiness. No personal content or keys are persisted in JavaScript. Android Internet permission supports the isolated generic model downloader; production origins/trust/license approvals are empty. No cloud inference exists. Downloaded sources, isolated conversion tools and generated GGUFs live in ignored .local/model-build and are not uploaded to GitHub.
 
-Open a new terminal (or `source ~/.zshrc`) for configured Java, Android SDK and Homebrew Ruby paths. To develop:
-
-```sh
-npm start
-# In a second terminal:
-npm run android
-# Or, with an iOS simulator:
-npm run ios
-```
-
-Android virtual device `Eilo_API35` is available. Build dependencies: API 37.0, Build Tools 37.0.0, NDK 27.1.12297006, CMake 3.22.1. For iOS, use `apps/mobile/ios/Eilo.xcworkspace`. Reinstall native dependencies after relevant dependency changes:
-
-```sh
-cd apps/mobile
-bundle install
-cd ios
-bundle exec pod install
-```
-
-Gemfile.lock and Podfile.lock record resolved native dependency versions. Metro uses its filesystem watcher because Watchman stalled during verification.
-
-Node 24.11.1 / npm 11.6.2 were used. One npm workspace lockfile pins dependency resolution. Metro and Android Gradle paths support hoisted dependencies. Jest tests the React Native shell. Vitest tests the metadata-only contract in packages/contracts. Kotlin JUnit and Swift XCTest exercise native fake-adapter seams; no production controller exists yet.
-
-The generated `com.eilo` identifiers and template Android debug signing are local scaffold defaults, not approved release identity/signing. No account, microphone capture, model runtime, backend or cloud resources have been added. Parent AGENTS.md and architecture/review instructions apply. Do not stage, commit or push; owner review is required before the next task.
-
-## S01 review
-
-See docs/sprints/S01_REVIEW.md and docs/verification/DEVICE_WORKLOAD_MATRIX.md. All changes remain uncommitted on sprint/s01-foundation. The Android release shell has no Internet or microphone permission; debug builds permit Metro. Local release-mode builds use test signing only and are not distribution artifacts. CI is drafted for public-repository standard runners; its first hosted run remains pending owner push/PR. Private-repository jobs are intentionally skipped until a new cost/security review.
+See [S03 review](docs/sprints/S03_REVIEW.md), [model recipe](tools/model-pack/README.md), [installer contract](docs/models/MANIFEST.md) and [blocking distribution review](docs/models/DISTRIBUTION_REVIEW.md). No paid service, deployment or later sprint is included.

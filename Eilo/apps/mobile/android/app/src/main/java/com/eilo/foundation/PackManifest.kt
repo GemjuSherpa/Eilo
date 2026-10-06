@@ -44,7 +44,7 @@ data class PackManifest(val packId: String, val revision: Long, val runtimeRevis
             require(keyTokens.size==header.size+fields.size*artifacts.size)
             require(header.all { key -> keyTokens.count { it==key }==1 })
             require(fields.all { key -> keyTokens.count { it==key }==artifacts.size })
-            return PackManifest(pack,revision,rr,a.toInt(),i.toInt(),artifacts)
+            return PackManifest(pack,revision,rr,a.toInt(),i.toInt(),java.util.Collections.unmodifiableList(artifacts.toList()))
         }
     }
 }

@@ -129,7 +129,7 @@ public final class NativeController: @unchecked Sendable {
     guard let token, token === activeToken, !token.cancelled, token.privacyEpoch == privacyEpoch else { return false }
     guard permissionGranted() else { stop(); return false }
     guard modelStatus == .ready else { modelsChanged();return false }
-    return true
+    return token === activeToken && !token.cancelled && token.privacyEpoch==privacyEpoch
   }
   var currentState: ControllerState = .stopped
   var currentError: SafeError?
