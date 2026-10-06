@@ -59,11 +59,18 @@ internal class WakeDetector(
             for(i in 0 until count) scratch[i]=input[i]/32768f
             engine.accept(scratch,count,sampleRate)
             var steps=0
-            while(engine.ready()) { if(++steps > 32) { close();return null };engine.decode() }
-            val keyword=engine.keyword()
-            val matched=keyword==configuration.phrase
-            // Drop every result, including unknown/empty keywords, before the next frame.
-            if(keyword.isNotEmpty()) engine.reset()
+            var matched=false
+            fun consumeResult() {
+                val keyword=engine.keyword()
+                matched=matched || keyword==configuration.phrase
+                if(keyword.isNotEmpty()) engine.reset()
+            }
+            while(engine.ready()) {
+                if(++steps > 32) { close();return null }
+                engine.decode()
+                consumeResult()
+            }
+            if(steps==0) consumeResult()
             if(expected.cancelled || !verified()) { close();return null }
             if(matched && expected === token && currentLease === lease) WakeActivation(expected,currentLease) else null
         } catch (_: Exception) { diagnostics.record(SafeComponent.MODEL,SafeError.UNAVAILABLE,SafeSeverity.ERROR);close();null }
