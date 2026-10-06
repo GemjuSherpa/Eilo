@@ -1,6 +1,7 @@
 import Foundation
 internal enum PackFiles {
   static func directory(_ dir: URL) throws -> URL {
+    if (try? FileManager.default.destinationOfSymbolicLink(atPath:dir.path)) != nil { throw PackFailure.activation }
     if FileManager.default.fileExists(atPath:dir.path) { guard try dir.resourceValues(forKeys:[.isSymbolicLinkKey]).isSymbolicLink != true else { throw PackFailure.activation } }
     try FileManager.default.createDirectory(at:dir,withIntermediateDirectories:true)
     let root=dir.resolvingSymlinksInPath();guard try root.resourceValues(forKeys:[.isDirectoryKey]).isDirectory==true else { throw PackFailure.activation };return root
@@ -8,6 +9,7 @@ internal enum PackFiles {
   static func child(_ root: URL,_ name: String) throws -> URL {
     guard name.range(of:"^[a-zA-Z0-9._-]+$",options:.regularExpression) != nil,name != ".",name != ".." else { throw PackFailure.activation }
     let f=root.appendingPathComponent(name)
+    if (try? FileManager.default.destinationOfSymbolicLink(atPath:f.path)) != nil { throw PackFailure.activation }
     if FileManager.default.fileExists(atPath:f.path) { guard try f.resourceValues(forKeys:[.isSymbolicLinkKey]).isSymbolicLink != true else { throw PackFailure.activation } }
     guard f.resolvingSymlinksInPath().deletingLastPathComponent()==root.resolvingSymlinksInPath() else { throw PackFailure.activation };return f
   }
