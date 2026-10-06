@@ -1765,17 +1765,20 @@
       "scope": "deterministic active command",
       "acceptance_criterion": "End conversation clears active context and returns to standby while keeping explicitly enabled capture.",
       "focused_test": "Active command test distinguishes end-conversation from Stop.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 End conversation invalidates pending output and clears active context while preserving enabled capture; cannot restart stopped/paused state. Kotlin compile/JUnit16 and Swift compile/XCTest16 pass."
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s02-vc-ctrl-06",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Physical-device and later real-audio/storage integration not verified.",
+      "next_action": "Review S02 evidence; no release assurance inferred.",
+      "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
     },
     {
       "id": "VC-CTRL-07",

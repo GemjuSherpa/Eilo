@@ -55,8 +55,10 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     private fun endSessionPreservingCapture(): Boolean {
         clearIdle(); invalidateGeneration(); hasConversation=false
+        val expectedGeneration=generation; val expectedEpoch=privacyEpoch
         return try {
             effects.cancelWork(); effects.clearVolatileContext()
+            if (generation != expectedGeneration || privacyEpoch != expectedEpoch) return false
             sessionId=UUID.randomUUID(); currentState=ControllerState.STANDBY; issueGeneration(); true
         } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CONTROLLER,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
     }
@@ -93,6 +95,10 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         currentError = if (next == ControllerState.ERROR) failure else null
         if (next == ControllerState.ERROR) diagnostics.record(SafeComponent.CONTROLLER, failure, SafeSeverity.ERROR)
         return true
+    }
+    @Synchronized fun endConversation(): Boolean {
+        if (currentState !in setOf(ControllerState.STANDBY,ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) return false
+        return endSessionPreservingCapture()
     }
     @Synchronized fun privacyTransition(change: PrivacyChange): Boolean {
         if (privacyEpoch == 9007199254740991L) { sessionId=UUID.randomUUID(); privacyEpoch=0 } else privacyEpoch++
