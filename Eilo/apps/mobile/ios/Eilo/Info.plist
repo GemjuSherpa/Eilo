@@ -33,6 +33,8 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Eilo uses device authentication to confirm changes to local consent choices.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Eilo needs microphone access after you choose Start to hear your conversation on this device.</string>
 	<key>UILaunchStoryboardName</key>

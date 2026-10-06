@@ -7,46 +7,60 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01FE29C99545AD6A1DC65053 /* IOSCaptureEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */; };
+		03FE7B1EF9C9065B5C75545F /* PackManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BD97AC57B222560095251D /* PackManifest.swift */; };
+		06219C35A05D1E3F53BAF6E3 /* AudioInterruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2714425033B445EF7376149 /* AudioInterruption.swift */; };
+		0AF01EE01FDD18F1A05E4825 /* EiloControlHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5D09D58C9544880D7B2D54 /* EiloControlHost.swift */; };
 		0C80B921A6F3F58F76C31292 /* libPods-Eilo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Eilo.a */; };
 		0FC9CE9D9B840B7AFF3796FA /* NativePermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB06A5C50B1D1AE3556BBC6 /* NativePermission.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		32178116509279ABCCA559EA /* EiloControl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E250E394C300712D5BE3018 /* EiloControl.mm */; };
+		35394E758243C0BDFB49C885 /* PackIntegrity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */; };
 		3C8C4063688EF32022104AB7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		48732F94B83CCD75AF2D1228 /* NativeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5B7654A70D45D6276D42E /* NativeController.swift */; };
+		6339113356833115484426CF /* PackRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C2DCEF0EF5C5A7A8E32453 /* PackRecovery.swift */; };
+		689001362560318A531A755D /* PackReadiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0050AB2287F0FAEBD34F7C /* PackReadiness.swift */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		AD283E1C4E31C18F3596F6F7 /* NativeIdleTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA8D2D61D2BFB2618FCD74C /* NativeIdleTimer.swift */; };
-		F06260405EFD417662348E4C /* SafeDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D762C0DF0FDDBF15B9BC750 /* SafeDiagnostics.swift */; };
-		03FE7B1EF9C9065B5C75545F /* PackManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BD97AC57B222560095251D /* PackManifest.swift */; };
 		B79F1A251651ADCED7B8DF2D /* PackSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67AE1F8F9EE2F427CE3AED7 /* PackSignature.swift */; };
-		C8CFEB8E1E31BB7EF6B3E90F /* PackTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381FD064A1A53657212B570C /* PackTransport.swift */; };
-		35394E758243C0BDFB49C885 /* PackIntegrity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */; };
-		6339113356833115484426CF /* PackRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C2DCEF0EF5C5A7A8E32453 /* PackRecovery.swift */; };
 		C724B72C5F713E69881597E0 /* PackStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4293C555A89066523319C606 /* PackStore.swift */; };
-		689001362560318A531A755D /* PackReadiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0050AB2287F0FAEBD34F7C /* PackReadiness.swift */; };
+		C8CFEB8E1E31BB7EF6B3E90F /* PackTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381FD064A1A53657212B570C /* PackTransport.swift */; };
+		F06260405EFD417662348E4C /* SafeDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D762C0DF0FDDBF15B9BC750 /* SafeDiagnostics.swift */; };
+		3D5849C4D5179CAE58CF85D5 /* NativeConsentPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */; };
+		98BF41F81902FA816B06B230 /* IOSConsentAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */; };
+		3B49E2663389BBF4ACDF0E7B /* BackgroundCapturePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackIntegrity.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Eilo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eilo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Eilo/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Eilo/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = Eilo/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2E250E394C300712D5BE3018 /* EiloControl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = EiloControl.mm; path = Eilo/EiloControl.mm; sourceTree = "<group>"; };
+		381FD064A1A53657212B570C /* PackTransport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackTransport.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackTransport.swift"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-Eilo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eilo.debug.xcconfig"; path = "Target Support Files/Pods-Eilo/Pods-Eilo.debug.xcconfig"; sourceTree = "<group>"; };
+		4293C555A89066523319C606 /* PackStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackStore.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackStore.swift"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Eilo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eilo.release.xcconfig"; path = "Target Support Files/Pods-Eilo/Pods-Eilo.release.xcconfig"; sourceTree = "<group>"; };
 		5CB06A5C50B1D1AE3556BBC6 /* NativePermission.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativePermission.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativePermission.swift"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Eilo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Eilo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70C2DCEF0EF5C5A7A8E32453 /* PackRecovery.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackRecovery.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackRecovery.swift"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Eilo/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Eilo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83B5B7654A70D45D6276D42E /* NativeController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeController.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift"; sourceTree = "<group>"; };
+		8A5D09D58C9544880D7B2D54 /* EiloControlHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EiloControlHost.swift; path = Eilo/EiloControlHost.swift; sourceTree = "<group>"; };
 		9D762C0DF0FDDBF15B9BC750 /* SafeDiagnostics.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SafeDiagnostics.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/SafeDiagnostics.swift"; sourceTree = "<group>"; };
 		BBA8D2D61D2BFB2618FCD74C /* NativeIdleTimer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeIdleTimer.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeIdleTimer.swift"; sourceTree = "<group>"; };
-		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		C7BD97AC57B222560095251D /* PackManifest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackManifest.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackManifest.swift"; sourceTree = "<group>"; };
 		D67AE1F8F9EE2F427CE3AED7 /* PackSignature.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackSignature.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackSignature.swift"; sourceTree = "<group>"; };
-		381FD064A1A53657212B570C /* PackTransport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackTransport.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackTransport.swift"; sourceTree = "<group>"; };
-		02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackIntegrity.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift"; sourceTree = "<group>"; };
-		70C2DCEF0EF5C5A7A8E32453 /* PackRecovery.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackRecovery.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackRecovery.swift"; sourceTree = "<group>"; };
-		4293C555A89066523319C606 /* PackStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackStore.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackStore.swift"; sourceTree = "<group>"; };
 		DB0050AB2287F0FAEBD34F7C /* PackReadiness.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackReadiness.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackReadiness.swift"; sourceTree = "<group>"; };
+		DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IOSCaptureEffects.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift"; sourceTree = "<group>"; };
+		E2714425033B445EF7376149 /* AudioInterruption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioInterruption.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/AudioInterruption.swift"; sourceTree = "<group>"; };
+		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeConsentPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeConsentPolicy.swift"; sourceTree = "<group>"; };
+		61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IOSConsentAuthentication.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/IOSConsentAuthentication.swift"; sourceTree = "<group>"; };
+		69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BackgroundCapturePolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/BackgroundCapturePolicy.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +80,8 @@
 			children = (
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
+				2E250E394C300712D5BE3018 /* EiloControl.mm */,
+				8A5D09D58C9544880D7B2D54 /* EiloControlHost.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
@@ -85,6 +101,11 @@
 		30F2448E7B57418BE6C6AAB8 /* NativeController */ = {
 			isa = PBXGroup;
 			children = (
+				69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */,
+				61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */,
+				49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */,
+				E2714425033B445EF7376149 /* AudioInterruption.swift */,
+				DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */,
 				DB0050AB2287F0FAEBD34F7C /* PackReadiness.swift */,
 				4293C555A89066523319C606 /* PackStore.swift */,
 				70C2DCEF0EF5C5A7A8E32453 /* PackRecovery.swift */,
@@ -287,6 +308,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B49E2663389BBF4ACDF0E7B /* BackgroundCapturePolicy.swift in Sources */,
+				98BF41F81902FA816B06B230 /* IOSConsentAuthentication.swift in Sources */,
+				3D5849C4D5179CAE58CF85D5 /* NativeConsentPolicy.swift in Sources */,
+				32178116509279ABCCA559EA /* EiloControl.mm in Sources */,
+				0AF01EE01FDD18F1A05E4825 /* EiloControlHost.swift in Sources */,
+				06219C35A05D1E3F53BAF6E3 /* AudioInterruption.swift in Sources */,
+				01FE29C99545AD6A1DC65053 /* IOSCaptureEffects.swift in Sources */,
 				689001362560318A531A755D /* PackReadiness.swift in Sources */,
 				C724B72C5F713E69881597E0 /* PackStore.swift in Sources */,
 				6339113356833115484426CF /* PackRecovery.swift in Sources */,
