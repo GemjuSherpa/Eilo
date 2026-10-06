@@ -13,6 +13,17 @@ import UIKit
     guard let data=try? JSONSerialization.data(withJSONObject:value,options:.sortedKeys),let result=String(data:data,encoding:.utf8) else { return "{}" }
     return result
   }
+  @objc func background(_ value:String,completion:@escaping (String)->Void) {
+    guard let app,app.captureEligibility.allowed,value=="true" || value=="false" else { completion(snapshot());return }
+    app.conversationController.stop()
+    if value=="false" { _=app.consent.chooseBackground(false,authenticated:false);completion(snapshot());return }
+    let expected=app.conversationController.snapshot()["privacyEpoch"] as? UInt64
+    app.consentAuthentication.request { [weak self,weak app] authenticated in
+      guard let self,let app else { completion("{}");return }
+      if authenticated,app.captureEligibility.allowed,app.conversationController.snapshot()["privacyEpoch"] as? UInt64 == expected { _=app.consent.chooseBackground(true,authenticated:true) }
+      completion(self.snapshot())
+    }
+  }
   @objc func command(_ name:String,value:String) -> String {
     guard let app else { return "{}" }
     if name != "history" && !value.isEmpty { return "{}" }

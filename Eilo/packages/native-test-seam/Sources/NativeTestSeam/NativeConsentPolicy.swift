@@ -26,6 +26,12 @@ public final class NativeConsentPolicy:@unchecked Sendable {
   var next=record;next.disclosureVersion=1;return save(next)
  }
  public var canStart:Bool { lock.lock();defer { lock.unlock() };return record.disclosureVersion==1 && record.historyChoice != .unselected && (record.historyChoice == .privateMode || privateExplicit || (historyAvailable() && !privateMode)) }
+ @discardableResult public func chooseBackground(_ enabled:Bool,authenticated:Bool)->Bool {
+  lock.lock();defer { lock.unlock() }
+  guard !enabled || (authenticated && record.disclosureVersion==1 && record.historyChoice != .unselected) else { return false }
+  var next=record;next.backgroundConsent=enabled;return save(next)
+ }
+ public var backgroundRequested:Bool { lock.lock();defer { lock.unlock() };return record.backgroundConsent && record.disclosureVersion==1 && record.historyChoice != .unselected }
  public var personalWritesAllowed:Bool { lock.lock();defer { lock.unlock() };return record.historyChoice == .history && !privateMode && historyAvailable() }
  public func snapshot()->[String:Any] {
   lock.lock();defer { lock.unlock() }

@@ -8,6 +8,7 @@ import ReactAppDependencyProvider
 class AppDelegate: UIResponder, UIApplicationDelegate {
   // One process-owned native authority; construction never requests permission/capture.
   // No shipping trust key/origin/license approval. Installer creation is explicit and cannot auto-start capture.
+  let consentAuthentication=IOSConsentAuthentication()
   let consent=NativeConsentPolicy(persistence:IOSConsentPersistence())
   let captureEffects = IOSCaptureEffects()
   let captureEligibility=IOSCaptureEligibility()
@@ -54,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
-  func applicationProtectedDataWillBecomeUnavailable(_ application: UIApplication) { captureEligibility.protectedData(false); conversationController.privacyTransition(.lock) }
+  func applicationProtectedDataWillBecomeUnavailable(_ application: UIApplication) { consentAuthentication.cancel();captureEligibility.protectedData(false); conversationController.privacyTransition(.lock) }
   func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) { captureEligibility.protectedData(true); conversationController.privacyTransition(.unlock) }
   func applicationWillTerminate(_ application: UIApplication) { conversationController.stop() }
 }
