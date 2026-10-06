@@ -1,0 +1,16 @@
+{
+  "outputs_equal": true,
+  "comparison": "cmp exit 0; two independent quantizer invocations",
+  "sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120",
+  "bytes_each": 1282439424,
+  "runs": [
+    {
+      "elapsed_seconds": 28.78,
+      "max_resident_bytes": 2134097920
+    },
+    {
+      "elapsed_seconds": 25.31,
+      "max_resident_bytes": 2159296512
+    }
+  ]
+}

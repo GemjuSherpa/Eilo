@@ -34,7 +34,7 @@ VC-SET-06,SET,Home Start/Stop control,F02;F05,VC-CTRL-02;VC-SET-04;VC-SET-05;VC-
 VC-SET-07,SET,Private-session selector,F16;A04,VC-SET-02;VC-CTRL-04;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
 VC-SET-08,SET,Settings volume control,F05,VC-SET-06;VC-UX-14,planned,not_requested,not_started,not_run,,,,,,
 VC-PACK-01,PACK,BF16 conversion intermediate,S05,,awaiting_review,awaiting_review,implemented,pass,,task/s03-vc-pack-01,,Gemju Sherpa,,"Eilo/docs/sprints/S03_REVIEW.md — Official pinned source hashes verified; BF16 conversion executed and GGUF inventory/tokenizer/template inspected. 4,069,679,360 bytes, SHA-256 2fd1d807958fc7352aa39b9d94a04073aa04ee07a735f272876a4b3ee90ac48f. Desktop RAM measured separately; phone inference not tested."
-VC-PACK-02,PACK,Q4 conversion artifact,S05,VC-PACK-01,planned,not_requested,not_started,not_run,,,,,,
+VC-PACK-02,PACK,Q4 conversion artifact,S05,VC-PACK-01,awaiting_review,awaiting_review,implemented,pass,,task/s03-vc-pack-02,,Gemju Sherpa,,"Eilo/docs/sprints/S03_REVIEW.md — Pinned Q4_K_M quantizer executed twice; cmp exit 0 and equal SHA-256 c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120. Each output is 1,282,439,424 bytes. GGUF quantization metadata and unchanged tokenizer/template inspected."
 VC-PACK-03,PACK,Trusted pack manifest schema,S05;S06,,planned,not_requested,not_started,not_run,,,,,,
 VC-PACK-04,PACK,Manifest signature verifier,S05;S06,VC-PACK-03,planned,not_requested,not_started,not_run,,,,,,
 VC-PACK-05,PACK,Model download transport,S01;S06;S07,VC-PACK-04,planned,not_requested,not_started,not_run,,,,,,
