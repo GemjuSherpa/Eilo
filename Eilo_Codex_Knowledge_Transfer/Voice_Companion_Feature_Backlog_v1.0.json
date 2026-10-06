@@ -1903,17 +1903,23 @@
       "scope": "React Native screen",
       "acceptance_criterion": "English adult onboarding describes AI identity, local encrypted text, no saved audio and local-loss limitations; no signup.",
       "focused_test": "UI flow reaches setup without account fields or account request.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Accessible English guest disclosure explains AI/adult audience, local processing, unsaved audio, optional encrypted text, unfinished history capability, local-loss limits and separate microphone/background choice. Guest UI reaches setup without identity fields/requests. Workspace lint/types and 34 JS/UI tests pass; physical screen-reader/large-text checks pending."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-set-01",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval.",
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Required physical/accessibility/later-pipeline integration evidence remains pending.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance.",
       "design_reference": "Approved VC-UX-14 handoff"
     },
     {

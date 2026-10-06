@@ -51,3 +51,7 @@ AVAudioSession interruption-began and media/engine reset observers stop native c
 ### VC-AUDIO-08
 
 Android private-output device removal and iOS old-device-unavailable events stop/invalidate work. Native speech release stays blocked across fresh Start until explicit unlocked speaker confirmation; reconnection never confirms. Kotlin 57 tests/lint and Swift 50 tests/typecheck pass. Real headphone/Bluetooth routing and spoken playback remain NOT RUN.
+
+### VC-SET-01
+
+Accessible English guest disclosure explains AI/adult audience, local processing, unsaved audio, optional encrypted text, unfinished history capability, local-loss limits and separate microphone/background choice. Guest UI reaches setup without identity fields/requests. Workspace lint/types and 34 JS/UI tests pass; physical screen-reader/large-text checks pending.
