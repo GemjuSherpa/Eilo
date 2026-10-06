@@ -62,6 +62,6 @@ public final class IOSCaptureEligibility: @unchecked Sendable {
   private let lock=NSLock();private var foreground=false;private var unlocked=false
   public var visible: Bool { get { lock.lock();defer { lock.unlock() };return foreground } set { lock.lock();foreground=newValue;lock.unlock() } }
   public func protectedData(_ available: Bool) { lock.lock();unlocked=available;lock.unlock() }
-  public var allowed: Bool { lock.lock();defer { lock.unlock() };return foreground && unlocked }
+  public var allowed: Bool { lock.lock();defer { lock.unlock() };return BackgroundCapturePolicy.allows(visible:foreground,unlocked:unlocked,permission:true,consent:false,capabilityVerified:BackgroundCapturePolicy.iosPhysicalPolicyVerified) }
 }
 #endif
