@@ -2114,17 +2114,28 @@
       "scope": "local privacy policy",
       "acceptance_criterion": "Selected private session blocks every persistent personal write; older history remains unchanged.",
       "focused_test": "Fake sinks for transcript/fact/index/inbox receive zero writes; mode race test.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Explicit private-session selection invalidates native work, enables unsaved use for a history request, and never enables unavailable protected storage. Earlier history choice is preserved; history re-entry is rejected until storage/authentication exists."
+        },
+        {
+          "type": "local_checks",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-set-07",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval.",
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Required physical/accessibility/later-pipeline integration evidence remains pending.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance.",
       "design_reference": "Approved VC-UX-14 handoff"
     },
     {
@@ -2141,17 +2152,28 @@
       "scope": "React Native control",
       "acceptance_criterion": "Accessible volume control affects output gain without altering consent or capture.",
       "focused_test": "Output fake asserts gain; screen-reader control test.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Native persisted 0–100 reply gain, accessible adjustable control and buttons; gain restoration does not start capture. No speech engine is available yet. Final local checks are recorded below."
+        },
+        {
+          "type": "local_checks",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-set-08",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval.",
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Required physical/accessibility/later-pipeline integration evidence remains pending.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance.",
       "design_reference": "Approved VC-UX-14 handoff"
     },
     {
@@ -2612,17 +2634,28 @@
       "scope": "Android native",
       "acceptance_criterion": "UI exit stops capture without consent; enabled permitted service can continue.",
       "focused_test": "Physical test of both consent states; return UI reads true state.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Native Android unlocked-background eligibility requires independent consent, microphone permission and an already-running foreground service. Exit without these stops; Activity destruction remains conservative Stop, and no automatic restart is added. Physical evidence remains pending."
+        },
+        {
+          "type": "local_checks",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-audio-03",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Required physical/accessibility/later-pipeline integration evidence remains pending.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance."
     },
     {
       "id": "VC-AUDIO-04",
@@ -2704,17 +2737,28 @@
       "scope": "iOS native",
       "acceptance_criterion": "No-consent UI exit stops capture; consented background path uses intended audio mode only.",
       "focused_test": "Physical transitions plus entitlement/use-case review; no silent-audio keepalive.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "blocked",
+      "approval_status": "awaiting_review",
+      "implementation_status": "partial",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Production iOS background capability remains false. Foreground eligibility is checked through native policy; inactivity and lock stop. Synthetic gate/permission/lock matrix passes when final tests below pass."
+        },
+        {
+          "type": "local_checks",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-audio-06",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Physical background/lock policy and full native pipeline are unavailable; iOS background capability is not enabled.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance."
     },
     {
       "id": "VC-AUDIO-07",
@@ -2797,17 +2841,28 @@
       "scope": "Android physical experiment",
       "acceptance_criterion": "Record actual user-started screen-off capture/output availability, termination limits and stopped-state accuracy.",
       "focused_test": "Physical lock/Doze/service-kill/reboot matrix; pass/fail/not-tested per configuration.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "blocked",
+      "approval_status": "awaiting_review",
+      "implementation_status": "partial",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Required Android hardware matrix and fail-closed locked policy recorded in Eilo/docs/sprints/S04_DEVICE_FEASIBILITY.md. All physical rows NOT RUN."
+        },
+        {
+          "type": "local_checks",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-audio-09",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "reviewer": "Gemju Sherpa",
+      "blocker": "No physical Android phone; actual locked/background/notification/Doze feasibility not established.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance."
     },
     {
       "id": "VC-AUDIO-10",
@@ -2825,17 +2880,28 @@
       "scope": "iOS physical experiment",
       "acceptance_criterion": "Record platform-compliant screen-off capture/output availability and termination limits.",
       "focused_test": "Physical lock/background/process-kill matrix; technical evidence and App Review rationale, not approval guarantee.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "blocked",
+      "approval_status": "awaiting_review",
+      "implementation_status": "partial",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Required iOS hardware matrix and conservative background-mode rationale recorded in Eilo/docs/sprints/S04_DEVICE_FEASIBILITY.md. All physical rows NOT RUN."
+        },
+        {
+          "type": "local_checks",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-audio-10",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "reviewer": "Gemju Sherpa",
+      "blocker": "No verified available physical iPhone; final inventory refresh timed out; lock/background/interruption feasibility not established.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance."
     },
     {
       "id": "VC-TURN-01",

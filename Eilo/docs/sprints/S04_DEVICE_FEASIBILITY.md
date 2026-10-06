@@ -28,6 +28,12 @@ Foreground microphone service is non-sticky, unexported and process-owned, with 
 
 Actual OEM lifecycle, notification tap, microphone indicator, resource release timing and long-run restrictions remain unknown. No Android supported-device or locked-audio feasibility pass is claimed. Later pipeline model readiness is also required for an end-to-end production capture trial; do not inject test readiness into a shipping build.
 
+## iOS decision (VC-AUDIO-10)
+
+The production background capability is false. Scene inactivity and protected-data loss stop capture. The independent consent choice cannot open this capability. No audio background-mode entitlement is enabled, no silent-audio keepalive is added, and no claim is made about App Review acceptance.
+
+Enabling background audio requires evidence that the final native pipeline obeys lock, protected-data, interruption and private-output policy on actual devices, followed by review of the legitimate audio use and platform requirements. Simulator availability cannot prove that evidence. A subsequent separately authorized change must implement and verify the capability before it can open; do not turn the gate on merely because this sprint's policy fixtures pass.
+
 ## Deferred acceptance
 
 VC-AUDIO-06, VC-AUDIO-09 and VC-AUDIO-10 remain blocked for their background/physical acceptance. Neither locked speech nor sustained background feasibility is delivered by S04. All extended screen-off/standby gates in later sprints remain pending. Device evidence and review are required before treating these tasks as verified.

@@ -37,3 +37,11 @@ This handoff consolidates the visible Eilo conversation decisions and the curren
 
 ## First response in Eilo App
 Acknowledge that you have read the package, summarize the baseline and unresolved gates, and state that setup/development remains paused. Do not execute VC-DEVOPS-01 until the owner explicitly asks.
+
+## Latest S04 continuation boundary — 6 October 2026
+
+Gemju Sherpa authorized remaining S04 local implementation and checks. Latest supplied AGENTS.md prohibits stage, commit, push, merge, tag and history rewrites; this supersedes historical Git permissions. Remaining changes stay uncommitted on the pre-existing task/s04-vc-set-08 branch. Review terminology and Gemju Sherpa attribution apply. Physical Android/iPhone feasibility is unverified; iOS background capability stays closed. See S04_REVIEW.md and S04_DEVICE_FEASIBILITY.md. Do not begin S05 without authorization.
+
+## Superseding Git authorization — 6 October 2026
+
+Gemju Sherpa overrides the earlier Git-commit prohibition for the remainder of the project. Each sprint uses its own branch, each task uses a subbranch, task commits merge into the sprint branch, and a sprint PR targets main. Commit and push are authorized for GemjuSherpa/Eilo. Main merge follows review approval. Preserve unrelated changes; no force-push/history rewrite, release tags, deployment or paid-service permission is implied. S04 remaining changes are being split into the task branches and published through the existing sprint PR. Physical feasibility blockers and iOS background closure remain unchanged.
