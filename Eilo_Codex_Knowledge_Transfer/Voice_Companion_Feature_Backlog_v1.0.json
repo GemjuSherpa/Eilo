@@ -1736,17 +1736,20 @@
       "scope": "native controller",
       "acceptance_criterion": "After60s with no speech/processing/playback, session context clears and state returns to standby.",
       "focused_test": "Fake-clock test; processing and playback defer timer; finishing playback starts timer.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Native monotonic 60-second idle timer starts after playback, suspends while capturing/thinking/speaking and rejects stale timers. Context expiry preserves capture. Kotlin compile/JUnit15 and Swift compile/XCTest15 pass."
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s02-vc-ctrl-05",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Physical-device and later real-audio/storage integration not verified.",
+      "next_action": "Review S02 evidence; no release assurance inferred.",
+      "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
     },
     {
       "id": "VC-CTRL-06",

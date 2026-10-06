@@ -13,3 +13,5 @@ Native Kotlin/Swift controller work is separate from real capture/ASR/model/TTS/
 - VC-CTRL-03 (task/s02-vc-ctrl-03): Opaque native operation tokens invalidate old callbacks/audio across cancellation, Stop, new turns and controller instances. Reentrant Stop cannot restore speaking. Kotlin compile/JUnit10 and Swift compile/XCTest10 pass.
 
 - VC-CTRL-04 (task/s02-vc-ctrl-04): Privacy epochs cancel work on lock/private/identity/reset transitions. Native guarded read/write/display effects deny stale callbacks and default memory access. Thread-delayed lock races, Kotlin compile/JUnit13 and Swift compile/XCTest13 pass.
+
+- VC-CTRL-05 (task/s02-vc-ctrl-05): Native monotonic 60-second idle timer starts after playback, suspends while capturing/thinking/speaking and rejects stale timers. Context expiry preserves capture. Kotlin compile/JUnit15 and Swift compile/XCTest15 pass.

@@ -33,7 +33,33 @@ enum class PrivateEffect { READ_MEMORY, COMMIT_HISTORY, DISPLAY_PRIVATE }
 fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
-class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }) {
+class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler()) {
+    private var idleTask: IdleCancellation? = null
+    private var idleStarted: Long? = null
+    private var hasConversation = false
+    private fun clearIdle() { idleTask?.cancel(); idleTask=null; idleStarted=null }
+    private fun updateIdle() {
+        clearIdle()
+        if (currentState == ControllerState.STANDBY && hasConversation) {
+            idleStarted=clock.milliseconds()
+            val expected=activeToken ?: return
+            idleTask=scheduler.schedule(60_000) { expireIdle(expected) }
+        }
+    }
+    @Synchronized private fun expireIdle(expected: GenerationToken) {
+        if (!accepts(expected) || currentState != ControllerState.STANDBY) return
+        val started=idleStarted ?: return
+        val elapsed=clock.milliseconds()-started
+        if (elapsed < 60_000) { idleTask=scheduler.schedule(60_000-elapsed.coerceAtLeast(0)) { expireIdle(expected) }; return }
+        endSessionPreservingCapture()
+    }
+    private fun endSessionPreservingCapture(): Boolean {
+        clearIdle(); invalidateGeneration(); hasConversation=false
+        return try {
+            effects.cancelWork(); effects.clearVolatileContext()
+            sessionId=UUID.randomUUID(); currentState=ControllerState.STANDBY; issueGeneration(); true
+        } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CONTROLLER,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
+    }
     private var sessionId = UUID.randomUUID()
     private var privacyEpoch = 0L
     private var locked = false
@@ -62,6 +88,8 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (event == ControllerEvent.START || event == ControllerEvent.SPEECH_DETECTED || event == ControllerEvent.PLAYBACK_FINISHED || event == ControllerEvent.RESUME) issueGeneration()
         if ((event == ControllerEvent.PAUSE || event == ControllerEvent.FAILURE) && !stop()) return false
         currentState = next
+        if (event == ControllerEvent.SPEECH_DETECTED) hasConversation=true
+        try { updateIdle() } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; return false }
         currentError = if (next == ControllerState.ERROR) failure else null
         if (next == ControllerState.ERROR) diagnostics.record(SafeComponent.CONTROLLER, failure, SafeSeverity.ERROR)
         return true
@@ -83,6 +111,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     @Synchronized fun releaseSpeech(token: GenerationToken, clause: String): Boolean {
         if (!accepts(token) || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING)) return false
+        clearIdle()
         return try {
             effects.playClause(clause)
             if (!accepts(token)) return false
@@ -92,9 +121,10 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun cancelGeneration() {
         invalidateGeneration()
         try { effects.cancelWork() } catch (_: Exception) { stop(); currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED; return }
-        if (currentState in setOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) { currentState = ControllerState.STANDBY; issueGeneration() }
+        if (currentState in setOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) { currentState = ControllerState.STANDBY; issueGeneration(); updateIdle() }
     }
     @Synchronized fun stop(): Boolean {
+        clearIdle(); hasConversation=false
         invalidateGeneration()
         currentState = ControllerState.STOPPED
         currentError = null
