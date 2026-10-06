@@ -1,7 +1,8 @@
 import Foundation
+import CryptoKit
 import XCTest
 @testable import NativeTestSeam
-enum PackFixtures { static let runtime="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; static let payload=Data(#"{"schema":1,"packId":"test-pack","revision":1,"runtimeRevision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","minAndroid":35,"minIos":18,"artifacts":[{"id":"llm","filename":"model.gguf","role":"llm","url":"https://models.example.test/model.gguf","sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","bytes":4,"license":"Apache-2.0","licenseEvidence":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}]}"#.utf8) }
+enum PackFixtures { static let runtime="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; static func verified(_ bytes: Data=payload) throws -> VerifiedPack { let key=P256.Signing.PrivateKey();return try VerifiedPack.verify(payload:bytes,signature:key.signature(for:bytes).derRepresentation,keyID:"test-key",algorithm:"ES256",trust:["test-key":key.publicKey.derRepresentation],runtime:runtime) }; static let payload=Data(#"{"schema":1,"packId":"test-pack","revision":1,"runtimeRevision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","minAndroid":35,"minIos":18,"artifacts":[{"id":"llm","filename":"model.gguf","role":"llm","url":"https://models.example.test/model.gguf","sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","bytes":4,"license":"Apache-2.0","licenseEvidence":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}]}"#.utf8) }
 final class PackManifestTests: XCTestCase {
  func testValidMetadata() throws { XCTAssertEqual(try PackManifest.parse(PackFixtures.payload,runtime:PackFixtures.runtime).artifacts.first?.bytes,4) }
  func testRejectsUnsafeAndIncomplete() {
