@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {controllerStates, parseStateEvent} from './index';
+import {controllerStates, modelStatuses, parseStateEvent} from './index';
 const event = {version: 1, state: 'stopped', sessionId: '00000000-0000-4000-8000-000000000001', operationId: '00000000-0000-4000-8000-000000000002', generation: 0, privacyEpoch: 0};
 describe('metadata-only native state boundary', () => {
   it.each(controllerStates)('accepts %s and returns an owned snapshot', state => {
@@ -27,5 +27,16 @@ describe('metadata-only native state boundary', () => {
     const input = {...event};
     Object.defineProperty(input, 'state', {get() {throw new Error('must not execute');}});
     expect(parseStateEvent(input)).toBeNull();
+  });
+});
+
+describe('bounded model readiness presentation', () => {
+  it.each(modelStatuses)('accepts native reason %s', modelStatus => {
+    expect(parseStateEvent({...event, modelStatus})).toEqual({...event, modelStatus});
+  });
+  it('rejects arbitrary content and non-string readiness', () => {
+    for (const modelStatus of ['synthetic private details', 1, null, {ready: true}]) {
+      expect(parseStateEvent({...event, modelStatus})).toBeNull();
+    }
   });
 });

@@ -11,7 +11,7 @@ final class RestartTests: XCTestCase {
   }
   func testSnapshotOpaqueMetadataAndTypedErrors() {
     let c=testController(); let snapshot=c.snapshot()
-    XCTAssertEqual(Set(snapshot.keys),Set(["version","state","sessionId","operationId","generation","privacyEpoch"]))
+    XCTAssertEqual(Set(snapshot.keys),Set(["version","state","sessionId","operationId","generation","privacyEpoch","modelStatus"]))
     XCTAssertEqual(snapshot["state"] as? String,"stopped"); XCTAssertNotNil(UUID(uuidString:snapshot["sessionId"] as! String))
     c.dispatch(.start); c.dispatch(.failure,failure:.timeout,token:c.token)
     XCTAssertEqual(c.snapshot()["errorCode"] as? String,"timeout")

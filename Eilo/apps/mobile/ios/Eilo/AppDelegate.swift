@@ -6,7 +6,16 @@ import ReactAppDependencyProvider
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
   // One process-owned native authority; construction never requests permission/capture.
+  // No shipping trust key/origin/license approval. Installer creation is explicit and cannot auto-start capture.
   let conversationController = NativeController(permission: IOSMicrophonePermission())
+  func createModelStore() throws -> PackStore {
+    guard let base=FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask).first else { throw PackFailure.unavailable }
+    var root=base.appendingPathComponent("generic-models",isDirectory:true)
+    root=try PackFiles.directory(root)
+    try FileManager.default.setAttributes([.protectionKey:FileProtectionType.completeUntilFirstUserAuthentication],ofItemAtPath:root.path)
+    var values=URLResourceValues();values.isExcludedFromBackup=true;try root.setResourceValues(values)
+    return PackStore(root:root,trust:[:],runtime:"5e03bdd8700948b9c41c54dd1b00f28a2aebc03f",ios:ProcessInfo.processInfo.operatingSystemVersion.majorVersion)
+  }
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 

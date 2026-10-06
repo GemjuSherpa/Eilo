@@ -7,3 +7,8 @@ coverage/
 
 **/.build/
 **/.swiftpm/
+
+# Local model source, conversion tools and generated weights
+.local/
+*.gguf
+*.safetensors

@@ -13,7 +13,7 @@ class RestartTest {
     }
     @Test fun snapshotHasOnlyOpaqueMetadataAndTypedErrors() {
         val c=testController(); val snapshot=c.snapshot()
-        assertEquals(setOf("version","state","sessionId","operationId","generation","privacyEpoch"),snapshot.keys)
+        assertEquals(setOf("version","state","sessionId","operationId","generation","privacyEpoch","modelStatus"),snapshot.keys)
         assertEquals("stopped",snapshot["state"]); java.util.UUID.fromString(snapshot["sessionId"] as String)
         c.dispatch(ControllerEvent.START); c.dispatch(ControllerEvent.FAILURE,SafeError.TIMEOUT,c.token())
         assertEquals("timeout",c.snapshot()["errorCode"])
