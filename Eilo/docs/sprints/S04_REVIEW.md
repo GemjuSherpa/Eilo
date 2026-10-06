@@ -1,6 +1,6 @@
 # S04 — guest consent and native audio lifecycle
 
-Gemju Sherpa verified S03 and authorized S04 on 6 October 2026, including scoped Git/GitHub commands. This is the first task checkpoint, not a completed sprint. The latest supplied AGENTS.md requires review after one small dependency-ready task.
+Gemju Sherpa verified S03 and authorized S04 on 6 October 2026, including scoped Git/GitHub commands. Gemju Sherpa subsequently authorized continuing the remaining S04 tasks before the sprint review. Task results and unrun physical checks are recorded below.
 
 ## VC-AUDIO-01 — Android foreground capture
 
@@ -31,3 +31,7 @@ VC-AUDIO-01 is implemented with partial verification and awaits Gemju Sherpa rev
 PASS: `:app:compileDebugKotlin :app:testDebugUnitTest :app:assembleDebug :app:assembleRelease :app:lintDebug` on JDK 17/installed Android SDK (54 JUnit tests, zero failures). Android lint now has zero errors; existing dependency/template warnings remain. PASS: npm workspace lint, typecheck and tests (33 contract tests plus one mobile UI test). No iOS source changed; its hosted regression build remains part of the existing CI workflow. No dependencies were installed and no infrastructure was provisioned.
 
 Official platform reference: [Android AudioRecord](https://developer.android.com/reference/android/media/AudioRecord), including nonblocking reads, recording-state checks and resource release. This reference is implementation guidance, not evidence of a hardware pass.
+
+### VC-AUDIO-05
+
+iOS AVAudioEngine/session capture is process-owned and native-only; asynchronous Start/Stop, stale completion, permission revocation and setup-race fixtures pass. Swift 48 tests and iOS-platform typecheck pass. Hardware Start/Stop and JS-detached capture are NOT RUN.
