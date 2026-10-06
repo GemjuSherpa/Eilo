@@ -17,7 +17,7 @@ VC-BASE-01,BASE,Versioned Android launch shell,F13;A10,,approved,approved,implem
 VC-BASE-02,BASE,Versioned iOS launch shell,F13;A10,,approved,approved,implemented,pass,,sprint/s01-foundation,,,,Eilo/docs/sprints/S01_REVIEW.md
 VC-BASE-03,BASE,Native state contract,F02;S04,,approved,approved,implemented,pass,,sprint/s01-foundation,,,,Eilo/docs/sprints/S01_REVIEW.md
 VC-BASE-04,BASE,Native adapter substitution,F13;S01,VC-BASE-03,approved,approved,implemented,pass,,sprint/s01-foundation,,,,Eilo/docs/sprints/S01_REVIEW.md
-VC-CTRL-01,CTRL,Deterministic state transitions,F02;F12,VC-BASE-03;VC-BASE-04,planned,not_requested,not_started,not_run,,,,,,
+VC-CTRL-01,CTRL,Deterministic state transitions,F02;F12,VC-BASE-03;VC-BASE-04,awaiting_review,awaiting_human_review,implemented,partial,,task/s02-vc-ctrl-01,,,Physical-device and later real-audio/storage integration not verified.,Eilo/docs/sprints/S02_REVIEW.md — Native deterministic transition tables; 99 state/event pairs per platform plus synthetic turn/failure checks. Kotlin compile/JUnit5 and Swift compile/XCTest5 pass. Capturing maps to existing listening wire state.
 VC-CTRL-02,CTRL,Stop transaction,F12;F15;A06,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
 VC-CTRL-03,CTRL,Generation cancellation token,F09;S04;A05,VC-CTRL-01,planned,not_requested,not_started,not_run,,,,,,
 VC-CTRL-04,CTRL,Privacy epoch guard,S02;S04;S10,VC-CTRL-03,planned,not_requested,not_started,not_run,,,,,,

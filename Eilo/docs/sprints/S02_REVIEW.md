@@ -5,3 +5,5 @@ Owner authorized S02 and scoped Git commands, with root sprint and per-task bran
 Native Kotlin/Swift controller work is separate from real capture/ASR/model/TTS/storage integration in later sprints. Device permission/lifecycle tests remain provisional; no physical Android available and iPhone model/RAM unresolved.
 
 - VC-LOCK-07 (task/s02-vc-lock-07): Bounded volatile typed diagnostics; Swift compiler/XCTest3 and Kotlin compiler/JUnit3 pass. No content, persistent log or upload sink.
+
+- VC-CTRL-01 (task/s02-vc-ctrl-01): Native deterministic transition tables; 99 state/event pairs per platform plus synthetic turn/failure checks. Kotlin compile/JUnit5 and Swift compile/XCTest5 pass. Capturing maps to existing listening wire state.
