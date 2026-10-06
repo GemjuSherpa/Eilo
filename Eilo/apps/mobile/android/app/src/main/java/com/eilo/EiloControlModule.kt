@@ -28,7 +28,7 @@ class EiloControlModule(context: ReactApplicationContext): NativeEiloControlSpec
   override fun invalidate() { active=false;main.removeCallbacks(refresh);super.invalidate() } // UI detachment never owns audio.
   private fun snapshot():String {
     val c=app.conversationController;c.permissionChanged()
-    val payload=JSONObject(mapOf("version" to 1,"controller" to c.snapshot(),"capturePending" to c.captureIsPending(),"speakerConfirmationRequired" to c.speakerConfirmationRequired()))
+    val payload=JSONObject(mapOf("version" to 1,"controller" to c.snapshot(),"capturePending" to c.captureIsPending(),"speakerConfirmationRequired" to c.speakerConfirmationRequired(),"preferences" to app.consent.snapshot()))
     val raw=payload.toString()
     if(raw!=previousPayload) { revision++;previousPayload=raw }
     return payload.put("revision",revision).toString()
@@ -39,11 +39,16 @@ class EiloControlModule(context: ReactApplicationContext): NativeEiloControlSpec
       try {
         val c=app.conversationController
         val unlocked=!app.getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked
-        if(value!="" || name !in setOf("start","stop","confirmSpeaker")) { promise.reject("invalid_command","Unsupported control");return@post }
+        if(name !in setOf("start","stop","confirmSpeaker","history","completeOnboarding") || (name!="history" && value!="") || (name=="history" && value !in setOf("private","history"))) { promise.reject("invalid_command","Unsupported control");return@post }
         when(name) {
+          "history" -> if(app.foregroundCaptureVisible && unlocked) {
+            c.privacyTransition(com.eilo.foundation.PrivacyChange.PRIVATE_SESSION)
+            if(!app.consent.chooseHistory(if(value=="private") com.eilo.foundation.HistoryChoice.PRIVATE else com.eilo.foundation.HistoryChoice.HISTORY)) throw IllegalStateException()
+          }
+          "completeOnboarding" -> if(app.foregroundCaptureVisible && unlocked && !app.consent.completeOnboarding()) throw IllegalStateException()
           "stop" -> c.stop()
           "confirmSpeaker" -> if(app.foregroundCaptureVisible && unlocked) c.confirmSpeaker() else c.stop()
-          "start" -> if(app.foregroundCaptureVisible && unlocked) {
+          "start" -> if(app.foregroundCaptureVisible && unlocked && app.consent.canStart()) {
             val activity=reactApplicationContext.currentActivity
             val needsNotification=android.os.Build.VERSION.SDK_INT >= 33 && app.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED
             if(needsNotification && c.modelStatus()==com.eilo.foundation.ModelStatus.READY && app.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)==android.content.pm.PackageManager.PERMISSION_GRANTED) {

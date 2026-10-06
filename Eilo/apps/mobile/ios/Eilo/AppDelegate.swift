@@ -8,6 +8,7 @@ import ReactAppDependencyProvider
 class AppDelegate: UIResponder, UIApplicationDelegate {
   // One process-owned native authority; construction never requests permission/capture.
   // No shipping trust key/origin/license approval. Installer creation is explicit and cannot auto-start capture.
+  let consent=NativeConsentPolicy(persistence:IOSConsentPersistence())
   let captureEffects = IOSCaptureEffects()
   let captureEligibility=IOSCaptureEligibility()
   var captureVisible: Bool { get { captureEligibility.visible } set { captureEligibility.visible=newValue } }
