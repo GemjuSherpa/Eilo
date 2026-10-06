@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   Switch,
+  View,
   useColorScheme,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +21,7 @@ import tokens from '@eilo/design-tokens';
 import {
   Onboarding,
   HistoryChoices,
+  Action,
   styles as textStyles,
 } from './src/Onboarding';
 import { Home } from './src/Home';
@@ -221,6 +223,94 @@ export default function App({
                             This separate choice requires device authentication.
                             It never starts the microphone. Screen lock stops
                             listening.
+                          </Text>
+                          <Text
+                            style={[textStyles.body, { color: colors.text }]}
+                          >
+                            Reply volume: {snapshot?.preferences.volume ?? 100}%
+                          </Text>
+                          <View
+                            accessibilityRole="adjustable"
+                            accessibilityLabel="Reply volume"
+                            accessibilityValue={{
+                              min: 0,
+                              max: 100,
+                              now: snapshot?.preferences.volume ?? 100,
+                            }}
+                            accessibilityActions={[
+                              { name: 'increment' },
+                              { name: 'decrement' },
+                            ]}
+                            onAccessibilityAction={event =>
+                              run(
+                                'volume',
+                                String(
+                                  Math.max(
+                                    0,
+                                    Math.min(
+                                      100,
+                                      (snapshot?.preferences.volume ?? 100) +
+                                        (event.nativeEvent.actionName ===
+                                        'increment'
+                                          ? 10
+                                          : -10),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            }
+                          >
+                            <Action
+                              colors={colors}
+                              label="Volume down"
+                              disabled={
+                                busy ||
+                                !snapshot ||
+                                snapshot.preferences.volume === 0
+                              }
+                              onPress={() =>
+                                run(
+                                  'volume',
+                                  String(
+                                    Math.max(
+                                      0,
+                                      (snapshot?.preferences.volume ?? 100) -
+                                        10,
+                                    ),
+                                  ),
+                                )
+                              }
+                            />
+                            <Action
+                              colors={colors}
+                              label="Volume up"
+                              disabled={
+                                busy ||
+                                !snapshot ||
+                                snapshot.preferences.volume === 100
+                              }
+                              onPress={() =>
+                                run(
+                                  'volume',
+                                  String(
+                                    Math.min(
+                                      100,
+                                      (snapshot?.preferences.volume ?? 100) +
+                                        10,
+                                    ),
+                                  ),
+                                )
+                              }
+                            />
+                          </View>
+                          <Text
+                            style={[
+                              textStyles.body,
+                              { color: colors.secondary_text },
+                            ]}
+                          >
+                            Changes reply gain only. Spoken replies become
+                            available in a later sprint.
                           </Text>
                         </ScrollView>
                       </SafeAreaView>

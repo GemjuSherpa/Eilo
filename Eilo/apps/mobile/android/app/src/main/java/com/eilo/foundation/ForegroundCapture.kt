@@ -19,6 +19,8 @@ internal class ForegroundCapture(
 ) : ControllerEffects {
     private val monitor = Any()
     private var run = 0L
+    @Volatile private var speechGain=1f
+    override fun setOutputGain(gain:Float) { require(gain.isFinite() && gain in 0f..1f);speechGain=gain }
     private var device: CaptureDevice? = null
     // There is no permission to open synchronously on a UI/permission callback thread.
     override fun startCapture() = false

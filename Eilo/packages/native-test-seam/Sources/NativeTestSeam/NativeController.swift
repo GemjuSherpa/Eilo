@@ -7,6 +7,7 @@ public enum ControllerEvent: CaseIterable, Sendable {
 }
 /// Effects are synchronous/nonblocking/idempotent. Async callbacks return through the controller.
 public protocol ControllerEffects: AnyObject {
+  func setOutputGain(_ gain:Float) throws
   func startCapture() throws -> Bool
   func beginCapture(completion: @escaping (Bool) -> Void, failure: @escaping () -> Void) throws
   func playClause(_ clause: String) throws
@@ -15,6 +16,7 @@ public protocol ControllerEffects: AnyObject {
   func clearVolatileContext() throws
 }
 public extension ControllerEffects {
+  func setOutputGain(_ gain:Float) throws {}
   func beginCapture(completion: @escaping (Bool) -> Void, failure: @escaping () -> Void) throws { completion(try startCapture()) }
 }
 public final class NoopControllerEffects: ControllerEffects {
@@ -52,6 +54,10 @@ public final class NativeController: @unchecked Sendable {
   let models: any ModelReadinessAdapter
   public var modelStatus: ModelStatus { models.status() }
   public func modelsChanged() { lock.lock();defer { lock.unlock() };if modelStatus != .ready { stop();if currentState == .stopped { currentState = .setup } } else if currentState == .setup { currentState = .stopped } }
+  @discardableResult public func setOutputGain(_ gain:Float)->Bool {
+    lock.lock();defer { lock.unlock() };guard gain.isFinite,(0...1).contains(gain) else { return false }
+    do { try effects.setOutputGain(gain);return true } catch { diagnostics.record(.speech,.unavailable,.warning);return false }
+  }
   var speakerRequired=false
   public var speakerConfirmationRequired: Bool { lock.lock();defer { lock.unlock() };return speakerRequired }
   public func routeDisconnected() { lock.lock();defer { lock.unlock() };speakerRequired=true;stop() }

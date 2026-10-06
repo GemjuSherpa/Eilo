@@ -26,8 +26,14 @@ import UIKit
   }
   @objc func command(_ name:String,value:String) -> String {
     guard let app else { return "{}" }
-    if name != "history" && !value.isEmpty { return "{}" }
+    if name.utf8.count>32 || value.utf8.count>8 { return "{}" }
+    if name != "history" && name != "volume" && !value.isEmpty { return "{}" }
     switch name {
+    case "volume":
+      guard app.captureEligibility.allowed,let level=Int(value),(0...100).contains(level) else { return "{}" }
+      let before=app.consent.snapshot()["volume"] as? Int ?? 100
+      guard app.conversationController.setOutputGain(Float(level)/100) else { return "{}" }
+      guard app.consent.chooseVolume(level) else { app.conversationController.setOutputGain(Float(before)/100);return "{}" }
     case "history":
       guard app.captureEligibility.allowed,let choice=HistoryChoice(rawValue:value),choice != .unselected else { return "{}" }
       app.conversationController.privacyTransition(.privateSession)

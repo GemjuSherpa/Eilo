@@ -39,8 +39,15 @@ class EiloControlModule(context: ReactApplicationContext): NativeEiloControlSpec
       try {
         val c=app.conversationController
         val unlocked=!app.getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked
-        if(name !in setOf("start","stop","confirmSpeaker","history","completeOnboarding","background") || (name !in setOf("history","background") && value!="") || (name=="history" && value !in setOf("private","history")) || (name=="background" && value !in setOf("true","false"))) { promise.reject("invalid_command","Unsupported control");return@post }
+        if(name.length>32 || value.length>8 || name !in setOf("start","stop","confirmSpeaker","history","completeOnboarding","background","volume") || (name !in setOf("history","background","volume") && value!="") || (name=="history" && value !in setOf("private","history")) || (name=="background" && value !in setOf("true","false"))) { promise.reject("invalid_command","Unsupported control");return@post }
         when(name) {
+          "volume" -> {
+            val level=value.toIntOrNull()
+            if(level==null || level !in 0..100 || !app.foregroundCaptureVisible || !unlocked) throw IllegalStateException()
+            val before=app.consent.snapshot()["volume"] as Int
+            if(!c.setOutputGain(level/100f)) throw IllegalStateException()
+            if(!app.consent.chooseVolume(level)) { c.setOutputGain(before/100f);throw IllegalStateException() }
+          }
           "background" -> {
             c.stop()
             if(!app.foregroundCaptureVisible || !unlocked) { promise.resolve(snapshot());return@post }

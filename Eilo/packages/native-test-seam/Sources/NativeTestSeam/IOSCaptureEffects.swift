@@ -8,6 +8,8 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
   private let worker=DispatchQueue(label:"eilo.native.capture")
   private var run: UInt64=0
   private var engine: AVAudioEngine?
+  private var speechGain:Float=1
+  public func setOutputGain(_ gain:Float) throws { lock.lock();defer { lock.unlock() };guard gain.isFinite,(0...1).contains(gain) else { throw CaptureFailure.unavailable };speechGain=gain }
   public var eligible: () -> Bool = { false }
   public init() {}
   public func startCapture() throws -> Bool { false }

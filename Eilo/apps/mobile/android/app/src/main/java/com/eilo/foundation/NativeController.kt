@@ -11,6 +11,7 @@ enum class ControllerEvent { SETUP_REQUIRED, READY, START, SPEECH_DETECTED, ENDP
 
 /** Lifecycle effects are idempotent. Device opening uses beginCapture off the UI thread. */
 interface ControllerEffects {
+    fun setOutputGain(gain:Float) {}
     fun startCapture(): Boolean
     fun beginCapture(completion: (Boolean) -> Unit, failure: () -> Unit) { completion(startCapture()) }
     fun playClause(clause: String)
@@ -39,6 +40,10 @@ fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter(), private val models: ModelReadinessAdapter = MissingModelReadiness()) {
     @Synchronized fun modelStatus(): ModelStatus = try { models.status() } catch (_: Exception) { ModelStatus.CORRUPT }
     @Synchronized fun modelsChanged() { if(modelStatus()!=ModelStatus.READY) { stop();if(currentState==ControllerState.STOPPED)currentState=ControllerState.SETUP } else if(currentState==ControllerState.SETUP) currentState=ControllerState.STOPPED }
+    @Synchronized fun setOutputGain(gain:Float):Boolean {
+      if(!gain.isFinite() || gain<0f || gain>1f) return false
+      return try { effects.setOutputGain(gain);true } catch (_:Exception) { diagnostics.record(SafeComponent.SPEECH,SafeError.UNAVAILABLE,SafeSeverity.WARNING);false }
+    }
     private var speakerRequired=false
     @Synchronized fun speakerConfirmationRequired() = speakerRequired
     @Synchronized fun routeDisconnected() { speakerRequired=true; stop() }
