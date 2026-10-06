@@ -6,11 +6,12 @@ final class EffectsSpy: ControllerEffects {
   func startCapture() throws -> Bool { started += 1; onStart?(); return true }
   var cancelled=0, released=0, cleared=0
   var context: [UInt8]=[1,2,3]; let committedHistory: [UInt8]=[4,5]
+  var onCancel: (() -> Void)?
   var failCancellation=false
   var onPlay: (() -> Void)?
   var clauses: [String] = []
   func playClause(_ clause: String) throws { clauses.append(clause); onPlay?() }
-  func cancelWork() throws { cancelled += 1; if failCancellation { throw NSError(domain:"SYNTHETIC_PRIVATE_MARKER",code:1) } }
+  func cancelWork() throws { cancelled += 1; onCancel?(); if failCancellation { throw NSError(domain:"SYNTHETIC_PRIVATE_MARKER",code:1) } }
   func releaseCapture() throws { released += 1 }
   func clearVolatileContext() throws { cleared += 1; context = [] }
 }
@@ -25,6 +26,11 @@ final class StopTransactionTests: XCTestCase {
       XCTAssertTrue(spy.context.isEmpty); XCTAssertEqual(spy.committedHistory,[4,5])
       XCTAssertFalse(c.dispatch(.speechReady)); XCTAssertFalse(c.dispatch(.playbackFinished))
     }
+  }
+  func testCleanupCannotReentrantlyStartOrRecurseStop() {
+    let spy=EffectsSpy(); let c=testController(effects:spy)
+    spy.onCancel={ XCTAssertFalse(c.dispatch(.start)); c.stop() }
+    XCTAssertTrue(c.stop()); XCTAssertEqual(spy.started,0); XCTAssertEqual(spy.cancelled,1); XCTAssertNil(c.token); XCTAssertEqual(c.state,.stopped)
   }
   func testFailureStillReleasesAndClearsWithoutCause() {
     let spy=EffectsSpy(); spy.failCancellation=true; let diagnostics=SafeDiagnostics()

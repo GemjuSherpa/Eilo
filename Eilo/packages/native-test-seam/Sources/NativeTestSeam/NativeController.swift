@@ -45,12 +45,13 @@ public final class NativeController: @unchecked Sendable {
   let diagnostics: SafeDiagnostics
   let effects: any ControllerEffects
   let permission: any MicrophonePermissionAdapter
+  var stopping=false
   var startIntent: UUID?
   var permissionPrompted=false
   func permissionGranted() -> Bool { permission.status() == .granted }
   public func permissionChanged() { lock.lock(); defer { lock.unlock() }; if !permissionGranted() { stop() } }
   func start() -> Bool {
-    guard startIntent == nil, !locked, [.stopped,.permissionRequired,.paused].contains(currentState) else { return false }
+    guard !stopping, startIntent == nil, !locked, [.stopped,.permissionRequired,.paused].contains(currentState) else { return false }
     let intent=UUID(); startIntent=intent
     switch permission.status() {
     case .granted: return completeStart(intent,.granted)
@@ -79,7 +80,7 @@ public final class NativeController: @unchecked Sendable {
   var idleTask: (any IdleCancellation)?
   var idleStarted: UInt64?
   var hasConversation=false
-  func clearIdle() { idleTask?.cancel(); idleTask=nil; idleStarted=nil }
+  func clearIdle() { let previous=idleTask; idleTask=nil; idleStarted=nil; previous?.cancel() }
   func updateIdle() {
     clearIdle()
     if currentState == .standby && hasConversation, let expected=activeToken {
@@ -90,7 +91,8 @@ public final class NativeController: @unchecked Sendable {
   func expireIdle(_ expected: GenerationToken) {
     lock.lock(); defer { lock.unlock() }
     guard accepts(expected), currentState == .standby, let started=idleStarted else { return }
-    let now=clock.milliseconds(), elapsed=clock.milliseconds() >= started ? now-started : 0
+    let now=clock.milliseconds()
+    let elapsed=now >= started ? now-started : 0
     if elapsed < 60_000 { idleTask=scheduler.schedule(60_000-elapsed) { [weak self] in self?.expireIdle(expected) }; return }
     endSessionPreservingCapture()
   }
@@ -137,6 +139,7 @@ public final class NativeController: @unchecked Sendable {
   public var error: SafeError? { lock.lock(); defer { lock.unlock() }; return currentError }
   @discardableResult public func dispatch(_ event: ControllerEvent, failure: SafeError = .unexpected, token: GenerationToken? = nil) -> Bool {
     lock.lock(); defer { lock.unlock() }
+    if stopping && event != .stop { return false }
     if locked && [.start,.resume].contains(event) { return false }
     if event == .stop { return stop() }
     if event == .resume && currentState != .paused { return false }
@@ -194,12 +197,17 @@ public final class NativeController: @unchecked Sendable {
     catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.speech,.unexpected,.error); return false }
   }
   public func cancelGeneration() {
-    lock.lock(); defer { lock.unlock() }; invalidateGeneration()
+    lock.lock(); defer { lock.unlock() }
+    guard !stopping else { return }
+    guard permissionGranted() else { stop(); return }
+    invalidateGeneration()
     do { try effects.cancelWork() } catch { stop(); currentState = .error; currentError = .unexpected; return }
     if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration(); updateIdle() }
   }
   @discardableResult public func stop() -> Bool {
     lock.lock(); defer { lock.unlock() }
+    if stopping { return true }
+    stopping=true; defer { stopping=false }
     startIntent=nil
     clearIdle(); hasConversation=false
     invalidateGeneration()
