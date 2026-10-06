@@ -29,6 +29,7 @@
 		F06260405EFD417662348E4C /* SafeDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D762C0DF0FDDBF15B9BC750 /* SafeDiagnostics.swift */; };
 		3D5849C4D5179CAE58CF85D5 /* NativeConsentPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */; };
 		98BF41F81902FA816B06B230 /* IOSConsentAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */; };
+		3B49E2663389BBF4ACDF0E7B /* BackgroundCapturePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeConsentPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeConsentPolicy.swift"; sourceTree = "<group>"; };
 		61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IOSConsentAuthentication.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/IOSConsentAuthentication.swift"; sourceTree = "<group>"; };
+		69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BackgroundCapturePolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/BackgroundCapturePolicy.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 		30F2448E7B57418BE6C6AAB8 /* NativeController */ = {
 			isa = PBXGroup;
 			children = (
+				69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */,
 				61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */,
 				49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */,
 				E2714425033B445EF7376149 /* AudioInterruption.swift */,
@@ -305,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B49E2663389BBF4ACDF0E7B /* BackgroundCapturePolicy.swift in Sources */,
 				98BF41F81902FA816B06B230 /* IOSConsentAuthentication.swift in Sources */,
 				3D5849C4D5179CAE58CF85D5 /* NativeConsentPolicy.swift in Sources */,
 				32178116509279ABCCA559EA /* EiloControl.mm in Sources */,
