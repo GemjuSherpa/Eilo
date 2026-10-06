@@ -10,7 +10,7 @@ internal class FakeTime : NativeClock, IdleScheduler {
 }
 class IdleTimerTest {
     @Test fun processingPlaybackDeferAndSixtySecondsOfIdleClearsOnlyContext() {
-        val time=FakeTime(); val spy=EffectsSpy(); val c=NativeController(effects=spy,clock=time,scheduler=time)
+        val time=FakeTime(); val spy=EffectsSpy(); val c=testController(effects=spy,clock=time,scheduler=time)
         c.dispatch(ControllerEvent.START); assertTrue(time.jobs.isEmpty())
         c.dispatch(ControllerEvent.SPEECH_DETECTED,token=c.token()); c.dispatch(ControllerEvent.ENDPOINT,token=c.token())
         time.now=120_000; assertTrue(time.jobs.isEmpty()); assertEquals(ControllerState.THINKING,c.state())
@@ -21,7 +21,7 @@ class IdleTimerTest {
         assertEquals(ControllerState.STANDBY,c.state()); assertArrayEquals(byteArrayOf(4,5),spy.committedHistory)
     }
     @Test fun resumedSpeechAndStopInvalidateOldTimers() {
-        val time=FakeTime(); val spy=EffectsSpy(); val c=NativeController(effects=spy,clock=time,scheduler=time)
+        val time=FakeTime(); val spy=EffectsSpy(); val c=testController(effects=spy,clock=time,scheduler=time)
         for (e in listOf(ControllerEvent.START,ControllerEvent.SPEECH_DETECTED,ControllerEvent.ENDPOINT,ControllerEvent.SPEECH_READY,ControllerEvent.PLAYBACK_FINISHED)) c.dispatch(e,token=c.token())
         val old=time.jobs.last(); c.dispatch(ControllerEvent.SPEECH_DETECTED,token=c.token())
         assertTrue(old.cancelled); time.now=100_000; old.task(); assertEquals(ControllerState.CAPTURING,c.state()); assertEquals(0,spy.cleared)

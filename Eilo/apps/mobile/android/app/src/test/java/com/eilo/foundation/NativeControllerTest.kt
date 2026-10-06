@@ -21,7 +21,7 @@ class NativeControllerTest {
         }
     }
     @Test fun invalidEventCannotChangeStateAndErrorIsTyped() {
-        val c = NativeController()
+        val c = testController()
         assertFalse(c.dispatch(ControllerEvent.SPEECH_READY)); assertEquals(ControllerState.STOPPED,c.state())
         for (e in listOf(ControllerEvent.START,ControllerEvent.SPEECH_DETECTED,ControllerEvent.ENDPOINT,ControllerEvent.SPEECH_READY,ControllerEvent.PLAYBACK_FINISHED)) assertTrue(c.dispatch(e,token=c.token()))
         assertEquals(ControllerState.STANDBY,c.state())

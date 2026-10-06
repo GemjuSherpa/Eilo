@@ -1936,17 +1936,20 @@
       "scope": "Android permission adapter",
       "acceptance_criterion": "Capture is impossible before user Start plus granted permission; denial does not loop prompts.",
       "focused_test": "Permission fake covers not-requested/denied/granted/revoked; capture spy.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Android OS permission adapter and native capture gate require explicit Start plus current permission. Denial does not loop; delayed/duplicate grants, revocation and reentrant Stop fail closed. Kotlin compile/JUnit23 pass; physical prompt/permission tests not run."
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s02-vc-set-04",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Physical-device and later real-audio/storage integration not verified.",
+      "next_action": "Review S02 evidence; no release assurance inferred.",
+      "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
     },
     {
       "id": "VC-SET-05",
