@@ -1646,17 +1646,20 @@
       "scope": "native controller",
       "acceptance_criterion": "Stop cancels work, releases capture and clears volatile context without deleting committed history.",
       "focused_test": "Stop in every active state; delayed adapter completion cannot resume capture/output.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Serialized Stop cancels/releases/clears; cleanup failure still attempts every action and emits typed error. Synthetic committed history stays intact. Kotlin compile/JUnit7 and Swift compile/XCTest7 pass."
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s02-vc-ctrl-02",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Physical-device and later real-audio/storage integration not verified.",
+      "next_action": "Review S02 evidence; no release assurance inferred.",
+      "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
     },
     {
       "id": "VC-CTRL-03",
