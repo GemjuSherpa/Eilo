@@ -1794,17 +1794,20 @@
       "scope": "deterministic active command",
       "acceptance_criterion": "Recognized stop listening invokes the same Stop transaction; no model/tool action required.",
       "focused_test": "Inject recognized command; capture releases even if model adapter fails.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Native recognized stop listening routes directly to the same Stop transaction without a model call. Exact bounded command matching rejects stale recognition. Kotlin compile/JUnit18 and Swift compile/XCTest18 pass."
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s02-vc-ctrl-07",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Physical-device and later real-audio/storage integration not verified.",
+      "next_action": "Review S02 evidence; no release assurance inferred.",
+      "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
     },
     {
       "id": "VC-CTRL-08",
