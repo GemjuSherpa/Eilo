@@ -5,6 +5,9 @@ public enum PackActivationStep { case copied,verified,beforePointer,afterPointer
 public final class PackStore {
   private let root: URL,trust: [String:Data],runtime: String,licenseEvidence: Set<String>,ios: Int
   private static let sharedLock=NSRecursiveLock()
+  private static let epochLock=NSLock()
+  private static var version=UUID()
+  public var epoch: UUID { Self.epochLock.lock();defer { Self.epochLock.unlock() };return Self.version }
   private var lock: NSRecursiveLock { Self.sharedLock }
   public init(root: URL,trust: [String:Data],runtime: String,licenseEvidence: Set<String>=[],ios: Int=18) { self.root=root;self.trust=trust;self.runtime=runtime;self.licenseEvidence=licenseEvidence;self.ios=ios }
   private func verify(_ payload: Data,_ signature: Data,_ key: String) throws -> VerifiedPack { try VerifiedPack.verify(payload:payload,signature:signature,keyID:key,algorithm:"ES256",trust:trust,runtime:runtime,ios:ios) }
@@ -29,7 +32,7 @@ public final class PackStore {
     let (_,versions)=try directories();return try PackFiles.child(PackFiles.child(versions,current.digest),current.manifest.artifacts[index].filename)
   }
   public func activate(_ pack: VerifiedPack,proofs: [VerifiedArtifact],cancel: PackCancellation,step: (PackActivationStep)throws->Void = { _ in }) throws {
-    lock.lock();defer { lock.unlock() };let checked=try verify(pack.signedPayload,pack.signatureBytes,pack.keyID)
+    lock.lock();defer { lock.unlock() };Self.epochLock.lock();Self.version=UUID();Self.epochLock.unlock();let checked=try verify(pack.signedPayload,pack.signatureBytes,pack.keyID)
     guard checked.manifest.artifacts.allSatisfy({ licenseEvidence.contains($0.licenseEvidence) }) else { throw PackFailure.activation }
     let (r,versions)=try directories(),old=try active()
     if let old=old { guard checked.manifest.packID==old.manifest.packID && (checked.manifest.revision>old.manifest.revision || checked.digest==old.digest) else { throw PackFailure.activation } }

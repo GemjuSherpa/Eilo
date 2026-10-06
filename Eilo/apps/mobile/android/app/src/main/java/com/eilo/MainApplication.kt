@@ -10,7 +10,9 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 class MainApplication : Application(), ReactApplication {
 
   // One native authority per process; startup never invokes Start or restores capture.
-  val conversationController = com.eilo.foundation.NativeController()
+  private val modelPacks by lazy { com.eilo.foundation.PackStore(java.io.File(noBackupFilesDir,"generic-models"),emptyMap(),"5e03bdd8700948b9c41c54dd1b00f28a2aebc03f",android=android.os.Build.VERSION.SDK_INT) }
+  private val modelReadiness by lazy { com.eilo.foundation.PackReadiness(modelPacks) }
+  val conversationController by lazy { com.eilo.foundation.NativeController(models=modelReadiness) }
 
   override val reactHost: ReactHost by lazy {
     getDefaultReactHost(

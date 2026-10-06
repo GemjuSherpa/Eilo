@@ -11,8 +11,8 @@ public struct VerifiedPack: Sendable {
     do {
       let key=try P256.Signing.PublicKey(derRepresentation:encoded), sig=try P256.Signing.ECDSASignature(derRepresentation:signature)
       guard key.isValidSignature(sig,for:payload) else { throw PackFailure.signature }
-      return VerifiedPack(manifest:try PackManifest.parse(payload,runtime:runtime,ios:ios),keyID:keyID,signedPayload:payload,signatureBytes:signature)
     } catch { throw PackFailure.signature }
+    return VerifiedPack(manifest:try PackManifest.parse(payload,runtime:runtime,ios:ios),keyID:keyID,signedPayload:payload,signatureBytes:signature)
   }
   private init(manifest: PackManifest,keyID: String,signedPayload: Data,signatureBytes: Data) { self.manifest=manifest;self.keyID=keyID;self.signedPayload=signedPayload;self.signatureBytes=signatureBytes }
 }

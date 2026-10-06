@@ -9,7 +9,8 @@ import java.util.UUID
 enum class PackActivationStep { COPIED, VERIFIED, BEFORE_POINTER, AFTER_POINTER }
 /** App-private, no-backup root; caller uses installer worker. All store operations serialize. */
 class PackStore(private val root: File, trust: Map<String,ByteArray>, private val runtime: String, private val licenseEvidence: Set<String> = emptySet(),private val android: Int=35) {
- companion object { private val storeLock=Any() }
+ companion object { private val storeLock=Any();private val storeEpoch=java.util.concurrent.atomic.AtomicReference(UUID.randomUUID()) }
+ fun epoch(): UUID=storeEpoch.get()
  private fun <T> locked(operation: ()->T): T = synchronized(storeLock) { operation() }
  private val trust=trust.mapValues { it.value.clone() }
  private fun verify(payload: ByteArray,signature: ByteArray,key: String)=VerifiedPack.verify(payload,signature,key,"ES256",trust,runtime,android)
@@ -32,6 +33,7 @@ class PackStore(private val root: File, trust: Map<String,ByteArray>, private va
   val (_,versions)=directories();return@locked PackFiles.child(PackFiles.child(versions,current.digest),current.manifest.artifacts[index].filename)
  }
  fun activate(pack: VerifiedPack,proofs: List<VerifiedArtifact>,cancel: PackCancellation,step: (PackActivationStep)->Unit={}) = locked {
+  storeEpoch.set(UUID.randomUUID())
   val checked=verify(pack.signedPayload(),pack.signatureBytes(),pack.keyId)
   check(checked.manifest.artifacts.all { it.licenseEvidence in licenseEvidence }) { "license" }
   val (r,versions)=directories();val old=active()

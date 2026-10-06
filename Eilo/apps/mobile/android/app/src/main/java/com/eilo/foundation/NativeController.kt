@@ -35,7 +35,9 @@ enum class PrivateEffect { READ_MEMORY, COMMIT_HISTORY, DISPLAY_PRIVATE }
 fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
-class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter()) {
+class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter(), private val models: ModelReadinessAdapter = MissingModelReadiness()) {
+    @Synchronized fun modelStatus(): ModelStatus = try { models.status() } catch (_: Exception) { ModelStatus.CORRUPT }
+    @Synchronized fun modelsChanged() { if(modelStatus()!=ModelStatus.READY) { stop();if(currentState==ControllerState.STOPPED)currentState=ControllerState.SETUP } else if(currentState==ControllerState.SETUP) currentState=ControllerState.STOPPED }
     private var stopping=false
     private var startIntent: UUID? = null
     private var permissionPrompted=false
@@ -43,13 +45,14 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     /** Binding/rebinding an activity never restores listening or prompts. */
     @Synchronized fun bindPermissionAdapter(adapter: MicrophonePermissionAdapter) { stop(); permission=adapter }
     @Synchronized fun snapshot(): Map<String, Any> {
-        val result=mutableMapOf<String,Any>("version" to 1,"state" to currentState.wireValue,"sessionId" to sessionId.toString(),"operationId" to (activeToken?.operationId ?: stoppedOperationId).toString(),"generation" to generation,"privacyEpoch" to privacyEpoch)
+        val result=mutableMapOf<String,Any>("modelStatus" to modelStatus().wireValue,"version" to 1,"state" to currentState.wireValue,"sessionId" to sessionId.toString(),"operationId" to (activeToken?.operationId ?: stoppedOperationId).toString(),"generation" to generation,"privacyEpoch" to privacyEpoch)
         if (currentState == ControllerState.ERROR) result["errorCode"]=(currentError ?: SafeError.UNEXPECTED).name.lowercase(java.util.Locale.ROOT)
         return result.toMap()
     }
     @Synchronized fun permissionChanged() { if (!permissionGranted()) stop() }
     @Synchronized private fun start(): Boolean {
         if (stopping || startIntent != null || locked || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED)) return false
+        if(modelStatus()!=ModelStatus.READY) { modelsChanged();return false }
         val intent=UUID.randomUUID(); startIntent=intent
         return try {
             when (permission.status()) {
@@ -66,12 +69,13 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized private fun completeStart(intent: UUID, result: MicrophonePermission): Boolean {
         if (startIntent != intent || locked) return false
         startIntent=null
+        if(modelStatus()!=ModelStatus.READY) { modelsChanged();return false }
         if (result != MicrophonePermission.GRANTED || !permissionGranted()) { currentState=ControllerState.PERMISSION_REQUIRED; currentError=null; return false }
         val beforeGeneration=generation; val beforeEpoch=privacyEpoch
         return try {
             if (!effects.startCapture()) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNAVAILABLE; return false }
             // Stop may have been invoked reentrantly while opening the adapter.
-            if (generation != beforeGeneration || privacyEpoch != beforeEpoch || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED) || !permissionGranted()) { stop(); return false }
+            if (generation != beforeGeneration || privacyEpoch != beforeEpoch || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED) || !permissionGranted() || modelStatus()!=ModelStatus.READY) { stop(); return false }
             issueGeneration(); currentState=ControllerState.STANDBY; currentError=null; true
         } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CAPTURE,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
     }
@@ -126,6 +130,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private fun accepts(token: GenerationToken?): Boolean {
         if (token == null || token !== activeToken || token.cancelled || token.privacyEpoch != privacyEpoch) return false
         if (!permissionGranted()) { stop(); return false }
+        if(modelStatus()!=ModelStatus.READY) { modelsChanged();return false }
         return true
     }
     private var currentState = ControllerState.STOPPED

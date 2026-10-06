@@ -22,8 +22,8 @@ data class PackManifest(val packId: String, val revision: Long, val runtimeRevis
             val tokener=JSONTokener(raw);val o=tokener.nextValue() as? JSONObject ?: error("manifest");require(tokener.nextClean()=='\u0000'); require(keys(o)==header && integer(o,"schema")==1L)
             val pack=text(o,"packId");require(matches(pack,"[a-z0-9][a-z0-9-]{0,63}"))
             val revision=integer(o,"revision");require(revision in 1..9007199254740991L)
-            val rr=text(o,"runtimeRevision");require(matches(rr,"[a-f0-9]{40}") && rr==runtime)
-            val a=integer(o,"minAndroid");val i=integer(o,"minIos");require(a in 35..android.toLong() && i in 18..99)
+            val rr=text(o,"runtimeRevision");require(matches(rr,"[a-f0-9]{40}"));if(rr!=runtime)throw PackIncompatibleException()
+            val a=integer(o,"minAndroid");val i=integer(o,"minIos");require(a in 35..99 && i in 18..99);if(a>android)throw PackIncompatibleException()
             val list=o.getJSONArray("artifacts");require(list.length() in 1..16)
             val artifacts=(0 until list.length()).map { n ->
                 val f=list.getJSONObject(n); require(keys(f)==fields)
@@ -48,3 +48,5 @@ data class PackManifest(val packId: String, val revision: Long, val runtimeRevis
         }
     }
 }
+
+class PackIncompatibleException : Exception()
