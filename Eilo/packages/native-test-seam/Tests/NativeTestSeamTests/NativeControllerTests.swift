@@ -14,9 +14,9 @@ final class NativeControllerTests: XCTestCase {
   func testSyntheticTurnAndTypedFailure() {
     let c = NativeController()
     XCTAssertFalse(c.dispatch(.speechReady)); XCTAssertEqual(c.state,.stopped)
-    for e: ControllerEvent in [.start,.speechDetected,.endpoint,.speechReady,.playbackFinished] { XCTAssertTrue(c.dispatch(e)) }
+    for e: ControllerEvent in [.start,.speechDetected,.endpoint,.speechReady,.playbackFinished] { XCTAssertTrue(c.dispatch(e,token:c.token)) }
     XCTAssertEqual(c.state,.standby)
-    c.dispatch(.failure,failure:.timeout); XCTAssertEqual(c.error,.timeout)
+    c.dispatch(.failure,failure:.timeout,token:c.token); XCTAssertEqual(c.error,.timeout)
     c.dispatch(.ready); XCTAssertNil(c.error)
   }
 }
