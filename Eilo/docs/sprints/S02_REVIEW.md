@@ -11,3 +11,5 @@ Native Kotlin/Swift controller work is separate from real capture/ASR/model/TTS/
 - VC-CTRL-02 (task/s02-vc-ctrl-02): Serialized Stop cancels/releases/clears; cleanup failure still attempts every action and emits typed error. Synthetic committed history stays intact. Kotlin compile/JUnit7 and Swift compile/XCTest7 pass.
 
 - VC-CTRL-03 (task/s02-vc-ctrl-03): Opaque native operation tokens invalidate old callbacks/audio across cancellation, Stop, new turns and controller instances. Reentrant Stop cannot restore speaking. Kotlin compile/JUnit10 and Swift compile/XCTest10 pass.
+
+- VC-CTRL-04 (task/s02-vc-ctrl-04): Privacy epochs cancel work on lock/private/identity/reset transitions. Native guarded read/write/display effects deny stale callbacks and default memory access. Thread-delayed lock races, Kotlin compile/JUnit13 and Swift compile/XCTest13 pass.

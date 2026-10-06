@@ -22,12 +22,20 @@ public final class NoopControllerEffects: ControllerEffects {
 public final class GenerationToken: @unchecked Sendable {
   public let sessionID: UUID
   public let operationID: UUID
+  public let privacyEpoch: UInt64
   public let generation: UInt64
   private let lock = NSLock()
   private var revoked = false
   public var cancelled: Bool { lock.lock(); defer { lock.unlock() }; return revoked }
   fileprivate func cancel() { lock.lock(); defer { lock.unlock() }; revoked = true }
-  fileprivate init(_ session: UUID, _ generation: UInt64) { sessionID = session; operationID = UUID(); self.generation = generation }
+  fileprivate init(_ session: UUID, _ generation: UInt64, _ epoch: UInt64) { sessionID = session; operationID = UUID(); self.generation = generation; privacyEpoch = epoch }
+}
+public enum PrivacyChange { case lock, unlock, privateSession, historySession, identityReset, deleteAll }
+public enum PrivateEffect { case readMemory, commitHistory, displayPrivate }
+public protocol PrivateEffectGate { func allows(_ effect: PrivateEffect) -> Bool }
+public struct DeniedPrivateEffectGate: PrivateEffectGate {
+  public init() {}
+  public func allows(_ effect: PrivateEffect) -> Bool { false }
 }
 /// Sole native state authority; serialized observations and effects.
 public final class NativeController: @unchecked Sendable {
@@ -35,6 +43,10 @@ public final class NativeController: @unchecked Sendable {
   let diagnostics: SafeDiagnostics
   let effects: any ControllerEffects
   var sessionID = UUID()
+  let privateGate: any PrivateEffectGate
+  var privacyEpoch: UInt64 = 0
+  var locked = false
+  var privateSession = true
   var generation: UInt64 = 0
   var activeToken: GenerationToken?
   public var token: GenerationToken? { lock.lock(); defer { lock.unlock() }; return activeToken }
@@ -42,15 +54,16 @@ public final class NativeController: @unchecked Sendable {
     activeToken?.cancel(); activeToken = nil
     if generation == 9_007_199_254_740_991 { sessionID = UUID(); generation = 0 } else { generation += 1 }
   }
-  func issueGeneration() { invalidateGeneration(); activeToken = GenerationToken(sessionID,generation) }
-  func accepts(_ token: GenerationToken?) -> Bool { guard let token else { return false }; return token === activeToken && !token.cancelled }
+  func issueGeneration() { invalidateGeneration(); activeToken = GenerationToken(sessionID,generation,privacyEpoch) }
+  func accepts(_ token: GenerationToken?) -> Bool { guard let token else { return false }; return token === activeToken && !token.cancelled && token.privacyEpoch == privacyEpoch }
   var currentState: ControllerState = .stopped
   var currentError: SafeError?
-  public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects()) { self.diagnostics = diagnostics; self.effects = effects }
+  public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects(), privateGate: any PrivateEffectGate = DeniedPrivateEffectGate()) { self.diagnostics = diagnostics; self.effects = effects; self.privateGate = privateGate }
   public var state: ControllerState { lock.lock(); defer { lock.unlock() }; return currentState }
   public var error: SafeError? { lock.lock(); defer { lock.unlock() }; return currentError }
   @discardableResult public func dispatch(_ event: ControllerEvent, failure: SafeError = .unexpected, token: GenerationToken? = nil) -> Bool {
     lock.lock(); defer { lock.unlock() }
+    if locked && [.start,.resume].contains(event) { return false }
     if event == .stop { return stop() }
     if [.speechDetected,.endpoint,.speechReady,.playbackFinished,.failure].contains(event) && !accepts(token) { return false }
     guard let next = Self.nextState(currentState, event) else { return false }
@@ -59,6 +72,24 @@ public final class NativeController: @unchecked Sendable {
     currentState = next; currentError = next == .error ? failure : nil
     if next == .error { diagnostics.record(.controller, failure, .error) }
     return true
+  }
+  @discardableResult public func privacyTransition(_ change: PrivacyChange) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    if privacyEpoch == 9_007_199_254_740_991 { sessionID = UUID(); privacyEpoch = 0 } else { privacyEpoch += 1 }
+    switch change {
+    case .lock: locked = true
+    case .unlock: locked = false
+    case .privateSession,.identityReset,.deleteAll: privateSession = true
+    case .historySession: privateSession = false
+    }
+    return stop()
+  }
+  /// Native capability seam; does not implement a protected store or authentication.
+  @discardableResult public func guardedPrivateEffect(_ token: GenerationToken, effect: PrivateEffect, action: () throws -> Void) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    guard accepts(token), !locked, !privateSession, ![.stopped,.setup,.error].contains(currentState), privateGate.allows(effect), accepts(token) else { return false }
+    do { try action(); return accepts(token) }
+    catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.memory,.unexpected,.error); return false }
   }
   @discardableResult public func releaseSpeech(_ token: GenerationToken, clause: String) -> Bool {
     lock.lock(); defer { lock.unlock() }
