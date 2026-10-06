@@ -76,5 +76,17 @@
     "threads": 2
   },
   "inclusion": "evaluation-only; no shipping pack or release signing key",
-  "runtime": "llama.cpp later in-process C++; Python build tools only"
+  "runtime": "llama.cpp later in-process C++; Python build tools only",
+  "source_archive_sha256": "508060adc320ab18b6ed120fd8f4b830fea80ef66fd9874577c4ba07481a31b2",
+  "local_hardware": {
+    "ram_bytes": 17179869184,
+    "architecture": "arm64",
+    "scope": "conversion only, no inference/phone feasibility claim"
+  },
+  "bf16_conversion": {
+    "elapsed_seconds": 160.2,
+    "max_resident_bytes": 2570354688,
+    "peak_memory_footprint_bytes": 2815544080,
+    "artifact_evidence": "docs/models/evidence/bf16.json"
+  }
 }
