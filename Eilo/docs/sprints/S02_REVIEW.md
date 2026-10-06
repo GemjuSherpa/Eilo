@@ -7,3 +7,5 @@ Native Kotlin/Swift controller work is separate from real capture/ASR/model/TTS/
 - VC-LOCK-07 (task/s02-vc-lock-07): Bounded volatile typed diagnostics; Swift compiler/XCTest3 and Kotlin compiler/JUnit3 pass. No content, persistent log or upload sink.
 
 - VC-CTRL-01 (task/s02-vc-ctrl-01): Native deterministic transition tables; 99 state/event pairs per platform plus synthetic turn/failure checks. Kotlin compile/JUnit5 and Swift compile/XCTest5 pass. Capturing maps to existing listening wire state.
+
+- VC-CTRL-02 (task/s02-vc-ctrl-02): Serialized Stop cancels/releases/clears; cleanup failure still attempts every action and emits typed error. Synthetic committed history stays intact. Kotlin compile/JUnit7 and Swift compile/XCTest7 pass.

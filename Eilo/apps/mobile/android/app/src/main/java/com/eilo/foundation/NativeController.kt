@@ -7,18 +7,45 @@ enum class ControllerState(val wireValue: String) {
 }
 enum class ControllerEvent { SETUP_REQUIRED, READY, START, SPEECH_DETECTED, ENDPOINT, SPEECH_READY, PLAYBACK_FINISHED, PAUSE, RESUME, STOP, FAILURE }
 
+/** Effects must be synchronous, nonblocking and idempotent; async completions return through the controller. */
+interface ControllerEffects {
+    fun cancelWork()
+    fun releaseCapture()
+    fun clearVolatileContext()
+}
+class NoopControllerEffects : ControllerEffects {
+    override fun cancelWork() {}
+    override fun releaseCapture() {}
+    override fun clearVolatileContext() {}
+}
+
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
-class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics()) {
+class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects()) {
     private var currentState = ControllerState.STOPPED
     private var currentError: SafeError? = null
     @Synchronized fun state(): ControllerState = currentState
     @Synchronized fun error(): SafeError? = currentError
     @Synchronized fun dispatch(event: ControllerEvent, failure: SafeError = SafeError.UNEXPECTED): Boolean {
+        if (event == ControllerEvent.STOP) return stop()
         val next = nextState(currentState, event) ?: return false
         currentState = next
         currentError = if (next == ControllerState.ERROR) failure else null
         if (next == ControllerState.ERROR) diagnostics.record(SafeComponent.CONTROLLER, failure, SafeSeverity.ERROR)
         return true
+    }
+    @Synchronized fun stop(): Boolean {
+        currentState = ControllerState.STOPPED
+        currentError = null
+        var failed = false
+        for (cleanup in listOf(effects::cancelWork, effects::releaseCapture, effects::clearVolatileContext)) {
+            try { cleanup() } catch (_: Exception) { failed = true }
+        }
+        diagnostics.clear()
+        if (failed) {
+            currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED
+            diagnostics.record(SafeComponent.CONTROLLER, SafeError.UNEXPECTED, SafeSeverity.ERROR)
+        }
+        return !failed
     }
     companion object {
         fun nextState(state: ControllerState, event: ControllerEvent): ControllerState? = when (event) {
