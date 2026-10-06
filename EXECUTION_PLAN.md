@@ -1,14 +1,14 @@
-<!-- Current authorization: Gemju Sherpa verified S03 on 6 October 2026 and authorized S04 with scoped Git/GitHub task-to-sprint-to-main workflow. Gemju Sherpa subsequently authorized continuing all remaining S04 tasks before sprint review. No deployment or paid services. -->
+<!-- Current authorization: Gemju Sherpa explicitly authorized S05 on 7 October 2026, with the ongoing task-to-sprint-to-main PR workflow. Current task VC-TURN-01; stop for review. No deployment or paid services. -->
 # Eilo — Small-Task Execution and Review
 
 Version 1.0 | 5 October 2026
 
 ## Latest Gemju Sherpa workflow
 
-Gemju Sherpa verified S03 and authorized S04 with Git commands, task branches, commits, pushes and PRs. Use sprint/s04-guest-audio as the root and one branch per task. Merge tested task branches into the sprint branch before any main merge. Gemju Sherpa subsequently requested continuing the remaining S04 tasks before the sprint review. Main integration follows completion of the tested sprint. No provisioning or release action is authorized.
+Gemju Sherpa reviewed and merged S04 and explicitly authorized S05. Use sprint/s05-turn-recognition and a separate task branch for each task. Implement VC-TURN-01 first, test it, commit/push and merge the task branch into the sprint branch, then open a PR to main and stop for review. Ongoing Git authorization applies to the remaining project tasks. Main merge follows review approval; no provisioning or release action is authorized.
 
 ## This is a plan, not execution permission
-S01 is merged; S02 and S03 are approved by Gemju Sherpa. S03's distribution-hosting privacy gate remains blocked: review approval does not establish infrastructure evidence. S04 is selected. All detailed baseline IDs/dependencies remain authoritative. Do not renumber tasks or execute this entire document in one turn.
+S01 is merged; S02 and S03 are approved by Gemju Sherpa. S03's distribution-hosting privacy gate remains blocked: review approval does not establish infrastructure evidence. S04 is reviewed and merged; its three physical/background blockers remain. S05 is selected. All detailed baseline IDs/dependencies remain authoritative. Do not renumber tasks or execute this entire document in one turn.
 
 ## Stage 0 — historical context intake
 Read the root context and baseline documents. Acknowledge the product/data boundaries, candidates versus measured evidence, missing artifact/toolchain/device constraints and assumptions. Wait. The next task candidate is VC-DEVOPS-01 repository/board baseline, only after an explicit Gemju Sherpa instruction with target repo/environment. Repository creation, initialization or board mutation is not authorized now.
@@ -41,7 +41,7 @@ Integrated native/device regression, privacy/security/provider licensing, access
 2. Implement only that responsibility. Keep unaffected human changes intact. Do not add future placeholders, unrelated packages/refactors or speculative features.
 3. Immediately run relevant lint/compiler checks after producing code, then focused tests/native validations appropriate to behavior. Resolve relevant failures within scope; report missing environments honestly.
 4. Update existing task tracker with implementation/evidence/checks and awaiting-review status. Do not record approval from Gemju Sherpa before receiving it. Schema extensions/new subtask IDs require explicit mapping, not replacement of stable IDs.
-5. Provide the review summary below and stop. The human verifies/commits/merges and explicitly selects/approves subsequent work.
+5. Provide the review summary below and stop. Gemju Sherpa reviews the PR and approves subsequent work; scoped task commits/pushes and task-to-sprint merges are authorized.
 
 ## Review response template
 - Task and requirement IDs:
@@ -53,7 +53,7 @@ Integrated native/device regression, privacy/security/provider licensing, access
 - Material risks or limitations:
 - Tracker state: awaiting review / blocked:
 - Next suggested task (not executed):
-- Source control: no staging, commit, push or merge performed.
+- Source control: task/sprint branch names, actual commits and PR, with main merge awaiting review.
 
 ## Completion rule
 A written implementation is not a passed test; a passed test is not approval from Gemju Sherpa; feature approval from Gemju Sherpa is not release authorization. Keep these states separate. A task with missing mandatory native/security evidence may be reviewable as a partial result but cannot be marked fully verified/release-ready.

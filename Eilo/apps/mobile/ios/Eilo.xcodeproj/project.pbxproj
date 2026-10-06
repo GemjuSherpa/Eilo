@@ -30,6 +30,7 @@
 		3D5849C4D5179CAE58CF85D5 /* NativeConsentPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */; };
 		98BF41F81902FA816B06B230 /* IOSConsentAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */; };
 		3B49E2663389BBF4ACDF0E7B /* BackgroundCapturePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */; };
+		5C6DA7DFF8A8CD20EAED96F4 /* StandbyAudioBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeConsentPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeConsentPolicy.swift"; sourceTree = "<group>"; };
 		61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IOSConsentAuthentication.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/IOSConsentAuthentication.swift"; sourceTree = "<group>"; };
 		69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BackgroundCapturePolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/BackgroundCapturePolicy.swift"; sourceTree = "<group>"; };
+		523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StandbyAudioBuffer.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/StandbyAudioBuffer.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 		30F2448E7B57418BE6C6AAB8 /* NativeController */ = {
 			isa = PBXGroup;
 			children = (
+				523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */,
 				69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */,
 				61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */,
 				49EF1E72CBE40EE0A6D4362C /* NativeConsentPolicy.swift */,
@@ -308,6 +311,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C6DA7DFF8A8CD20EAED96F4 /* StandbyAudioBuffer.swift in Sources */,
 				3B49E2663389BBF4ACDF0E7B /* BackgroundCapturePolicy.swift in Sources */,
 				98BF41F81902FA816B06B230 /* IOSConsentAuthentication.swift in Sources */,
 				3D5849C4D5179CAE58CF85D5 /* NativeConsentPolicy.swift in Sources */,

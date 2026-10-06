@@ -1903,8 +1903,8 @@
       "scope": "React Native screen",
       "acceptance_criterion": "English adult onboarding describes AI identity, local encrypted text, no saved audio and local-loss limitations; no signup.",
       "focused_test": "UI flow reaches setup without account fields or account request.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -1912,6 +1912,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Accessible English guest disclosure explains AI/adult audience, local processing, unsaved audio, optional encrypted text, unfinished history capability, local-loss limits and separate microphone/background choice. Guest UI reaches setup without identity fields/requests. Workspace lint/types and 34 JS/UI tests pass; physical screen-reader/large-text checks pending."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -1937,8 +1942,8 @@
       "scope": "local consent policy",
       "acceptance_criterion": "History is off until explicit choice; choice is versioned and separate from microphone permission.",
       "focused_test": "Fresh setup and permission grant cannot enable history; explicit choice can.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -1946,6 +1951,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Versioned native consent metadata requires an unselected-to-explicit history/private choice; microphone permission cannot set it. Native onboarding completion is persisted only after a choice. Failed/unknown-version persistence fails closed. History request never enables unavailable encrypted storage; Start requires a deliberate usable/private choice. Native metadata stays local, iOS file is complete-protected and backup-excluded. Kotlin 60 tests/lint, Swift 53 tests/typecheck, 40 JS/UI tests and unsigned iOS Release build pass. Physical storage/backup/accessibility checks pending."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -1971,8 +1981,8 @@
       "scope": "local consent policy",
       "acceptance_criterion": "Background mode defaults off and changes only through explicit choice.",
       "focused_test": "Permission grant or UI exit does not set consent; exercise separate toggle.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -1980,6 +1990,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Background choice defaults off, is independently versioned and never starts capture. Enabling requires a current OS credential/LocalAuthentication result plus an unlocked visible context and unchanged privacy epoch; denial/cancellation does not apply it. Failed persistence remains off. Kotlin 62 tests/lint, Swift 55 tests/typecheck, 41 JS/UI tests and iOS Release build pass. Physical device-authentication and background checks not run."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2079,8 +2094,8 @@
       "scope": "React Native screen",
       "acceptance_criterion": "One accessible control requests Start/Stop and displays actual native state after reconnect.",
       "focused_test": "UI test with changed native state while UI detached; no typing required.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2088,6 +2103,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Generated TurboModule exposes allowlisted commands and strictly validated metadata only. Home requests native Start/Stop, offers Stop during pending/unknown state, and explicitly confirms speaker output. Monotonic native revisions reject old snapshots; UI detach/reconnect tests read changed native state without owning capture. Workspace lint/typecheck, 39 JS/UI tests, Kotlin 57 tests/lint, Swift 50 tests and unsigned iOS Release build pass. Physical control/VoiceOver/TalkBack checks pending."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2114,8 +2134,8 @@
       "scope": "local privacy policy",
       "acceptance_criterion": "Selected private session blocks every persistent personal write; older history remains unchanged.",
       "focused_test": "Fake sinks for transcript/fact/index/inbox receive zero writes; mode race test.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2128,6 +2148,11 @@
           "type": "local_checks",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2152,8 +2177,8 @@
       "scope": "React Native control",
       "acceptance_criterion": "Accessible volume control affects output gain without altering consent or capture.",
       "focused_test": "Output fake asserts gain; screen-reader control test.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2166,6 +2191,11 @@
           "type": "local_checks",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2567,8 +2597,8 @@
       "scope": "Android native",
       "acceptance_criterion": "Capture starts from permitted visible user action and is owned outside JavaScript.",
       "focused_test": "Physical Android Start/Stop; JS suspension does not falsify actual capture state.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2576,6 +2606,11 @@
           "type": "task_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Async native foreground capture; Kotlin compile and 54 JUnit tests pass. Physical checks not run."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2601,8 +2636,8 @@
       "scope": "Android native notification",
       "acceptance_criterion": "Required ongoing notification shows no personal content and its Stop action releases capture.",
       "focused_test": "Tap notification Stop without opening UI; verify mic released.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2610,6 +2645,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Unexported, non-sticky microphone foreground service owns a generic ongoing notification. Its immutable Stop pending intent calls native Stop without opening UI; teardown cancels capture. Kotlin, 55 JUnit tests and Android lint pass. Actual notification tap/microphone release is NOT RUN on physical Android."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2634,8 +2674,8 @@
       "scope": "Android native",
       "acceptance_criterion": "UI exit stops capture without consent; enabled permitted service can continue.",
       "focused_test": "Physical test of both consent states; return UI reads true state.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2648,6 +2688,11 @@
           "type": "local_checks",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2671,8 +2716,8 @@
       "scope": "Android native",
       "acceptance_criterion": "Calls/focus loss/permission revocation/contention safely pause/stop and release volatile state.",
       "focused_test": "Inject each OS event independently; no fabricated capture or automatic unsafe restart.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2680,6 +2725,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Native OS focus loss/duck, native capture-loop permission checks, client silencing and capture errors stop/release and invalidate work; focus gain never restarts. Independent event matrix rejects stale speech. Kotlin, 56 JUnit tests and Android lint pass. Physical calls/revocation/contention not run."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2704,8 +2754,8 @@
       "scope": "iOS native",
       "acceptance_criterion": "Permitted user-started native audio session owns capture independently of JavaScript.",
       "focused_test": "Physical iPhone start/stop and JS-detached state check.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2713,6 +2763,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "iOS AVAudioEngine/session capture is process-owned and native-only; asynchronous Start/Stop, stale completion, permission revocation and setup-race fixtures pass. Swift 48 tests and iOS-platform typecheck pass. Hardware Start/Stop and JS-detached capture are NOT RUN."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2738,7 +2793,7 @@
       "acceptance_criterion": "No-consent UI exit stops capture; consented background path uses intended audio mode only.",
       "focused_test": "Physical transitions plus entitlement/use-case review; no silent-audio keepalive.",
       "status": "blocked",
-      "approval_status": "awaiting_review",
+      "approval_status": "approved",
       "implementation_status": "partial",
       "verification_status": "partial",
       "evidence": [
@@ -2751,6 +2806,11 @@
           "type": "local_checks",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2774,8 +2834,8 @@
       "scope": "iOS native",
       "acceptance_criterion": "Interruption/permission loss safely pauses/stops capture and volatile work.",
       "focused_test": "Independent native event fixtures and physical call interruption.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2783,6 +2843,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "AVAudioSession interruption-began and media/engine reset observers stop native capture and volatile work without resuming on interruption end. Permission availability uses the existing version-checked adapter. Swift 49 tests, platform typecheck and unsigned iOS Release build pass. Physical call/revocation checks NOT RUN."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2807,8 +2872,8 @@
       "scope": "native output policy",
       "acceptance_criterion": "Headphone/Bluetooth disconnect pauses private output until explicit speaker confirmation.",
       "focused_test": "Route event tests show no automatic private speaker playback.",
-      "status": "awaiting_review",
-      "approval_status": "awaiting_review",
+      "status": "approved",
+      "approval_status": "approved",
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
@@ -2816,6 +2881,11 @@
           "type": "sprint_review",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Android private-output device removal and iOS old-device-unavailable events stop/invalidate work. Native speech release stays blocked across fresh Start until explicit unlocked speaker confirmation; reconnection never confirms. Kotlin 57 tests/lint and Swift 50 tests/typecheck pass. Real headphone/Bluetooth routing and spoken playback remain NOT RUN."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2842,7 +2912,7 @@
       "acceptance_criterion": "Record actual user-started screen-off capture/output availability, termination limits and stopped-state accuracy.",
       "focused_test": "Physical lock/Doze/service-kill/reboot matrix; pass/fail/not-tested per configuration.",
       "status": "blocked",
-      "approval_status": "awaiting_review",
+      "approval_status": "approved",
       "implementation_status": "partial",
       "verification_status": "partial",
       "evidence": [
@@ -2855,6 +2925,11 @@
           "type": "local_checks",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2881,7 +2956,7 @@
       "acceptance_criterion": "Record platform-compliant screen-off capture/output availability and termination limits.",
       "focused_test": "Physical lock/background/process-kill matrix; technical evidence and App Review rationale, not approval guarantee.",
       "status": "blocked",
-      "approval_status": "awaiting_review",
+      "approval_status": "approved",
       "implementation_status": "partial",
       "verification_status": "partial",
       "evidence": [
@@ -2894,6 +2969,11 @@
           "type": "local_checks",
           "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
           "notes": "Final local verification: JS/UI 42, Android JUnit 68, Swift XCTest 61; lint/types, Android debug/release/lint, iOS simulator Release/typecheck and current-source Gitleaks pass. Physical checks NOT RUN. Task-to-sprint publication authorized; hosted checks recorded on the sprint PR."
+        },
+        {
+          "type": "review",
+          "artifact": "https://github.com/GemjuSherpa/Eilo/pull/23",
+          "notes": "Gemju Sherpa reviewed and merged S04. Physical/background blockers remain; review is not verification."
         }
       ],
       "owner": null,
@@ -2917,17 +2997,23 @@
       "scope": "native audio buffer",
       "acceptance_criterion": "Standby retains no more than2s volatile audio; overwritten samples are not saved or transcribed.",
       "focused_test": "Fake-clock/sample stream checks max duration; storage/ASR spies remain untouched.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "local_checks",
+          "artifact": "Eilo/docs/sprints/S05_REVIEW.md",
+          "notes": "Native bounded-ring retention and capture integration: Android 74 tests/lint/compiler, Swift 66 tests, iOS platform typecheck and unsigned simulator Release build pass. Physical checks NOT RUN."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s05-vc-turn-01",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Physical capture/timer scheduling and later wake/ASR integration are not verified.",
+      "next_action": "Review VC-TURN-01 PR with Gemju Sherpa before further S05 work."
     },
     {
       "id": "VC-TURN-02",
