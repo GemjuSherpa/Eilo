@@ -1,0 +1,92 @@
+{
+  "keyword_tokens": [
+    "▁HE",
+    "Y",
+    "▁A",
+    "▁LO",
+    "W"
+  ],
+  "note": "Earlier valid-audio exploration of HEY A LOW; not the revised HEY ALO lexicon used in results.json. Initial silent-fixture experiment was discarded.",
+  "runs": [
+    {
+      "threshold": 0.25,
+      "boost": 1.5,
+      "scores": {
+        "ay-low-padded": 0,
+        "target-1": 1,
+        "target-2": 1,
+        "target-3": 0,
+        "target-4": 0,
+        "negative-hey": 0,
+        "negative-name": 0,
+        "negative-near": 0,
+        "negative-ordinary": 0,
+        "negative-padded": 0
+      }
+    },
+    {
+      "threshold": 0.25,
+      "boost": 3,
+      "scores": {
+        "ay-low-padded": 0,
+        "target-1": 0,
+        "target-2": 0,
+        "target-3": 0,
+        "target-4": 0,
+        "negative-hey": 0,
+        "negative-name": 0,
+        "negative-near": 0,
+        "negative-ordinary": 0,
+        "negative-padded": 0
+      }
+    },
+    {
+      "threshold": 0.1,
+      "boost": 3,
+      "scores": {
+        "ay-low-padded": 0,
+        "target-1": 1,
+        "target-2": 1,
+        "target-3": 1,
+        "target-4": 1,
+        "negative-hey": 0,
+        "negative-name": 0,
+        "negative-near": 0,
+        "negative-ordinary": 0,
+        "negative-padded": 0
+      }
+    },
+    {
+      "threshold": 0.1,
+      "boost": 5,
+      "scores": {
+        "ay-low-padded": 0,
+        "target-1": 0,
+        "target-2": 0,
+        "target-3": 0,
+        "target-4": 0,
+        "negative-hey": 0,
+        "negative-name": 0,
+        "negative-near": 0,
+        "negative-ordinary": 0,
+        "negative-padded": 0
+      }
+    },
+    {
+      "threshold": 0.05,
+      "boost": 5,
+      "scores": {
+        "ay-low-padded": 0,
+        "target-1": 0,
+        "target-2": 0,
+        "target-3": 0,
+        "target-4": 0,
+        "negative-hey": 0,
+        "negative-name": 0,
+        "negative-near": 0,
+        "negative-ordinary": 0,
+        "negative-padded": 0
+      }
+    }
+  ]
+}

@@ -44,3 +44,7 @@ xcodebuild -workspace apps/mobile/ios/Eilo.xcworkspace -scheme Eilo \
 Production KWS binding/version, checkpoint artifacts and license evidence, tokenized production keyword, calibrated threshold, verified resampling, runtime feature-buffer lifetime and bounded capture-to-worker delivery are not implemented/verified. The adapter is not wired to microphone capture. Production model readiness remains unavailable and no bypass was added. Real wake/nonwake fixtures, false activation/recognition scoring and phone measurements are NOT RUN.
 
 Tracker: partial implementation, partial verification, awaiting review of this adapter boundary with production acceptance blocked. Do not mark VC-TURN-02 approved/complete from these fixtures, or advance VC-TURN-03 on a false dependency pass. Next work remains VC-TURN-02 runtime/checkpoint/capture integration after this review. Main merge awaits Gemju Sherpa review.
+
+## Review outcome and continuation — 7 October 2026
+
+Gemju Sherpa reviewed this adapter checkpoint and authorized continuation. Commit e8a8331 is pushed to main and PR #25 is merged. This approval covers the adapter boundary only; acoustic production acceptance remains incomplete. See [runtime continuation](S05_VC_TURN_02_RUNTIME_REVIEW.md) for the actual candidate evaluation and decode-result handoff correction.

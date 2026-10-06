@@ -1,0 +1,153 @@
+{
+  "compiler": "pass",
+  "scripted_abi_contract": "pass",
+  "host": "macOS ARM64",
+  "phrase": "Hey Eilo",
+  "pronunciation": "Ay-loh",
+  "threshold": 0.1,
+  "boost": 3.0,
+  "cases": [
+    {
+      "file": "ay-low-padded.wav",
+      "kind": "wake",
+      "detections": 0,
+      "expected": 1,
+      "pass": false
+    },
+    {
+      "file": "target-1.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "target-2.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "target-3.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "target-4.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "negative-hey.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "negative-name.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "negative-near.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "negative-ordinary.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "negative-padded.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "positive-padded.wav",
+      "kind": "spelling diagnostic",
+      "detections": 1,
+      "expected": null,
+      "pass": null
+    },
+    {
+      "file": "pronounced-padded.wav",
+      "kind": "pronunciation diagnostic",
+      "detections": 0,
+      "expected": null,
+      "pass": null
+    },
+    {
+      "file": "holdout-wake-1.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "holdout-wake-2.wav",
+      "kind": "wake",
+      "detections": 0,
+      "expected": 1,
+      "pass": false
+    },
+    {
+      "file": "holdout-near-1.wav",
+      "kind": "nonwake",
+      "detections": 1,
+      "expected": 0,
+      "pass": false
+    },
+    {
+      "file": "holdout-near-2.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "holdout-near-3.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "holdout-near-4.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "holdout-near-5.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "holdout-near-6.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    }
+  ],
+  "acoustic_acceptance": "FAIL",
+  "failed_cases": 3
+}

@@ -1,0 +1,135 @@
+{
+  "source": "macOS installed Samantha voice via say and afconvert; synthetic only; 16 kHz mono PCM16; one-second zero padding each side",
+  "generation_text": {
+    "ay-low-padded": "Hey, ay low",
+    "target-1": "Hey Ailo",
+    "target-2": "Hey Aylo",
+    "target-3": "Hey A low",
+    "target-4": "Hey A-low",
+    "negative-hey": "Hey there",
+    "negative-name": "Ailo",
+    "negative-near": "Hey hello",
+    "negative-ordinary": "Please play some music",
+    "negative-padded": "The weather is nice today",
+    "positive-padded": "Hey Eilo",
+    "pronounced-padded": "Hey, ee low",
+    "holdout-wake-1": "Hey Aylo please",
+    "holdout-wake-2": "Hey Ailo can you help",
+    "holdout-near-1": "Hello Ailo",
+    "holdout-near-2": "Say hello",
+    "holdout-near-3": "Hey below",
+    "holdout-near-4": "Hey alone",
+    "holdout-near-5": "Hey a little",
+    "holdout-near-6": "A low price"
+  },
+  "fixtures": [
+    {
+      "file": "ay-low-padded.wav",
+      "kind": "wake",
+      "sha256": "ee5c5e7ab8ed98739275de3884eb83b7a8fa03b25eefbb26bde4434597baaf69"
+    },
+    {
+      "file": "target-1.wav",
+      "kind": "wake",
+      "sha256": "236a1bc15fc6784b4285b27d461b3aa65f3894f5e7445df0a6bc162df0f8081e"
+    },
+    {
+      "file": "target-2.wav",
+      "kind": "wake",
+      "sha256": "236a1bc15fc6784b4285b27d461b3aa65f3894f5e7445df0a6bc162df0f8081e"
+    },
+    {
+      "file": "target-3.wav",
+      "kind": "wake",
+      "sha256": "2e1e678062d4b22af48503c393f7aa3b7c7d237211016e60b29fbbfa87423f8d"
+    },
+    {
+      "file": "target-4.wav",
+      "kind": "wake",
+      "sha256": "2e1e678062d4b22af48503c393f7aa3b7c7d237211016e60b29fbbfa87423f8d"
+    },
+    {
+      "file": "negative-hey.wav",
+      "kind": "nonwake",
+      "sha256": "22b6f2af42df9e3cb4cefb4228199babab88f572ada48f003da462775b648892"
+    },
+    {
+      "file": "negative-name.wav",
+      "kind": "nonwake",
+      "sha256": "244bc018557f4f80d276dcd4488412a43edb513c3183a4ca323ab961e2c63e64"
+    },
+    {
+      "file": "negative-near.wav",
+      "kind": "nonwake",
+      "sha256": "e90a3bbd7c892e8891e282117a9ddfaf4c9fc9058f37dc65a65bd76acda03fcf"
+    },
+    {
+      "file": "negative-ordinary.wav",
+      "kind": "nonwake",
+      "sha256": "1ff3eb0fa53884207ce17da519aa945c4d0d16ec42688ec51468fba243f8d9c7"
+    },
+    {
+      "file": "negative-padded.wav",
+      "kind": "nonwake",
+      "sha256": "00871f39d597b9dac2580994c88af1fe811ec99c1f82d73e5176cf3846ac6034"
+    },
+    {
+      "file": "positive-padded.wav",
+      "kind": "spelling diagnostic",
+      "sha256": "d3b68e56b33d0fb7fb0914fdb09a27381c6e93bcfd76cfa75cabaf80f3b4e979"
+    },
+    {
+      "file": "pronounced-padded.wav",
+      "kind": "pronunciation diagnostic",
+      "sha256": "4fb0506f0828992604b4507817d00e6823fc8fc93d887a2f22f22ac731cc10d9"
+    },
+    {
+      "file": "holdout-wake-1.wav",
+      "kind": "wake",
+      "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
+      "sha256": "b3481c48d00eb06760e4d610f03043248fe16aec7d287beaeba3c7a433c6d63d"
+    },
+    {
+      "file": "holdout-wake-2.wav",
+      "kind": "wake",
+      "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
+      "sha256": "2fdf7e3d377ec8ab2e28c0459f338b63788e688e5bdfd05f643a5af0216f4657"
+    },
+    {
+      "file": "holdout-near-1.wav",
+      "kind": "nonwake",
+      "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
+      "sha256": "82efd48714c9c9e2eb111d558095842c12b727d6a8d1a529f591ddc5f42c70c2"
+    },
+    {
+      "file": "holdout-near-2.wav",
+      "kind": "nonwake",
+      "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
+      "sha256": "8d13d25debdf0539b130fe915add8e4d9147c3b5e5fbab0ca732ef40776ed8fa"
+    },
+    {
+      "file": "holdout-near-3.wav",
+      "kind": "nonwake",
+      "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
+      "sha256": "1c5ef97813538d7a45da4f12a86d774794ab874085f87ad146dcc3da65b51f39"
+    },
+    {
+      "file": "holdout-near-4.wav",
+      "kind": "nonwake",
+      "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
+      "sha256": "188e4c77826a365d07406a7410c6db1827b8b67d61332e6d20113e44c95f2fca"
+    },
+    {
+      "file": "holdout-near-5.wav",
+      "kind": "nonwake",
+      "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
+      "sha256": "1d810f615d991e2f17d316d62cf4a92cef201440f8191909469b98336f5abb77"
+    },
+    {
+      "file": "holdout-near-6.wav",
+      "kind": "nonwake",
+      "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
+      "sha256": "5d9e2fb8334efd9be40d89ab9cecdb56216967cf3be9b76536a926b32502458a"
+    }
+  ]
+}

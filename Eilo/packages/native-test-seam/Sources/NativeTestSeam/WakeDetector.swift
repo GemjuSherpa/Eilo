@@ -67,11 +67,17 @@ final class WakeDetector {
       guard verified() else { close();return nil }
       for i in input.indices { scratch[i]=input[i] }
       try engine.accept(UnsafeBufferPointer(start:scratch.baseAddress,count:input.count),sampleRate:sampleRate)
-      var steps=0
-      while try engine.ready() { steps += 1;guard steps <= 32 else { throw WakeFailure.unavailable };try engine.decode() }
-      let keyword=try engine.keyword()
-      let activation=keyword==configuration.phrase
-      if !keyword.isEmpty { try engine.reset() }
+      var steps=0,activation=false
+      func consumeResult() throws {
+        let keyword=try engine.keyword()
+        activation=activation || keyword==configuration.phrase
+        if !keyword.isEmpty { try engine.reset() }
+      }
+      while try engine.ready() {
+        steps += 1;guard steps <= 32 else { throw WakeFailure.unavailable }
+        try engine.decode();try consumeResult()
+      }
+      if steps==0 { try consumeResult() }
       guard !expected.cancelled, verified() else { close();return nil }
       return activation && expected === token && currentLease === lease ? WakeActivation(expected,currentLease) : nil
     } catch { diagnostics.record(.model,.unavailable,.error);close();return nil }

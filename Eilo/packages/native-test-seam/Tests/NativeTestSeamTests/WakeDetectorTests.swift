@@ -2,6 +2,7 @@ import XCTest
 @testable import NativeTestSeam
 private final class KeywordFixture: WakeKeywordStream {
   var onAccept:(()->Void)?
+  var onDecode:((Int)->Void)?
   var result="",fail="";var pending=2,accepted=0,decoded=0,resets=0,closed=0;var endless=false
   var borrowed:UnsafeBufferPointer<Float>?
   func accept(_ samples:UnsafeBufferPointer<Float>,sampleRate:Int) throws {
@@ -9,7 +10,7 @@ private final class KeywordFixture: WakeKeywordStream {
     if fail=="accept" { throw WakeFailure.unavailable }
   }
   func ready() throws -> Bool { if fail=="ready" { throw WakeFailure.unavailable };return endless || pending>0 }
-  func decode() throws { decoded += 1;pending -= 1;if fail=="decode" { throw WakeFailure.unavailable } }
+  func decode() throws { decoded += 1;pending -= 1;onDecode?(decoded);if fail=="decode" { throw WakeFailure.unavailable } }
   func keyword() throws -> String { if fail=="result" { throw WakeFailure.unavailable };return result }
   func reset() throws { resets += 1;result="";if fail=="reset" { throw WakeFailure.unavailable } }
   func close() throws { closed += 1;if fail=="close" { throw WakeFailure.unavailable } }
@@ -24,6 +25,12 @@ final class WakeDetectorTests: XCTestCase {
     for result in ["","ordinary speech","HEY OTHER","HEY EILO trailing"] { engine.result=result;XCTAssertNil(process(d,t));XCTAssertEqual(c.state,.standby);XCTAssertTrue(engine.borrowed!.allSatisfy {$0==0}) }
     engine.result="HEY EILO";let event=process(d,t)!;XCTAssertEqual(c.state,.standby);XCTAssertTrue(event.apply(c));XCTAssertEqual(c.state,.capturing);XCTAssertFalse(event.apply(c));XCTAssertEqual(engine.resets,4);d.close()
     XCTAssertTrue(effects.clauses.isEmpty)
+  }
+  func testTransientKeywordIsConsumedBeforeNextDecodeOverwritesIt() {
+    let c=testController();c.dispatch(.start);let t=c.token!,engine=KeywordFixture()
+    engine.onDecode={ step in engine.result=step==1 ? "HEY EILO" : "" }
+    let d=WakeDetector(configuration:config,verified:{true},open:{_ in engine});XCTAssertTrue(d.begin(t))
+    XCTAssertTrue(process(d,t)!.apply(c));XCTAssertEqual(engine.decoded,2);XCTAssertEqual(engine.resets,1);d.close()
   }
   func testStopAndPrivacyRejectQueuedWakeAndCancelledInput() {
     for privacy:PrivacyChange? in [nil,.lock,.privateSession,.identityReset] {
