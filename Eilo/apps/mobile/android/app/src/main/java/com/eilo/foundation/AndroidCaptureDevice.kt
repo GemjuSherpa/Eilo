@@ -8,6 +8,7 @@ import android.media.MediaRecorder
 internal class AndroidCaptureDevice(context: android.content.Context) : CaptureDevice {
     private val record: AudioRecord
     private var closed = false
+    val sessionId get() = record.audioSessionId
     init {
         if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED) throw SecurityException()
         val minimum = AudioRecord.getMinBufferSize(16_000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)

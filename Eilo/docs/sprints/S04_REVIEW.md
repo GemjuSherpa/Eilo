@@ -39,3 +39,7 @@ iOS AVAudioEngine/session capture is process-owned and native-only; asynchronous
 ### VC-AUDIO-02
 
 Unexported, non-sticky microphone foreground service owns a generic ongoing notification. Its immutable Stop pending intent calls native Stop without opening UI; teardown cancels capture. Kotlin, 55 JUnit tests and Android lint pass. Actual notification tap/microphone release is NOT RUN on physical Android.
+
+### VC-AUDIO-04
+
+Native OS focus loss/duck, native capture-loop permission checks, client silencing and capture errors stop/release and invalidate work; focus gain never restarts. Independent event matrix rejects stale speech. Kotlin, 56 JUnit tests and Android lint pass. Physical calls/revocation/contention not run.
