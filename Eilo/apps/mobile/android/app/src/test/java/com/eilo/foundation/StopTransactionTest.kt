@@ -7,11 +7,12 @@ internal class EffectsSpy : ControllerEffects {
     override fun startCapture(): Boolean { started++; onStart?.invoke(); return true }
     var cancelled = 0; var released = 0; var cleared = 0
     var context = byteArrayOf(1,2,3); val committedHistory = byteArrayOf(4,5)
+    var onCancel: (() -> Unit)? = null
     var failCancellation = false
     var onPlay: (() -> Unit)? = null
     val clauses = mutableListOf<String>()
     override fun playClause(clause: String) { clauses.add(clause); onPlay?.invoke() }
-    override fun cancelWork() { cancelled++; if (failCancellation) throw IllegalStateException("SYNTHETIC_PRIVATE_MARKER") }
+    override fun cancelWork() { cancelled++; onCancel?.invoke(); if (failCancellation) throw IllegalStateException("SYNTHETIC_PRIVATE_MARKER") }
     override fun releaseCapture() { released++ }
     override fun clearVolatileContext() { cleared++; context.fill(0) }
 }
@@ -26,6 +27,11 @@ class StopTransactionTest {
             assertArrayEquals(byteArrayOf(0,0,0),spy.context); assertArrayEquals(byteArrayOf(4,5),spy.committedHistory)
             assertFalse(c.dispatch(ControllerEvent.SPEECH_READY)); assertFalse(c.dispatch(ControllerEvent.PLAYBACK_FINISHED))
         }
+    }
+    @Test fun cleanupCannotReentrantlyStartOrRecurseStop() {
+        val spy=EffectsSpy(); val c=testController(effects=spy)
+        spy.onCancel={ assertFalse(c.dispatch(ControllerEvent.START)); c.stop() }
+        assertTrue(c.stop()); assertEquals(0,spy.started); assertEquals(1,spy.cancelled); assertNull(c.token()); assertEquals(ControllerState.STOPPED,c.state())
     }
     @Test fun cleanupFailureStillReleasesAndClearsWithoutLeakingCause() {
         val spy=EffectsSpy(); spy.failCancellation=true

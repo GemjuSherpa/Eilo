@@ -36,6 +36,7 @@ fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
 class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter()) {
+    private var stopping=false
     private var startIntent: UUID? = null
     private var permissionPrompted=false
     private fun permissionGranted(): Boolean = try { permission.status() == MicrophonePermission.GRANTED } catch (_: Exception) { false }
@@ -48,7 +49,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     @Synchronized fun permissionChanged() { if (!permissionGranted()) stop() }
     @Synchronized private fun start(): Boolean {
-        if (startIntent != null || locked || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED)) return false
+        if (stopping || startIntent != null || locked || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED)) return false
         val intent=UUID.randomUUID(); startIntent=intent
         return try {
             when (permission.status()) {
@@ -77,7 +78,10 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private var idleTask: IdleCancellation? = null
     private var idleStarted: Long? = null
     private var hasConversation = false
-    private fun clearIdle() { idleTask?.cancel(); idleTask=null; idleStarted=null }
+    private fun clearIdle() {
+        val previous=idleTask; idleTask=null; idleStarted=null
+        try { previous?.cancel() } catch (_: Exception) { diagnostics.record(SafeComponent.CONTROLLER,SafeError.UNEXPECTED,SafeSeverity.WARNING) }
+    }
     private fun updateIdle() {
         clearIdle()
         if (currentState == ControllerState.STANDBY && hasConversation) {
@@ -129,6 +133,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun state(): ControllerState = currentState
     @Synchronized fun error(): SafeError? = currentError
     @Synchronized fun dispatch(event: ControllerEvent, failure: SafeError = SafeError.UNEXPECTED, token: GenerationToken? = null): Boolean {
+        if (stopping && event != ControllerEvent.STOP) return false
         if (locked && event in setOf(ControllerEvent.START,ControllerEvent.RESUME)) return false
         if (event == ControllerEvent.STOP) return stop()
         if (event == ControllerEvent.RESUME && currentState != ControllerState.PAUSED) return false
@@ -183,11 +188,15 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         } catch (_: Exception) { stop(); currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED; diagnostics.record(SafeComponent.SPEECH, SafeError.UNEXPECTED, SafeSeverity.ERROR); false }
     }
     @Synchronized fun cancelGeneration() {
+        if (stopping) return
+        if (!permissionGranted()) { stop(); return }
         invalidateGeneration()
         try { effects.cancelWork() } catch (_: Exception) { stop(); currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED; return }
         if (currentState in setOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) { currentState = ControllerState.STANDBY; issueGeneration(); updateIdle() }
     }
     @Synchronized fun stop(): Boolean {
+        if (stopping) return true
+        stopping=true
         startIntent=null
         clearIdle(); hasConversation=false
         invalidateGeneration()
@@ -202,6 +211,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
             currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED
             diagnostics.record(SafeComponent.CONTROLLER, SafeError.UNEXPECTED, SafeSeverity.ERROR)
         }
+        stopping=false
         return !failed
     }
     companion object {

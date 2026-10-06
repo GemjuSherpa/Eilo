@@ -1651,10 +1651,10 @@
       "implementation_status": "implemented",
       "verification_status": "partial",
       "evidence": [
-        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Serialized Stop cancels/releases/clears; cleanup failure still attempts every action and emits typed error. Synthetic committed history stays intact. Kotlin compile/JUnit7 and Swift compile/XCTest7 pass."
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Final Stop regression: cleanup cannot reentrantly Start or recurse Stop; cancellation callbacks remain invalid. Kotlin compile/JUnit26 and Swift compile/XCTest26 pass. Original task branch task/s02-vc-ctrl-02 was merged first."
       ],
       "owner": null,
-      "branch": "task/s02-vc-ctrl-02",
+      "branch": "task/s02-vc-ctrl-02-review",
       "commit": null,
       "reviewer": null,
       "blocker": "Physical-device and later real-audio/storage integration not verified.",
