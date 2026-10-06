@@ -1971,17 +1971,23 @@
       "scope": "local consent policy",
       "acceptance_criterion": "Background mode defaults off and changes only through explicit choice.",
       "focused_test": "Permission grant or UI exit does not set consent; exercise separate toggle.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        {
+          "type": "sprint_review",
+          "artifact": "Eilo/docs/sprints/S04_REVIEW.md",
+          "notes": "Background choice defaults off, is independently versioned and never starts capture. Enabling requires a current OS credential/LocalAuthentication result plus an unlocked visible context and unchanged privacy epoch; denial/cancellation does not apply it. Failed persistence remains off. Kotlin 62 tests/lint, Swift 55 tests/typecheck, 41 JS/UI tests and iOS Release build pass. Physical device-authentication and background checks not run."
+        }
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s04-vc-set-03",
       "commit": null,
-      "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval.",
+      "reviewer": "Gemju Sherpa",
+      "blocker": "Required physical/accessibility/later-pipeline integration evidence remains pending.",
+      "next_action": "Review S04 with Gemju Sherpa; no release assurance.",
       "design_reference": "Approved VC-UX-14 handoff"
     },
     {

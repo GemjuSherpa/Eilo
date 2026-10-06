@@ -25,7 +25,10 @@ RCT_EXPORT_MODULE(EiloControl)
   dispatch_async(dispatch_get_main_queue(), ^{ resolve([self->_host snapshot]); });
 }
 - (void)command:(NSString *)name value:(NSString *)value resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
-  dispatch_async(dispatch_get_main_queue(), ^{ resolve([self->_host command:name value:value]); });
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if ([name isEqualToString:@"background"]) { [self->_host background:value completion:^(NSString *snapshot) { resolve(snapshot); }]; }
+    else { resolve([self->_host command:name value:value]); }
+  });
 }
 - (void)invalidate { [_timer invalidate];_timer=nil; }
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params {

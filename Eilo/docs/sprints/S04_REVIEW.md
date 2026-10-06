@@ -71,3 +71,7 @@ Generated TurboModule exposes allowlisted commands and strictly validated metada
 ### VC-SET-02
 
 Versioned native consent metadata requires an unselected-to-explicit history/private choice; microphone permission cannot set it. Native onboarding completion is persisted only after a choice. Failed/unknown-version persistence fails closed. History request never enables unavailable encrypted storage; Start requires a deliberate usable/private choice. Native metadata stays local, iOS file is complete-protected and backup-excluded. Kotlin 60 tests/lint, Swift 53 tests/typecheck, 40 JS/UI tests and unsigned iOS Release build pass. Physical storage/backup/accessibility checks pending.
+
+### VC-SET-03
+
+Background choice defaults off, is independently versioned and never starts capture. Enabling requires a current OS credential/LocalAuthentication result plus an unlocked visible context and unchanged privacy epoch; denial/cancellation does not apply it. Failed persistence remains off. Kotlin 62 tests/lint, Swift 55 tests/typecheck, 41 JS/UI tests and iOS Release build pass. Physical device-authentication and background checks not run.

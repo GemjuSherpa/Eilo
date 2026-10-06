@@ -39,8 +39,22 @@ class EiloControlModule(context: ReactApplicationContext): NativeEiloControlSpec
       try {
         val c=app.conversationController
         val unlocked=!app.getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked
-        if(name !in setOf("start","stop","confirmSpeaker","history","completeOnboarding") || (name!="history" && value!="") || (name=="history" && value !in setOf("private","history"))) { promise.reject("invalid_command","Unsupported control");return@post }
+        if(name !in setOf("start","stop","confirmSpeaker","history","completeOnboarding","background") || (name !in setOf("history","background") && value!="") || (name=="history" && value !in setOf("private","history")) || (name=="background" && value !in setOf("true","false"))) { promise.reject("invalid_command","Unsupported control");return@post }
         when(name) {
+          "background" -> {
+            c.stop()
+            if(!app.foregroundCaptureVisible || !unlocked) { promise.resolve(snapshot());return@post }
+            if(value=="true") {
+              val expected=c.snapshot()["privacyEpoch"]
+              val activity=reactApplicationContext.currentActivity as? MainActivity
+              if(activity==null) { promise.resolve(snapshot());return@post }
+              activity.authenticateConsent { authenticated ->
+                if(authenticated && app.foregroundCaptureVisible && !app.getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked && c.snapshot()["privacyEpoch"]==expected) app.consent.chooseBackground(true,true)
+                promise.resolve(snapshot())
+              }
+              return@post
+            } else if(!app.consent.chooseBackground(false,false)) throw IllegalStateException()
+          }
           "history" -> if(app.foregroundCaptureVisible && unlocked) {
             c.privacyTransition(com.eilo.foundation.PrivacyChange.PRIVATE_SESSION)
             if(!app.consent.chooseHistory(if(value=="private") com.eilo.foundation.HistoryChoice.PRIVATE else com.eilo.foundation.HistoryChoice.HISTORY)) throw IllegalStateException()
