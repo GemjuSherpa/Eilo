@@ -64,7 +64,7 @@ public final class PackTransport {
   private let policy: PackOriginPolicy;private let client: any PackHTTPClient
   public init(policy: PackOriginPolicy,client: any PackHTTPClient=NativePackHTTPClient()) { self.policy=policy;self.client=client }
   public static func strongEtag(_ s: String?) -> Bool { s?.range(of:#"^"[a-zA-Z0-9._-]{1,128}"$"#,options:.regularExpression) != nil }
-  @discardableResult public func transfer(_ pack: VerifiedPack,index: Int,file: URL,cancel: PackCancellation,offset: Int64=0,etag: String?=nil) throws -> String? {
+  @discardableResult public func transfer(_ pack: VerifiedPack,index: Int,file: URL,cancel: PackCancellation,offset: Int64=0,etag: String?=nil,validator: @escaping (String?)throws->Void = { _ in }) throws -> String? {
     guard pack.manifest.artifacts.indices.contains(index) else { throw PackFailure.manifest };let a=pack.manifest.artifacts[index]
     guard offset>=0 && offset<a.bytes && (offset==0 || Self.strongEtag(etag)) else { throw PackFailure.transport }
     if offset>0 { guard try FileManager.default.attributesOfItem(atPath:file.path)[.size] as? Int64 == offset else { throw PackFailure.transport } }
@@ -79,7 +79,8 @@ public final class PackTransport {
           if offset>0 && (h.status != 206 || h.etag != etag) { throw PackRestartRequired() }
           guard h.status==(offset>0 ? 206:200),h.length==a.bytes-offset,h.encoding==nil || h.encoding=="identity" else { throw PackFailure.transport }
           if offset>0 && h.range != "bytes \(offset)-\(a.bytes-1)/\(a.bytes)" { throw PackFailure.transport }
-          try cancel.check();nextEtag=Self.strongEtag(h.etag) ? h.etag:nil
+          try cancel.check();nextEtag=Self.strongEtag(h.etag) ? h.etag:nil;try validator(nextEtag)
+          if FileManager.default.fileExists(atPath:file.path) { guard try file.resourceValues(forKeys:[.isSymbolicLinkKey]).isSymbolicLink != true else { throw PackFailure.transport } }
           if offset==0 { guard FileManager.default.createFile(atPath:file.path,contents:nil) else { throw PackFailure.transport } }
           output=try FileHandle(forWritingTo:file);if offset>0 { try output?.seekToEnd() };accepted=true
         }

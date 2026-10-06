@@ -40,7 +40,7 @@ class PackOriginPolicy(origins: Set<String>) {
 }
 /** Blocking disk/network work must be invoked on the dedicated installer worker, never UI/audio threads. */
 class PackTransport(private val policy: PackOriginPolicy, private val client: PackHTTPClient=NativePackHTTPClient()) {
- fun transfer(pack: VerifiedPack,index: Int,file: File,cancel: PackCancellation,offset: Long=0,etag: String?=null): String? {
+ fun transfer(pack: VerifiedPack,index: Int,file: File,cancel: PackCancellation,offset: Long=0,etag: String?=null,validator: (String?)->Unit={}): String? {
   val a=pack.manifest.artifacts[index];require(offset in 0 until a.bytes && (offset==0L || strongEtag(etag)))
   require(offset==0L || file.length()==offset)
   var url=a.url;var redirects=0
@@ -55,7 +55,7 @@ class PackTransport(private val policy: PackOriginPolicy, private val client: Pa
       if(offset>0 && (h.status!=206 || h.etag!=etag)) throw PackRestartRequired()
       check(h.status==(if(offset>0)206 else 200) && h.length==a.bytes-offset && (h.encoding==null || h.encoding=="identity")) { "transport" }
       if(offset>0) check(h.range=="bytes $offset-${a.bytes-1}/${a.bytes}") { "transport" }
-      cancel.check();nextEtag=if(strongEtag(h.etag))h.etag else null;accepted=true;output=java.io.FileOutputStream(file,offset>0)
+      cancel.check();nextEtag=if(strongEtag(h.etag))h.etag else null;validator(nextEtag);check(!java.nio.file.Files.isSymbolicLink(file.toPath()));accepted=true;output=java.io.FileOutputStream(file,offset>0)
      }
     },{ bytes,n ->
      cancel.check();check(accepted && n in 0..bytes.size && n.toLong()<=a.bytes-offset-received) { "transport" };output!!.write(bytes,0,n);received+=n
