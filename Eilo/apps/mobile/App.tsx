@@ -221,8 +221,10 @@ export default function App({
                             ]}
                           >
                             This separate choice requires device authentication.
-                            It never starts the microphone. Screen lock stops
-                            listening.
+                            It never starts the microphone. iOS background
+                            listening is unavailable pending physical
+                            verification. Android requires an already-running
+                            service. Screen lock stops listening.
                           </Text>
                           <Text
                             style={[textStyles.body, { color: colors.text }]}
