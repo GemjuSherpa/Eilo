@@ -64,6 +64,7 @@ class MainApplication : Application(), ReactApplication {
         if (devices.any { it.isSink && (it.type in setOf(android.media.AudioDeviceInfo.TYPE_WIRED_HEADPHONES,android.media.AudioDeviceInfo.TYPE_WIRED_HEADSET,android.media.AudioDeviceInfo.TYPE_BLUETOOTH_SCO,android.media.AudioDeviceInfo.TYPE_BLUETOOTH_A2DP) || (android.os.Build.VERSION.SDK_INT >= 31 && it.type == android.media.AudioDeviceInfo.TYPE_BLE_HEADSET)) }) conversationController.routeDisconnected()
       }
     },android.os.Handler(android.os.Looper.getMainLooper()))
+    conversationController.setOutputGain((consent.snapshot()["volume"] as Int)/100f)
     loadReactNative(this)
   }
 }

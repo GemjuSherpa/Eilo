@@ -35,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       guard let self else { return false }
       return self.captureEligibility.allowed && IOSMicrophonePermission().status() == .granted
     }
+    _=conversationController.setOutputGain(Float(consent.snapshot()["volume"] as? Int ?? 100)/100)
     let interruptions=AudioInterruptionHandler(conversationController)
     audioObservers.append(NotificationCenter.default.addObserver(forName:AVAudioSession.interruptionNotification,object:nil,queue:.main) { notification in
       if let type=notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,type == AVAudioSession.InterruptionType.began.rawValue { interruptions.receive(.call) }
