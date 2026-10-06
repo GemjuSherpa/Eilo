@@ -25,3 +25,5 @@ cmp .local/model-build/qwen3-1.7b-q4-k-m.gguf .local/model-build/qwen3-1.7b-q4-k
 ```
 
 Independent repeat evidence is recorded after both executions complete, not inferred from a recipe.
+
+VC-PACK-02 passed locally: both outputs are byte-identical, 1,282,439,424 bytes; SHA-256 c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120. File type 15 (Q4_K_M), 311 tensors (F32/Q4_K/Q6_K); tokenizer/template match BF16 exactly. No reply quality or mobile RAM/latency result is claimed.
