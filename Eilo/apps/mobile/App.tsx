@@ -1,34 +1,57 @@
-import {StatusBar, StyleSheet, Text, useColorScheme, View, ScrollView} from 'react-native';
+import {useCallback, useEffect, useState, useRef} from 'react';
+import {AppState, ScrollView, StatusBar, StyleSheet, Text, useColorScheme} from 'react-native';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {NavigationContainer, DarkTheme, DefaultTheme} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import tokens from '@eilo/design-tokens';
-import {useState} from 'react';
-import {Onboarding} from './src/Onboarding';
-
-// The launch shell has no controller, account, capture or network adapters.
-export default function App() {
+import {Onboarding, styles as textStyles} from './src/Onboarding';
+import {Home} from './src/Home';
+import {nativeControl, type ControlClient, type ControlCommand, type ControlSnapshot} from './src/ControlClient';
+const Tabs = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+export default function App({client = nativeControl}: {client?: ControlClient}) {
+  const revision = useRef(-1);
   const [continued, setContinued] = useState(false);
+  const [snapshot, setSnapshot] = useState<ControlSnapshot | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
   const dark = useColorScheme() === 'dark';
   const colors = dark ? tokens.colors.dark : tokens.colors.light;
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={dark ? 'light-content' : 'dark-content'} />
-      <SafeAreaView style={[styles.screen, {backgroundColor: colors.surface}]}>
-        <ScrollView>
-        {!continued ? <Onboarding colors={colors} onContinue={() => setContinued(true)} /> : <View accessible accessibilityLabel="Eilo. Guest. Stopped.">
-          <Text accessibilityRole="header" style={[styles.title, {color: colors.text}]}>
-            Eilo
-          </Text>
-          <Text style={[styles.body, {color: colors.secondary_text}]}>Guest</Text>
-          <Text style={[styles.body, {color: colors.text}]}>Stopped</Text>
-        </View>}
-        </ScrollView>
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
+  useEffect(() => {
+    let attached = true;revision.current = -1;
+    const receive = (value: ControlSnapshot) => {if (attached && value.revision >= revision.current) {revision.current = value.revision;setSnapshot(value); setError(false);}};
+    const refresh = () => {client.snapshot().then(receive).catch(() => {if (attached) {setSnapshot(null);setError(true);}});};
+    const remove = client.subscribe(receive, () => {if (attached) {setSnapshot(null);setError(true);}});
+    const appState = AppState.addEventListener('change', state => {if (state === 'active') {refresh();}});
+    refresh();
+    return () => {attached = false;remove();appState.remove();};
+  }, [client]);
+  const run = useCallback((name: ControlCommand) => {
+    setBusy(true);
+    client.command(name).then(value => {if (value.revision >= revision.current) {revision.current = value.revision;setSnapshot(value);setError(false);}})
+      .catch(() => {setSnapshot(null);setError(true);})
+      .finally(() => setBusy(false));
+  }, [client]);
+  return <SafeAreaProvider>
+    <StatusBar barStyle={dark ? 'light-content' : 'dark-content'} />
+    <NavigationContainer theme={{...(dark ? DarkTheme : DefaultTheme), colors: {
+      ...(dark ? DarkTheme.colors : DefaultTheme.colors), background: colors.surface, card: colors.surface,
+      primary: colors.primary, text: colors.text, border: colors.boundary,
+    }}}>
+      <Stack.Navigator screenOptions={{headerShown: false, animation: 'none'}}>
+      {!continued ? <Stack.Screen name="Welcome">{() => <SafeAreaView style={[styles.screen, {backgroundColor: colors.surface}]}>
+        <ScrollView><Onboarding colors={colors} onContinue={() => setContinued(true)} /></ScrollView>
+      </SafeAreaView>}</Stack.Screen> : <Stack.Screen name="Companion">{() => <Tabs.Navigator screenOptions={{tabBarStyle: {minHeight: 64}, headerTitleStyle: {color: colors.text}}}>
+        <Tabs.Screen name="Home">{() => <SafeAreaView style={styles.screen} edges={['left', 'right']}>
+          <ScrollView><Home colors={colors} snapshot={snapshot} busy={busy} error={error} run={run} /></ScrollView>
+        </SafeAreaView>}</Tabs.Screen>
+        <Tabs.Screen name="Settings">{() => <SafeAreaView style={styles.screen} edges={['left', 'right']}>
+          <ScrollView><Text style={[textStyles.body, {color: colors.text}]}>No history is saved. Background listening is off.</Text></ScrollView>
+        </SafeAreaView>}</Tabs.Screen>
+      </Tabs.Navigator>}</Stack.Screen>}
+      </Stack.Navigator>
+    </NavigationContainer>
+  </SafeAreaProvider>;
 }
-
-const styles = StyleSheet.create({
-  screen: {flex: 1, justifyContent: 'center', padding: 24},
-  title: {fontSize: 32, fontWeight: '600'},
-  body: {fontSize: 16, lineHeight: 24, marginTop: 8},
-});
+const styles = StyleSheet.create({screen: {flex: 1, padding: 24}});

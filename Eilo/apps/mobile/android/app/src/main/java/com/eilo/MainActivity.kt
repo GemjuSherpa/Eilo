@@ -8,6 +8,7 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 class MainActivity : ReactActivity() {
   private val controller get() = (application as MainApplication).conversationController
   override fun onCreate(savedInstanceState: android.os.Bundle?) {
+    supportFragmentManager.fragmentFactory = com.swmansion.rnscreens.fragment.restoration.RNScreensFragmentFactory()
     super.onCreate(savedInstanceState)
     controller.bindPermissionAdapter(com.eilo.foundation.AndroidMicrophonePermission(this))
   }

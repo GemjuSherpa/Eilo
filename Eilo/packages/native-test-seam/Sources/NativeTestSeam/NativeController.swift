@@ -59,10 +59,11 @@ public final class NativeController: @unchecked Sendable {
   var stopping=false
   var startIntent: UUID?
   var capturePending=false
+  public var captureIsPending: Bool { lock.lock();defer { lock.unlock() };return capturePending }
   var captureIntent: UUID?
   var permissionPrompted=false
   func permissionGranted() -> Bool { permission.status() == .granted }
-  public func permissionChanged() { lock.lock(); defer { lock.unlock() }; if !permissionGranted() { stop() } }
+  public func permissionChanged() { lock.lock(); defer { lock.unlock() }; if !permissionGranted() && (startIntent != nil || activeToken != nil) { stop() } }
   func start() -> Bool {
     guard !stopping, startIntent == nil, !locked, [.stopped,.permissionRequired,.paused].contains(currentState) else { return false }
     guard modelStatus == .ready else { modelsChanged();return false }
