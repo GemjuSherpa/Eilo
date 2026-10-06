@@ -26,8 +26,8 @@ class MainActivity : ReactActivity() {
     controller.bindPermissionAdapter(com.eilo.foundation.AndroidMicrophonePermission(this))
   }
   override fun onResume() { super.onResume(); (application as MainApplication).foregroundCaptureVisible=true; controller.permissionChanged() }
-  // Foreground-only: exit cancels pending opens and releases native capture.
-  override fun onPause() { (application as MainApplication).foregroundCaptureVisible=false; controller.stop(); super.onPause() }
+  // Exit stops unless a consented native service is already active and the device remains unlocked.
+  override fun onPause() { val app=application as MainApplication;app.foregroundCaptureVisible=false;if(!app.captureAllowed()) controller.stop();super.onPause() }
   override fun onDestroy() {
     consentConfirmation?.invoke(false);consentConfirmation=null
     controller.bindPermissionAdapter(com.eilo.foundation.UnavailablePermissionAdapter())

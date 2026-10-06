@@ -24,9 +24,7 @@ class MainApplication : Application(), ReactApplication {
   }
   private val foregroundCapture by lazy {
     com.eilo.foundation.ForegroundCapture(captureWorker, {
-      foregroundCaptureVisible &&
-        checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == android.content.pm.PackageManager.PERMISSION_GRANTED &&
-        !getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked
+      captureAllowed()
     }, { com.eilo.foundation.AndroidCaptureDevice(this).also { captureSessionId=it.sessionId } }, {
       audioFocus.acquire()
       captureServiceWanted=true
@@ -38,6 +36,11 @@ class MainApplication : Application(), ReactApplication {
       stopService(android.content.Intent(this,CaptureService::class.java))
     })
   }
+  fun captureAllowed() = com.eilo.foundation.BackgroundCapturePolicy.allows(
+    foregroundCaptureVisible,
+    !getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked,
+    checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)==android.content.pm.PackageManager.PERMISSION_GRANTED,
+    consent.backgroundRequested(),captureServiceRunning)
   val conversationController: com.eilo.foundation.NativeController by lazy { com.eilo.foundation.NativeController(effects=foregroundCapture,models=modelReadiness,privateGate=com.eilo.foundation.PrivateEffectGate { consent.personalWritesAllowed() }) }
 
   override val reactHost: ReactHost by lazy {
