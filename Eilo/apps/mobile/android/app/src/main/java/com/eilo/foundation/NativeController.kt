@@ -87,6 +87,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         endSessionPreservingCapture()
     }
     private fun endSessionPreservingCapture(): Boolean {
+        if (!permissionGranted()) { stop(); return false }
         clearIdle(); invalidateGeneration(); hasConversation=false
         val expectedGeneration=generation; val expectedEpoch=privacyEpoch
         return try {
@@ -122,6 +123,8 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun dispatch(event: ControllerEvent, failure: SafeError = SafeError.UNEXPECTED, token: GenerationToken? = null): Boolean {
         if (locked && event in setOf(ControllerEvent.START,ControllerEvent.RESUME)) return false
         if (event == ControllerEvent.STOP) return stop()
+        if (event == ControllerEvent.RESUME && currentState != ControllerState.PAUSED) return false
+        if (event == ControllerEvent.START && currentState == ControllerState.PAUSED) return false
         if (event == ControllerEvent.START || event == ControllerEvent.RESUME) return start()
         if (event in setOf(ControllerEvent.SPEECH_DETECTED, ControllerEvent.ENDPOINT, ControllerEvent.SPEECH_READY, ControllerEvent.PLAYBACK_FINISHED, ControllerEvent.FAILURE) && !accepts(token)) return false
         val next = nextState(currentState, event) ?: return false
@@ -199,7 +202,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
             ControllerEvent.FAILURE -> ControllerState.ERROR
             ControllerEvent.SETUP_REQUIRED -> if (state == ControllerState.STOPPED) ControllerState.SETUP else null
             ControllerEvent.READY -> if (state in setOf(ControllerState.SETUP, ControllerState.ERROR)) ControllerState.STOPPED else null
-            ControllerEvent.START -> if (state == ControllerState.STOPPED) ControllerState.STANDBY else null
+            ControllerEvent.START -> if (state in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED)) ControllerState.STANDBY else null
             ControllerEvent.SPEECH_DETECTED -> if (state == ControllerState.STANDBY) ControllerState.CAPTURING else null
             ControllerEvent.ENDPOINT -> if (state == ControllerState.CAPTURING) ControllerState.THINKING else null
             ControllerEvent.SPEECH_READY -> if (state == ControllerState.THINKING) ControllerState.SPEAKING else null

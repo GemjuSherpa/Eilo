@@ -3,7 +3,7 @@ import XCTest
 final class NativeControllerTests: XCTestCase {
   func testDeclaredEdgesAndInvalidEvents() {
     let edges: [ControllerEvent: Set<ControllerState>] = [
-      .setupRequired:[.stopped], .ready:[.setup,.error], .start:[.stopped],
+      .setupRequired:[.stopped], .ready:[.setup,.error], .start:[.stopped,.permissionRequired],
       .speechDetected:[.standby], .endpoint:[.capturing], .speechReady:[.thinking],
       .playbackFinished:[.speaking], .pause:[.standby,.capturing,.thinking,.speaking],
       .resume:[.paused], .stop:Set(ControllerState.allCases), .failure:Set(ControllerState.allCases)]
@@ -12,7 +12,7 @@ final class NativeControllerTests: XCTestCase {
     }}
   }
   func testSyntheticTurnAndTypedFailure() {
-    let c = NativeController()
+    let c = testController()
     XCTAssertFalse(c.dispatch(.speechReady)); XCTAssertEqual(c.state,.stopped)
     for e: ControllerEvent in [.start,.speechDetected,.endpoint,.speechReady,.playbackFinished] { XCTAssertTrue(c.dispatch(e,token:c.token)) }
     XCTAssertEqual(c.state,.standby)

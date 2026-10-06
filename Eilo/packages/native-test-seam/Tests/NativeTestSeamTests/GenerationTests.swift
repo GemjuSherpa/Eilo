@@ -5,7 +5,7 @@ final class GenerationTests: XCTestCase {
     c.dispatch(.start); c.dispatch(.speechDetected,token:c.token); c.dispatch(.endpoint,token:c.token); return c.token!
   }
   func testOldAudioAfterCancelStopAndNewTurn() {
-    let spy=EffectsSpy(); let c=NativeController(effects:spy); let old=thinking(c)
+    let spy=EffectsSpy(); let c=testController(effects:spy); let old=thinking(c)
     c.cancelGeneration(); XCTAssertTrue(old.cancelled); XCTAssertFalse(c.releaseSpeech(old,clause:"stale")); XCTAssertTrue(spy.clauses.isEmpty)
     c.dispatch(.speechDetected); XCTAssertEqual(c.state,.standby)
     c.stop(); let fresh=thinking(c)
@@ -13,12 +13,12 @@ final class GenerationTests: XCTestCase {
     c.stop(); XCTAssertFalse(c.releaseSpeech(fresh,clause:"after Stop")); XCTAssertEqual(spy.clauses,["synthetic approved clause"])
   }
   func testReentrantStopCannotRestoreSpeaking() {
-    let spy=EffectsSpy(); let c=NativeController(effects:spy); let token=thinking(c)
+    let spy=EffectsSpy(); let c=testController(effects:spy); let token=thinking(c)
     spy.onPlay={ c.stop() }
     XCTAssertFalse(c.releaseSpeech(token,clause:"synthetic")); XCTAssertEqual(c.state,.stopped); XCTAssertTrue(token.cancelled)
   }
   func testWrongOwnerAndUntokenedCompletionRejected() {
-    let a=NativeController(), b=NativeController(); let token=thinking(a); _=thinking(b)
+    let a=testController(), b=testController(); let token=thinking(a); _=thinking(b)
     XCTAssertFalse(b.releaseSpeech(token,clause:"wrong owner")); XCTAssertFalse(b.dispatch(.speechReady)); XCTAssertEqual(b.state,.thinking)
   }
 }

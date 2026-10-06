@@ -1966,17 +1966,20 @@
       "scope": "iOS permission adapter",
       "acceptance_criterion": "Capture is impossible before user Start plus granted permission; denial does not loop prompts.",
       "focused_test": "Same permission matrix against iOS adapter; denial leaves settings usable.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 iOS AVAudioApplication permission adapter (AVAudioSession fallback) compiles against installed iOS SDK. Native gate matches Android matrix and stale-grant/revocation tests. Swift compile/XCTest23 and Kotlin compile/JUnit23 pass; physical iOS prompts not run."
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s02-vc-set-05",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Physical-device and later real-audio/storage integration not verified.",
+      "next_action": "Review S02 evidence; no release assurance inferred.",
+      "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
     },
     {
       "id": "VC-SET-06",
