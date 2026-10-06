@@ -167,6 +167,11 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private var currentError: SafeError? = null
     @Synchronized fun state(): ControllerState = currentState
     @Synchronized fun error(): SafeError? = currentError
+    /** Revalidate the detector lease under the same monitor as token/state transitions. */
+    @Synchronized internal fun wakeDetected(token:GenerationToken, active:()->Boolean):Boolean {
+        if(!active()) return false
+        return dispatch(ControllerEvent.SPEECH_DETECTED,token=token)
+    }
     @Synchronized fun dispatch(event: ControllerEvent, failure: SafeError = SafeError.UNEXPECTED, token: GenerationToken? = null): Boolean {
         if (stopping && event != ControllerEvent.STOP) return false
         if (locked && event in setOf(ControllerEvent.START,ControllerEvent.RESUME)) return false
