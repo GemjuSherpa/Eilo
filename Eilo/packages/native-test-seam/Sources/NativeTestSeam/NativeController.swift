@@ -109,11 +109,12 @@ public final class NativeController: @unchecked Sendable {
   var privacyEpoch: UInt64 = 0
   var locked = false
   var privateSession = true
+  var stoppedOperationID=UUID()
   var generation: UInt64 = 0
   var activeToken: GenerationToken?
   public var token: GenerationToken? { lock.lock(); defer { lock.unlock() }; return activeToken }
   func invalidateGeneration() {
-    activeToken?.cancel(); activeToken = nil
+    activeToken?.cancel(); activeToken = nil; stoppedOperationID=UUID()
     if generation == 9_007_199_254_740_991 { sessionID = UUID(); generation = 0 } else { generation += 1 }
   }
   func issueGeneration() { invalidateGeneration(); activeToken = GenerationToken(sessionID,generation,privacyEpoch) }
@@ -125,6 +126,13 @@ public final class NativeController: @unchecked Sendable {
   var currentState: ControllerState = .stopped
   var currentError: SafeError?
   public init(diagnostics: SafeDiagnostics = SafeDiagnostics(), effects: any ControllerEffects = NoopControllerEffects(), privateGate: any PrivateEffectGate = DeniedPrivateEffectGate(), clock: any NativeClock = MonotonicClock(), scheduler: any IdleScheduler = NativeIdleScheduler(), permission: any MicrophonePermissionAdapter = UnavailablePermissionAdapter()) { self.diagnostics = diagnostics; self.effects = effects; self.privateGate = privateGate; self.clock=clock; self.scheduler=scheduler; self.permission=permission }
+  /// Metadata only; no native content/keys/errors can enter this presentation snapshot.
+  public func snapshot() -> [String: Any] {
+    lock.lock(); defer { lock.unlock() }
+    var result: [String:Any] = ["version":1,"state":currentState.rawValue,"sessionId":sessionID.uuidString.lowercased(),"operationId":(activeToken?.operationID ?? stoppedOperationID).uuidString.lowercased(),"generation":generation,"privacyEpoch":privacyEpoch]
+    if currentState == .error { result["errorCode"] = currentError == .permissionDenied ? "permission_denied" : (currentError ?? .unexpected).rawValue }
+    return result
+  }
   public var state: ControllerState { lock.lock(); defer { lock.unlock() }; return currentState }
   public var error: SafeError? { lock.lock(); defer { lock.unlock() }; return currentError }
   @discardableResult public func dispatch(_ event: ControllerEvent, failure: SafeError = .unexpected, token: GenerationToken? = nil) -> Bool {

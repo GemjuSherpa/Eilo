@@ -9,6 +9,9 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 
 class MainApplication : Application(), ReactApplication {
 
+  // One native authority per process; startup never invokes Start or restores capture.
+  val conversationController = com.eilo.foundation.NativeController()
+
   override val reactHost: ReactHost by lazy {
     getDefaultReactHost(
       context = applicationContext,
