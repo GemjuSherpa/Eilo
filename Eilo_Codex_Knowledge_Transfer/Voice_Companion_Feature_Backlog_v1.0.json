@@ -1823,17 +1823,20 @@
       "scope": "native persistence boundary",
       "acceptance_criterion": "Every process launch begins stopped; restored settings never resume microphone capture.",
       "focused_test": "Relaunch with prior listening preference and simulate reboot/restore; capture count stays zero.",
-      "status": "planned",
-      "approval_status": "not_requested",
-      "implementation_status": "not_started",
-      "verification_status": "not_run",
-      "evidence": [],
+      "status": "awaiting_review",
+      "approval_status": "awaiting_human_review",
+      "implementation_status": "implemented",
+      "verification_status": "partial",
+      "evidence": [
+        "Eilo/docs/sprints/S02_REVIEW.md \u2014 Process-owned controller always starts stopped; no settings restoration invokes capture. Android activity binding and iOS protected-data/scene callbacks stop work. Opaque metadata snapshots and fresh-process tests pass (Kotlin JUnit25, Swift XCTest25); integrated unsigned iOS Release build passes."
+      ],
       "owner": null,
-      "branch": null,
+      "branch": "task/s02-vc-ctrl-08",
       "commit": null,
       "reviewer": null,
-      "blocker": null,
-      "next_action": "Implement only after task-scoped authorization and dependency approval."
+      "blocker": "Physical-device and later real-audio/storage integration not verified.",
+      "next_action": "Review S02 evidence; no release assurance inferred.",
+      "evidence_scope": "Native synthetic tests and compiler checks; integration limitations recorded."
     },
     {
       "id": "VC-SET-01",

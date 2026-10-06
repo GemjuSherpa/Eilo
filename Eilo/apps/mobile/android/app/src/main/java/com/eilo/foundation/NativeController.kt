@@ -35,10 +35,17 @@ enum class PrivateEffect { READ_MEMORY, COMMIT_HISTORY, DISPLAY_PRIVATE }
 fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
-class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private val permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter()) {
+class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter()) {
     private var startIntent: UUID? = null
     private var permissionPrompted=false
     private fun permissionGranted(): Boolean = try { permission.status() == MicrophonePermission.GRANTED } catch (_: Exception) { false }
+    /** Binding/rebinding an activity never restores listening or prompts. */
+    @Synchronized fun bindPermissionAdapter(adapter: MicrophonePermissionAdapter) { stop(); permission=adapter }
+    @Synchronized fun snapshot(): Map<String, Any> {
+        val result=mutableMapOf<String,Any>("version" to 1,"state" to currentState.wireValue,"sessionId" to sessionId.toString(),"operationId" to (activeToken?.operationId ?: stoppedOperationId).toString(),"generation" to generation,"privacyEpoch" to privacyEpoch)
+        if (currentState == ControllerState.ERROR) result["errorCode"]=(currentError ?: SafeError.UNEXPECTED).name.lowercase(java.util.Locale.ROOT)
+        return result.toMap()
+    }
     @Synchronized fun permissionChanged() { if (!permissionGranted()) stop() }
     @Synchronized private fun start(): Boolean {
         if (startIntent != null || locked || currentState !in setOf(ControllerState.STOPPED,ControllerState.PERMISSION_REQUIRED,ControllerState.PAUSED)) return false
@@ -100,11 +107,12 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private var privacyEpoch = 0L
     private var locked = false
     private var privateSession = true
+    private var stoppedOperationId=UUID.randomUUID()
     private var generation = 0L
     private var activeToken: GenerationToken? = null
     @Synchronized fun token(): GenerationToken? = activeToken
     private fun invalidateGeneration() {
-        activeToken?.cancelled = true; activeToken = null
+        activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
         if (generation == 9007199254740991L) { sessionId = UUID.randomUUID(); generation = 0 } else generation++
     }
     private fun issueGeneration() {
