@@ -149,5 +149,7 @@
     }
   ],
   "acoustic_acceptance": "FAIL",
-  "failed_cases": 3
+  "failed_cases": 3,
+  "fixture_count": 20,
+  "unique_audio_count": 18
 }

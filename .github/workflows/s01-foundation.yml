@@ -33,6 +33,10 @@ jobs:
         run: |
           python3 scripts/test_verify_ios_launch.py
           python3 -O scripts/test_verify_ios_launch.py
+      - name: Wake fixture validation (synthetic, no model downloads)
+        run: |
+          python3 packages/wake-runtime/test_fixture_validation.py
+          python3 -O packages/wake-runtime/test_fixture_validation.py
   android:
     if: github.event.repository.private == false
     runs-on: ubuntu-24.04
