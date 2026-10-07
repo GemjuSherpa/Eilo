@@ -1,13 +1,14 @@
 {
-  "phrase": "Hey Eilo",
+  "phrase": "Hey, Eilo",
   "pronunciation": "Ay-loh",
   "keyword_tokens": [
     "▁HE",
     "Y",
     "▁A",
-    "LO"
+    "▁LO",
+    "W"
   ],
-  "status": "evaluation only; acoustic acceptance failed",
+  "status": "evaluation only; expanded synthetic acoustic set passes; mobile/physical calibration remains open",
   "runtime": {
     "version": "1.13.8",
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/v1.13.8/sherpa-onnx-v1.13.8-osx-arm64-shared-no-tts.tar.bz2",
@@ -62,6 +63,8 @@
     ],
     "license_declaration": "Apache License 2.0 in archive README.md; distribution review incomplete"
   },
-  "evaluation_threshold": 0.1,
-  "evaluation_boost": 3.0
+  "evaluation_threshold": 0.125,
+  "evaluation_boost": 1.5,
+  "max_active_paths": 8,
+  "num_trailing_blanks": 1
 }

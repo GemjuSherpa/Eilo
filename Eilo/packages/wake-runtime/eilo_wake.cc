@@ -32,11 +32,11 @@ extern "C" EiloWake *eilo_wake_create(const char *encoder, const char *decoder,
     c.model_config.transducer.joiner = joiner;
     c.model_config.tokens = tokens; c.model_config.num_threads = 1;
     c.model_config.provider = "cpu"; c.model_config.debug = 0;
-    c.max_active_paths = 4; c.num_trailing_blanks = 1;
+    c.max_active_paths = 8; c.num_trailing_blanks = 1;
     c.keywords_threshold = threshold; c.keywords_score = boost;
-    // Candidate phonetic spelling HEY ALO for Gemju Sherpa's Ay-loh selection.
-    // This spelling is under evaluation, not a calibrated production lexicon.
-    const char keyword[] = "\xE2\x96\x81HE Y \xE2\x96\x81" "A LO @HEY_EILO\n";
+    // Phonetic HEY A LOW matches Hey, Eilo (Ay-loh), including a spoken pause.
+    // Selected on local synthetic fixtures; physical-device calibration remains open.
+    const char keyword[] = "\xE2\x96\x81HE Y \xE2\x96\x81" "A \xE2\x96\x81LO W @HEY_EILO\n";
     c.keywords_buf = keyword; c.keywords_buf_size = static_cast<int32_t>(sizeof(keyword)-1);
     w->spotter = SherpaOnnxCreateKeywordSpotter(&c);
     if (w->spotter) w->stream = SherpaOnnxCreateKeywordStream(w->spotter);

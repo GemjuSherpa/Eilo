@@ -16,7 +16,8 @@ static const char *keyword = "HEY_EILO";
 extern "C" {
 const SherpaOnnxKeywordSpotter *SherpaOnnxCreateKeywordSpotter(const SherpaOnnxKeywordSpotterConfig *c) {
   assert(c->feat_config.sample_rate == 16000 && c->model_config.num_threads == 1);
-  assert(std::strstr(c->keywords_buf, "@HEY_EILO\n"));
+  assert(c->max_active_paths == 8 && c->num_trailing_blanks == 1);
+  assert(std::strcmp(c->keywords_buf, "▁HE Y ▁A ▁LO W @HEY_EILO\n") == 0);
   return &spotter;
 }
 const SherpaOnnxOnlineStream *SherpaOnnxCreateKeywordStream(const SherpaOnnxKeywordSpotter *) { return fail_stream ? nullptr : &stream; }

@@ -32,3 +32,7 @@ Compiler/contract checks passing must not override the failed recognition result
 The tested lexicon/checkpoint combination fails this target/nonwake fixture set, including a confusable nonwake activation. Further pronunciation/checkpoint evaluation is required before capture integration. The model digest is locally observed from official HTTPS, unlike the publisher-supplied runtime digest; production trust and distribution-license review remain incomplete. Mobile ABI packaging/bindings, resampling, vendor feature-buffer lifetime/erasure, bounded worker delivery and physical phone tests remain unverified. No raw-user-audio debugging, cloud inference or readiness weakening is proposed.
 
 Tracker: VC-TURN-02 remains partial, acoustic acceptance failed, awaiting review of this continuation. VC-TURN-03 stays dependency-blocked. Main merge of this continuation awaits Gemju Sherpa review. The unrelated S02_REVIEW.md edit is preserved and excluded.
+
+## Subsequent correction
+
+The earlier failure above is historical. The acoustic-fix follow-up now passes the unchanged original samples and eight additional comma-pause samples for **Hey, Eilo (Ay-loh)**. See [acoustic correction review](S05_WAKE_ACOUSTIC_REVIEW.md) for the selected settings, controlled ablations and remaining mobile/physical gates. The historical failed baseline is retained in `packages/wake-runtime/tests/acoustic-tuning-results.json`; current results are in `tests/results.json`.

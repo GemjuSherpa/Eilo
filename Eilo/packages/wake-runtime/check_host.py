@@ -30,9 +30,39 @@ def verify_fixture(path):
             raise ValueError('fixture is empty or silent')
 
 
+def validate_manifest(manifest):
+    """Require an explicit, bounded acceptance set before accessing any assets."""
+    if not isinstance(manifest, dict):
+        raise ValueError('fixture manifest failed')
+    fixtures = manifest.get('fixtures')
+    if not isinstance(fixtures, list) or not 2 <= len(fixtures) <= 256:
+        raise ValueError('fixture coverage failed')
+    allowed = {'wake', 'nonwake', 'spelling diagnostic', 'pronunciation diagnostic'}
+    names = set()
+    kinds = set()
+    for fixture in fixtures:
+        if not isinstance(fixture, dict):
+            raise ValueError('fixture entry failed')
+        name, kind, checksum = fixture.get('file'), fixture.get('kind'), fixture.get('sha256')
+        if (not isinstance(name, str) or not name.endswith('.wav')
+                or '/' in name or '\\' in name or name in names):
+            raise ValueError('fixture filename failed')
+        if not isinstance(kind, str) or kind not in allowed:
+            raise ValueError('fixture classification failed')
+        if (not isinstance(checksum, str) or len(checksum) != 64
+                or any(char not in '0123456789abcdef' for char in checksum)):
+            raise ValueError('fixture digest failed')
+        names.add(name)
+        kinds.add(kind)
+    if not {'wake', 'nonwake'} <= kinds:
+        raise ValueError('fixture coverage failed')
+    return fixtures
+
+
 def main():
     provenance = json.loads((HERE / 'provenance.json').read_text())
     fixture_manifest = json.loads((HERE / 'tests/fixtures/manifest.json').read_text())
+    fixtures = validate_manifest(fixture_manifest)
     for role in ('runtime', 'model'):
         item = provenance[role]
         if digest(CACHE / (role + '.tar.bz2')) != item['sha256']:
@@ -40,7 +70,7 @@ def main():
         for artifact in item['files']:
             if digest(CACHE / item['directory'] / artifact['path']) != artifact['sha256']:
                 raise ValueError('extracted candidate integrity failed')
-    for fixture in fixture_manifest['fixtures']:
+    for fixture in fixtures:
         path = CACHE / 'fixtures' / fixture['file']
         if digest(path) != fixture['sha256']:
             raise ValueError('fixture integrity failed')
@@ -59,9 +89,11 @@ def main():
                             '-o', str(acoustic)], check=True)
     report = {'compiler': 'pass', 'scripted_abi_contract': 'pass', 'host': 'macOS ARM64',
               'phrase': provenance['phrase'], 'pronunciation': provenance['pronunciation'],
-              'threshold': provenance['evaluation_threshold'], 'boost': provenance['evaluation_boost'], 'cases': []}
+              'threshold': provenance['evaluation_threshold'], 'boost': provenance['evaluation_boost'],
+              'max_active_paths': provenance['max_active_paths'],
+              'num_trailing_blanks': provenance['num_trailing_blanks'], 'cases': []}
     failures = 0
-    for fixture in fixture_manifest['fixtures']:
+    for fixture in fixtures:
         result = subprocess.run([str(acoustic), str(model), str(CACHE / 'fixtures' / fixture['file']),
                                  str(provenance['evaluation_threshold']), str(provenance['evaluation_boost'])], capture_output=True, text=True, check=True)
         detections = json.loads(result.stdout)['detections']
@@ -72,6 +104,8 @@ def main():
                                 'detections': detections, 'expected': expected, 'pass': passed})
     report['acoustic_acceptance'] = 'FAIL' if failures else 'PASS ON SYNTHETIC SET ONLY'
     report['failed_cases'] = failures
+    report['fixture_count'] = len(fixtures)
+    report['unique_audio_count'] = len({fixture['sha256'] for fixture in fixtures})
     output = CACHE / 'host-results.json'
     output.write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
