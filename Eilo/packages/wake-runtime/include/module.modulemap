@@ -1,0 +1,4 @@
+module CEiloWake {
+  header "eilo_wake.h"
+  export *
+}
