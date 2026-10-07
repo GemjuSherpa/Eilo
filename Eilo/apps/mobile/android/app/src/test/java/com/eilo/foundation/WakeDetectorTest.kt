@@ -3,13 +3,14 @@ import org.junit.Assert.*
 import org.junit.Test
 
 private class KeywordFixture : WakeKeywordStream {
+    var expectedRate=16000
     var result="";var pending=2;var accepted=0;var decoded=0;var resets=0;var closed=0
     var onAccept:(()->Unit)?=null
     var onDecode:((Int)->Unit)?=null
     var fail="";var endless=false;var borrowed:FloatArray?=null
     override fun accept(samples:FloatArray,count:Int,sampleRate:Int) {
         accepted++;borrowed=samples;onAccept?.invoke()
-        assertEquals(16000,sampleRate);assertEquals(4,count)
+        assertEquals(expectedRate,sampleRate);assertEquals(4,count)
         assertEquals(listOf(-1f,-0.5f,0f,32767f/32768f),samples.take(count))
         if(fail=="accept") error("synthetic")
     }
@@ -64,6 +65,18 @@ class WakeDetectorTest {
         val d=WakeDetector(config,verified={true},open={ if(opens++==0) first else second });assertTrue(d.begin(old))
         c.stop();c.dispatch(ControllerEvent.START);val fresh=c.token()!!;assertTrue(d.begin(fresh));assertEquals(1,first.closed)
         assertNull(process(d,old));assertEquals(0,second.closed);second.result="HEY EILO";assertTrue(process(d,fresh)!!.apply(c));d.close()
+    }
+    @Test fun routeRateChangeClosesStreamAndRevokesPendingWake() {
+        val c=testController();c.dispatch(ControllerEvent.START);val old=c.token()!!
+        val first=KeywordFixture();val second=KeywordFixture();var opens=0
+        val d=WakeDetector(config,verified={true},open={if(opens++==0)first else second})
+        assertTrue(d.begin(old));first.result="HEY EILO";val event=process(d,old)!!
+        first.expectedRate=48000;first.result="HEY EILO"
+        assertNull(d.processPCM16(old,pcm,pcm.size,48000));assertEquals(1,first.accepted);assertEquals(1,first.closed)
+        assertFalse(event.apply(c));assertTrue(first.borrowed!!.all {it==0f});assertNull(process(d,old));assertEquals(1,first.accepted)
+        c.stop();c.dispatch(ControllerEvent.START);val fresh=c.token()!!;second.expectedRate=48000;second.result="HEY EILO"
+        assertTrue(d.begin(fresh));assertNull(process(d,old));assertEquals(0,second.closed)
+        assertTrue(d.processPCM16(fresh,pcm,pcm.size,48000)!!.apply(c));d.close()
     }
     @Test fun missingVerificationAndRevocationFailClosed() {
         val c=testController();c.dispatch(ControllerEvent.START);val t=c.token()!!;assertFalse(WakeDetector(config).begin(t))
