@@ -20,7 +20,15 @@
     "holdout-near-3": "Hey below",
     "holdout-near-4": "Hey alone",
     "holdout-near-5": "Hey a little",
-    "holdout-near-6": "A low price"
+    "holdout-near-6": "A low price",
+    "paused-wake-1": "Hey, Ailo",
+    "paused-wake-2": "Hey, Aylo",
+    "paused-wake-3": "Hey, ay low",
+    "paused-wake-4": "Hey, Aylo, can you help me",
+    "paused-near-1": "Hello, Ailo",
+    "paused-near-2": "Hey, hello",
+    "paused-near-3": "Ailo, can you help me",
+    "paused-near-4": "Hey, alone"
   },
   "fixtures": [
     {
@@ -130,6 +138,54 @@
       "kind": "nonwake",
       "cohort": "additional phrases generated after lexicon/threshold selection; same TTS voice",
       "sha256": "5d9e2fb8334efd9be40d89ab9cecdb56216967cf3be9b76536a926b32502458a"
+    },
+    {
+      "file": "paused-wake-1.wav",
+      "kind": "wake",
+      "sha256": "a4bfd5143e37c920d7a15b90105073a9a35695d7cf6f3d60c484e444928ef7e7",
+      "cohort": "additional comma-pause phrases generated after candidate selection; same installed TTS voice"
+    },
+    {
+      "file": "paused-wake-2.wav",
+      "kind": "wake",
+      "sha256": "a4bfd5143e37c920d7a15b90105073a9a35695d7cf6f3d60c484e444928ef7e7",
+      "cohort": "additional comma-pause phrases generated after candidate selection; same installed TTS voice"
+    },
+    {
+      "file": "paused-wake-3.wav",
+      "kind": "wake",
+      "sha256": "ee5c5e7ab8ed98739275de3884eb83b7a8fa03b25eefbb26bde4434597baaf69",
+      "cohort": "additional comma-pause phrases generated after candidate selection; same installed TTS voice"
+    },
+    {
+      "file": "paused-wake-4.wav",
+      "kind": "wake",
+      "sha256": "f544eb871477076ee5c979e57107e30de7682907e2f75f7de4bbdd0cb9010793",
+      "cohort": "additional comma-pause phrases generated after candidate selection; same installed TTS voice"
+    },
+    {
+      "file": "paused-near-1.wav",
+      "kind": "nonwake",
+      "sha256": "2b01cae4c67b35fcb9a055651fc742eb854b560781ce59ee5edafdd5938fbfb1",
+      "cohort": "additional comma-pause phrases generated after candidate selection; same installed TTS voice"
+    },
+    {
+      "file": "paused-near-2.wav",
+      "kind": "nonwake",
+      "sha256": "01a59b2a7aa2f1d06c2f0ba76b3fedcf4112d4410ab84ca620c14f66702c34ea",
+      "cohort": "additional comma-pause phrases generated after candidate selection; same installed TTS voice"
+    },
+    {
+      "file": "paused-near-3.wav",
+      "kind": "nonwake",
+      "sha256": "a75c50c2f91b96c30f7513dac2d7ab0532c07707d1a1b1188a71a99f31d31793",
+      "cohort": "additional comma-pause phrases generated after candidate selection; same installed TTS voice"
+    },
+    {
+      "file": "paused-near-4.wav",
+      "kind": "nonwake",
+      "sha256": "0b9f8a12d543521b114d5e9b79f1369c68da5fb394cbc6b3d00462027574f8dc",
+      "cohort": "additional comma-pause phrases generated after candidate selection; same installed TTS voice"
     }
   ]
 }
