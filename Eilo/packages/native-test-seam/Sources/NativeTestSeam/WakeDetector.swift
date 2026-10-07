@@ -41,6 +41,7 @@ final class WakeDetector {
   private let open: (WakeConfiguration) throws -> any WakeKeywordStream
   private let scratch=UnsafeMutableBufferPointer<Float>.allocate(capacity:19200)
   private let diagnostics: SafeDiagnostics
+  private var sampleRate:Int?
   private var releaseFailed=false
   private var stream: (any WakeKeywordStream)?
   private var token: GenerationToken?
@@ -62,6 +63,8 @@ final class WakeDetector {
     lock.lock();defer { lock.unlock() }
     guard expected === token, !expected.cancelled else { if expected === token { close() };return nil }
     guard (8000...192000).contains(sampleRate), !input.isEmpty, input.count <= sampleRate/10, input.allSatisfy({ $0.isFinite && (-1...1).contains($0) }), let engine=stream, let currentLease=lease else { close();return nil }
+    guard self.sampleRate == nil || self.sampleRate == sampleRate else { close();return nil }
+    self.sampleRate=sampleRate
     defer { erase() }
     do {
       guard verified() else { close();return nil }
@@ -85,7 +88,7 @@ final class WakeDetector {
   private func erase() { scratch.update(repeating:0) }
   deinit { close();scratch.deinitialize();scratch.deallocate() }
   func close() {
-    lock.lock();defer { lock.unlock() };lease?.revoke();lease=nil;let previous=stream;stream=nil;token=nil;erase()
+    lock.lock();defer { lock.unlock() };lease?.revoke();lease=nil;let previous=stream;stream=nil;token=nil;sampleRate=nil;erase()
     // Close to all future input even when native release reports a failure.
     do { try previous?.close() } catch { releaseFailed=true;diagnostics.record(.model,.unavailable,.error) }
   }

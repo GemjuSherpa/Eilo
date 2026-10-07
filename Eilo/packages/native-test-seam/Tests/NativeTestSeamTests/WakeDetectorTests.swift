@@ -1,12 +1,13 @@
 import XCTest
 @testable import NativeTestSeam
 private final class KeywordFixture: WakeKeywordStream {
+  var expectedRate=16000
   var onAccept:(()->Void)?
   var onDecode:((Int)->Void)?
   var result="",fail="";var pending=2,accepted=0,decoded=0,resets=0,closed=0;var endless=false
   var borrowed:UnsafeBufferPointer<Float>?
   func accept(_ samples:UnsafeBufferPointer<Float>,sampleRate:Int) throws {
-    accepted += 1;borrowed=samples;onAccept?();XCTAssertEqual(sampleRate,16000);XCTAssertEqual(Array(samples),[-1,-0.5,0,0.5])
+    accepted += 1;borrowed=samples;onAccept?();XCTAssertEqual(sampleRate,expectedRate);XCTAssertEqual(Array(samples),[-1,-0.5,0,0.5])
     if fail=="accept" { throw WakeFailure.unavailable }
   }
   func ready() throws -> Bool { if fail=="ready" { throw WakeFailure.unavailable };return endless || pending>0 }
@@ -56,6 +57,18 @@ final class WakeDetectorTests: XCTestCase {
     let d=WakeDetector(configuration:config,verified:{true},open:{_ in defer { opens += 1 };return opens==0 ? first : second });XCTAssertTrue(d.begin(old))
     c.stop();c.dispatch(.start);let fresh=c.token!;XCTAssertTrue(d.begin(fresh));XCTAssertEqual(first.closed,1)
     XCTAssertNil(process(d,old));XCTAssertEqual(second.closed,0);second.result="HEY EILO";XCTAssertTrue(process(d,fresh)!.apply(c));d.close()
+  }
+  func testRouteRateChangeClosesStreamAndRevokesPendingWake() {
+    let c=testController();c.dispatch(.start);let old=c.token!,first=KeywordFixture(),second=KeywordFixture();var opens=0
+    let d=WakeDetector(configuration:config,verified:{true},open:{_ in defer { opens += 1 };return opens==0 ? first : second })
+    XCTAssertTrue(d.begin(old));first.result="HEY EILO";let event=process(d,old)!
+    first.expectedRate=48000;first.result="HEY EILO"
+    XCTAssertNil(pcm.withUnsafeBufferPointer { d.process(old,input:$0,sampleRate:48000) })
+    XCTAssertEqual(first.accepted,1);XCTAssertEqual(first.closed,1);XCTAssertFalse(event.apply(c))
+    XCTAssertTrue(first.borrowed!.allSatisfy {$0==0});XCTAssertNil(process(d,old));XCTAssertEqual(first.accepted,1)
+    c.stop();c.dispatch(.start);let fresh=c.token!;second.expectedRate=48000;second.result="HEY EILO"
+    XCTAssertTrue(d.begin(fresh));XCTAssertNil(process(d,old));XCTAssertEqual(second.closed,0)
+    XCTAssertTrue(pcm.withUnsafeBufferPointer { d.process(fresh,input:$0,sampleRate:48000) }!.apply(c));d.close()
   }
   func testMissingVerificationAndRevocationFailClosed() {
     let c=testController();c.dispatch(.start);let t=c.token!;XCTAssertFalse(WakeDetector(configuration:config).begin(t))
