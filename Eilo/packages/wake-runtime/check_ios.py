@@ -89,19 +89,24 @@ def main():
     report = {'runtime': 'sherpa-onnx 1.13.8 / onnxruntime 1.28.2',
               'device': selected[0]['name'], 'udid': args.udid,
               'compiler': 'PASS: C++ simulator/device; Swift simulator binding',
-              'microphone': 'not used', 'model_readiness': 'unchanged/unavailable', 'cases': []}
+              'microphone': 'not used', 'model_readiness': 'unchanged/unavailable',
+              'delivery': 'Bounded native queue, scripted receive clock and synthetic controller only; no audio device capture',
+              'cases': []}
     failures = 0
     for fixture in fixtures:
         result = run(['xcrun', 'simctl', 'spawn', args.udid, str(executable), str(model),
                       str(CACHE / 'fixtures' / fixture['file'])], 60)
         value = json.loads(result.stdout)
-        if value.get('closed_input_rejected') is not True or type(value.get('detections')) is not int:
+        if (value.get('closed_input_rejected') is not True or type(value.get('detections')) is not int
+                or value.get('delivery_closed_rejected') is not True
+                or value.get('delivery_detections') != value['detections']):
             raise ValueError('invalid simulator binding result')
         expected = 1 if fixture['kind'] == 'wake' else 0 if fixture['kind'] == 'nonwake' else None
         passed = None if expected is None else value['detections'] == expected
         failures += passed is False
         report['cases'].append({'file': fixture['file'], 'kind': fixture['kind'],
-                                'detections': value['detections'], 'expected': expected, 'pass': passed})
+                                'detections': value['detections'], 'delivery_detections': value['delivery_detections'],
+                                'expected': expected, 'pass': passed})
     report.update({'fixture_count': len(fixtures),
                    'unique_audio_count': len({item['sha256'] for item in fixtures}),
                    'failed_cases': failures,

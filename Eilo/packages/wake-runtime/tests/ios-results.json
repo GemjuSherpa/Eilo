@@ -10,6 +10,7 @@
       "file": "ay-low-padded.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -17,6 +18,7 @@
       "file": "target-1.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -24,6 +26,7 @@
       "file": "target-2.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -31,6 +34,7 @@
       "file": "target-3.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -38,6 +42,7 @@
       "file": "target-4.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -45,6 +50,7 @@
       "file": "negative-hey.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -52,6 +58,7 @@
       "file": "negative-name.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -59,6 +66,7 @@
       "file": "negative-near.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -66,6 +74,7 @@
       "file": "negative-ordinary.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -73,6 +82,7 @@
       "file": "negative-padded.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -80,6 +90,7 @@
       "file": "positive-padded.wav",
       "kind": "spelling diagnostic",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": null,
       "pass": null
     },
@@ -87,6 +98,7 @@
       "file": "pronounced-padded.wav",
       "kind": "pronunciation diagnostic",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": null,
       "pass": null
     },
@@ -94,6 +106,7 @@
       "file": "holdout-wake-1.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -101,6 +114,7 @@
       "file": "holdout-wake-2.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -108,6 +122,7 @@
       "file": "holdout-near-1.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -115,6 +130,7 @@
       "file": "holdout-near-2.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -122,6 +138,7 @@
       "file": "holdout-near-3.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -129,6 +146,7 @@
       "file": "holdout-near-4.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -136,6 +154,7 @@
       "file": "holdout-near-5.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -143,6 +162,7 @@
       "file": "holdout-near-6.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -150,6 +170,7 @@
       "file": "paused-wake-1.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -157,6 +178,7 @@
       "file": "paused-wake-2.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -164,6 +186,7 @@
       "file": "paused-wake-3.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -171,6 +194,7 @@
       "file": "paused-wake-4.wav",
       "kind": "wake",
       "detections": 1,
+      "delivery_detections": 1,
       "expected": 1,
       "pass": true
     },
@@ -178,6 +202,7 @@
       "file": "paused-near-1.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -185,6 +210,7 @@
       "file": "paused-near-2.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -192,6 +218,7 @@
       "file": "paused-near-3.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     },
@@ -199,6 +226,7 @@
       "file": "paused-near-4.wav",
       "kind": "nonwake",
       "detections": 0,
+      "delivery_detections": 0,
       "expected": 0,
       "pass": true
     }
@@ -206,5 +234,6 @@
   "fixture_count": 28,
   "unique_audio_count": 24,
   "failed_cases": 0,
-  "acoustic_acceptance": "PASS ON SYNTHETIC SET ONLY"
+  "acoustic_acceptance": "PASS ON SYNTHETIC SET ONLY",
+  "delivery": "Bounded native queue, scripted receive clock and synthetic controller only; no audio device capture"
 }

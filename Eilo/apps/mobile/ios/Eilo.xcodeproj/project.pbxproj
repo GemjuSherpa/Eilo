@@ -33,6 +33,7 @@
 		5C6DA7DFF8A8CD20EAED96F4 /* StandbyAudioBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */; };
 		5E15004C121B950562FFA60F /* WakeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF6B5E15156115846C3F796 /* WakeDetector.swift */; };
 		A850BD743A291C2313AF8201 /* NativeWakeStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = A850BD743A291C2313AF8202 /* NativeWakeStream.swift */; };
+		B751DE863B492E4314CF8311 /* WakeFrameDelivery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B751DE863B492E4314CF8312 /* WakeFrameDelivery.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StandbyAudioBuffer.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/StandbyAudioBuffer.swift"; sourceTree = "<group>"; };
 		0DF6B5E15156115846C3F796 /* WakeDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WakeDetector.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/WakeDetector.swift"; sourceTree = "<group>"; };
 		A850BD743A291C2313AF8202 /* NativeWakeStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeWakeStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeWakeStream.swift"; sourceTree = "<group>"; };
+		B751DE863B492E4314CF8312 /* WakeFrameDelivery.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WakeFrameDelivery.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/WakeFrameDelivery.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 		30F2448E7B57418BE6C6AAB8 /* NativeController */ = {
 			isa = PBXGroup;
 			children = (
+				B751DE863B492E4314CF8312 /* WakeFrameDelivery.swift */,
 				A850BD743A291C2313AF8202 /* NativeWakeStream.swift */,
 				0DF6B5E15156115846C3F796 /* WakeDetector.swift */,
 				523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */,
@@ -317,6 +320,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B751DE863B492E4314CF8311 /* WakeFrameDelivery.swift in Sources */,
 				A850BD743A291C2313AF8201 /* NativeWakeStream.swift in Sources */,
 				5E15004C121B950562FFA60F /* WakeDetector.swift in Sources */,
 				5C6DA7DFF8A8CD20EAED96F4 /* StandbyAudioBuffer.swift in Sources */,
