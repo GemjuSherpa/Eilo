@@ -2,12 +2,14 @@
 import AVFAudio
 import UIKit
 
-/// Native-only capture. No audio leaves this adapter until separately reviewed wake/ASR work.
+/// Native-only capture. Optional verified wake delivery stays off until explicitly attached.
 public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
   private let lock=NSRecursiveLock()
   private let worker=DispatchQueue(label:"eilo.native.capture")
   private var run: UInt64=0
   private var standby:StandbyAudioBuffer?
+  private var wakeSlot:WakeCaptureSlot?
+  private weak var wakeController:NativeController?
   private var expiry:DispatchSourceTimer?
   private var engine: AVAudioEngine?
   private var speechGain:Float=1
@@ -29,12 +31,18 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
         let format=input.outputFormat(forBus:0)
         guard format.sampleRate.isFinite,format.sampleRate>=8000,format.sampleRate<=192000,format.sampleRate.rounded()==format.sampleRate,format.channelCount > 0,format.commonFormat == .pcmFormatFloat32 else { throw CaptureFailure.unavailable }
         let retained=StandbyAudioBuffer(sampleRate:Int(format.sampleRate));let ticket=retained.begin()
-        lock.lock();guard run==expected else { lock.unlock();retained.close();try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return };standby=retained;lock.unlock()
+        let slot=WakeCaptureSlot(sampleRate:Int(format.sampleRate))
+        lock.lock();guard run==expected else { lock.unlock();retained.close();try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return };standby=retained;wakeSlot=slot;lock.unlock()
         input.installTap(onBus:0,bufferSize:512,format:format) { buffer,_ in
           // Retain at most two seconds in the native ring; erase callback samples.
           // Ring tickets reject callbacks after Stop or a new capture.
           if let channels=buffer.floatChannelData {
-            retained.append(ticket:ticket,input:UnsafeBufferPointer(start:channels[0],count:Int(buffer.frameLength)))
+            let samples=UnsafeBufferPointer(start:channels[0],count:Int(buffer.frameLength))
+            retained.append(ticket:ticket,input:samples)
+            if buffer.format.sampleRate.isFinite,buffer.format.sampleRate.rounded()==buffer.format.sampleRate,
+              (8000...192000).contains(buffer.format.sampleRate) {
+              slot.submit(samples,sampleRate:Int(buffer.format.sampleRate))
+            } else { slot.submit(samples,sampleRate:0) }
             for channel in 0..<Int(buffer.format.channelCount) {
               channels[channel].update(repeating:0,count:Int(buffer.frameLength))
             }
@@ -42,13 +50,25 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
         }
         lock.lock()
         do {
-          guard run == expected,eligible() else { retained.close();if run==expected {standby=nil};lock.unlock();audio.inputNode.removeTap(onBus:0);try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return }
+          guard run == expected,eligible() else { retained.close();slot.close();if run==expected {standby=nil;wakeSlot=nil};lock.unlock();audio.inputNode.removeTap(onBus:0);try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return }
           try audio.start();engine=audio
-          let timer=DispatchSource.makeTimerSource(queue:worker);timer.schedule(deadline:.now(),repeating:.milliseconds(50));timer.setEventHandler { [weak retained] in retained?.expire() };expiry=timer;timer.resume();lock.unlock()
+          let timer=DispatchSource.makeTimerSource(queue:worker);timer.schedule(deadline:.now(),repeating:.milliseconds(50));timer.setEventHandler { [weak self,weak retained,weak slot] in
+            retained?.expire()
+            guard let self,let slot else { return }
+            // Decode returns before controller entry, so Stop cannot form a controller/decoder lock cycle.
+            let result=slot.drain()
+            switch result {
+            case .events(let events):
+              self.lock.lock();let controller=self.wakeController;self.lock.unlock()
+              if let controller { for event in events { _=event.apply(controller) } }
+            case .failed: if self.current(expected) { self.deliver(failure) }
+            case .inactive: break
+            }
+          };expiry=timer;timer.resume();lock.unlock()
           deliver { completion(true) }
         } catch { lock.unlock();throw error }
       } catch {
-        lock.lock();if run==expected { expiry?.cancel();expiry=nil;standby?.close();standby=nil };lock.unlock()
+        lock.lock();if run==expected { expiry?.cancel();expiry=nil;standby?.close();standby=nil;wakeSlot?.close();wakeSlot=nil;wakeController=nil };lock.unlock()
         candidate?.stop();candidate?.inputNode.removeTap(onBus:0)
         try? AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation)
         if current(expected) { deliver(failure) }
@@ -57,13 +77,33 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
   }
   private func deliver(_ action: @escaping ()->Void) { DispatchQueue.global(qos:.userInitiated).async(execute:action) }
   private func current(_ expected: UInt64) -> Bool { lock.lock();defer { lock.unlock() };return run == expected }
+  /// Native worker setup only; caller supplies an independently verified detector and current token.
+  /// The default AppDelegate never calls this while production model readiness is missing.
+  func connectWakeDetector(_ detector:WakeDetector,token:GenerationToken,controller:NativeController,completion:@escaping (Bool)->Void) {
+    lock.lock();let expected=run,slot=wakeSlot;lock.unlock()
+    worker.async { [weak self] in
+      guard let self,let slot,self.current(expected),!token.cancelled,
+        controller.effects === self,controller.token === token,controller.state == .standby else {
+        detector.close();completion(false);return
+      }
+      do {
+        let delivery=try WakeFrameDelivery(sampleRate:slot.sampleRate,detector:detector,token:token)
+        self.lock.lock()
+        let attached=self.run==expected && self.eligible() && !token.cancelled && slot.attach(delivery)
+        if attached { self.wakeController=controller }
+        self.lock.unlock()
+        if !attached { delivery.close() }
+        completion(attached)
+      } catch { detector.close();completion(false) }
+    }
+  }
   public func releaseCapture() throws {
     lock.lock();defer { lock.unlock() };run &+= 1
-    expiry?.cancel();expiry=nil;standby?.close();standby=nil
+    expiry?.cancel();expiry=nil;standby?.close();standby=nil;wakeSlot?.close();wakeSlot=nil;wakeController=nil
     if let audio=engine { engine=nil;audio.stop();audio.inputNode.removeTap(onBus:0);try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation) }
   }
-  public func cancelWork() throws {}
-  public func clearVolatileContext() throws { lock.lock();defer { lock.unlock() };standby?.clear() }
+  public func cancelWork() throws { lock.lock();defer { lock.unlock() };wakeSlot?.detach();wakeController=nil }
+  public func clearVolatileContext() throws { lock.lock();defer { lock.unlock() };standby?.clear();wakeSlot?.detach();wakeController=nil }
   public func playClause(_ clause:String) throws { throw CaptureFailure.unavailable }
   private enum CaptureFailure: Error { case unavailable }
 }
