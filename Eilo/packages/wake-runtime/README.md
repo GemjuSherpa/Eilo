@@ -22,4 +22,33 @@ Local fixtures are frozen macOS Samantha TTS outputs, 16 kHz mono PCM16 with one
 
 The temporary exploration used threshold/boost pairs `(0.25,1.5)`, `(0.25,3)`, `(0.1,3)`, `(0.1,5)`, `(0.05,5)`. These runs used the earlier `HEY A LOW` lexicon: the default pair detected two of five target variants; threshold 0.1/boost 3 detected four of five; other pairs detected none. All five nonwake fixtures yielded zero detections. The previous `HEY ALO` candidate at 0.1/3 detected five of seven intended targets but also activated on the added nonwake phrase `Hello Ailo`. The eight additional phrases were generated after selecting the final lexicon/parameters, but use the same TTS voice. These are limited tuning/validation observations, not representative accuracy evidence. Production thresholds remain undecided. The subsequent correction uses `HEY A LOW`, eight paths, threshold 0.125 and boost 1.5. Controlled ablations on the failing samples show that restoring four paths misses the paused target, restoring boost 3 reintroduces both misses and the Hello false activation, and restoring the old lexicon activates on Hey alone. [Tuning evidence](tests/acoustic-tuning-results.json) preserves the failed baseline, explicitly partial searches and full original-set selection results. [Current results](tests/results.json) record the unchanged original fixtures plus additional comma-pause validation; no failed original sample was removed or relabeled.
 
-Mobile ABI packaging, Kotlin/Swift vendor bindings, verified model-pack trust, bounded capture-to-worker delivery and resampling/native lifetime checks remain outstanding. There is no change to mobile dependency lockfiles or microphone wiring. Complete this gate before VC-TURN-03.
+The iOS Swift/C ABI evaluation binding is now implemented and tested with the real vendor libraries on the simulator; Android binding, production model-pack trust, bounded capture-to-worker delivery and physical calibration remain outstanding. There is no change to mobile dependency lockfiles or microphone wiring. Complete this gate before VC-TURN-03.
+
+## iOS binding evaluation
+
+`NativeWakeStream.swift` owns a single opaque C handle, maps only the fixed keyword to `HEY EILO`, borrows frames synchronously and closes on invalid input, changed sample rate, native errors or revoked verification. Result reads/reset and idempotent close share a native lock. C++ owns the actual decoder/reset. Opening requires an independent verification callback before and after creation; linking alone grants no model readiness. The real implementation requires `DEBUG`, `EILO_WAKE_EVALUATION` and the `CEiloWake` module. Standard Debug/Release builds fail closed without these conditions. This binding does not select a model pack, request permission or start capture.
+
+The exact iOS static XCFrameworks are sherpa-onnx **1.13.8** and its declared ONNX Runtime **1.28.2** dependency. [iOS provenance](ios-provenance.json) records the publishers' Swift package URLs/checksums and locally observed extracted hashes. The local C wrapper compiles for iOS 18 device and ARM64 simulator; actual decoding is measured only on the iPhone 18 Pro / iOS 27.0 simulator. Deployment compatibility is separate from physical device support. The binaries, model weights and synthetic voice WAVs stay under ignored `.local/kws`; this does not authorize redistribution or store release.
+
+From `Eilo`, download the two archive URLs in `ios-provenance.json` to `.local/kws/ios/sherpa-ios-static.zip` and `.local/kws/ios/onnxruntime-ios-static.zip`. Verify their exact listed SHA256 checksums before extracting both into `.local/kws/ios`. Use the existing verified model archive/files and frozen WAVs described above. Then run, with your explicitly selected booted simulator UDID:
+
+```sh
+python3 packages/wake-runtime/check_ios.py --udid YOUR_BOOTED_SIMULATOR_UDID
+python3 packages/wake-runtime/test_ios_integrity.py
+python3 -O packages/wake-runtime/test_ios_integrity.py
+```
+
+The verifier checks archives, all recorded extracted runtime files, models and WAVs before compilation/execution. It compiles the C wrapper for both iOS slices and the Swift binding/synthetic runner for ARM64 simulator, then scores all 28 entries via `simctl spawn`. Each spawned process consumes one verified synthetic file, never a microphone; it also confirms input rejection after close. Commands have deadlines. Reports are written to `.local/kws/ios/ios-results.json`; [recorded results](tests/ios-results.json) show eleven wake detections and no activations on fifteen nonwake entries. Two diagnostics are excluded, and the 28 entries represent 24 unique WAVs from one installed voice. These results do not establish physical accuracy, real route handling, vendor buffer erasure or full ASR integration.
+
+A successful compilation generates `.local/kws/ios/WakeEvaluation.xcconfig`. Use it only for a **local ARM64 simulator Debug** build:
+
+```sh
+xcodebuild -workspace apps/mobile/ios/Eilo.xcworkspace -scheme Eilo \
+  -configuration Debug -sdk iphonesimulator \
+  -destination 'id=YOUR_BOOTED_SIMULATOR_UDID' \
+  -xcconfig .local/kws/ios/WakeEvaluation.xcconfig \
+  -derivedDataPath apps/mobile/ios/build/SimulatorDiagnosis \
+  CODE_SIGNING_ALLOWED=NO -jobs 3
+```
+
+The configuration links local static libraries and adds the Debug-only Swift import/flag plus an iOS 18 deployment floor. It does not bundle models or turn on app wake recognition. Omit `-xcconfig` to build the normal app without vendor dependencies. No network download, install, device creation/erase or model-readiness change occurs in the verifier; missing/tampered assets or runner failures return exit 2, and failed acoustic acceptance returns exit 1.
