@@ -28,7 +28,7 @@ struct WakeActivation {
   private let token: GenerationToken
   private let lease:WakeLease
   fileprivate init(_ token: GenerationToken, _ lease:WakeLease) { self.token=token;self.lease=lease }
-  func apply(_ controller: NativeController) -> Bool { controller.wakeDetected(token,active:{lease.active}) }
+  func apply(_ controller: NativeController, deliveryActive:()->Bool = { true }) -> Bool { controller.wakeDetected(token,active:{lease.active && deliveryActive()}) }
 }
 enum WakeFailure: Error { case unavailable }
 
@@ -86,6 +86,9 @@ final class WakeDetector {
     } catch { diagnostics.record(.model,.unavailable,.error);close();return nil }
   }
   private func erase() { scratch.update(repeating:0) }
+  func isActive(_ expected:GenerationToken)->Bool {
+    lock.lock();defer { lock.unlock() };return expected === token && !expected.cancelled && stream != nil && lease?.active == true
+  }
   deinit { close();scratch.deinitialize();scratch.deallocate() }
   func close() {
     lock.lock();defer { lock.unlock() };lease?.revoke();lease=nil;let previous=stream;stream=nil;token=nil;sampleRate=nil;erase()
