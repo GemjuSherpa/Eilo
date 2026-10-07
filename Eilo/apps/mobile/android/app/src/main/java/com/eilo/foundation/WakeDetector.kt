@@ -36,6 +36,7 @@ internal class WakeDetector(
     private val open: (WakeConfiguration) -> WakeKeywordStream = { throw IllegalStateException() },
 ) {
     private val scratch=FloatArray(19200) // At most 100 ms at the maximum accepted 192 kHz rate.
+    private var sampleRate:Int?=null
     private var releaseFailed=false
     private var stream: WakeKeywordStream?=null
     private var token: GenerationToken?=null
@@ -52,6 +53,8 @@ internal class WakeDetector(
     @Synchronized fun processPCM16(expected: GenerationToken, input: ShortArray, count: Int, sampleRate: Int): WakeActivation? {
         if(expected !== token || expected.cancelled) { if(expected === token) close();return null }
         if(sampleRate !in 8000..192000 || count !in 1..input.size || count > sampleRate/10) { close();return null }
+        if(this.sampleRate != null && this.sampleRate != sampleRate) { close();return null }
+        this.sampleRate=sampleRate
         val engine=stream ?: return null
         val currentLease=lease ?: return null
         return try {
@@ -78,7 +81,7 @@ internal class WakeDetector(
     }
     @Synchronized fun close() {
         lease?.active=false;lease=null
-        val previous=stream;stream=null;token=null;scratch.fill(0f)
+        val previous=stream;stream=null;token=null;sampleRate=null;scratch.fill(0f)
         try { previous?.close() } catch (_: Exception) { releaseFailed=true;diagnostics.record(SafeComponent.MODEL,SafeError.UNAVAILABLE,SafeSeverity.ERROR) }
     }
 }
