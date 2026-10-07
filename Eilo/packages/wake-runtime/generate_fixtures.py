@@ -19,8 +19,8 @@ def main():
         for fixture in manifest['fixtures']:
             name = Path(fixture['file']).stem
             aiff, unpadded, padded = (scratch / filename for filename in ('speech.aiff', 'speech.wav', 'padded.wav'))
-            subprocess.run(['say', '-v', 'Samantha', '-o', str(aiff), manifest['generation_text'][name]], check=True)
-            subprocess.run(['afconvert', '-f', 'WAVE', '-d', 'LEI16@16000', '-c', '1', str(aiff), str(unpadded)], check=True)
+            subprocess.run(['say', '-v', 'Samantha', '-o', str(aiff), manifest['generation_text'][name]], check=True, timeout=30)
+            subprocess.run(['afconvert', '-f', 'WAVE', '-d', 'LEI16@16000', '-c', '1', str(aiff), str(unpadded)], check=True, timeout=30)
             with wave.open(str(unpadded), 'rb') as audio:
                 parameters, samples = audio.getparams(), audio.readframes(audio.getnframes())
             with wave.open(str(padded), 'wb') as audio:
@@ -37,5 +37,5 @@ if __name__ == '__main__':
     try:
         main()
     except (OSError, ValueError, subprocess.SubprocessError):
-        print('Fixture generation unavailable: voice output is empty, changed or does not match frozen hashes.', file=sys.stderr)
+        print('Fixture generation unavailable: voice conversion failed/timed out, or output is empty/changed from frozen hashes.', file=sys.stderr)
         sys.exit(2)

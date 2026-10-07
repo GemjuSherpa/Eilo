@@ -89,7 +89,9 @@ def main():
                             '-o', str(acoustic)], check=True)
     report = {'compiler': 'pass', 'scripted_abi_contract': 'pass', 'host': 'macOS ARM64',
               'phrase': provenance['phrase'], 'pronunciation': provenance['pronunciation'],
-              'threshold': provenance['evaluation_threshold'], 'boost': provenance['evaluation_boost'], 'cases': []}
+              'threshold': provenance['evaluation_threshold'], 'boost': provenance['evaluation_boost'],
+              'max_active_paths': provenance['max_active_paths'],
+              'num_trailing_blanks': provenance['num_trailing_blanks'], 'cases': []}
     failures = 0
     for fixture in fixtures:
         result = subprocess.run([str(acoustic), str(model), str(CACHE / 'fixtures' / fixture['file']),

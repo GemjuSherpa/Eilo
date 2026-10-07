@@ -2,17 +2,19 @@
   "compiler": "pass",
   "scripted_abi_contract": "pass",
   "host": "macOS ARM64",
-  "phrase": "Hey Eilo",
+  "phrase": "Hey, Eilo",
   "pronunciation": "Ay-loh",
-  "threshold": 0.1,
-  "boost": 3.0,
+  "threshold": 0.125,
+  "boost": 1.5,
+  "max_active_paths": 8,
+  "num_trailing_blanks": 1,
   "cases": [
     {
       "file": "ay-low-padded.wav",
       "kind": "wake",
-      "detections": 0,
+      "detections": 1,
       "expected": 1,
-      "pass": false
+      "pass": true
     },
     {
       "file": "target-1.wav",
@@ -80,14 +82,14 @@
     {
       "file": "positive-padded.wav",
       "kind": "spelling diagnostic",
-      "detections": 1,
+      "detections": 0,
       "expected": null,
       "pass": null
     },
     {
       "file": "pronounced-padded.wav",
       "kind": "pronunciation diagnostic",
-      "detections": 0,
+      "detections": 1,
       "expected": null,
       "pass": null
     },
@@ -101,16 +103,16 @@
     {
       "file": "holdout-wake-2.wav",
       "kind": "wake",
-      "detections": 0,
+      "detections": 1,
       "expected": 1,
-      "pass": false
+      "pass": true
     },
     {
       "file": "holdout-near-1.wav",
       "kind": "nonwake",
-      "detections": 1,
+      "detections": 0,
       "expected": 0,
-      "pass": false
+      "pass": true
     },
     {
       "file": "holdout-near-2.wav",
@@ -146,10 +148,66 @@
       "detections": 0,
       "expected": 0,
       "pass": true
+    },
+    {
+      "file": "paused-wake-1.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "paused-wake-2.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "paused-wake-3.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "paused-wake-4.wav",
+      "kind": "wake",
+      "detections": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "file": "paused-near-1.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "paused-near-2.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "paused-near-3.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "file": "paused-near-4.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "expected": 0,
+      "pass": true
     }
   ],
-  "acoustic_acceptance": "FAIL",
-  "failed_cases": 3,
-  "fixture_count": 20,
-  "unique_audio_count": 18
+  "acoustic_acceptance": "PASS ON SYNTHETIC SET ONLY",
+  "failed_cases": 0,
+  "fixture_count": 28,
+  "unique_audio_count": 24
 }

@@ -23,3 +23,5 @@ From Eilo, run `python3 packages/wake-runtime/test_fixture_validation.py` and re
 Review scope: prevent false acceptance from invalid fixture sets and expose duplicate-audio counts. Main merge awaits Gemju Sherpa review. Unrelated S02_REVIEW.md edits are preserved.
 
 Live pre-commit check: installed the freshly built Debug app and ran `python3 -O scripts/verify-ios-launch.py --udid E01AE333-A393-48F6-AAD7-579F0A5DB1F8 --dwell 10`: three fresh launches PASS after ten seconds each. No simulator erase, consent change or microphone capture. Staged diff and secret scans follow before commit; hosted checks await publication.
+
+Subsequent acoustic correction: the failure described above is historical. See S05_WAKE_ACOUSTIC_REVIEW.md and current frozen results for the passing original and expanded paused-phrase set. Native mobile integration remains partial.
