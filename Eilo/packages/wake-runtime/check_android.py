@@ -52,6 +52,8 @@ def verify_report(report, fixtures):
         if (case.get('file') != fixture['file'] or case.get('kind') != fixture['kind']
                 or type(case.get('detections')) is not int or case['detections'] < 0
                 or (expected is not None and case['detections'] != expected)
+                or type(case.get('queued_detections')) is not int or case['queued_detections'] != case['detections']
+                or case.get('queued_stop_rejected') is not True
                 or case.get('closed_input_rejected') is not True
                 or case.get('controller_stop_rejected') is not True):
             raise ValueError('host JNI case failed')

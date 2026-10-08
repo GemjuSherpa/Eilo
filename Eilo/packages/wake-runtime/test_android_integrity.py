@@ -55,9 +55,9 @@ class AndroidIntegrityTests(unittest.TestCase):
     def testPassingLabelCannotHideMissingOrFailedCase(self):
         fixtures=[{'file':'wake.wav','kind':'wake'},{'file':'ordinary.wav','kind':'nonwake'}]
         report={'fixture_count':2,'jni_invalid_stale_handles':'PASS','acoustic_acceptance':'PASS ON SYNTHETIC SET ONLY',
-                'cases':[dict(f, detections=1 if f['kind']=='wake' else 0, closed_input_rejected=True,controller_stop_rejected=True) for f in fixtures]}
+                'cases':[dict(f, detections=1 if f['kind']=='wake' else 0, closed_input_rejected=True,controller_stop_rejected=True,queued_detections=1 if f['kind']=='wake' else 0,queued_stop_rejected=True) for f in fixtures]}
         check_android.verify_report(report,fixtures)
-        for field,value in [('detections',0),('file','wrong.wav'),('closed_input_rejected',False),('controller_stop_rejected',False),('detections',True)]:
+        for field,value in [('detections',0),('file','wrong.wav'),('closed_input_rejected',False),('controller_stop_rejected',False),('detections',True),('queued_detections',0),('queued_detections',True),('queued_stop_rejected',False),('queued_stop_rejected',None)]:
             altered=json.loads(json.dumps(report));altered['cases'][0][field]=value
             with self.assertRaises(ValueError):check_android.verify_report(altered,fixtures)
         report['cases'].pop()

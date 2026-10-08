@@ -22,7 +22,8 @@ internal data class WakeConfiguration(val phrase: String, val threshold: Float, 
 /** Metadata-only handoff; NativeController rechecks the original session/privacy/generation. */
 internal class WakeLease { @Volatile var active=true }
 internal class WakeActivation(private val token: GenerationToken, private val lease:WakeLease) {
-    fun apply(controller: NativeController) = controller.wakeDetected(token) { lease.active }
+    fun apply(controller: NativeController, deliveryActive: () -> Boolean = { true }) =
+        controller.wakeDetected(token) { lease.active && deliveryActive() }
 }
 
 /** Call only on a serialized native inference worker, never an audio callback/UI thread.
@@ -79,6 +80,8 @@ internal class WakeDetector(
         } catch (_: Exception) { diagnostics.record(SafeComponent.MODEL,SafeError.UNAVAILABLE,SafeSeverity.ERROR);close();null }
         finally { scratch.fill(0f) }
     }
+    @Synchronized fun isActive(expected: GenerationToken) =
+        expected === token && !expected.cancelled && stream != null && lease?.active == true
     @Synchronized fun close() {
         lease?.active=false;lease=null
         val previous=stream;stream=null;token=null;sampleRate=null;scratch.fill(0f)
