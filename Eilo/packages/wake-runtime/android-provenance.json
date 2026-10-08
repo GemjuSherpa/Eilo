@@ -1,0 +1,93 @@
+{
+  "runtime": "sherpa-onnx 1.13.8 Android / bundled ONNX Runtime",
+  "archive": {
+    "file": "runtime.tar.bz2",
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/v1.13.8/sherpa-onnx-v1.13.8-android.tar.bz2",
+    "sha256": "2ff63469a71cb6009aa2e3ed5f4a670f8abdcbe4bb9ffd23776afc792a6b4f44",
+    "digest_source": "publisher GitHub release asset SHA256",
+    "files": [
+      {
+        "path": "jniLibs/arm64-v8a/README.md",
+        "sha256": "635c364935350c718c6fb92ce336d8e07bde529213d96de1303d293a472e0b82"
+      },
+      {
+        "path": "jniLibs/arm64-v8a/libonnxruntime.so",
+        "sha256": "33847ad43bffe204699fd4a27f7f3603452a8cdaf2f9a44983a0bc31ffcf2da1"
+      },
+      {
+        "path": "jniLibs/arm64-v8a/libsherpa-onnx-c-api.so",
+        "sha256": "c85e2382e2ca12b0513826be926eaccfea896b4cbf568182e287671ba526f80d"
+      },
+      {
+        "path": "jniLibs/arm64-v8a/libsherpa-onnx-cxx-api.so",
+        "sha256": "5eabb2bcf5a8af66aeab37431c09fab4a9c65cdebf02bd7e50f8c589044bd70e"
+      },
+      {
+        "path": "jniLibs/arm64-v8a/libsherpa-onnx-jni.so",
+        "sha256": "3c6492ea91ea68fd3b72b9495efdde6dd913f6b58c387e3b07389cf335f4d26f"
+      },
+      {
+        "path": "jniLibs/armeabi-v7a/README.md",
+        "sha256": "635c364935350c718c6fb92ce336d8e07bde529213d96de1303d293a472e0b82"
+      },
+      {
+        "path": "jniLibs/armeabi-v7a/libonnxruntime.so",
+        "sha256": "7a8f17a707e52e0ac3a026be319272876d9eae61f4bb19585292772d785f7744"
+      },
+      {
+        "path": "jniLibs/armeabi-v7a/libsherpa-onnx-c-api.so",
+        "sha256": "2294b9cc929ca0d22c5da52864ec8176f8fd119a739c9d594384763f6101d33f"
+      },
+      {
+        "path": "jniLibs/armeabi-v7a/libsherpa-onnx-cxx-api.so",
+        "sha256": "c5517f3ce8a6f84f18bd0f814331c6069140d59df60030581cb83308572d8da7"
+      },
+      {
+        "path": "jniLibs/armeabi-v7a/libsherpa-onnx-jni.so",
+        "sha256": "3d6b6daf6d23162dceb1df91ac075a42a09b60fafb5f9400cba22562f10a1dc0"
+      },
+      {
+        "path": "jniLibs/x86/README.md",
+        "sha256": "635c364935350c718c6fb92ce336d8e07bde529213d96de1303d293a472e0b82"
+      },
+      {
+        "path": "jniLibs/x86/libonnxruntime.so",
+        "sha256": "fcb6cd80415f7951e58fdd8158a238946dce3710d5fee492b67174d5131f9eee"
+      },
+      {
+        "path": "jniLibs/x86/libsherpa-onnx-c-api.so",
+        "sha256": "fc08ee45be6eaafde43e128f22f130aec4ef2c5362e44d95f7ae54e9ad6e752e"
+      },
+      {
+        "path": "jniLibs/x86/libsherpa-onnx-cxx-api.so",
+        "sha256": "f7677ec51867f2774b3e6749e1d44fedc6973077a10d251ba54f695c1377fa24"
+      },
+      {
+        "path": "jniLibs/x86/libsherpa-onnx-jni.so",
+        "sha256": "04831b079ebd68557b6e9605f90be1dc76118973ee1aef5a75cc0d0889dc3778"
+      },
+      {
+        "path": "jniLibs/x86_64/README.md",
+        "sha256": "635c364935350c718c6fb92ce336d8e07bde529213d96de1303d293a472e0b82"
+      },
+      {
+        "path": "jniLibs/x86_64/libonnxruntime.so",
+        "sha256": "087e84297cad64acb823c3d901d6e0cc934e91add7cdb20da802cd1c0bea5c3e"
+      },
+      {
+        "path": "jniLibs/x86_64/libsherpa-onnx-c-api.so",
+        "sha256": "631ca2828e47b61d8afe4b3c75a157423cbafaba6f8c0db89c27d21f1b173d9a"
+      },
+      {
+        "path": "jniLibs/x86_64/libsherpa-onnx-cxx-api.so",
+        "sha256": "09cd2ea23b15ae3234b0b4678fbef14639c58792dd36d2cd435c030dc030c5d0"
+      },
+      {
+        "path": "jniLibs/x86_64/libsherpa-onnx-jni.so",
+        "sha256": "1dc24c88fb364f1022a5217b70ab3bc3c9cae3120ae2e1ed358e1f68ed120b04"
+      }
+    ]
+  },
+  "header": "same pinned 1.13.8 C API header as host provenance; Android archive has no header",
+  "status": "local evaluation only; no microphone or production readiness"
+}
