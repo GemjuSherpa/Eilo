@@ -74,11 +74,36 @@ class NativeWakeEvaluationTest {
                 if(detections>0) { assertNotNull(event);assertTrue(event!!.apply(c));assertEquals(ControllerState.CAPTURING,c.state()) }
                 else { assertNull(event);assertEquals(ControllerState.STANDBY,c.state()) }
                 c.stop();event?.let{assertFalse(it.apply(c))};assertNull(detector.processPCM16(token,shortArrayOf(0),1,16000))
-            } finally {detector.close();pcm.fill(0);bytes.fill(0)}
+            } finally {detector.close()}
+            val queuedController=testController();queuedController.dispatch(ControllerEvent.START)
+            val queuedToken=queuedController.token()!!
+            val queuedDetector=WakeDetector(config,verified={true},open={NativeWakeStream(paths,it,{true},NativeWakeJNI)})
+            var receiveTime=0L
+            val delivery=WakeFrameDelivery(16000,queuedDetector,queuedToken) {receiveTime}
+            var queuedDetections=0;var queuedEvent:WakeCaptureActivation?=null
+            val queuedChunk=ShortArray(320)
+            try {
+                var offset=0
+                while(offset<pcm.size) {
+                    val count=minOf(queuedChunk.size,pcm.size-offset)
+                    pcm.copyInto(queuedChunk,0,offset,offset+count)
+                    assertTrue(delivery.submit(queuedChunk,count,16000));queuedChunk.fill(0)
+                    receiveTime+=20_000_000L;offset+=count
+                    if((offset/queuedChunk.size)%3==0 || offset==pcm.size) {
+                        val drained=delivery.drain();assertTrue(drained is WakeDrain.Events)
+                        for(activation in (drained as WakeDrain.Events).values) {queuedDetections++;queuedEvent=activation}
+                    }
+                }
+                assertEquals(file,detections,queuedDetections)
+                if(queuedDetections>0) {assertTrue(queuedEvent!!.apply(queuedController));assertEquals(ControllerState.CAPTURING,queuedController.state())}
+                else assertEquals(ControllerState.STANDBY,queuedController.state())
+                queuedController.stop();queuedEvent?.let{assertFalse(it.apply(queuedController))}
+                assertFalse(delivery.submit(queuedChunk,1,16000));assertSame(WakeDrain.Inactive,delivery.drain())
+            } finally {delivery.close();queuedChunk.fill(0);pcm.fill(0);bytes.fill(0)}
             val kind=fixture.getString("kind")
             if(kind=="wake"){assertEquals(file,1,detections);wakes++}
             if(kind=="nonwake"){assertEquals(file,0,detections);nonwakes++}
-            cases.put(JSONObject().put("file",file).put("kind",kind).put("detections",detections).put("closed_input_rejected",true).put("controller_stop_rejected",true))
+            cases.put(JSONObject().put("file",file).put("kind",kind).put("detections",detections).put("closed_input_rejected",true).put("controller_stop_rejected",true).put("queued_detections",queuedDetections).put("queued_stop_rejected",true))
         }
         assertEquals(28,fixtures.length());assertEquals(11,wakes);assertEquals(15,nonwakes)
         // IDs are opaque and never reusable pointers. Invalid input disables the handle in JNI too.

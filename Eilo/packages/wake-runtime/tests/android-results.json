@@ -4,198 +4,254 @@
   "cases": [
     {
       "file": "ay-low-padded.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "target-1.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "target-2.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "target-3.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "target-4.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "negative-hey.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "negative-name.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "negative-near.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "negative-ordinary.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "negative-padded.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "positive-padded.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "spelling diagnostic",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "pronounced-padded.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "pronunciation diagnostic",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "holdout-wake-1.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "holdout-wake-2.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "holdout-near-1.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "holdout-near-2.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "holdout-near-3.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "holdout-near-4.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "holdout-near-5.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "holdout-near-6.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "paused-wake-1.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "paused-wake-2.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "paused-wake-3.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "paused-wake-4.wav",
+      "queued_detections": 1,
       "controller_stop_rejected": true,
       "kind": "wake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 1
     },
     {
       "file": "paused-near-1.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "paused-near-2.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "paused-near-3.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     },
     {
       "file": "paused-near-4.wav",
+      "queued_detections": 0,
       "controller_stop_rejected": true,
       "kind": "nonwake",
       "closed_input_rejected": true,
+      "queued_stop_rejected": true,
       "detections": 0
     }
   ],
