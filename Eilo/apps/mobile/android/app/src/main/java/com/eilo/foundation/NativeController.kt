@@ -167,6 +167,13 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private var currentError: SafeError? = null
     @Synchronized fun state(): ControllerState = currentState
     @Synchronized fun error(): SafeError? = currentError
+    /** Native attachment check; call before acquiring capture/delivery locks. */
+    @Synchronized internal fun canAttachWake(capture: ControllerEffects, token: GenerationToken): Boolean =
+        effects === capture && currentState == ControllerState.STANDBY && accepts(token)
+    @Synchronized internal fun wakeCaptureFailed(token: GenerationToken, active: () -> Boolean): Boolean {
+        if (!active()) return false
+        return dispatch(ControllerEvent.FAILURE, failure = SafeError.UNAVAILABLE, token = token)
+    }
     /** Revalidate the detector lease under the same monitor as token/state transitions. */
     @Synchronized internal fun wakeDetected(token:GenerationToken, active:()->Boolean):Boolean {
         if(!active()) return false
