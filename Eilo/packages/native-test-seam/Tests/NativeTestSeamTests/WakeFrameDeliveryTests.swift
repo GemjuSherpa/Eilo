@@ -59,6 +59,19 @@ final class WakeFrameDeliveryTests:XCTestCase {
     for _ in 0..<4 { _=submit(d,[0]) };XCTAssertFalse(submit(d,[0]))
     XCTAssertFalse(events[0].apply(c));XCTAssertEqual(c.state,.standby);d.close()
   }
+  func testVerificationRevokedAfterDrainRejectsPendingWake() throws {
+    let c=testController(),engine=DeliveryEngine();c.dispatch(.start);let token=c.token!
+    var verified=true
+    let config=try WakeConfiguration(phrase:"HEY EILO",threshold:0.125,boost:1.5)
+    let detector=WakeDetector(configuration:config,verified:{verified},open:{_ in engine})
+    let d=try WakeFrameDelivery(sampleRate:16000,detector:detector,token:token,now:{0})
+    engine.result="HEY EILO";XCTAssertTrue(submit(d,[0.25]))
+    guard case .events(let events)=d.drain(),events.count==1 else { return XCTFail("Missing wake") }
+    verified=false;XCTAssertFalse(events[0].apply(c));XCTAssertEqual(c.state,.standby)
+    verified=true;XCTAssertFalse(events[0].apply(c));XCTAssertFalse(detector.isActive(token))
+    XCTAssertTrue(submit(d,[0.25]));guard case .failed=d.drain() else { return XCTFail("Revoked detector remained active") }
+    XCTAssertEqual(engine.frames.count,1);XCTAssertEqual(engine.closed,1);d.close();c.stop()
+  }
   func testStopAndPrivacyRejectDeliveryAndPendingWake() throws {
     for privacy:PrivacyChange? in [nil,.lock,.privateSession,.identityReset] {
       let c=testController(),engine=DeliveryEngine(),d=try delivery(c,engine)

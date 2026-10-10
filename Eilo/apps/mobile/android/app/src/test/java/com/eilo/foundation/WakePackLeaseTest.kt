@@ -100,6 +100,19 @@ class WakePackLeaseTest {
             rejects { stream.keyword() };stream.close();assertEquals(1,api.destroys)
         }
     }
+    @Test fun signedPackReplacementAfterQueueDrainRejectsPendingActivation() {
+        Fixture().use { f ->
+            f.activate();val lease=WakePackLease.resolve(f.store,f.selection);val api=API()
+            val c=testController();c.dispatch(ControllerEvent.START);val token=c.token()!!
+            val detector=WakeDetector(configuration,verified=lease::verified,open={ lease.openStream(it,api) })
+            val delivery=WakeFrameDelivery(16000,detector,token)
+            assertTrue(delivery.submit(shortArrayOf(100),1,16000))
+            val event=(delivery.drain() as WakeDrain.Events).values.single()
+            f.activate(f.pack(2));assertFalse(event.apply(c));assertEquals(ControllerState.STANDBY,c.state())
+            assertFalse(detector.isActive(token));assertFalse(event.apply(c))
+            delivery.close();lease.close();assertEquals(1,api.destroys);c.stop()
+        }
+    }
     @Test fun corruptFileOrSymlinkCannotProduceLeaseAndExplicitRevocationRejectsResult() {
         Fixture().use { f ->
             f.activate();val pack=f.store.active()!!;val target=f.store.file(pack,pack.manifest.artifacts.indexOfFirst { it.id=="encoder" })

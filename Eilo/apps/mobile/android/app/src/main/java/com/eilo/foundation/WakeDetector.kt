@@ -21,9 +21,20 @@ internal data class WakeConfiguration(val phrase: String, val threshold: Float, 
 
 /** Metadata-only handoff; NativeController rechecks the original session/privacy/generation. */
 internal class WakeLease { @Volatile var active=true }
-internal class WakeActivation(private val token: GenerationToken, private val lease:WakeLease) {
+internal class WakeActivation(
+    private val token: GenerationToken, private val lease:WakeLease,
+    private val verified: () -> Boolean,
+) {
     fun apply(controller: NativeController, deliveryActive: () -> Boolean = { true }) =
-        controller.wakeDetected(token) { lease.active && deliveryActive() }
+        controller.wakeDetected(token) {
+            if (!lease.active || !deliveryActive()) false
+            else {
+                // Disk-free verification only. Never acquire decoder/capture locks here.
+                val valid=try { verified() } catch (_: Exception) { false }
+                if (!valid) lease.active=false
+                valid && lease.active
+            }
+        }
 }
 
 /** Call only on a serialized native inference worker, never an audio callback/UI thread.
@@ -58,6 +69,7 @@ internal class WakeDetector(
         this.sampleRate=sampleRate
         val engine=stream ?: return null
         val currentLease=lease ?: return null
+        if (!currentLease.active) { close();return null }
         return try {
             if(!verified()) { close();return null }
             for(i in 0 until count) scratch[i]=input[i]/32768f
@@ -76,7 +88,7 @@ internal class WakeDetector(
             }
             if(steps==0) consumeResult()
             if(expected.cancelled || !verified()) { close();return null }
-            if(matched && expected === token && currentLease === lease) WakeActivation(expected,currentLease) else null
+            if(matched && expected === token && currentLease === lease) WakeActivation(expected,currentLease,verified) else null
         } catch (_: Exception) { diagnostics.record(SafeComponent.MODEL,SafeError.UNAVAILABLE,SafeSeverity.ERROR);close();null }
         finally { scratch.fill(0f) }
     }
