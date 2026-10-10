@@ -83,6 +83,17 @@ class WakeDetectorTest {
         var verified=false;var opens=0;val engine=KeywordFixture();val d=WakeDetector(config,verified={verified},open={opens++;engine})
         assertFalse(d.begin(t));assertEquals(0,opens);verified=true;assertTrue(d.begin(t));verified=false;assertNull(process(d,t));assertEquals(1,engine.closed)
     }
+    @Test fun verificationRevokedAfterDecodeRejectsQueuedEventPermanently() {
+        for(throws in listOf(false,true)) {
+            val c=testController();c.dispatch(ControllerEvent.START);val t=c.token()!!
+            var verified=true;var checks=0;val engine=KeywordFixture();engine.result="HEY EILO"
+            val d=WakeDetector(config,verified={ checks++;if(!verified && throws)error("synthetic");verified },open={engine})
+            assertTrue(d.begin(t));val event=process(d,t)!!;val before=checks
+            verified=false;assertFalse(event.apply(c));assertTrue(checks>before)
+            assertEquals(ControllerState.STANDBY,c.state());assertFalse(d.isActive(t))
+            verified=true;assertFalse(event.apply(c));assertNull(process(d,t));assertEquals(1,engine.accepted);d.close();assertEquals(1,engine.closed)
+        }
+    }
     @Test fun badInputBoundsCloseBeforeBackendAndPreserveCallerSamples() {
         for(pair in listOf(16000 to 0,16000 to 5,7999 to 4,192001 to 4)) {
             val c=testController();c.dispatch(ControllerEvent.START);val t=c.token()!!;val engine=KeywordFixture();val d=WakeDetector(config,verified={true},open={engine});d.begin(t)
