@@ -28,6 +28,12 @@ class PackStore(private val root: File, trust: Map<String,ByteArray>, private va
   check(pointer.length()==64L);val digest=pointer.readText();check(digest.matches(Regex("[a-f0-9]{64}")))
   return@locked readSlot(PackFiles.child(versions,digest))
  }
+ /** One serialized signature/license/hash pass; consumers separately bind the snapshot to epoch(). */
+ internal fun verifiedFiles(): Pair<VerifiedPack,List<File>>? = locked {
+  val current=active() ?: return@locked null
+  val (_,versions)=directories();val slot=PackFiles.child(versions,current.digest)
+  current to current.manifest.artifacts.map { PackFiles.child(slot,it.filename) }
+ }
  fun file(pack: VerifiedPack,index: Int): File = locked {
   val current=active() ?: error("unavailable");check(current.digest==pack.digest)
   val (_,versions)=directories();return@locked PackFiles.child(PackFiles.child(versions,current.digest),current.manifest.artifacts[index].filename)
