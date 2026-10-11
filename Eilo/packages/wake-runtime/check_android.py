@@ -41,12 +41,12 @@ def verify_candidates():
     return root, CACHE / provenance['runtime']['directory'], fixtures
 
 
-def verify_report(report, fixtures):
+def verify_report(report, fixtures, *, runtime_loader_probe="PASS: explicit pinned host loading; no Android execution"):
     cases = report.get('cases')
     if (report.get('fixture_count') != len(fixtures) or not isinstance(cases, list)
             or len(cases) != len(fixtures) or report.get('jni_invalid_stale_handles') != 'PASS'
             or report.get('acoustic_acceptance') != 'PASS ON SYNTHETIC SET ONLY'
-            or report.get('runtime_loader_probe') != 'PASS: explicit pinned host loading; no Android execution'):
+            or report.get('runtime_loader_probe') != runtime_loader_probe):
         raise ValueError('host JNI report failed')
     for case, fixture in zip(cases, fixtures):
         expected = 1 if fixture['kind'] == 'wake' else 0 if fixture['kind'] == 'nonwake' else None
@@ -95,6 +95,7 @@ def main():
         return json.dumps(str(path))
     init.write_text('gradle.afterProject { p ->\n if (p.path == ":app") {\n'
                     ' p.android.sourceSets.test.java.srcDir(' + quoted(HERE / 'tests/android') + ')\n'
+                    ' p.android.sourceSets.test.java.srcDir(' + quoted(HERE / 'tests/android-shared') + ')\n'
                     ' p.tasks.withType(Test).configureEach {\n'
                     ' systemProperty "eilo.wake.root", ' + quoted(HERE) + '\n'
                     ' systemProperty "eilo.wake.cache", ' + quoted(CACHE) + '\n'
