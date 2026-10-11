@@ -1,0 +1,52 @@
+{
+  "platform": "Android API35 ARM64 emulator / ART JNI / synthetic only",
+  "cases": [
+    {
+      "id": "question",
+      "slice": "english",
+      "reference": "What time is it?",
+      "transcript": "What time is it?",
+      "stale_final_rejected": true
+    },
+    {
+      "id": "name",
+      "slice": "name",
+      "reference": "My name is Gemju Sherpa.",
+      "transcript": "My name is Jemju Shirka.",
+      "stale_final_rejected": true
+    },
+    {
+      "id": "numbers",
+      "slice": "number",
+      "reference": "The number is forty two and the time is seven thirty.",
+      "transcript": "The number is 42 and the time is 7:30.",
+      "stale_final_rejected": true
+    },
+    {
+      "id": "quiet",
+      "slice": "english",
+      "reference": "I would like to talk about my day.",
+      "transcript": "I would like to talk about my day",
+      "stale_final_rejected": true
+    },
+    {
+      "id": "pause",
+      "slice": "pause",
+      "reference": "Can you help me plan tomorrow?",
+      "transcript": "Can you help me plan tomorrow?",
+      "stale_final_rejected": true
+    },
+    {
+      "id": "noise",
+      "slice": "noise",
+      "reference": "Please tell me a short story.",
+      "transcript": "Please tell me a short story.",
+      "stale_final_rejected": true
+    }
+  ],
+  "physical": "NOT RUN",
+  "runtime": "Moonshine v0.1.5 / C API30000",
+  "temporary_assets_removed": true,
+  "apk_sha256": "988ef2864e2abcb15e4275971a57c456182592ebb86f346e3712992d99792aa2",
+  "page_size": "4096"
+}
