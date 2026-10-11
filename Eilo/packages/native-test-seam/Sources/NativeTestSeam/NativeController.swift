@@ -137,7 +137,7 @@ public final class NativeController: @unchecked Sendable {
     clearIdle(); invalidateGeneration(); hasConversation=false
     let expectedGeneration=generation, expectedEpoch=privacyEpoch
     do {
-      try effects.cancelWork(); try effects.clearVolatileContext()
+      playback.cancel();try effects.cancelWork(); try effects.clearVolatileContext()
       guard generation == expectedGeneration, privacyEpoch == expectedEpoch else { return false }
       sessionID=UUID(); currentState = .standby; issueGeneration(); return true
     } catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.controller,.unexpected,.error); return false }
@@ -150,6 +150,8 @@ public final class NativeController: @unchecked Sendable {
   var stoppedOperationID=UUID()
   var generation: UInt64 = 0
   var activeToken: GenerationToken?
+  private lazy var playback=PlaybackRejection(now:{[weak self] in self?.clock.milliseconds() ?? 0})
+  func recognitionAllowed(_ token:GenerationToken)->Bool{lock.lock();defer{lock.unlock()};return currentState == .capturing && accepts(token) && playback.allowsAudio}
   public var token: GenerationToken? { lock.lock(); defer { lock.unlock() }; return activeToken }
   func invalidateGeneration() {
     activeToken?.cancel(); activeToken = nil; stoppedOperationID=UUID()
@@ -176,7 +178,7 @@ public final class NativeController: @unchecked Sendable {
   public var error: SafeError? { lock.lock(); defer { lock.unlock() }; return currentError }
   /// Detector lease and token/state acceptance share the controller serialization boundary.
   func wakeDetected(_ token:GenerationToken,active:()->Bool) -> Bool {
-    lock.lock();defer { lock.unlock() };guard active() else { return false }
+    lock.lock();defer { lock.unlock() };guard active(),playback.allowsAudio else { return false }
     return dispatch(.speechDetected,token:token)
   }
   /// Final native recognition shares the Stop monitor. Accepted only queues native conversation
@@ -184,7 +186,7 @@ public final class NativeController: @unchecked Sendable {
   func finishRecognition(_ token:GenerationToken,result:AsrText,confidence:Float?,ambiguous:Bool=false,
                          overlap:Bool=false,active:()->Bool,accepted:(String)->Void)->Bool {
     lock.lock();defer{lock.unlock()}
-    guard result.final,currentState == .capturing,accepts(token),active(),accepts(token) else{return false}
+    guard result.final,recognitionAllowed(token),active(),accepts(token) else{return false}
     let decision=RecognitionPolicy.decide(result.text,confidence:confidence,ambiguous:ambiguous,overlap:overlap)
     guard dispatch(.endpoint,token:token) else{return false}
     switch decision {
@@ -202,6 +204,7 @@ public final class NativeController: @unchecked Sendable {
     if event == .start || event == .resume { return start() }
     if [.speechDetected,.endpoint,.speechReady,.playbackFinished,.failure].contains(event) && !accepts(token) { return false }
     guard let next = Self.nextState(currentState, event) else { return false }
+    if event == .playbackFinished,let token{playback.finish(token)}
     if event == .start || event == .speechDetected || event == .playbackFinished || event == .resume { issueGeneration() }
     if (event == .pause || event == .failure) && !stop() { return false }
     currentState = next
@@ -248,7 +251,7 @@ public final class NativeController: @unchecked Sendable {
     lock.lock(); defer { lock.unlock() }
     guard !speakerRequired, accepts(token), [.thinking,.speaking].contains(currentState) else { return false }
     clearIdle()
-    do { try effects.playClause(clause); guard accepts(token) else { return false }; currentState = .speaking; return true }
+    do { playback.begin(token);try effects.playClause(clause); guard accepts(token) else { return false }; currentState = .speaking; return true }
     catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.speech,.unexpected,.error); return false }
   }
   public func cancelGeneration() {
@@ -256,7 +259,7 @@ public final class NativeController: @unchecked Sendable {
     guard !stopping else { return }
     guard permissionGranted() else { stop(); return }
     invalidateGeneration()
-    do { try effects.cancelWork() } catch { stop(); currentState = .error; currentError = .unexpected; return }
+    do { playback.cancel();try effects.cancelWork() } catch { stop(); currentState = .error; currentError = .unexpected; return }
     if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration(); updateIdle() }
   }
   @discardableResult public func stop() -> Bool {
@@ -266,7 +269,7 @@ public final class NativeController: @unchecked Sendable {
     startIntent=nil; capturePending=false; captureIntent=nil
     clearIdle(); hasConversation=false
     invalidateGeneration()
-    currentState = .stopped; currentError = nil
+    currentState = .stopped; currentError = nil;playback.cancel()
     var failed = false
     let cleanups: [() throws -> Void] = [permission.cancelPendingRequests, effects.cancelWork, effects.releaseCapture, effects.clearVolatileContext]
     for cleanup in cleanups { do { try cleanup() } catch { failed = true } }

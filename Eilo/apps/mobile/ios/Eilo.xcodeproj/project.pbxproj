@@ -39,6 +39,7 @@
 		B4E231E417AAB80055EC3E79 /* StreamingAsr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804BAE9C01C6884AFE9DCF3B /* StreamingAsr.swift */; };
 		CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121735391666D6AEED84AC08 /* NativeAsrStream.swift */; };
 		8F7489F34E3E281FD61E409C /* RecognitionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCD120463949438E6CBF76 /* RecognitionPolicy.swift */; };
+		BB4F5D565A63F913D51BB909 /* PlaybackRejection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +80,7 @@
 		804BAE9C01C6884AFE9DCF3B /* StreamingAsr.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StreamingAsr.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/StreamingAsr.swift"; sourceTree = "<group>"; };
 		121735391666D6AEED84AC08 /* NativeAsrStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeAsrStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeAsrStream.swift"; sourceTree = "<group>"; };
 		51FCD120463949438E6CBF76 /* RecognitionPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecognitionPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/RecognitionPolicy.swift"; sourceTree = "<group>"; };
+		D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackRejection.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PlaybackRejection.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 				A850BD743A291C2313AF8202 /* NativeWakeStream.swift */,
 				0DF6B5E15156115846C3F796 /* WakeDetector.swift */,
 				523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */,
+				D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */,
 				51FCD120463949438E6CBF76 /* RecognitionPolicy.swift */,
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
 				804BAE9C01C6884AFE9DCF3B /* StreamingAsr.swift */,
@@ -339,6 +342,7 @@
 				A850BD743A291C2313AF8201 /* NativeWakeStream.swift in Sources */,
 				5E15004C121B950562FFA60F /* WakeDetector.swift in Sources */,
 				5C6DA7DFF8A8CD20EAED96F4 /* StandbyAudioBuffer.swift in Sources */,
+				BB4F5D565A63F913D51BB909 /* PlaybackRejection.swift in Sources */,
 				8F7489F34E3E281FD61E409C /* RecognitionPolicy.swift in Sources */,
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
 				B4E231E417AAB80055EC3E79 /* StreamingAsr.swift in Sources */,
