@@ -142,3 +142,20 @@ python3 -O Eilo/packages/wake-runtime/test_android_package.py
 ```
 
 It downloads/installs nothing and opens no microphone. Missing/changed inputs or failed checks exit 2 without a new success report. The local evaluation APK/report are preserved under ignored `Eilo/.local/kws/android/`; a normal subsequent Gradle build restores the ordinary app APK. Verify both normal Debug/Release APKs contain no wake libraries after restoration. [Recorded packaging evidence](tests/android-package-results.json) and [review](../../docs/sprints/S05_WAKE_ANDROID_PACKAGE_REVIEW.md) retain actual results. Native libraries/model licensing, production trust/default caller and Android physical execution remain separate gates before ASR.
+
+## Android packaged JNI execution on the installed emulator
+
+`check_android_device.py` combines the explicit Debug packaging verifier with invocation-only native instrumentation. It requires an already-booted API35 ARM64 emulator selected by an explicit `--serial emulator-N` argument. The existing `Eilo_API35` AVD can be started with audio disabled; no emulator image or dependency installation is needed for the recorded run. The tool downloads nothing and grants no microphone permission.
+
+Only this invocation adds the native instrumentation manifest, shared synthetic evaluator, runner, cached JUnit dependency and pinned synthetic model/WAV assets to the Debug build. The native runner uses the default fixed-name `System.loadLibrary` loader and linked version probe. It rechecks model/fixture hashes after copying assets into its temporary app-private directory, then executes the same 28 direct/controller/queued cases and invalid/stale-handle checks as the macOS harness. Capture, permission and model-readiness adapters are explicitly synthetic; no AudioRecord input or real conversation is used. Cleanup finishes before success is reported, and the Python tool verifies cleanup and removes the temporary report after collecting it. Case validation requires the Android loader evidence label explicitly; host labels cannot satisfy it.
+
+```sh
+python3 Eilo/packages/wake-runtime/check_android_device.py \
+  --ndk /Users/gemju/Library/Android/sdk/ndk/27.1.12297006 \
+  --java-home /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home \
+  --android-sdk /Users/gemju/Library/Android/sdk --serial emulator-5554
+```
+
+The serial must identify the intended installed Eilo emulator; do not substitute a physical phone. Exit 2 indicates an environment/integrity/build/acceptance failure. The evaluation installs the Debug APK into that emulator; after evaluation rebuild the normal Android Debug/Release APKs, inspect them for absence of wake libraries/evaluation assets/instrumentation, and reinstall the normal Debug APK. Preserve emulator data/consent and do not open capture.
+
+[Recorded execution](tests/android-device-results.json) passes on Android API35/ARM64 with a 4096-byte page size. This adds real Android ART/JNI execution to the prior host-only evidence; it does not establish 16 KB device operation, physical microphone/noise/route/latency/battery behavior, production trust/licensing or readiness. See [execution review](../../docs/sprints/S05_WAKE_ANDROID_EXECUTION_REVIEW.md). ASR remains dependency-gated.
