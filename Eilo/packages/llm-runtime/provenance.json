@@ -1,0 +1,18 @@
+{
+  "runtime": {
+    "version": "llama.cpp v0.6.0",
+    "commit": "8345f333951c661d166b00e6f9362e553768f292",
+    "release": "https://github.com/ggml-org/llama.cpp/releases/tag/v0.6.0",
+    "source_url": "https://codeload.github.com/ggml-org/llama.cpp/tar.gz/8345f333951c661d166b00e6f9362e553768f292",
+    "source_archive_sha256": "84050e783dbd0c4a4678f90f253b0881df04e90a98c20f73ae3709751c4a4850",
+    "license": "MIT"
+  },
+  "model": {
+    "file": "qwen3-1.7b-q4-k-m.gguf",
+    "bytes": 1282439424,
+    "sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120",
+    "source_evidence": "../../docs/models/evidence/q4-k-m.json",
+    "license": "Apache-2.0"
+  },
+  "scope": "CPU-only native core; explicit synthetic evaluation; no default mobile attachment"
+}
