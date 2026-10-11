@@ -30,9 +30,21 @@ class NativeWakeEvaluationTest {
     }
     @Test fun realJNIAndKotlinDecoderAcceptFrozenSyntheticSet() {
         val root=File(System.getProperty("eilo.wake.root"))
-        System.load(System.getProperty("eilo.wake.library"))
         val provenance=JSONObject(File(root,"provenance.json").readText())
         val cache=File(System.getProperty("eilo.wake.cache"))
+        val host=File(cache,provenance.getJSONObject("runtime").getString("directory"))
+        val runtime=NativeWakeRuntime(loadLibrary={ name ->
+            val library=when(name) {
+                "onnxruntime" -> File(host,"lib/libonnxruntime.dylib")
+                "sherpa-onnx-c-api" -> File(host,"lib/libsherpa-onnx-c-api.dylib")
+                "eilo_wake_jni" -> File(System.getProperty("eilo.wake.library"))
+                else -> error("unexpected library")
+            }
+            System.load(library.absolutePath)
+        })
+        assertSame(NativeWakeJNI,runtime.load());assertSame(NativeWakeJNI,runtime.load())
+        assertTrue(NativeWakeJNI.runtimeCompatible())
+
         val model=File(cache,provenance.getJSONObject("model").getString("directory"))
         val paths=WakeModelPaths(File(model,"encoder-epoch-12-avg-2-chunk-16-left-64.int8.onnx").path,
             File(model,"decoder-epoch-12-avg-2-chunk-16-left-64.onnx").path,
@@ -115,7 +127,7 @@ class NativeWakeEvaluationTest {
         assertEquals(-1,NativeWakeJNI.process(fresh,floatArrayOf(Float.NaN),1,16000))
         assertEquals(-1,NativeWakeJNI.process(fresh,floatArrayOf(0f),1,16000));NativeWakeJNI.destroy(fresh)
         report.put("cases",cases).put("fixture_count",fixtures.length()).put("acoustic_acceptance","PASS ON SYNTHETIC SET ONLY")
-            .put("jni_invalid_stale_handles","PASS")
+            .put("jni_invalid_stale_handles","PASS").put("runtime_loader_probe","PASS: explicit pinned host loading; no Android execution")
         File(cache,"android/host-jni-results.json").writeText(report.toString(2)+"\n")
     }
 }
