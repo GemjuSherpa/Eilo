@@ -179,6 +179,19 @@ public final class NativeController: @unchecked Sendable {
     lock.lock();defer { lock.unlock() };guard active() else { return false }
     return dispatch(.speechDetected,token:token)
   }
+  /// Final native recognition shares the Stop monitor. Accepted only queues native conversation
+  /// work; no inference, persistence or capture locks here. Missing confidence is never invented.
+  func finishRecognition(_ token:GenerationToken,result:AsrText,confidence:Float?,ambiguous:Bool=false,
+                         overlap:Bool=false,active:()->Bool,accepted:(String)->Void)->Bool {
+    lock.lock();defer{lock.unlock()}
+    guard result.final,currentState == .capturing,accepts(token),active(),accepts(token) else{return false}
+    let decision=RecognitionPolicy.decide(result.text,confidence:confidence,ambiguous:ambiguous,overlap:overlap)
+    guard dispatch(.endpoint,token:token) else{return false}
+    switch decision {
+      case .clarify:return releaseSpeech(token,clause:RecognitionPolicy.clarification)
+      case .conversation(let text):accepted(text);return accepts(token)
+    }
+  }
   @discardableResult public func dispatch(_ event: ControllerEvent, failure: SafeError = .unexpected, token: GenerationToken? = nil) -> Bool {
     lock.lock(); defer { lock.unlock() }
     if stopping && event != .stop { return false }
