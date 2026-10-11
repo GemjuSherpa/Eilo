@@ -35,6 +35,7 @@
 		A850BD743A291C2313AF8201 /* NativeWakeStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = A850BD743A291C2313AF8202 /* NativeWakeStream.swift */; };
 		B751DE863B492E4314CF8311 /* WakeFrameDelivery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B751DE863B492E4314CF8312 /* WakeFrameDelivery.swift */; };
 		320C11DB509CAA220A0F2E73 /* WakeQuestionHandoff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220727614D5FFD1BC4470824 /* WakeQuestionHandoff.swift */; };
+		C694858D16F14EDDD9C21D0A /* EndpointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9470D1DBF42722EF654FFBA /* EndpointDetector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		A850BD743A291C2313AF8202 /* NativeWakeStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeWakeStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeWakeStream.swift"; sourceTree = "<group>"; };
 		B751DE863B492E4314CF8312 /* WakeFrameDelivery.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WakeFrameDelivery.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/WakeFrameDelivery.swift"; sourceTree = "<group>"; };
 		220727614D5FFD1BC4470824 /* WakeQuestionHandoff.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WakeQuestionHandoff.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/WakeQuestionHandoff.swift"; sourceTree = "<group>"; };
+		B9470D1DBF42722EF654FFBA /* EndpointDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EndpointDetector.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/EndpointDetector.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 				A850BD743A291C2313AF8202 /* NativeWakeStream.swift */,
 				0DF6B5E15156115846C3F796 /* WakeDetector.swift */,
 				523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */,
+				B9470D1DBF42722EF654FFBA /* EndpointDetector.swift */,
 				220727614D5FFD1BC4470824 /* WakeQuestionHandoff.swift */,
 				69A7E3D3F91B16C4A93A986B /* BackgroundCapturePolicy.swift */,
 				61F8736E33CF560BB0B0991C /* IOSConsentAuthentication.swift */,
@@ -327,6 +330,7 @@
 				A850BD743A291C2313AF8201 /* NativeWakeStream.swift in Sources */,
 				5E15004C121B950562FFA60F /* WakeDetector.swift in Sources */,
 				5C6DA7DFF8A8CD20EAED96F4 /* StandbyAudioBuffer.swift in Sources */,
+				C694858D16F14EDDD9C21D0A /* EndpointDetector.swift in Sources */,
 				320C11DB509CAA220A0F2E73 /* WakeQuestionHandoff.swift in Sources */,
 				3B49E2663389BBF4ACDF0E7B /* BackgroundCapturePolicy.swift in Sources */,
 				98BF41F81902FA816B06B230 /* IOSConsentAuthentication.swift in Sources */,
