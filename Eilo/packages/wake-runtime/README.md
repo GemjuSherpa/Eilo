@@ -123,3 +123,22 @@ This synchronous native operation is not on the JS bridge or called by the defau
 The offline Android verifier exercises this loader with an explicit pinned macOS host path shim and the actual JNI probe before running all 28 frozen synthetic direct/queued cases. Normal JVM tests exercise load order, cached success, partial failures and failed probes. The verifier rejects reports without the exact host-only loader evidence label.
 
 No native libraries are added to APKs, no default app caller is installed, and loading grants neither model readiness nor capture consent. Android execution, packaging/page-size compatibility, production selection/trust/licensing and physical microphone/route/performance evidence remain open. ASR remains gated. See [loader review](../../docs/sprints/S05_WAKE_RUNTIME_LOADER_REVIEW.md).
+
+## Explicit Android Debug APK packaging evaluation
+
+`check_android_package.py` verifies the existing pinned offline archives/extracted artifacts, rebuilds the JNI wrapper with the installed pinned NDK, and stages only `libonnxruntime.so`, `libsherpa-onnx-c-api.so` and `libeilo_wake_jni.so` for each of the four Android ABIs. A generated ignored Gradle init script adds those libraries only to the Debug source set for this invocation and preserves their symbols so APK bytes can be checked exactly. No project Gradle configuration or default readiness changes.
+
+The verifier checks native dependencies against those libraries and Android system libraries, requires every 64-bit ELF LOAD segment to have power-of-two alignment of at least 16 KB, checks all twelve uncompressed APK entries/hashes, rejects duplicates/extra wake entries, and runs SDK `zipalign -c -P 16 4`. This follows the separate ELF/ZIP checks in [Android page-size guidance](https://developer.android.com/guide/practices/page-sizes). This proves structural packaging only, not loader execution, page-size device operation, microphone recognition or licensing clearance.
+
+From the repository root, run:
+
+```sh
+python3 Eilo/packages/wake-runtime/check_android_package.py \
+  --ndk /Users/gemju/Library/Android/sdk/ndk/27.1.12297006 \
+  --java-home /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home \
+  --android-sdk /Users/gemju/Library/Android/sdk
+python3 Eilo/packages/wake-runtime/test_android_package.py
+python3 -O Eilo/packages/wake-runtime/test_android_package.py
+```
+
+It downloads/installs nothing and opens no microphone. Missing/changed inputs or failed checks exit 2 without a new success report. The local evaluation APK/report are preserved under ignored `Eilo/.local/kws/android/`; a normal subsequent Gradle build restores the ordinary app APK. Verify both normal Debug/Release APKs contain no wake libraries after restoration. [Recorded packaging evidence](tests/android-package-results.json) and [review](../../docs/sprints/S05_WAKE_ANDROID_PACKAGE_REVIEW.md) retain actual results. Native libraries/model licensing, production trust/default caller and Android physical execution remain separate gates before ASR.
