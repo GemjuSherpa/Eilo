@@ -64,6 +64,12 @@ class AndroidIntegrityTests(unittest.TestCase):
         for probe in [None,'FAIL','PASS']:
             altered=json.loads(json.dumps(report));altered['runtime_loader_probe']=probe
             with self.assertRaises(ValueError):check_android.verify_report(altered,fixtures)
+        android_probe='PASS: Android System.loadLibrary and linked version probe'
+        with self.assertRaises(ValueError):
+            check_android.verify_report(report,fixtures,runtime_loader_probe=android_probe)
+        android_report=dict(report,runtime_loader_probe=android_probe)
+        check_android.verify_report(android_report,fixtures,runtime_loader_probe=android_probe)
+        with self.assertRaises(ValueError):check_android.verify_report(android_report,fixtures)
         report['cases'].pop()
         with self.assertRaises(ValueError):check_android.verify_report(report,fixtures)
 

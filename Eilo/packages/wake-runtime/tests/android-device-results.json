@@ -1,0 +1,270 @@
+{
+  "runtime": "sherpa-onnx 1.13.8 Android arm64-v8a",
+  "environment": "Android API35 emulator ART + packaged JNI + Kotlin controller; synthetic capture/readiness only",
+  "microphone": "not used",
+  "model_readiness": "unchanged/unavailable",
+  "cases": [
+    {
+      "file": "ay-low-padded.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "target-1.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "target-2.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "target-3.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "target-4.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "negative-hey.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "negative-name.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "negative-near.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "negative-ordinary.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "negative-padded.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "positive-padded.wav",
+      "kind": "spelling diagnostic",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "pronounced-padded.wav",
+      "kind": "pronunciation diagnostic",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "holdout-wake-1.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "holdout-wake-2.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "holdout-near-1.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "holdout-near-2.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "holdout-near-3.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "holdout-near-4.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "holdout-near-5.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "holdout-near-6.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "paused-wake-1.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "paused-wake-2.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "paused-wake-3.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "paused-wake-4.wav",
+      "kind": "wake",
+      "detections": 1,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 1,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "paused-near-1.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "paused-near-2.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "paused-near-3.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    },
+    {
+      "file": "paused-near-4.wav",
+      "kind": "nonwake",
+      "detections": 0,
+      "closed_input_rejected": true,
+      "controller_stop_rejected": true,
+      "queued_detections": 0,
+      "queued_stop_rejected": true
+    }
+  ],
+  "fixture_count": 28,
+  "acoustic_acceptance": "PASS ON SYNTHETIC SET ONLY",
+  "jni_invalid_stale_handles": "PASS",
+  "runtime_loader_probe": "PASS: Android System.loadLibrary and linked version probe",
+  "android_execution": "PASS: Android API35 ARM64 emulator; synthetic only",
+  "android_api": "35",
+  "page_size": "4096",
+  "apk_sha256": "65e1a5575e2500de97b53e2a7891de8f746f1f2a85c8e2dc59d543bb18308ad6",
+  "temporary_assets_removed": true,
+  "unique_audio_count": 24
+}
