@@ -262,6 +262,20 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         try { playback.cancel();effects.cancelWork() } catch (_: Exception) { stop(); currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED; return }
         if (currentState in setOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) { currentState = ControllerState.STANDBY; issueGeneration(); updateIdle() }
     }
+    /** Cancel old work before creating the new turn; never reopen capture or revive a stopped run.
+     * Verification is disk-free native echo-separated speech evidence, not an energy threshold. */
+    @Synchronized internal fun interruptReply(token:GenerationToken,verified:()->Boolean):GenerationToken? {
+        if(stopping || !accepts(token) || currentState !in setOf(ControllerState.THINKING,ControllerState.SPEAKING))return null
+        return try {
+            if(!verified() || !accepts(token))return null
+            clearIdle();invalidateGeneration();playback.cancel()
+            val expected=generation;val epoch=privacyEpoch
+            effects.cancelWork()
+            if(generation!=expected || privacyEpoch!=epoch || locked)return null
+            if(!verified() || !permissionGranted() || modelStatus()!=ModelStatus.READY){stop();return null}
+            issueGeneration();currentState=ControllerState.CAPTURING;hasConversation=true;activeToken
+        }catch(_:Exception){stop();null}
+    }
     @Synchronized fun stop(): Boolean {
         if (stopping) return true
         stopping=true

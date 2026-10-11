@@ -262,6 +262,20 @@ public final class NativeController: @unchecked Sendable {
     do { playback.cancel();try effects.cancelWork() } catch { stop(); currentState = .error; currentError = .unexpected; return }
     if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration(); updateIdle() }
   }
+  /// Cancellation precedes the replacement token. No capture reopen or revival after Stop.
+  /// The lease must represent independently verified echo-separated user speech.
+  func interruptReply(_ token:GenerationToken,independentSpeechStillVerified:()->Bool)->GenerationToken? {
+    lock.lock();defer{lock.unlock()}
+    guard !stopping,accepts(token),[.thinking,.speaking].contains(currentState),independentSpeechStillVerified(),accepts(token) else{return nil}
+    clearIdle();invalidateGeneration();playback.cancel()
+    let expected=generation,epoch=privacyEpoch
+    do {
+      try effects.cancelWork()
+      guard generation==expected,privacyEpoch==epoch,!locked else{return nil}
+      guard independentSpeechStillVerified(),permissionGranted(),modelStatus == .ready else{stop();return nil}
+      issueGeneration();currentState = .capturing;hasConversation=true;return activeToken
+    }catch{stop();return nil}
+  }
   @discardableResult public func stop() -> Bool {
     lock.lock(); defer { lock.unlock() }
     if stopping { return true }

@@ -40,6 +40,7 @@
 		CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121735391666D6AEED84AC08 /* NativeAsrStream.swift */; };
 		8F7489F34E3E281FD61E409C /* RecognitionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCD120463949438E6CBF76 /* RecognitionPolicy.swift */; };
 		BB4F5D565A63F913D51BB909 /* PlaybackRejection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */; };
+		5D0333AAA5D7E1B3DD9056C2 /* ConfirmedSpeechInterruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861E892B57EF25A976AF7B7C /* ConfirmedSpeechInterruption.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +82,7 @@
 		121735391666D6AEED84AC08 /* NativeAsrStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeAsrStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeAsrStream.swift"; sourceTree = "<group>"; };
 		51FCD120463949438E6CBF76 /* RecognitionPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecognitionPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/RecognitionPolicy.swift"; sourceTree = "<group>"; };
 		D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackRejection.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PlaybackRejection.swift"; sourceTree = "<group>"; };
+		861E892B57EF25A976AF7B7C /* ConfirmedSpeechInterruption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConfirmedSpeechInterruption.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/ConfirmedSpeechInterruption.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				A850BD743A291C2313AF8202 /* NativeWakeStream.swift */,
 				0DF6B5E15156115846C3F796 /* WakeDetector.swift */,
 				523EB23DF36D10BD223BFC4B /* StandbyAudioBuffer.swift */,
+				861E892B57EF25A976AF7B7C /* ConfirmedSpeechInterruption.swift */,
 				D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */,
 				51FCD120463949438E6CBF76 /* RecognitionPolicy.swift */,
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
@@ -342,6 +345,7 @@
 				A850BD743A291C2313AF8201 /* NativeWakeStream.swift in Sources */,
 				5E15004C121B950562FFA60F /* WakeDetector.swift in Sources */,
 				5C6DA7DFF8A8CD20EAED96F4 /* StandbyAudioBuffer.swift in Sources */,
+				5D0333AAA5D7E1B3DD9056C2 /* ConfirmedSpeechInterruption.swift in Sources */,
 				BB4F5D565A63F913D51BB909 /* PlaybackRejection.swift in Sources */,
 				8F7489F34E3E281FD61E409C /* RecognitionPolicy.swift in Sources */,
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
