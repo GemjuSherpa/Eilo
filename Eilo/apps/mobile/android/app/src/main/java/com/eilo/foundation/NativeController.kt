@@ -179,6 +179,23 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if(!active()) return false
         return dispatch(ControllerEvent.SPEECH_DETECTED,token=token)
     }
+    /** Final native recognition only, serialized with Stop. The accepted callback must only queue
+     * native conversation work, without inference, store IO or capture locks in this monitor.
+     * Unknown Moonshine confidence stays unknown; never synthesize a confidence score. */
+    @Synchronized internal fun finishRecognition(token:GenerationToken, result:AsrText,
+        confidence:Float?, ambiguous:Boolean=false, overlap:Boolean=false, active:()->Boolean,
+        accepted:(String)->Unit):Boolean {
+        if(!result.final || currentState!=ControllerState.CAPTURING || !accepts(token))return false
+        return try {
+            if(!active() || !accepts(token))return false
+            val decision=RecognitionPolicy.decide(result.text,confidence,ambiguous,overlap)
+            if(!dispatch(ControllerEvent.ENDPOINT,token=token))return false
+            when(decision){
+                RecognitionDecision.Clarify->releaseSpeech(token,RecognitionPolicy.CLARIFICATION)
+                is RecognitionDecision.Conversation->{accepted(decision.text);accepts(token)}
+            }
+        }catch(_:Exception){stop();false}
+    }
     @Synchronized fun dispatch(event: ControllerEvent, failure: SafeError = SafeError.UNEXPECTED, token: GenerationToken? = null): Boolean {
         if (stopping && event != ControllerEvent.STOP) return false
         if (locked && event in setOf(ControllerEvent.START,ControllerEvent.RESUME)) return false
