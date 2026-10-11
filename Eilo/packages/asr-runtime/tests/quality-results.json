@@ -1,0 +1,348 @@
+{
+  "normalization": "lowercase ASCII words/digits; punctuation ignored; no number/name rewriting",
+  "kind": "frozen synthetic file evaluation",
+  "platforms": [
+    {
+      "platform": "macOS ARM64 native CPU",
+      "case_count": 6,
+      "reference_words": 40,
+      "errors": 6,
+      "wer": 0.15,
+      "cases": [
+        {
+          "id": "question",
+          "slice": "english",
+          "reference_words": 4,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "name",
+          "slice": "name",
+          "reference_words": 5,
+          "substitutions": 2,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 2,
+          "wer": 0.4,
+          "exact_normalized_match": false
+        },
+        {
+          "id": "numbers",
+          "slice": "number",
+          "reference_words": 11,
+          "substitutions": 3,
+          "deletions": 1,
+          "insertions": 0,
+          "errors": 4,
+          "wer": 0.36363636363636365,
+          "exact_normalized_match": false
+        },
+        {
+          "id": "quiet",
+          "slice": "english",
+          "reference_words": 8,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "pause",
+          "slice": "pause",
+          "reference_words": 6,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "noise",
+          "slice": "noise",
+          "reference_words": 6,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        }
+      ],
+      "slices": {
+        "english": {
+          "cases": 2,
+          "reference_words": 12,
+          "errors": 0,
+          "wer": 0.0
+        },
+        "name": {
+          "cases": 1,
+          "reference_words": 5,
+          "errors": 2,
+          "wer": 0.4
+        },
+        "number": {
+          "cases": 1,
+          "reference_words": 11,
+          "errors": 4,
+          "wer": 0.36363636363636365
+        },
+        "pause": {
+          "cases": 1,
+          "reference_words": 6,
+          "errors": 0,
+          "wer": 0.0
+        },
+        "noise": {
+          "cases": 1,
+          "reference_words": 6,
+          "errors": 0,
+          "wer": 0.0
+        }
+      },
+      "failed_exact_match_cases": [
+        "name",
+        "numbers"
+      ],
+      "accent_diversity": "NOT RUN; one installed US-English synthetic voice",
+      "physical_quality": "NOT RUN",
+      "quality_release_gate": "NOT ESTABLISHED"
+    },
+    {
+      "platform": "Android API35 ARM64 emulator / ART JNI / synthetic only",
+      "case_count": 6,
+      "reference_words": 40,
+      "errors": 6,
+      "wer": 0.15,
+      "cases": [
+        {
+          "id": "question",
+          "slice": "english",
+          "reference_words": 4,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "name",
+          "slice": "name",
+          "reference_words": 5,
+          "substitutions": 2,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 2,
+          "wer": 0.4,
+          "exact_normalized_match": false
+        },
+        {
+          "id": "numbers",
+          "slice": "number",
+          "reference_words": 11,
+          "substitutions": 3,
+          "deletions": 1,
+          "insertions": 0,
+          "errors": 4,
+          "wer": 0.36363636363636365,
+          "exact_normalized_match": false
+        },
+        {
+          "id": "quiet",
+          "slice": "english",
+          "reference_words": 8,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "pause",
+          "slice": "pause",
+          "reference_words": 6,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "noise",
+          "slice": "noise",
+          "reference_words": 6,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        }
+      ],
+      "slices": {
+        "english": {
+          "cases": 2,
+          "reference_words": 12,
+          "errors": 0,
+          "wer": 0.0
+        },
+        "name": {
+          "cases": 1,
+          "reference_words": 5,
+          "errors": 2,
+          "wer": 0.4
+        },
+        "number": {
+          "cases": 1,
+          "reference_words": 11,
+          "errors": 4,
+          "wer": 0.36363636363636365
+        },
+        "pause": {
+          "cases": 1,
+          "reference_words": 6,
+          "errors": 0,
+          "wer": 0.0
+        },
+        "noise": {
+          "cases": 1,
+          "reference_words": 6,
+          "errors": 0,
+          "wer": 0.0
+        }
+      },
+      "failed_exact_match_cases": [
+        "name",
+        "numbers"
+      ],
+      "accent_diversity": "NOT RUN; one installed US-English synthetic voice",
+      "physical_quality": "NOT RUN",
+      "quality_release_gate": "NOT ESTABLISHED"
+    },
+    {
+      "platform": "iOS27.0 ARM64 simulator / actual Swift C ABI",
+      "case_count": 6,
+      "reference_words": 40,
+      "errors": 6,
+      "wer": 0.15,
+      "cases": [
+        {
+          "id": "question",
+          "slice": "english",
+          "reference_words": 4,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "name",
+          "slice": "name",
+          "reference_words": 5,
+          "substitutions": 2,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 2,
+          "wer": 0.4,
+          "exact_normalized_match": false
+        },
+        {
+          "id": "numbers",
+          "slice": "number",
+          "reference_words": 11,
+          "substitutions": 3,
+          "deletions": 1,
+          "insertions": 0,
+          "errors": 4,
+          "wer": 0.36363636363636365,
+          "exact_normalized_match": false
+        },
+        {
+          "id": "quiet",
+          "slice": "english",
+          "reference_words": 8,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "pause",
+          "slice": "pause",
+          "reference_words": 6,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        },
+        {
+          "id": "noise",
+          "slice": "noise",
+          "reference_words": 6,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "errors": 0,
+          "wer": 0.0,
+          "exact_normalized_match": true
+        }
+      ],
+      "slices": {
+        "english": {
+          "cases": 2,
+          "reference_words": 12,
+          "errors": 0,
+          "wer": 0.0
+        },
+        "name": {
+          "cases": 1,
+          "reference_words": 5,
+          "errors": 2,
+          "wer": 0.4
+        },
+        "number": {
+          "cases": 1,
+          "reference_words": 11,
+          "errors": 4,
+          "wer": 0.36363636363636365
+        },
+        "pause": {
+          "cases": 1,
+          "reference_words": 6,
+          "errors": 0,
+          "wer": 0.0
+        },
+        "noise": {
+          "cases": 1,
+          "reference_words": 6,
+          "errors": 0,
+          "wer": 0.0
+        }
+      },
+      "failed_exact_match_cases": [
+        "name",
+        "numbers"
+      ],
+      "accent_diversity": "NOT RUN; one installed US-English synthetic voice",
+      "physical_quality": "NOT RUN",
+      "quality_release_gate": "NOT ESTABLISHED"
+    }
+  ]
+}
