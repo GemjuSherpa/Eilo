@@ -43,7 +43,7 @@ class WakePackLeaseTest {
         override fun close() { root.deleteRecursively() }
     }
     private class API(private val onCreate: ()->Unit={}) : NativeWakeAPI {
-        var creates=0;var destroys=0;var processes=0;var paths:WakeModelPaths?=null
+        @Volatile var creates=0;@Volatile var destroys=0;@Volatile var processes=0;var paths:WakeModelPaths?=null
         var onProcess: ()->Unit={}
         override fun create(paths: WakeModelPaths,configuration: WakeConfiguration): Long { creates++;this.paths=paths;onCreate();return 7L }
         override fun process(handle: Long,samples: FloatArray,count: Int,rate: Int): Int { processes++;onProcess();return 1 }
@@ -51,6 +51,73 @@ class WakePackLeaseTest {
     }
     private fun rejects(action: ()->Unit) { try { action();fail("Accepted invalid lease") } catch (_: Exception) {} }
 
+    private class CaptureSession : AutoCloseable {
+        val captureWorker=java.util.concurrent.Executors.newSingleThreadExecutor { Thread(it,"eilo-test-capture") }
+        val inferenceWorker=java.util.concurrent.Executors.newSingleThreadExecutor { Thread(it,"eilo-test-inference") }
+        val feed=java.util.concurrent.atomic.AtomicBoolean(false)
+        val deviceClosed=java.util.concurrent.atomic.AtomicBoolean(false)
+        val capture=ForegroundCapture(captureWorker,{true},{ object : CaptureDevice {
+            override fun start() {}
+            override fun read(samples: ShortArray): Int { if(!feed.get())return 0;samples[0]=100;return 1 }
+            override fun close() { deviceClosed.set(true) }
+        } })
+        val controller=testController(effects=capture)
+        init { controller.dispatch(ControllerEvent.START);await { controller.state()==ControllerState.STANDBY } }
+        fun ticket()=capture.prepareWakeSetup(controller,controller.token()!!)!!
+        fun install(ticket: ForegroundCapture.WakeSetupTicket,f: Fixture,api: NativeWakeAPI=NativeWakeAPI.unavailable) =
+            inferenceWorker.submit<Boolean> { WakeCaptureInstaller.install(ticket,f.store,f.selection,WakeConfiguration("HEY EILO",.125f,1.5f),api) }
+        fun await(check: ()->Boolean) {
+            val end=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(5)
+            while(!check() && System.nanoTime()<end)Thread.sleep(1)
+            assertTrue(check())
+        }
+        override fun close() {
+            controller.stop();captureWorker.shutdownNow();inferenceWorker.shutdownNow()
+            assertTrue(captureWorker.awaitTermination(5,java.util.concurrent.TimeUnit.SECONDS))
+            assertTrue(inferenceWorker.awaitTermination(5,java.util.concurrent.TimeUnit.SECONDS))
+        }
+    }
+    @Test fun verifiedWorkerInstallationFeedsActualCaptureAndReleasesOwnedStream() {
+        Fixture().use { f -> CaptureSession().use { c ->
+            f.activate();val api=API { assertEquals("eilo-test-inference",Thread.currentThread().name) }
+            assertTrue(c.install(c.ticket(),f,api).get(5,java.util.concurrent.TimeUnit.SECONDS))
+            assertNull(c.capture.prepareWakeSetup(c.controller,c.controller.token()!!))
+            c.feed.set(true);c.await { c.controller.state()==ControllerState.CAPTURING };c.await { api.destroys==1 }
+            assertEquals(1,api.creates);assertTrue(api.processes>0);c.controller.stop();assertTrue(c.deviceClosed.get())
+        } }
+    }
+    @Test fun contextClearBeforeQueuedSetupRejectsTicketButFreshTicketCanAttach() {
+        Fixture().use { f -> CaptureSession().use { c ->
+            f.activate();val ticket=c.ticket();val api=API();c.capture.clearVolatileContext()
+            assertFalse(c.install(ticket,f,api).get(5,java.util.concurrent.TimeUnit.SECONDS));assertEquals(0,api.creates)
+            assertFalse(c.deviceClosed.get());assertTrue(c.install(c.ticket(),f,api).get(5,java.util.concurrent.TimeUnit.SECONDS))
+            c.controller.stop();assertEquals(1,api.destroys)
+        } }
+    }
+    @Test fun stopOrClearDuringWorkerOpeningRejectsLateAttachmentAndClosesHandle() {
+        for(stop in listOf(false,true)) Fixture().use { f -> CaptureSession().use { c ->
+            f.activate();val entered=java.util.concurrent.CountDownLatch(1);val release=java.util.concurrent.CountDownLatch(1)
+            val api=API { entered.countDown();check(release.await(5,java.util.concurrent.TimeUnit.SECONDS)) }
+            val pending=c.install(c.ticket(),f,api)
+            try {
+                assertTrue(entered.await(5,java.util.concurrent.TimeUnit.SECONDS))
+                if(stop)c.controller.stop() else c.capture.clearVolatileContext()
+                release.countDown();assertFalse(pending.get(5,java.util.concurrent.TimeUnit.SECONDS));assertEquals(1,api.destroys)
+                assertEquals(if(stop)ControllerState.STOPPED else ControllerState.STANDBY,c.controller.state())
+                if(!stop) { val fresh=API();assertTrue(c.install(c.ticket(),f,fresh).get(5,java.util.concurrent.TimeUnit.SECONDS));c.controller.stop();assertEquals(1,fresh.destroys) }
+            } finally { release.countDown() }
+        } }
+    }
+    @Test fun unavailableRuntimeMissingOrCorruptPackNeverAttaches() {
+        Fixture().use { f -> CaptureSession().use { c ->
+            val api=API();assertFalse(c.install(c.ticket(),f,api).get(5,java.util.concurrent.TimeUnit.SECONDS));assertEquals(0,api.creates)
+            f.activate();assertFalse(c.install(c.ticket(),f).get(5,java.util.concurrent.TimeUnit.SECONDS))
+            assertNotNull(c.capture.prepareWakeSetup(c.controller,c.controller.token()!!))
+            val p=f.store.active()!!;f.store.file(p,0).writeBytes(byteArrayOf(9,9,9,9))
+            assertFalse(c.install(c.ticket(),f,api).get(5,java.util.concurrent.TimeUnit.SECONDS));assertEquals(0,api.creates)
+            assertEquals(ControllerState.STANDBY,c.controller.state())
+        } }
+    }
     @Test fun signedStoreResolvesExactIdsAndUnavailableDefaultNeverGrantsReadiness() {
         Fixture().use { f ->
             f.activate();val lease=WakePackLease.resolve(f.store,f.selection)
