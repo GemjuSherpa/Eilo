@@ -45,7 +45,8 @@ def verify_report(report, fixtures):
     cases = report.get('cases')
     if (report.get('fixture_count') != len(fixtures) or not isinstance(cases, list)
             or len(cases) != len(fixtures) or report.get('jni_invalid_stale_handles') != 'PASS'
-            or report.get('acoustic_acceptance') != 'PASS ON SYNTHETIC SET ONLY'):
+            or report.get('acoustic_acceptance') != 'PASS ON SYNTHETIC SET ONLY'
+            or report.get('runtime_loader_probe') != 'PASS: explicit pinned host loading; no Android execution'):
         raise ValueError('host JNI report failed')
     for case, fixture in zip(cases, fixtures):
         expected = 1 if fixture['kind'] == 'wake' else 0 if fixture['kind'] == 'nonwake' else None

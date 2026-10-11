@@ -23,6 +23,8 @@ internal interface NativeWakeAPI {
 
 /** JNI has no automatic loader and is not exposed by a TurboModule. Local evaluation loads it explicitly. */
 internal object NativeWakeJNI:NativeWakeAPI {
+    private external fun runtimeCompatibleNative():Boolean
+    fun runtimeCompatible()=try { runtimeCompatibleNative() } catch (_:LinkageError) { false }
     private external fun createNative(encoder:String,decoder:String,joiner:String,tokens:String,threshold:Float,boost:Float):Long
     private external fun processNative(handle:Long,samples:FloatArray,count:Int,rate:Int):Int
     private external fun destroyNative(handle:Long)

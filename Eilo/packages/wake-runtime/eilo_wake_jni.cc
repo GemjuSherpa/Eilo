@@ -1,4 +1,6 @@
 #include "eilo_wake.h"
+#include "sherpa-onnx/c-api/c-api.h"
+#include <cstring>
 #include <jni.h>
 #include <array>
 #include <cmath>
@@ -28,6 +30,12 @@ struct Path {
   ~Path() { if(text)env->ReleaseStringUTFChars(value,text); }
 };
 }
+// Capability probe only: does not allocate a decoder, open models or touch microphone data.
+extern "C" JNIEXPORT jboolean JNICALL Java_com_eilo_foundation_NativeWakeJNI_runtimeCompatibleNative(JNIEnv*,jobject) {
+  const char *version=SherpaOnnxGetVersionStr();
+  return version && std::strcmp(version,"1.13.8")==0 ? JNI_TRUE : JNI_FALSE;
+}
+
 extern "C" JNIEXPORT jlong JNICALL Java_com_eilo_foundation_NativeWakeJNI_createNative(
     JNIEnv *env,jobject,jstring encoder,jstring decoder,jstring joiner,jstring tokens,jfloat threshold,jfloat boost) {
   std::lock_guard<std::mutex> guard(mutex);
