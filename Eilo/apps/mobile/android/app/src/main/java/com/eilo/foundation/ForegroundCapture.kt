@@ -30,16 +30,33 @@ internal class ForegroundCapture(
     private var wake: WakeBinding? = null
     private var wakeEpoch = 0L
 
-    /** Native-only attachment of a delivery already constructed on a native inference worker.
-     * Never enqueue detector construction behind this executor's continuous capture loop.
-     * The caller retains responsibility for closing a rejected candidate. No app/JS default calls it.
-     */
-    fun attachWakeDelivery(controller: NativeController, token: GenerationToken, delivery: WakeFrameDelivery): Boolean {
-        val expected = synchronized(monitor) { run to wakeEpoch }
-        if (delivery.sampleRate != 16000 || !delivery.belongsTo(token) || !controller.canAttachWake(this, token)) return false
+    /** Mint before scheduling expensive construction on a separate inference worker. */
+    internal class WakeSetupTicket internal constructor(
+        internal val capture: ForegroundCapture, internal val controller: NativeController,
+        internal val token: GenerationToken, internal val run: Long, internal val epoch: Long,
+    )
+    fun prepareWakeSetup(controller: NativeController, token: GenerationToken): WakeSetupTicket? {
+        if (!controller.canAttachWake(this,token)) return null
         return synchronized(monitor) {
-            if (run != expected.first || wakeEpoch != expected.second || device == null || wake != null || token.cancelled || !eligible()) false
-            else { wake = WakeBinding(controller, token, delivery); true }
+            if (device==null || wake!=null || token.cancelled || !eligible()) null
+            else WakeSetupTicket(this,controller,token,run,wakeEpoch)
+        }
+    }
+    fun currentWakeSetup(ticket: WakeSetupTicket): Boolean = synchronized(monitor) {
+        ticket.capture===this && run==ticket.run && wakeEpoch==ticket.epoch &&
+            device!=null && wake==null && !ticket.token.cancelled && eligible()
+    }
+    /** Native-only preconstructed delivery; rejected candidates remain caller-owned. */
+    fun attachWakeDelivery(controller: NativeController, token: GenerationToken, delivery: WakeFrameDelivery): Boolean {
+        val ticket=prepareWakeSetup(controller,token) ?: return false
+        return attachWakeDelivery(ticket,delivery)
+    }
+    fun attachWakeDelivery(ticket: WakeSetupTicket, delivery: WakeFrameDelivery): Boolean {
+        if (ticket.capture!==this || delivery.sampleRate!=16000 || !delivery.belongsTo(ticket.token) ||
+            !delivery.available() || !ticket.controller.canAttachWake(this,ticket.token)) return false
+        return synchronized(monitor) {
+            if (!currentWakeSetup(ticket) || !delivery.available()) false
+            else { wake=WakeBinding(ticket.controller,ticket.token,delivery);wakeEpoch++;true }
         }
     }
     private fun detachWake(): WakeBinding? = synchronized(monitor) { val previous = wake; previous?.active = false; wake = null; wakeEpoch++; previous }

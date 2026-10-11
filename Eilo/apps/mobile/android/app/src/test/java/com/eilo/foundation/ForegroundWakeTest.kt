@@ -68,6 +68,21 @@ class ForegroundWakeTest {
             assertTrue(device.borrowed!!.all { it == 0.toShort() }); assertTrue(e.borrowed!!.all { it == 0f })
         } finally { c.stop(); wrong.stop(); executor.shutdownNow(); assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS)) }
     }
+    @Test fun closedCandidateAndConsumedSetupTicketCannotReattach() {
+        val executor=Executors.newSingleThreadExecutor();val device=Device()
+        val capture=ForegroundCapture(executor,{true},{device});val c=testController(effects=capture)
+        try {
+            c.dispatch(ControllerEvent.START);await { c.state()==ControllerState.STANDBY };val token=c.token()!!
+            val ticket=capture.prepareWakeSetup(c,token)!!
+            val closed=delivery(CaptureWakeEngine(),token);closed.close();assertFalse(capture.attachWakeDelivery(ticket,closed))
+            val engine=CaptureWakeEngine();val first=delivery(engine,token);assertTrue(capture.attachWakeDelivery(ticket,first))
+            first.close();await { capture.prepareWakeSetup(c,token)!=null }
+            val nextEngine=CaptureWakeEngine();val next=delivery(nextEngine,token)
+            assertFalse(capture.attachWakeDelivery(ticket,next));assertEquals(0,nextEngine.closed)
+            assertTrue(capture.attachWakeDelivery(capture.prepareWakeSetup(c,token)!!,next))
+            c.stop();assertEquals(1,engine.closed);assertEquals(1,nextEngine.closed)
+        } finally { c.stop();executor.shutdownNow();assertTrue(executor.awaitTermination(5,TimeUnit.SECONDS)) }
+    }
     @Test fun stopDuringDecodeWaitsWithoutControllerCaptureDeadlockAndCannotActivate() {
         val executor = Executors.newSingleThreadExecutor(); val device = Device()
         val capture = ForegroundCapture(executor, {true}, {device}); val c = testController(effects = capture)

@@ -45,6 +45,7 @@ internal class WakeFrameDelivery(
     }
 
     fun belongsTo(expected: GenerationToken) = expected === token
+    fun available(): Boolean = synchronized(queue) { open && !token.cancelled }
     fun submit(input: ShortArray, count: Int, sampleRate: Int): Boolean = synchronized(queue) {
         if (token.cancelled) { open = false; lease.active = false; clearLocked() }
         if (!open) return false
