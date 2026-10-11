@@ -1,0 +1,173 @@
+{
+  "version": "Moonshine v0.1.5 / C API30000",
+  "license": "Moonshine source and English models MIT; bundled third-party inventory remains a release gate",
+  "source": "https://github.com/moonshine-ai/moonshine/tree/v0.1.5",
+  "host": {
+    "archive": "moonshine-voice-macos-arm64.tar.gz",
+    "url": "https://github.com/moonshine-ai/moonshine/releases/download/v0.1.5/moonshine-voice-macos-arm64.tar.gz",
+    "publisher_sha256": "51151f98eb1b20b8fc141bab361a1574dbfdbef8300b632ee6679e373112e0f6",
+    "files": [
+      {
+        "path": "moonshine-voice-macos-arm64/include/moonshine-c-api.h",
+        "sha256": "e5c9038c4987d87f40abd78f843bd6ab0bff96a5ffd1cc2557c5531b0cbab21f"
+      },
+      {
+        "path": "moonshine-voice-macos-arm64/lib/libmoonshine.a",
+        "sha256": "754f894267cc4f45af8cc91cae8acf483dba6ce7bd987e7f85f0dec737293ae6"
+      }
+    ]
+  },
+  "model": {
+    "directory": "small-streaming-en-26-08-21",
+    "files": [
+      {
+        "file": "adapter.ort",
+        "url": "https://download.moonshine.ai/model/small-streaming-en/quantized_26_08_21/adapter.ort",
+        "bytes": 2870368,
+        "publisher_crc32c": "XlWjTg==",
+        "local_sha256": "c665f742364febad597cc9ac1e0b341ffbee0e24a1466e2f3bde95e6e4771762"
+      },
+      {
+        "file": "cross_kv.ort",
+        "url": "https://download.moonshine.ai/model/small-streaming-en/quantized_26_08_21/cross_kv.ort",
+        "bytes": 5356536,
+        "publisher_crc32c": "5ySK8g==",
+        "local_sha256": "e2d3417144e9514055ebfefe8dcc4c0a55a55adcb8530435844c75c53e352bf6"
+      },
+      {
+        "file": "decoder_kv.ort",
+        "url": "https://download.moonshine.ai/model/small-streaming-en/quantized_26_08_21/decoder_kv.ort",
+        "bytes": 81878600,
+        "publisher_crc32c": "Rn/VUA==",
+        "local_sha256": "1a05465b1dd955858dfcbee039c0020fb5dd982b0f5094c34e61735d518d771b"
+      },
+      {
+        "file": "encoder.ort",
+        "url": "https://download.moonshine.ai/model/small-streaming-en/quantized_26_08_21/encoder.ort",
+        "bytes": 44148576,
+        "publisher_crc32c": "41D2jQ==",
+        "local_sha256": "2d4d973e91e8aca08c51e7e7efa28a46ab265b63d809d5294d18b86bcd85b993"
+      },
+      {
+        "file": "frontend.model.ort",
+        "url": "https://download.moonshine.ai/model/small-streaming-en/quantized_26_08_21/frontend.model.ort",
+        "bytes": 26944,
+        "publisher_crc32c": "WW2/2g==",
+        "local_sha256": "09b1210ae30dc5f0f3e45f0ebab914c254741323114f53fbbe5ae62cca35058f"
+      },
+      {
+        "file": "frontend.weights.ort",
+        "url": "https://download.moonshine.ai/model/small-streaming-en/quantized_26_08_21/frontend.weights.ort",
+        "bytes": 7769464,
+        "publisher_crc32c": "9pROuQ==",
+        "local_sha256": "7ef97521bd4bad3928f5bb6808586f4fcc6e92bd5990394112eed7d4052ec338"
+      },
+      {
+        "file": "streaming_config.json",
+        "url": "https://download.moonshine.ai/model/small-streaming-en/quantized_26_08_21/streaming_config.json",
+        "bytes": 512,
+        "publisher_crc32c": "dPbFiw==",
+        "local_sha256": "26f02b6afb22d60871a5efd85c3d38e569cc0ddb6c5eb6e93d3260152ae8a47a"
+      },
+      {
+        "file": "tokenizer.bin",
+        "url": "https://download.moonshine.ai/model/small-streaming-en/quantized_26_08_21/tokenizer.bin",
+        "bytes": 249974,
+        "publisher_crc32c": "B7s10Q==",
+        "local_sha256": "6884b35fd6377d4c4d32336a0bc152f36b64d1e45b6503683cdc238250a8472d"
+      }
+    ]
+  },
+  "android": {
+    "url": "https://repo.maven.apache.org/maven2/ai/moonshine/moonshine-voice/0.1.5/moonshine-voice-0.1.5.aar",
+    "publisher_sha256": "ee2d95c21150683c743db8f3aef66281fd5408bcefc94be3ca1d2545ada1f571",
+    "bytes": 24321396,
+    "files": [
+      {
+        "path": "android-0.1.5/jni/armeabi-v7a/libmoonshine-jni.so",
+        "sha256": "f3629e5f722845de5663baac0d6c0990ce9fe976dab4260ea94306098db48295"
+      },
+      {
+        "path": "android-0.1.5/jni/armeabi-v7a/libonnxruntime.so",
+        "sha256": "a312010c875759084ec1b8da57f289abbf5f5be6b2cad9469ff7653dbb605037"
+      },
+      {
+        "path": "android-0.1.5/jni/armeabi-v7a/libmoonshine.so",
+        "sha256": "f2ed8cbaaf1133dbe57a22c5694dccb692972cb5f4e013affefb91ac15a17285"
+      },
+      {
+        "path": "android-0.1.5/jni/arm64-v8a/libmoonshine-jni.so",
+        "sha256": "08f81c6f173df3929a5a4977db7fa8488358038dafdadd3ac0b17df233f2d357"
+      },
+      {
+        "path": "android-0.1.5/jni/arm64-v8a/libonnxruntime.so",
+        "sha256": "86e85022fc539963177e478c8e9a8a8219bc3b0d7515bf5297a62986dbc45e7a"
+      },
+      {
+        "path": "android-0.1.5/jni/arm64-v8a/libmoonshine.so",
+        "sha256": "922eddb6a0316f94091f40c5304db152e1b33ac4ad36db97823157dd402e19e0"
+      },
+      {
+        "path": "android-0.1.5/jni/x86_64/libmoonshine-jni.so",
+        "sha256": "ed5f999e08b69fe89ab80873420778f82c7f854713c9fca78ea5dbe6c5703688"
+      },
+      {
+        "path": "android-0.1.5/jni/x86_64/libonnxruntime.so",
+        "sha256": "887bcdac57e4020ebe95c62200677b0f63a977be628a7a0231c7a6a8d8ab9c5c"
+      },
+      {
+        "path": "android-0.1.5/jni/x86_64/libmoonshine.so",
+        "sha256": "1dd94038e151b8f515c5dfce7c7aa7f836c56d4eb2527414de3cf6f9317be4db"
+      }
+    ]
+  },
+  "ios": {
+    "archive": "Moonshine-v0.1.5.xcframework.zip",
+    "version": "0.1.5",
+    "url": "https://github.com/moonshine-ai/moonshine-swift/releases/download/v0.1.5/Moonshine.xcframework.zip",
+    "publisher_sha256": "6bc7fb4b6d3a470a2ae2d681299975f3ba9d710753786d1cd7e8beabaad066e8",
+    "digest_source": "https://github.com/moonshine-ai/moonshine-swift/blob/v0.1.5/Package.swift",
+    "files": [
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/Info.plist",
+        "sha256": "b9f439800dfc588a9028a3b32158d36fb8546afa0c5eae4edc593d7475e05a06"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/macos-arm64_x86_64/libmoonshine.a",
+        "sha256": "f35a8229c8c67ddb4982f1a5a8765ae93377d42f7ecaf4bbbc17547665abccbb"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/ios-arm64_x86_64-simulator/libmoonshine.a",
+        "sha256": "f454ee77a254d25468f0787392a90f06cb177736307c95ded45e6c32a8c46141"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/ios-arm64/libmoonshine.a",
+        "sha256": "cc9f17910811160c2df801159564ac8901836d15b1750757dc62b1622b7fa51b"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/macos-arm64_x86_64/Headers/moonshine-c-api.h",
+        "sha256": "e5c9038c4987d87f40abd78f843bd6ab0bff96a5ffd1cc2557c5531b0cbab21f"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/macos-arm64_x86_64/Headers/module.modulemap",
+        "sha256": "69705edf17169790603dd4cebcffa3cf447d16556f0c7de4531cfb4bfba1a663"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/ios-arm64_x86_64-simulator/Headers/moonshine-c-api.h",
+        "sha256": "e5c9038c4987d87f40abd78f843bd6ab0bff96a5ffd1cc2557c5531b0cbab21f"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/ios-arm64_x86_64-simulator/Headers/module.modulemap",
+        "sha256": "69705edf17169790603dd4cebcffa3cf447d16556f0c7de4531cfb4bfba1a663"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/ios-arm64/Headers/moonshine-c-api.h",
+        "sha256": "e5c9038c4987d87f40abd78f843bd6ab0bff96a5ffd1cc2557c5531b0cbab21f"
+      },
+      {
+        "path": "ios-0.1.5/Moonshine.xcframework/ios-arm64/Headers/module.modulemap",
+        "sha256": "69705edf17169790603dd4cebcffa3cf447d16556f0c7de4531cfb4bfba1a663"
+      }
+    ]
+  }
+}

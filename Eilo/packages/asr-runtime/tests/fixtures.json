@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "kind": "local-system-voice-synthetic",
+  "cases": [
+    {
+      "id": "question",
+      "file": "question.wav",
+      "reference": "What time is it?",
+      "slice": "english",
+      "voice": "Samantha",
+      "sha256": "763fa4368b002d09fc0a52b17cc091568ef32346ba30f0cff1cdac226ac962d5",
+      "samples": 37228
+    },
+    {
+      "id": "name",
+      "file": "name.wav",
+      "reference": "My name is Gemju Sherpa.",
+      "slice": "name",
+      "voice": "Samantha",
+      "sha256": "afbb08e2a025e618979d688d556533f16433c9c6fda5acf73a47d40f955f3a95",
+      "samples": 47660
+    },
+    {
+      "id": "numbers",
+      "file": "numbers.wav",
+      "reference": "The number is forty two and the time is seven thirty.",
+      "slice": "number",
+      "voice": "Samantha",
+      "sha256": "0c31e78cccc16e13a0fd0070873fa9d79cecccb06260f2f078cff5abf6dd7b79",
+      "samples": 64875
+    },
+    {
+      "id": "quiet",
+      "file": "quiet.wav",
+      "reference": "I would like to talk about my day.",
+      "slice": "english",
+      "voice": "Samantha",
+      "sha256": "a2b90189f5bb533abfd5dc04962e3e1f7302dcde87a75afa97e4c913fd2fe83e",
+      "samples": 52727
+    },
+    {
+      "id": "pause",
+      "file": "pause.wav",
+      "reference": "Can you help me plan tomorrow?",
+      "slice": "pause",
+      "voice": "Samantha",
+      "sha256": "ad216aaa1727641a43f8f12ecb241e0d7ee84aa60c085f46cda1fa06b56c7220",
+      "samples": 50745
+    },
+    {
+      "id": "noise",
+      "file": "noise.wav",
+      "reference": "Please tell me a short story.",
+      "slice": "noise",
+      "voice": "Samantha",
+      "sha256": "36e135e0e69ba629394be13ff9f783d605bf7e5673c1c429c33ae5ec55cb31e6",
+      "samples": 49047
+    }
+  ],
+  "physical": "NOT RUN",
+  "accent_coverage": "single installed US-English voice only; accented physical speech NOT RUN"
+}
