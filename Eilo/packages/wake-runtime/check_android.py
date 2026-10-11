@@ -60,16 +60,8 @@ def verify_report(report, fixtures):
             raise ValueError('host JNI case failed')
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--ndk', required=True, type=Path)
-    parser.add_argument('--java-home', required=True, type=Path)
-    parser.add_argument('--android-sdk', required=True, type=Path)
-    args = parser.parse_args()
-    if 'Pkg.Revision = 27.1.12297006' not in (args.ndk / 'source.properties').read_text():
-        raise ValueError('unexpected NDK version')
-    root, host, fixtures = verify_candidates()
-    toolchain = args.ndk / 'toolchains/llvm/prebuilt/darwin-x86_64/bin'
+def build_android_jni(root, host, ndk):
+    toolchain = ndk / 'toolchains/llvm/prebuilt/darwin-x86_64/bin'
     targets = {'arm64-v8a': 'aarch64-linux-android26', 'armeabi-v7a': 'armv7a-linux-androideabi26',
                'x86': 'i686-linux-android26', 'x86_64': 'x86_64-linux-android26'}
     for abi, target in targets.items():
@@ -80,6 +72,18 @@ def main():
              '-fPIC', '-shared', '-static-libstdc++', '-Wl,--no-undefined', '-Wl,-z,max-page-size=16384',
              '-I', HERE / 'include', '-I', host / 'include', HERE / 'eilo_wake.cc', HERE / 'eilo_wake_jni.cc',
              '-L', libs, '-Wl,-rpath-link,' + str(libs), '-lsherpa-onnx-c-api', '-o', output / 'libeilo_wake_jni.so'])
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--ndk', required=True, type=Path)
+    parser.add_argument('--java-home', required=True, type=Path)
+    parser.add_argument('--android-sdk', required=True, type=Path)
+    args = parser.parse_args()
+    if 'Pkg.Revision = 27.1.12297006' not in (args.ndk / 'source.properties').read_text():
+        raise ValueError('unexpected NDK version')
+    root, host, fixtures = verify_candidates()
+    build_android_jni(root, host, args.ndk)
     host_lib = root / 'libeilo_wake_jni.dylib'
     run(['xcrun', 'clang++', '-std=c++17', '-Wall', '-Wextra', '-Werror', '-dynamiclib',
          '-I', args.java_home / 'include', '-I', args.java_home / 'include/darwin',
