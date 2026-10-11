@@ -1,5 +1,6 @@
 {
   "model_readiness": "unchanged/unavailable",
+  "runtime_loader_probe": "PASS: explicit pinned host loading; no Android execution",
   "environment": "Host JVM JNI + actual Kotlin binding/controller; not Android device execution",
   "cases": [
     {
