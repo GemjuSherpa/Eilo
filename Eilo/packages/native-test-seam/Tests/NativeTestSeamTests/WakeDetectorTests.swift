@@ -52,6 +52,16 @@ final class WakeDetectorTests: XCTestCase {
     let d=WakeDetector(configuration:config,verified:{true},open:{_ in engine});d.begin(t);let event=process(d,t)!;d.close();XCTAssertFalse(event.apply(c))
     engine.result="HEY EILO";d.begin(t);let second=process(d,t)!;engine.result="HEY EILO";d.begin(t);XCTAssertFalse(second.apply(c));XCTAssertTrue(process(d,t)!.apply(c));d.close()
   }
+  func testVerificationRevokedAfterDecodeRejectsQueuedEventPermanently() {
+    let c=testController();c.dispatch(.start);let t=c.token!,engine=KeywordFixture();engine.result="HEY EILO"
+    var verified=true,checks=0
+    let d=WakeDetector(configuration:config,verified:{ checks += 1;return verified },open:{_ in engine})
+    XCTAssertTrue(d.begin(t));let event=process(d,t)!,before=checks
+    verified=false;XCTAssertFalse(event.apply(c));XCTAssertGreaterThan(checks,before)
+    XCTAssertEqual(c.state,.standby);XCTAssertFalse(d.isActive(t))
+    verified=true;XCTAssertFalse(event.apply(c));XCTAssertNil(process(d,t));XCTAssertEqual(engine.accepted,1)
+    d.close();XCTAssertEqual(engine.closed,1)
+  }
   func testRestartClosesOldStreamWithoutOldInputPoisoningNewStream() {
     let c=testController();c.dispatch(.start);let old=c.token!,first=KeywordFixture(),second=KeywordFixture();var opens=0
     let d=WakeDetector(configuration:config,verified:{true},open:{_ in defer { opens += 1 };return opens==0 ? first : second });XCTAssertTrue(d.begin(old))

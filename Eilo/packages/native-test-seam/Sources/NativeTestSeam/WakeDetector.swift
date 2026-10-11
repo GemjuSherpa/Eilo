@@ -27,8 +27,18 @@ final class WakeLease {
 struct WakeActivation {
   private let token: GenerationToken
   private let lease:WakeLease
-  fileprivate init(_ token: GenerationToken, _ lease:WakeLease) { self.token=token;self.lease=lease }
-  func apply(_ controller: NativeController, deliveryActive:()->Bool = { true }) -> Bool { controller.wakeDetected(token,active:{lease.active && deliveryActive()}) }
+  private let verified:()->Bool
+  fileprivate init(_ token: GenerationToken, _ lease:WakeLease, _ verified:@escaping ()->Bool) {
+    self.token=token;self.lease=lease;self.verified=verified
+  }
+  func apply(_ controller: NativeController, deliveryActive:()->Bool = { true }) -> Bool {
+    controller.wakeDetected(token,active:{
+      guard lease.active, deliveryActive() else { return false }
+      // Disk-free verification only. Never acquire decoder/capture locks here.
+      guard verified() else { lease.revoke();return false }
+      return lease.active
+    })
+  }
 }
 enum WakeFailure: Error { case unavailable }
 
@@ -64,6 +74,7 @@ final class WakeDetector {
     guard expected === token, !expected.cancelled else { if expected === token { close() };return nil }
     guard (8000...192000).contains(sampleRate), !input.isEmpty, input.count <= sampleRate/10, input.allSatisfy({ $0.isFinite && (-1...1).contains($0) }), let engine=stream, let currentLease=lease else { close();return nil }
     guard self.sampleRate == nil || self.sampleRate == sampleRate else { close();return nil }
+    guard currentLease.active else { close();return nil }
     self.sampleRate=sampleRate
     defer { erase() }
     do {
@@ -82,7 +93,7 @@ final class WakeDetector {
       }
       if steps==0 { try consumeResult() }
       guard !expected.cancelled, verified() else { close();return nil }
-      return activation && expected === token && currentLease === lease ? WakeActivation(expected,currentLease) : nil
+      return activation && expected === token && currentLease === lease ? WakeActivation(expected,currentLease,verified) : nil
     } catch { diagnostics.record(.model,.unavailable,.error);close();return nil }
   }
   private func erase() { scratch.update(repeating:0) }
