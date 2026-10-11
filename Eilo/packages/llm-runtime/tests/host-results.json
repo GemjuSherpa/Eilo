@@ -1,0 +1,112 @@
+{
+  "task": "VC-LLM-01",
+  "platform": "Darwin arm64 native CPU",
+  "runtime": {
+    "version": "llama.cpp v0.6.0",
+    "commit": "8345f333951c661d166b00e6f9362e553768f292",
+    "release": "https://github.com/ggml-org/llama.cpp/releases/tag/v0.6.0",
+    "source_url": "https://codeload.github.com/ggml-org/llama.cpp/tar.gz/8345f333951c661d166b00e6f9362e553768f292",
+    "source_archive_sha256": "84050e783dbd0c4a4678f90f253b0881df04e90a98c20f73ae3709751c4a4850",
+    "license": "MIT"
+  },
+  "model": {
+    "file": "qwen3-1.7b-q4-k-m.gguf",
+    "bytes": 1282439424,
+    "sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120",
+    "source_evidence": "../../docs/models/evidence/q4-k-m.json",
+    "license": "Apache-2.0"
+  },
+  "build_options": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "BUILD_SHARED_LIBS": "OFF",
+    "GGML_CPU": "ON",
+    "GGML_ACCELERATE": "ON",
+    "GGML_BLAS": "OFF",
+    "GGML_OPENMP": "OFF",
+    "GGML_BACKEND_DL": "OFF",
+    "LLAMA_OPENSSL": "OFF",
+    "LLAMA_SUBPROCESS": "OFF",
+    "GGML_METAL": "OFF",
+    "GGML_CUDA": "OFF",
+    "GGML_HIP": "OFF",
+    "GGML_MUSA": "OFF",
+    "GGML_SYCL": "OFF",
+    "GGML_VULKAN": "OFF",
+    "GGML_OPENCL": "OFF",
+    "GGML_RPC": "OFF",
+    "GGML_WEBGPU": "OFF",
+    "GGML_HEXAGON": "OFF",
+    "GGML_OPENVINO": "OFF",
+    "GGML_VIRTGPU": "OFF",
+    "GGML_ET": "OFF",
+    "GGML_ZDNN": "OFF",
+    "GGML_ZENDNN": "OFF",
+    "LLAMA_BUILD_COMMON": "OFF",
+    "LLAMA_BUILD_EXAMPLES": "OFF",
+    "LLAMA_BUILD_TESTS": "OFF",
+    "LLAMA_BUILD_TOOLS": "OFF",
+    "LLAMA_BUILD_SERVER": "OFF",
+    "LLAMA_BUILD_APP": "OFF",
+    "LLAMA_BUILD_MTMD": "OFF"
+  },
+  "contract_scenarios": 27,
+  "sanitizers": "ASan/UBSan PASS (adapter/scripted backend only)",
+  "native_lifecycle_cases": [
+    "invalid_descriptor",
+    "corrupt_model",
+    "pre_cancel",
+    "post_token_cancel",
+    "concurrent_begin_cancel",
+    "concurrent_load_cancel"
+  ],
+  "network": {
+    "policy": "all network operations denied for inference process",
+    "IPv4_TCP": "DENIED",
+    "IPv6_TCP": "DENIED",
+    "IPv4_UDP": "DENIED"
+  },
+  "process_fork": "DENIED",
+  "CPU_devices_only": "PASS",
+  "static_library_network_symbols": "ABSENT",
+  "fatal_backtrace_process_symbols": {
+    "libggml-base.a": [
+      "_execlp",
+      "_fork"
+    ]
+  },
+  "cases": [
+    {
+      "id": 1,
+      "prompt": "The opposite of cold is",
+      "tokens": 8,
+      "output": " heat, and the opposite of hot is",
+      "kind": "raw completion, not speech-approved"
+    },
+    {
+      "id": 2,
+      "prompt": "One, two, three,",
+      "tokens": 8,
+      "output": " four, five, six, seven,",
+      "kind": "raw completion, not speech-approved"
+    },
+    {
+      "id": 3,
+      "prompt": "The sky on a clear day is",
+      "tokens": 8,
+      "output": " a vast, unbroken expanse of",
+      "kind": "raw completion, not speech-approved"
+    }
+  ],
+  "evaluation_seconds_including_hashing": 5.207,
+  "physical": "NOT RUN",
+  "production_readiness": "NOT ENABLED",
+  "remaining": [
+    "mobile bindings/pack lease/controller integration",
+    "non-thinking template",
+    "speech policy",
+    "vendor allocator/logits retention audit",
+    "phone performance"
+  ],
+  "date_local": "2026-10-12",
+  "timezone": "Australia/Melbourne"
+}

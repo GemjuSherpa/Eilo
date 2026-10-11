@@ -39,6 +39,10 @@ jobs:
           python3 -O packages/wake-runtime/test_fixture_validation.py
           python3 packages/wake-runtime/test_ios_integrity.py
           python3 -O packages/wake-runtime/test_ios_integrity.py
+      - name: CPU model source integrity fixtures (synthetic, no downloads)
+        run: |
+          python3 -m unittest discover -s packages/llm-runtime -p 'test_*.py'
+          python3 -O -m unittest discover -s packages/llm-runtime -p 'test_*.py'
   android:
     if: github.event.repository.private == false
     runs-on: ubuntu-24.04
