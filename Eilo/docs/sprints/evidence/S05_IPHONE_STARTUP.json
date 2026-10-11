@@ -1,0 +1,21 @@
+{
+  "date_local": "2026-10-12",
+  "timezone": "Australia/Melbourne",
+  "device_model": "iPhone 17 Pro Max",
+  "os_version": "26.6.1",
+  "application": "Eilo",
+  "scope": "normal signed application startup; vendor ASR and microphone recognition not exercised",
+  "debug_build_install_launch": "PASS",
+  "developer_profile_trust": "confirmed by successful application launch",
+  "release_build_install": "PASS",
+  "release_javascript_bundle": "present",
+  "release_fresh_launches": 3,
+  "dwell_seconds_per_launch": 10,
+  "distinct_processes_survived": 3,
+  "home_rendering": "confirmed by Gemju Sherpa",
+  "initial_release_launch_failure": "phone locked; rerun succeeded after Gemju Sherpa unlocked it",
+  "network_disabled_trial": "NOT RUN",
+  "physical_wake_asr_interruption_trials": "NOT RUN",
+  "microphone_audio_recorded_or_uploaded": false,
+  "production_model_readiness": "unavailable"
+}

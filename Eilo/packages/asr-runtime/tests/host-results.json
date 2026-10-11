@@ -1,0 +1,64 @@
+{
+  "runtime": "Moonshine v0.1.5 / C API30000",
+  "platform": "macOS ARM64 native CPU",
+  "model": "small-streaming-en-26-08-21",
+  "kind": "synthetic-only",
+  "cases": [
+    {
+      "id": "question",
+      "slice": "english",
+      "reference": "What time is it?",
+      "transcript": "What time is it?",
+      "seconds": 1.24,
+      "audio_seconds": 2.32675,
+      "final_once_and_closed_input": "PASS"
+    },
+    {
+      "id": "name",
+      "slice": "name",
+      "reference": "My name is Gemju Sherpa.",
+      "transcript": "My name is Jemju Shurpa.",
+      "seconds": 0.25,
+      "audio_seconds": 2.97875,
+      "final_once_and_closed_input": "PASS"
+    },
+    {
+      "id": "numbers",
+      "slice": "number",
+      "reference": "The number is forty two and the time is seven thirty.",
+      "transcript": "The number is 42 and the time is 7:30.",
+      "seconds": 0.458,
+      "audio_seconds": 4.0546875,
+      "final_once_and_closed_input": "PASS"
+    },
+    {
+      "id": "quiet",
+      "slice": "english",
+      "reference": "I would like to talk about my day.",
+      "transcript": "I would like to talk about my day",
+      "seconds": 0.299,
+      "audio_seconds": 3.2954375,
+      "final_once_and_closed_input": "PASS"
+    },
+    {
+      "id": "pause",
+      "slice": "pause",
+      "reference": "Can you help me plan tomorrow?",
+      "transcript": "Can you help me plan tomorrow?",
+      "seconds": 0.268,
+      "audio_seconds": 3.1715625,
+      "final_once_and_closed_input": "PASS"
+    },
+    {
+      "id": "noise",
+      "slice": "noise",
+      "reference": "Please tell me a short story.",
+      "transcript": "Please tell me a short story.",
+      "seconds": 0.268,
+      "audio_seconds": 3.0654375,
+      "final_once_and_closed_input": "PASS"
+    }
+  ],
+  "physical": "NOT RUN",
+  "production_readiness": "NOT ENABLED"
+}

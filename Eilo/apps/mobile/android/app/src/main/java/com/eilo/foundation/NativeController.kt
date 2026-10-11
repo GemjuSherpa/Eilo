@@ -38,6 +38,9 @@ fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
 class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter(), private val models: ModelReadinessAdapter = MissingModelReadiness()) {
+    private val playback=PlaybackRejection(clock::milliseconds)
+    @Synchronized internal fun recognitionAllowed(token:GenerationToken):Boolean =
+        currentState==ControllerState.CAPTURING && accepts(token) && playback.allowsAudio()
     @Synchronized fun modelStatus(): ModelStatus = try { models.status() } catch (_: Exception) { ModelStatus.CORRUPT }
     @Synchronized fun modelsChanged() { if(modelStatus()!=ModelStatus.READY) { stop();if(currentState==ControllerState.STOPPED)currentState=ControllerState.SETUP } else if(currentState==ControllerState.SETUP) currentState=ControllerState.STOPPED }
     @Synchronized fun setOutputGain(gain:Float):Boolean {
@@ -136,7 +139,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         clearIdle(); invalidateGeneration(); hasConversation=false
         val expectedGeneration=generation; val expectedEpoch=privacyEpoch
         return try {
-            effects.cancelWork(); effects.clearVolatileContext()
+            playback.cancel();effects.cancelWork(); effects.clearVolatileContext()
             if (generation != expectedGeneration || privacyEpoch != expectedEpoch) return false
             sessionId=UUID.randomUUID(); currentState=ControllerState.STANDBY; issueGeneration(); true
         } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CONTROLLER,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
@@ -169,15 +172,32 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun error(): SafeError? = currentError
     /** Native attachment check; call before acquiring capture/delivery locks. */
     @Synchronized internal fun canAttachWake(capture: ControllerEffects, token: GenerationToken): Boolean =
-        effects === capture && currentState == ControllerState.STANDBY && accepts(token)
+        effects === capture && currentState == ControllerState.STANDBY && accepts(token) && playback.allowsAudio()
     @Synchronized internal fun wakeCaptureFailed(token: GenerationToken, active: () -> Boolean): Boolean {
         if (!active()) return false
         return dispatch(ControllerEvent.FAILURE, failure = SafeError.UNAVAILABLE, token = token)
     }
     /** Revalidate the detector lease under the same monitor as token/state transitions. */
     @Synchronized internal fun wakeDetected(token:GenerationToken, active:()->Boolean):Boolean {
-        if(!active()) return false
+        if(!active() || !playback.allowsAudio()) return false
         return dispatch(ControllerEvent.SPEECH_DETECTED,token=token)
+    }
+    /** Final native recognition only, serialized with Stop. The accepted callback must only queue
+     * native conversation work, without inference, store IO or capture locks in this monitor.
+     * Unknown Moonshine confidence stays unknown; never synthesize a confidence score. */
+    @Synchronized internal fun finishRecognition(token:GenerationToken, result:AsrText,
+        confidence:Float?, ambiguous:Boolean=false, overlap:Boolean=false, active:()->Boolean,
+        accepted:(String)->Unit):Boolean {
+        if(!result.final || !recognitionAllowed(token))return false
+        return try {
+            if(!active() || !accepts(token))return false
+            val decision=RecognitionPolicy.decide(result.text,confidence,ambiguous,overlap)
+            if(!dispatch(ControllerEvent.ENDPOINT,token=token))return false
+            when(decision){
+                RecognitionDecision.Clarify->releaseSpeech(token,RecognitionPolicy.CLARIFICATION)
+                is RecognitionDecision.Conversation->{accepted(decision.text);accepts(token)}
+            }
+        }catch(_:Exception){stop();false}
     }
     @Synchronized fun dispatch(event: ControllerEvent, failure: SafeError = SafeError.UNEXPECTED, token: GenerationToken? = null): Boolean {
         if (stopping && event != ControllerEvent.STOP) return false
@@ -188,6 +208,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (event == ControllerEvent.START || event == ControllerEvent.RESUME) return start()
         if (event in setOf(ControllerEvent.SPEECH_DETECTED, ControllerEvent.ENDPOINT, ControllerEvent.SPEECH_READY, ControllerEvent.PLAYBACK_FINISHED, ControllerEvent.FAILURE) && !accepts(token)) return false
         val next = nextState(currentState, event) ?: return false
+        if(event==ControllerEvent.PLAYBACK_FINISHED && token!=null)playback.finish(token)
         if (event == ControllerEvent.START || event == ControllerEvent.SPEECH_DETECTED || event == ControllerEvent.PLAYBACK_FINISHED || event == ControllerEvent.RESUME) issueGeneration()
         if ((event == ControllerEvent.PAUSE || event == ControllerEvent.FAILURE) && !stop()) return false
         currentState = next
@@ -229,7 +250,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (speakerRequired || !accepts(token) || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING)) return false
         clearIdle()
         return try {
-            effects.playClause(clause)
+            playback.begin(token);effects.playClause(clause)
             if (!accepts(token)) return false
             currentState = ControllerState.SPEAKING; true
         } catch (_: Exception) { stop(); currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED; diagnostics.record(SafeComponent.SPEECH, SafeError.UNEXPECTED, SafeSeverity.ERROR); false }
@@ -238,8 +259,22 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (stopping) return
         if (!permissionGranted()) { stop(); return }
         invalidateGeneration()
-        try { effects.cancelWork() } catch (_: Exception) { stop(); currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED; return }
+        try { playback.cancel();effects.cancelWork() } catch (_: Exception) { stop(); currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED; return }
         if (currentState in setOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) { currentState = ControllerState.STANDBY; issueGeneration(); updateIdle() }
+    }
+    /** Cancel old work before creating the new turn; never reopen capture or revive a stopped run.
+     * Verification is disk-free native echo-separated speech evidence, not an energy threshold. */
+    @Synchronized internal fun interruptReply(token:GenerationToken,verified:()->Boolean):GenerationToken? {
+        if(stopping || !accepts(token) || currentState !in setOf(ControllerState.THINKING,ControllerState.SPEAKING))return null
+        return try {
+            if(!verified() || !accepts(token))return null
+            clearIdle();invalidateGeneration();playback.cancel()
+            val expected=generation;val epoch=privacyEpoch
+            effects.cancelWork()
+            if(generation!=expected || privacyEpoch!=epoch || locked)return null
+            if(!verified() || !permissionGranted() || modelStatus()!=ModelStatus.READY){stop();return null}
+            issueGeneration();currentState=ControllerState.CAPTURING;hasConversation=true;activeToken
+        }catch(_:Exception){stop();null}
     }
     @Synchronized fun stop(): Boolean {
         if (stopping) return true
@@ -248,6 +283,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         clearIdle(); hasConversation=false
         invalidateGeneration()
         currentState = ControllerState.STOPPED
+        playback.cancel()
         currentError = null
         var failed = false
         for (cleanup in listOf(permission::cancelPendingRequests,effects::cancelWork, effects::releaseCapture, effects::clearVolatileContext)) {
