@@ -12,3 +12,11 @@ condition = "AND"
 paths = ['''(^|/)Podfile\.lock$''']
 regexTarget = "line"
 regexes = ['''^PODFILE CHECKSUM: [0-9a-f]{40}$''', '''^\s*React-cxxstableapi: [0-9a-f]{40}$''']
+
+[[allowlists]]
+description = "Wake evaluation APK library SHA256 evidence, not credentials"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^Eilo/packages/wake-runtime/tests/android-package-results\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"lib/(arm64-v8a|armeabi-v7a|x86|x86_64)/lib(onnxruntime|sherpa-onnx-c-api|eilo_wake_jni)\.so": "[0-9a-f]{64}",?$''']
