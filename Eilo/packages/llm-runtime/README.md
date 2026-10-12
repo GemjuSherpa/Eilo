@@ -6,7 +6,7 @@ The model is loaded from a duplicated, independently verified open file descript
 
 Bounds: 1–8 CPU threads, 4,096 total prompt/output tokens, 16,384 prompt bytes, 1–256 generated tokens, 128-token prefill batches, and 1,024 bytes per returned token piece. These are hard adapter safety limits; prompt trimming, memory budgets and continuation policy belong to later tasks. A raw piece can split UTF-8 and contains no speech authorization. No prompt/template, memory, tool, display or TTS integration is provided here. VC-LLM-02 must configure the actual non-thinking template before conversational release.
 
-The normal mobile app does not link/load this runtime or change its missing-model gate. C++ mobile compilation verifies source compatibility only; native Swift/Kotlin bindings, trusted production attachment, phone inference/quality/performance and vendor allocator/logits retention remain open. The KV clear is not a complete private-memory erasure claim. The adapter suppresses llama/ggml process-wide logs and installs content-free fatal/terminate hooks; fatal assertions still terminate the process. A future shared-runtime integration must retain this logging boundary and review these process-wide hooks.
+The normal mobile app compiles the Swift binding with an unavailable default and does not link/load this runtime or change its missing-model gate. The separate Swift simulator evaluation links and executes the actual CPU runtime; device SDK linking is also checked. Kotlin binding, trusted production attachment, physical inference/quality/performance and vendor allocator/logits retention remain open. The KV clear is not a complete private-memory erasure claim. The adapter suppresses llama/ggml process-wide logs and installs content-free fatal/terminate hooks; fatal assertions still terminate the process. A future shared-runtime integration must retain this logging boundary and review these process-wide hooks.
 
 ## Pin and licensing
 
@@ -43,3 +43,34 @@ The script verifies the pinned archive and every extracted source file, rejects 
 Actual evaluation includes three generic raw completions, invalid descriptor/corrupt GGUF failure, pre-cancel, post-token cancellation, concurrent begin cancellation and concurrent load cancellation. Scripted C API fixtures separately cover 27 lifecycle/bounds/error scenarios with ASan/UBSan. Sanitizers do not instrument the release vendor libraries. Concurrent host cancellation is not a physical latency/p95 measurement, and raw completions are not a chat-quality or non-thinking pass.
 
 The final report is `.local/llm/host-results.json`; [published frozen results](tests/host-results.json) include generic synthetic outputs only. Normal app regression uses the existing same iPhone 18 Pro simulator build/three-launch check. That app run does not execute this separately evaluated CPU adapter.
+
+## iOS Swift binding evaluation
+
+`NativeLlmStream` uses one serialized native worker for loading, generation and cleanup. `requestCancellation` can run concurrently: a short handle-lifetime lock protects the atomic C cancellation call without waiting for decode or destroying its active handle. The worker clears its 1,024-byte scratch after each borrowed callback and rechecks the supplied current controller/privacy/model lease before releasing a raw piece. A piece may split UTF-8 and remains unapproved for speech. The consumer must also recheck its controller transaction before later display/playback/storage. Join the worker before releasing its last reference; a Swift object cannot fix misuse of this ownership contract.
+
+The descriptor must already be hashed, immutable and exclusively borrowed until load returns. The wrapper accepts no model pathname, creates no file/network client and retains no prompt String. The evaluator opens a native pathname separately and hashes the same descriptor that C++ subsequently duplicates. Its permissive synthetic lease is an evaluation fixture, not production manifest verification.
+
+The real API requires all three conditions: the `CEiloLlm` header module, `DEBUG`, and `EILO_LLM_EVALUATION`. Merely making headers available, defining Debug alone or defining the evaluation flag alone preserves the unavailable default. Normal app builds add only Swift source compilation; no runtime libraries/model/assets/readiness override are added.
+
+From `Eilo`, with the existing pinned source and Q4 artifact, select an existing booted simulator explicitly:
+
+```sh
+python3 packages/llm-runtime/check_ios.py --udid E01AE333-A393-48F6-AAD7-579F0A5DB1F8
+```
+
+For simulator/device SDK link checks without model execution:
+
+```sh
+python3 packages/llm-runtime/check_ios.py --compile-only
+```
+
+The script verifies all original source files, downloads nothing, builds ARM64 iOS CPU static libraries with Metal/GPU/RPC/dynamic backends/server/network tools disabled, and links Swift/C++ for both SDKs. It runs three frozen generic completions, six real lifecycle fixtures and three default-gate configurations on the chosen simulator. The library registry must contain CPU devices only. Results go to `.local/llm/ios-results.json`; [published results](tests/ios-results.json) retain only generic fixtures, build hashes and scope boundaries. Runtime/source/binary/model files stay ignored. No microphone or physical iPhone execution occurs. Listed network symbols are absent, but OS-wide networking isolation for the simulator process is **not verified**; the earlier host sandbox result does not establish phone isolation.
+
+Focused lifetime/lease/error tests run as part of the existing Swift package and CI:
+
+```sh
+cd packages/native-test-seam
+swift test --filter NativeLlmStreamTests
+```
+
+This checkpoint leaves VC-LLM-01 partial. Production signed-pack/controller attachment, Kotlin binding, non-thinking configuration, downstream speech policy and physical performance/retention evidence remain separate work.
