@@ -64,7 +64,7 @@
       "libraries": [
         {
           "file": "build-ios-iphonesimulator/src/libllama.a",
-          "sha256": "6b5fee5551a31069d9a4cf2a08f4fddf36718a7a5293d9d807c6538c3915bff7"
+          "sha256": "e12321504271db780b9619a01f7f1b69d655e24ccf167cdef19339278993ccd6"
         },
         {
           "file": "build-ios-iphonesimulator/ggml/src/libggml.a",
@@ -76,7 +76,7 @@
         },
         {
           "file": "build-ios-iphonesimulator/ggml/src/libggml-base.a",
-          "sha256": "a60383e25a1d0e3d038c0a32168afac45e4502d34b4bc3648fb62202ef16edef"
+          "sha256": "0b37a9ac16b8e4394f091f286f3990ee5c9f9c38dfb128627479c77386dbd9b8"
         }
       ],
       "network_symbols": "ABSENT",
@@ -133,7 +133,7 @@
       "libraries": [
         {
           "file": "build-ios-iphoneos/src/libllama.a",
-          "sha256": "7e1982811072677b939d4b2b69b423c7e2e87728583a1e82afa1197b8a205a05"
+          "sha256": "258412c282e8ec16759b4dad1fb5fcc6327af70f549df5b718304e0e0cc9dd8c"
         },
         {
           "file": "build-ios-iphoneos/ggml/src/libggml.a",
@@ -145,7 +145,7 @@
         },
         {
           "file": "build-ios-iphoneos/ggml/src/libggml-base.a",
-          "sha256": "8b7aac7d87f6604f40b2b7ca4d0c71afc08aefd1deb929769f8a3cb42341a216"
+          "sha256": "c5c96c8cb782bd5524997c67a01da60dcb2e1c5deba3603d53b87bdc78dc4512"
         }
       ],
       "network_symbols": "ABSENT",

@@ -193,9 +193,12 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         continuationToken = token; continuationCancel = cancel; return true
     }
     private var speechWork: SpeechWorkTicket? = null
-    @Synchronized internal fun prepareSpeechWork(token: GenerationToken, cancel: () -> Unit): SpeechWorkTicket? {
+    @Synchronized internal fun prepareSpeechWork(token: GenerationToken, cancel: () -> Unit, publish: (SpeechWorkTicket) -> Unit = {}): SpeechWorkTicket? {
         if (speechWork != null || stopping || speakerRequired || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING) || !accepts(token)) return null
-        return SpeechWorkTicket(this, token, cancel).also { speechWork = it }
+        val ticket = SpeechWorkTicket(this, token, cancel)
+        publish(ticket) // Initialize native receiver before cancellation can observe it.
+        if (stopping || !accepts(token)) { ticket.cancelled = true; return null }
+        speechWork = ticket; return ticket
     }
     /** Short native buffer/SDK scheduling transaction only; no IO, inference or joins. */
     @Synchronized internal fun speechTransaction(ticket: SpeechWorkTicket, action: () -> Boolean): Boolean {
@@ -224,7 +227,8 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun token(): GenerationToken? = activeToken
     private fun invalidateGeneration() {
         activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
-        val continuation = continuationCancel; continuationCancel = null; continuationToken = null; continuation?.invoke()
+        val continuation = continuationCancel; continuationCancel = null; continuationToken = null
+        try { continuation?.invoke() } catch (_: Exception) { diagnostics.record(SafeComponent.MODEL, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
         val speech = speechWork; speechWork = null; speech?.cancelled = true
         try { speech?.cancel?.invoke() } catch (_: Exception) { diagnostics.record(SafeComponent.SPEECH, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
         val previous = llmWork; llmWork = null

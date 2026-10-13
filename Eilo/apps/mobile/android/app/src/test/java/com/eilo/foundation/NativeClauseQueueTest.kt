@@ -44,4 +44,10 @@ class NativeClauseQueueTest {
     @Test fun sdkCompletionAndInterruptionAreSeparate(){for(event in listOf(OfflineSpeechEvent.FINISHED,OfflineSpeechEvent.INTERRUPTED)){val c=controller();val s=Sink();val q=NativeClauseQueue.create(c,c.token()!!,s){_,_->true}!!;q.enqueue("First.");s.callbacks[0](OfflineSpeechEvent.STARTED);s.callbacks[0](event);val record=q.progress{true}.single();assertEquals(event==OfflineSpeechEvent.FINISHED,record.sdkFinished);assertEquals(event==OfflineSpeechEvent.INTERRUPTED,record.sdkInterrupted)} }
     @Test fun progressLedgerIsBoundedAndContainsNoContent(){val ledger=PlaybackLedger();repeat(40){ledger.produced(java.util.UUID.randomUUID())};assertEquals(32,ledger.snapshot().size);assertTrue(ledger.snapshot().all{it.produced && it.queued});ledger.clear();assertTrue(ledger.snapshot().isEmpty())}
 
+    @Test fun missingSdkCompletionTimesOutAndLateCallbacksCannotDrain(){val c=controller();val s=Sink();var fire:()->Unit={};val scheduler=IdleScheduler{delay,task->assertEquals(60000L,delay);fire=task;IdleCancellation{}};val q=NativeClauseQueue.create(c,c.token()!!,s,scheduler){_,_->true}!!;q.enqueue("First.");q.enqueue("Second.");fire();s.callbacks[0](OfflineSpeechEvent.FINISHED);assertEquals(listOf("First."),s.texts);assertTrue(s.stops>0);assertEquals("error",c.snapshot()["state"]);assertTrue(q.progress{true}.first().failed)}
+
+    @Test fun speechReceiverPublishesBeforeCancellationAndRechecksStop(){val c=controller();var published=false;var cancelled=false;assertNotNull(c.prepareSpeechWork(c.token()!!,{assertTrue(published);cancelled=true},{published=true}));c.stop();assertTrue(cancelled)
+        val stopped=controller();val token=stopped.token()!!;assertNull(stopped.prepareSpeechWork(token,{}, {stopped.stop()}));assertTrue(token.cancelled)
+    }
+
 }
