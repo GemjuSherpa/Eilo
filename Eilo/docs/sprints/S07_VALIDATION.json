@@ -44,11 +44,18 @@
       "install": "PASS",
       "fresh_ten_second_launches": 3,
       "local_proof_sha256": "8840703ad6e7c7041aaedda0e81dd89be1ec231766a53d8401df708b34e4d7f1"
+    },
+    {
+      "task_label": "refusals",
+      "normal_app_build": "PASS",
+      "install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "local_proof_sha256": "ddfd1f3109b56d684a841daba0c0e0547fd53484268e287dd212eb3e28822536"
     }
   ],
   "final_native_tests": {
-    "Swift": 217,
-    "Android": 267
+    "Swift": 218,
+    "Android": 268
   },
   "workspace_tests": {
     "mobile": 9,
@@ -57,5 +64,6 @@
   "joined_native_evaluation": "PASS; synthetic state/endpoint/confidence/separation and offline voice evidence only",
   "physical": "NOT RUN; connected iPhone offline, no physical Android",
   "normal_app_voice_readiness": "UNAVAILABLE",
-  "semantic_review": "pending_review"
+  "semantic_review": "pending_review",
+  "persona_lexical_screen": "PASS: nine nontruncated synthetic candidates after exact-refusal fix; semantic review pending"
 }
