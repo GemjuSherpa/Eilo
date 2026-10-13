@@ -129,5 +129,9 @@ int main() {
   reset(); begun(fd); char out[1024]; int bytes=9; CHECK(eilo_llm_next(current,out,1023,&bytes)==-1 && bytes==0); CHECK(live==0); finish(); ++scenarios;
   reset(); CHECK(eilo_llm_begin(current,"fixture",7,2)==-1); finish(); ++scenarios;
   CHECK(eilo_llm_next(nullptr,nullptr,0,nullptr)==-1); eilo_llm_cancel(nullptr); eilo_llm_destroy(nullptr); ++scenarios;
+  reset(); loaded(fd); CHECK(eilo_llm_count_tokens(current,"fixture",7)==300); CHECK(eilo_llm_count_tokens(current,"fixture",7)==300); CHECK(eilo_llm_begin(current,"fixture",7,2)==0); finish(); ++scenarios;
+  reset(); loaded(fd); token_count=4097; CHECK(eilo_llm_count_tokens(current,"fixture",7)==4097); token_count=300; CHECK(eilo_llm_begin(current,"fixture",7,2)==0); finish(); ++scenarios;
+  reset(); loaded(fd); eilo_llm_cancel(current); CHECK(eilo_llm_count_tokens(current,"fixture",7)==-2); finish(); ++scenarios;
+  reset(); loaded(fd); CHECK(eilo_llm_count_tokens(current,"x\0x",3)==-1); finish(); ++scenarios;
   std::fclose(file); std::printf("%d scripted C ABI lifecycle scenarios PASS\n",scenarios);
 }

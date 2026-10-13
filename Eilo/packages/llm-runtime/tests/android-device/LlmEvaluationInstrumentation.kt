@@ -255,6 +255,12 @@ class LlmEvaluationInstrumentation : Instrumentation() {
             stage = "model_hash"
             descriptor(File(work, "model.gguf"), true).use { model ->
                 val cases = JSONArray()
+                make(model.fd,api).use { stream ->
+                    val plan=PromptBudget.build("Name one colour.",List(16){QwenTurn(QwenRole.USER,"Generic earlier context. ".repeat(100))},List(6){"Generic recalled fact. ".repeat(60)},count=stream::countTokens)
+                    check(plan.promptTokens+plan.outputLimit<=4096 && plan.recalledTokens<=512 && plan.droppedHistory>0 && plan.droppedRecall>0)
+                    check(plan.text.contains(QwenTemplate.RULES) && plan.text.contains("Name one colour."))
+                    check(stream.countTokens(plan.text)==plan.promptTokens);begin(stream,plan.text);check(stream.withNextPiece{_,_->})
+                }
                 val prompts = listOf("The opposite of cold is", "One, two, three,", "The sky on a clear day is")
                 for ((index, prompt) in prompts.withIndex()) {
                     stage = "completion_${index + 1}"
@@ -343,7 +349,7 @@ class LlmEvaluationInstrumentation : Instrumentation() {
                     .put("native_lifecycle_cases", JSONArray(listOf("pre_cancel", "corrupt_gguf", "post_token_cancel",
                         "lease_revocation", "concurrent_load_cancel", "concurrent_begin_cancel", "destroy_during_load")))
                     .put("default_gate_cases", JSONArray(listOf("ordinary_debug", "debug_with_release_flag", "unavailable_api")))
-                    .put("microphone", "NOT USED").put("remaining", JSONArray(listOf("Swift controller worker and production app attachment",
+                    .put("prompt_budget", "Actual loaded vocabulary; context4096/recall512/output256 and deterministic trim PASS").put("microphone", "NOT USED").put("remaining", JSONArray(listOf("Swift controller worker and production app attachment",
                         "physical performance", "non-thinking configuration", "speech policy", "vendor allocator/logits erasure")))
                     .toString(2))
             }

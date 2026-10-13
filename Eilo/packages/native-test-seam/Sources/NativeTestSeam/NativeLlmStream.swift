@@ -14,6 +14,14 @@ struct NativeLlmAPI {
   let cancel: (OpaquePointer) -> Void
   let destroy: (OpaquePointer) -> Void
 
+  let countTokens:(OpaquePointer,UnsafeBufferPointer<UInt8>)->Int32
+  init(create:@escaping()->OpaquePointer?,load:@escaping(OpaquePointer,Int32,Int32)->Int32,
+       begin:@escaping(OpaquePointer,UnsafeBufferPointer<UInt8>,Int32)->Int32,
+       next:@escaping(OpaquePointer,UnsafeMutableBufferPointer<CChar>,inout Int32)->Int32,
+       cancel:@escaping(OpaquePointer)->Void,destroy:@escaping(OpaquePointer)->Void,
+       countTokens:@escaping(OpaquePointer,UnsafeBufferPointer<UInt8>)->Int32={_,_ in -3}){
+    self.create=create;self.load=load;self.begin=begin;self.next=next;self.cancel=cancel;self.destroy=destroy;self.countTokens=countTokens
+  }
   static var linked: NativeLlmAPI {
     #if canImport(CEiloLlm) && DEBUG && EILO_LLM_EVALUATION
     return NativeLlmAPI(create: { eilo_llm_create() },
@@ -23,7 +31,9 @@ struct NativeLlmAPI {
           eilo_llm_begin(handle, $0.baseAddress, Int32($0.count), limit)
         }
       }, next: { eilo_llm_next($0, $1.baseAddress, Int32($1.count), &$2) },
-      cancel: { eilo_llm_cancel($0) }, destroy: { eilo_llm_destroy($0) })
+      cancel: { eilo_llm_cancel($0) }, destroy: { eilo_llm_destroy($0) }, countTokens:{handle,bytes in
+        bytes.withMemoryRebound(to:CChar.self){eilo_llm_count_tokens(handle,$0.baseAddress,Int32($0.count))}
+      })
     #else
     return NativeLlmAPI(create: { nil }, load: { _, _, _ in -3 },
       begin: { _, _, _ in -3 }, next: { _, _, bytes in bytes = 0; return -3 },
@@ -60,6 +70,15 @@ final class NativeLlmStream {
     }
     try accept(api.load(current, verifiedDescriptor, Int32(threads)))
     phase = .loaded
+  }
+
+  /// Worker-only loaded vocabulary with the same special-token flags as begin.
+  func countTokens(_ text:String)throws->Int {
+    var bytes=Array(text.utf8);defer{bytes.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)}}
+    let current=try checkedHandle()
+    guard phase == .loaded,(1...16384).contains(bytes.count),!bytes.contains(0) else{try fail()}
+    let result=bytes.withUnsafeBufferPointer{api.countTokens(current,$0)};_ = try checkedHandle()
+    guard (1...32768).contains(result) else{try fail(result)};return Int(result)
   }
 
   /// Borrows preformatted bytes only for this call. Template/speech policy is separate.

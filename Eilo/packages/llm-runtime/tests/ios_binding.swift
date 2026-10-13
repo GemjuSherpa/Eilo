@@ -119,6 +119,11 @@ import Darwin
       print("GEN\t\(index + 1)\t\(count)\t\(output.map { String(format: "%02x", $0) }.joined())")
       output.withUnsafeMutableBufferPointer { $0.initialize(repeating: 0) }
     }
+    let budgetStream = try make(fd)
+    let plan = try PromptBudget.build(latest:"Name one colour.",history:(0..<16).map{_ in QwenTurn(role:.user,text:String(repeating:"Generic earlier context. ",count:100))},recall:(0..<6).map{_ in String(repeating:"Generic recalled fact. ",count:60)},count:budgetStream.countTokens)
+    try check(plan.promptTokens+plan.outputLimit<=4096 && plan.recalledTokens<=512 && plan.droppedHistory>0 && plan.droppedRecall>0 && plan.text.contains(QwenTemplate.rules) && plan.text.contains("Name one colour."))
+    try check(try budgetStream.countTokens(plan.text)==plan.promptTokens)
+    try begin(budgetStream,plan.text);try check(try budgetStream.withNextPiece{_ in});budgetStream.close()
     let pre = try NativeLlmStream(allowed: { true }); pre.requestCancellation()
     try cancelled { try pre.load(verifiedDescriptor: fd) }; pre.close()
     do { let invalid = try make(corrupt); invalid.close(); throw LlmFailure.cancelled }
@@ -138,6 +143,7 @@ import Darwin
     try concurrentCancellation(fd, loading: false)
     print("LIFECYCLE\tpre_cancel,corrupt_gguf,post_token_cancel,lease_revocation,concurrent_load_cancel,concurrent_begin_cancel\tPASS")
     try FileManager.default.removeItem(at:root);try check(!FileManager.default.fileExists(atPath:root.path))
+    print("BUDGET\tactual_vocab,context4096,recall512,output256,preserve_rules_latest\tPASS")
     print("WORKER\tsigned_pack_three_completions,prompt_erased,no_speech,temp_removed\tPASS")
   }
   static func main() {
