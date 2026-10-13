@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "generation": {
+    "context_tokens": 4096,
+    "output_tokens": 256,
+    "enable_thinking": false,
+    "threads": 2,
+    "sampler": "greedy",
+    "backends": "CPU only"
+  },
+  "prompts": [
+    {
+      "id": "compare-01",
+      "text": "Name the three primary colours used in additive light.",
+      "quality_rubric": "Red, green and blue; no extra invented colours."
+    },
+    {
+      "id": "compare-02",
+      "text": "Calculate twelve multiplied by eight. State the result only.",
+      "quality_rubric": "96."
+    },
+    {
+      "id": "compare-03",
+      "text": "Give two short steps for organizing a desk.",
+      "quality_rubric": "Two distinct clear practical steps."
+    },
+    {
+      "id": "compare-04",
+      "text": "Summarize: The blue box is below the table. The red box is in the next room.",
+      "quality_rubric": "Preserves both colour/location facts without invention."
+    },
+    {
+      "id": "compare-05",
+      "text": "Explain in one sentence why three quarters is larger than one half.",
+      "quality_rubric": "Correct comparison, e.g. three quarters versus two quarters."
+    },
+    {
+      "id": "compare-06",
+      "text": "Write a brief friendly greeting without making promises.",
+      "quality_rubric": "Brief understandable greeting, no fabricated capability promise."
+    }
+  ]
+}

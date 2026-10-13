@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "task": "VC-LLM-06",
+  "status": "NOT_RUN",
+  "reason": "Physical iPhone offline; physical Android unavailable; no verified Qwen3-0.6B Q4_K_M artifact/comparison adapter prepared. Desktop/simulator performance is not phone evidence.",
+  "platforms": [
+    {
+      "platform": "iOS",
+      "hardware_kind": null,
+      "hardware_model": null,
+      "os_build": null,
+      "models": [],
+      "samples": [],
+      "quality": null,
+      "prefill_ms": null,
+      "first_token_ms": null,
+      "peak_memory_bytes": null
+    },
+    {
+      "platform": "Android",
+      "hardware_kind": null,
+      "hardware_model": null,
+      "os_build": null,
+      "models": [],
+      "samples": [],
+      "quality": null,
+      "prefill_ms": null,
+      "first_token_ms": null,
+      "peak_memory_bytes": null
+    }
+  ]
+}
