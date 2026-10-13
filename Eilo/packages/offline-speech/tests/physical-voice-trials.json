@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "task": "VC-VOICE-06",
+  "status": "NOT_RUN",
+  "reason": "Physical iPhone is offline; physical Android is unavailable. SDK simulator/emulator completion does not establish physical offline voice quality.",
+  "platforms": [
+    {
+      "platform": "iOS",
+      "hardware_kind": null,
+      "hardware_model": null,
+      "os_build": null,
+      "installed_voices": [],
+      "samples": [],
+      "first_audible_ms": null,
+      "intelligibility": null
+    },
+    {
+      "platform": "Android",
+      "hardware_kind": null,
+      "hardware_model": null,
+      "os_build": null,
+      "installed_voices": [],
+      "samples": [],
+      "first_audible_ms": null,
+      "intelligibility": null
+    }
+  ]
+}

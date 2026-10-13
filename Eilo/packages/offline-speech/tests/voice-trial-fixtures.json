@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "language": "en",
+  "utterances": [
+    {
+      "id": "voice-01",
+      "text": "Eilo is ready for a short offline test."
+    },
+    {
+      "id": "voice-02",
+      "text": "The next train leaves at seven thirty."
+    },
+    {
+      "id": "voice-03",
+      "text": "Please read the numbers one, two, three, and twenty-five."
+    },
+    {
+      "id": "voice-04",
+      "text": "The meeting is on Friday, the twenty-third of October."
+    },
+    {
+      "id": "voice-05",
+      "text": "Turn left after the library, then walk two hundred metres."
+    },
+    {
+      "id": "voice-06",
+      "text": "Dr. Lane brought three books and a map."
+    },
+    {
+      "id": "voice-07",
+      "text": "A calm voice can pause here; then continue clearly."
+    },
+    {
+      "id": "voice-08",
+      "text": "Is this a question? Yes, it is."
+    },
+    {
+      "id": "voice-09",
+      "text": "The caf\u00e9 serves tea, coffee, and water."
+    },
+    {
+      "id": "voice-10",
+      "text": "The temperature is eighteen point five degrees."
+    },
+    {
+      "id": "voice-11",
+      "text": "Hey, Eilo. Please say a short greeting."
+    },
+    {
+      "id": "voice-12",
+      "text": "First sentence. Second sentence! Final sentence?"
+    }
+  ]
+}
