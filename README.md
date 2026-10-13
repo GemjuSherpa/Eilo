@@ -20,8 +20,8 @@ The repository contains a React Native application, shared contracts/design toke
 | S02: controller/privacy contracts | Reviewed; native state and cancellation boundaries implemented. |
 | S03: model installation | Reviewed; signed-manifest, checksum, staging/resume/activation and readiness mechanisms implemented. Production distribution configuration remains unavailable. |
 | S04: guest/audio setup | Reviewed and merged; explicit consent, native control and capture foundations implemented. Physical/background feasibility blockers remain. |
-| S05 / VC-TURN-01 | Reviewed and approved: bounded native standby audio buffers. Later S05 tasks remain outstanding. |
-| S05 / VC-TURN-02 | Adapter checkpoint reviewed and merged. Runtime evaluation under review; synthetic target recognition failed and microphone integration remains gated. [Evidence](Eilo/docs/sprints/S05_VC_TURN_02_RUNTIME_REVIEW.md). |
+| S05: wake/turn recognition | Local implementations reviewed and merged in PR #41. Synthetic wake/ASR and lifecycle evidence is recorded; production attachment and physical voice acceptance remain partial. [Evidence](Eilo/docs/sprints/S05_TURN_COMPLETION_REVIEW.md). |
+| S06 / VC-LLM-01 | CPU core and Swift checkpoint reviewed/merged. Kotlin/JNI checkpoint awaits review: actual ARM64 Android emulator CPU completions and cancellation checks pass. Production signed-pack/controller attachment and physical inference remain open. [Evidence](Eilo/docs/sprints/S06_ANDROID_LLM_BINDING_REVIEW.md). |
 | Wake/VAD, streaming ASR, local replies, offline TTS and protected history | Planned pipeline; not a completed integrated voice experience. |
 
 **The current app is not an end-to-end conversation demo.** Production model trust, download origins and license approvals are not configured. Start remains gated by native readiness; do not bypass it to present a synthetic fixture as a working product. History selection does not enable encrypted storage that has not been implemented.
