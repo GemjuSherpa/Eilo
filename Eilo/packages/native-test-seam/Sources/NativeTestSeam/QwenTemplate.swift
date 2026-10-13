@@ -6,7 +6,7 @@ enum QwenPromptFailure:Error{case unavailable}
 /// Restricted no-tools subset of pinned Qwen3, hard enable_thinking=false.
 /// Fixed native rules are the only system content; arbitrary role strings are absent.
 enum QwenTemplate {
-  static let rules=PersonaPolicy.rules+CapabilityPolicy.rules
+  static let rules=PersonaPolicy.rules+CapabilityPolicy.rules+DangerPolicy.rules
   static let suffix="<|im_start|>assistant\n<think>\n\n</think>\n\n"
   static func data(_ text:String)throws->String{guard !text.contains("\0"),text.utf8.count<=16384 else{throw QwenPromptFailure.unavailable};return text.replacingOccurrences(of:"<",with:"＜").replacingOccurrences(of:">",with:"＞")}
   static func render(latest:String,history:[QwenTurn]=[])throws->String{
