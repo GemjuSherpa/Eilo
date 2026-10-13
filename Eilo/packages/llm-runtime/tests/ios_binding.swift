@@ -105,14 +105,16 @@ import Darwin
     let (store,selection) = try signedFixture(root)
     for (index, prompt) in prompts.enumerated() {
       let c = try controller()
-      var input = Array(prompt.utf8)
+      var input = Array(try QwenTemplate.render(latest:prompt).utf8)
       let owned = try input.withUnsafeBufferPointer { try LlmOwnedPrompt($0) }
       input.withUnsafeMutableBufferPointer { $0.initialize(repeating:0) }
       var output = [UInt8](), count = 0
+      let guardOutput = NonThinkingOutput(current:{c.token.map{!$0.cancelled} ?? false}){output.append(contentsOf:$0.utf8)}
       guard let job = LlmControllerJob.submit(controller:c,token:c.token!,store:store,selection:selection,prompt:owned,outputLimit:8,consume:{ bytes in
-        try check(!Thread.isMainThread);output.append(contentsOf:bytes);count += 1;try check(count <= 8)
+        try check(!Thread.isMainThread);try guardOutput.append(bytes);count += 1;try check(count <= 8)
       }) else { throw LlmFailure.unavailable }
       try check(job.awaitCompletion(timeout:120) == .completed && owned.cleared && c.state == .thinking)
+      try guardOutput.finish()
       try check(eilo_llm_eval_cpu_only() == 1 && count > 0 && !output.isEmpty)
       print("GEN\t\(index + 1)\t\(count)\t\(output.map { String(format: "%02x", $0) }.joined())")
       output.withUnsafeMutableBufferPointer { $0.initialize(repeating: 0) }
