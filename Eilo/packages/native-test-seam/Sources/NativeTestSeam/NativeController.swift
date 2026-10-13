@@ -150,11 +150,72 @@ public final class NativeController: @unchecked Sendable {
   var stoppedOperationID=UUID()
   var generation: UInt64 = 0
   var activeToken: GenerationToken?
+  private var llmWork: LlmWorkTicket?
+  func prepareLlmWork(_ token: GenerationToken, cancel: @escaping () -> Void) -> LlmWorkTicket? {
+    lock.lock(); defer { lock.unlock() }
+    guard !stopping, currentState == .thinking, accepts(token), llmWork == nil else { return nil }
+    let ticket = LlmWorkTicket(controller: self, token: token, cancel: cancel); llmWork = ticket; return ticket
+  }
+  func llmWorkAllowed(_ ticket: LlmWorkTicket) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    return ticket.controller === self && llmWork === ticket && !ticket.cancelled &&
+      !stopping && [.thinking,.speaking].contains(currentState) && accepts(ticket.token)
+  }
+  /// Bounded borrowed native buffer work only; no IO/inference/join or speech rights.
+  func consumeLlmPiece(_ ticket: LlmWorkTicket, verified: () -> Bool,
+                       bytes: UnsafeBufferPointer<UInt8>, consume: (UnsafeBufferPointer<UInt8>) throws -> Void) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    guard llmWorkAllowed(ticket), verified(), llmWorkAllowed(ticket) else { return false }
+    do { try consume(bytes); return verified() && llmWorkAllowed(ticket) }
+    catch { stop(); return false }
+  }
+  func finishLlmWork(_ ticket: LlmWorkTicket, result: LlmJobResult, verified: () -> Bool = { false }) -> LlmJobResult {
+    lock.lock(); defer { lock.unlock() }
+    guard llmWorkAllowed(ticket) else { return .cancelled }
+    let outcome: LlmJobResult = result == .completed && !verified() ? .unavailable : result
+    guard llmWorkAllowed(ticket) else { return .cancelled }
+    llmWork = nil; ticket.cancelled = true
+    if outcome == .unavailable && !dispatch(.failure, failure: .unavailable, token: ticket.token) { return .cancelled }
+    return outcome
+  }
+  private var continuationToken:GenerationToken?,continuationCancel:(()->Void)?
+  func prepareContinuation(_ token:GenerationToken,cancel:@escaping()->Void)->Bool{
+    lock.lock();defer{lock.unlock()};guard continuationToken !== token,!stopping,[.thinking,.speaking].contains(currentState),accepts(token) else{return false}
+    continuationToken=token;continuationCancel=cancel;return true
+  }
+  private var speechWork: SpeechWorkTicket?
+  func prepareSpeechWork(_ token:GenerationToken,cancel:@escaping()->Void,publish:(SpeechWorkTicket)->Void={_ in})->SpeechWorkTicket? {
+    lock.lock();defer{lock.unlock()}
+    guard speechWork==nil,!stopping,!speakerRequired,[.thinking,.speaking].contains(currentState),accepts(token) else{return nil}
+    let ticket=SpeechWorkTicket(controller:self,token:token,cancel:cancel);publish(ticket)
+    guard !stopping,accepts(token) else{ticket.cancelled=true;return nil};speechWork=ticket;return ticket
+  }
+  /// Short native buffer/SDK scheduling transaction only; no IO, inference or joins.
+  func speechTransaction(_ ticket:SpeechWorkTicket,_ action:()->Bool)->Bool {
+    lock.lock();defer{lock.unlock()}
+    guard speechWork===ticket,!ticket.cancelled,!stopping,!speakerRequired,accepts(ticket.token),[.thinking,.speaking].contains(currentState) else{return false}
+    return action() && speechWork===ticket && !ticket.cancelled && accepts(ticket.token)
+  }
+  @discardableResult func speechStarted(_ ticket:SpeechWorkTicket)->Bool {speechTransaction(ticket){clearIdle();playback.begin(ticket.token);currentState = .speaking;return true}}
+  @discardableResult func speechGap(_ ticket:SpeechWorkTicket)->Bool {speechTransaction(ticket){_ = playback.finish(ticket.token);currentState = .thinking;return true}}
+  func speechMetadata(_ ticket:SpeechWorkTicket,permitted:()->Bool,ledger:PlaybackLedger)->[PlaybackProgress]{
+    lock.lock();defer{lock.unlock()};guard ticket.token.privacyEpoch==privacyEpoch,!locked else{ledger.clear();return []}
+    return permitted() ? ledger.snapshot():[]
+  }
+  func speechPrivacyCurrent(_ ticket:SpeechWorkTicket)->Bool{lock.lock();defer{lock.unlock()};return ticket.token.privacyEpoch==privacyEpoch && !locked}
+  func finishSpeechWork(_ ticket:SpeechWorkTicket){
+    lock.lock();defer{lock.unlock()};guard speechTransaction(ticket,{true}) else{return}
+    speechWork=nil;ticket.cancelled=true;currentState = .speaking;_ = dispatch(.playbackFinished,token:ticket.token)
+  }
   private lazy var playback=PlaybackRejection(now:{[weak self] in self?.clock.milliseconds() ?? 0})
   func recognitionAllowed(_ token:GenerationToken)->Bool{lock.lock();defer{lock.unlock()};return currentState == .capturing && accepts(token) && playback.allowsAudio}
   public var token: GenerationToken? { lock.lock(); defer { lock.unlock() }; return activeToken }
   func invalidateGeneration() {
     activeToken?.cancel(); activeToken = nil; stoppedOperationID=UUID()
+    let continuation=continuationCancel;continuationCancel=nil;continuationToken=nil;continuation?()
+    let speech=speechWork;speechWork=nil;speech?.cancelled=true;speech?.cancel()
+    let previous = llmWork; llmWork = nil; previous?.cancelled = true
+    previous?.cancel() // Signal only; worker destruction/join never runs in this monitor.
     if generation == 9_007_199_254_740_991 { sessionID = UUID(); generation = 0 } else { generation += 1 }
   }
   func issueGeneration() { invalidateGeneration(); activeToken = GenerationToken(sessionID,generation,privacyEpoch) }

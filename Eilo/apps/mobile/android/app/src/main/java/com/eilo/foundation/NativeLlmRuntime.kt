@@ -6,6 +6,7 @@ internal object NativeLlmJni : NativeLlmApi {
     external fun runtimeCompatible(): Boolean
     override external fun create(): Long
     override external fun load(handle: Long, descriptor: Int, threads: Int): Int
+    override external fun countTokens(handle: Long, text: ByteArray, count: Int): Int
     override external fun begin(handle: Long, prompt: ByteArray, count: Int, outputLimit: Int): Int
     override external fun next(handle: Long, output: ByteArray, count: IntArray): Int
     override external fun cancel(handle: Long)

@@ -1,0 +1,11 @@
+{
+  "task": "VC-VOICE-02",
+  "platform": "Android API35 ARM64 emulator",
+  "offline_ready": true,
+  "microphone": "NOT USED",
+  "physical_airplane_mode_and_traffic": "NOT RUN",
+  "engine_network_isolation": "NOT VERIFIED; engine has separate OS permissions",
+  "exact_voice_network_flag": false,
+  "SDK_synthesis_completion": "PASS",
+  "normal_APK_restored": "PASS"
+}

@@ -66,6 +66,17 @@ extern "C" JNIEXPORT jint JNICALL Java_com_eilo_foundation_NativeLlmJni_load(JNI
   if (!lock.owns_lock()) return EILO_LLM_INVALID;
   return eilo_llm_load(entry->core.get(), fd, threads);
 }
+extern "C" JNIEXPORT jint JNICALL Java_com_eilo_foundation_NativeLlmJni_countTokens(JNIEnv *env, jobject, jlong id,
+    jbyteArray text, jint count) {
+  auto entry = find(id);
+  if (!entry || !text || count < 1 || count > 16384 || count > env->GetArrayLength(text)) return EILO_LLM_INVALID;
+  std::unique_lock<std::mutex> lock(entry->worker, std::try_to_lock);
+  if (!lock.owns_lock()) return EILO_LLM_INVALID;
+  Scratch<16384> scratch;
+  env->GetByteArrayRegion(text, 0, count, reinterpret_cast<jbyte *>(scratch.bytes.data()));
+  if (env->ExceptionCheck()) return EILO_LLM_UNAVAILABLE;
+  return eilo_llm_count_tokens(entry->core.get(), scratch.bytes.data(), count);
+}
 extern "C" JNIEXPORT jint JNICALL Java_com_eilo_foundation_NativeLlmJni_begin(JNIEnv *env, jobject, jlong id,
     jbyteArray prompt, jint count, jint limit) {
   auto entry = find(id);

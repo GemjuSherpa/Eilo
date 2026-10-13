@@ -101,7 +101,7 @@ def evaluate(udid, executable, selected, builds):
              model['sha256'], model['bytes'], corrupt.name], 'ios-binding.log', timeout=240)
     lines = (CACHE / 'ios-binding.log').read_text().splitlines()
     expected = 'pre_cancel,corrupt_gguf,post_token_cancel,lease_revocation,concurrent_load_cancel,concurrent_begin_cancel'
-    if len(lines) != 4 or lines[-1] != f'LIFECYCLE\t{expected}\tPASS':
+    if len(lines) != 6 or lines[3] != f'LIFECYCLE\t{expected}\tPASS' or lines[4] != 'BUDGET\tactual_vocab,context4096,recall512,output256,preserve_rules_latest\tPASS' or lines[5] != 'WORKER\tsigned_pack_three_completions,prompt_erased,no_speech,temp_removed\tPASS':
         raise ValueError('binding evaluation report mismatch')
     prompts = ['The opposite of cold is', 'One, two, three,', 'The sky on a clear day is']
     cases = []
@@ -111,18 +111,22 @@ def evaluate(udid, executable, selected, builds):
         if kind != 'GEN' or int(identifier) != index + 1 or not 1 <= int(count) <= 8 or not 1 <= len(raw) <= 8192:
             raise ValueError('invalid bounded raw completion')
         cases.append({'id': index + 1, 'prompt': prompts[index], 'tokens': int(count),
-                      'output': raw.decode('utf-8'), 'kind': 'raw, not speech-approved'})
+                      'output': raw.decode('utf-8'), 'kind': 'non-thinking guarded plain text, not speech-approved'})
     defaults = default_gates(udid)
     report = {'task': 'VC-LLM-01', 'platform': 'iOS ARM64 simulator / actual Swift C ABI',
               'device': selected['name'], 'udid': udid, 'runtime': PROVENANCE['runtime'],
               'model': model, 'builds': builds, 'source_modifications': 'NONE',
               'CPU_registry_only': 'PASS', 'same_open_model_descriptor_SHA256': 'PASS',
               'cases': cases, 'native_lifecycle_cases': expected.split(','),
+              'controller_worker_cases': ['signed_pack_three_completions', 'prompt_erased', 'no_speech', 'temp_removed'],
+              'prompt_budget': 'Actual loaded vocabulary; context4096/recall512/output256 and deterministic trim PASS',
+              'template': 'Pinned Qwen3 no-tools subset, enable_thinking=false; markup/UTF-8 output guard',
+              'pack_trust': 'Ephemeral synthetic signing key/license evidence; no production trust',
               'microphone': 'NOT USED', 'physical_inference': 'NOT RUN',
               'network': 'No inference network clients/references; simulator OS-wide isolation NOT VERIFIED',
               'app_attachment': 'NOT ENABLED; default linked API unavailable',
               'default_gate_cases': defaults,
-              'remaining': ['Kotlin binding', 'signed pack/controller attachment', 'non-thinking template',
+              'remaining': ['production app attachment/release trust',
                             'speech policy', 'physical performance', 'vendor allocator/logits erasure']}
     (CACHE / 'ios-results.json').write_text(json.dumps(report, indent=2) + '\n')
     print('Swift/C ABI iOS simulator: three real CPU completions and six lifecycle cases PASS; device SDK link PASS, physical execution NOT RUN.')

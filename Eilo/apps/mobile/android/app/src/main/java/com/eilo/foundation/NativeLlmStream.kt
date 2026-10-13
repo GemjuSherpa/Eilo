@@ -3,6 +3,7 @@ package com.eilo.foundation
 internal interface NativeLlmApi {
     fun create(): Long
     fun load(handle: Long, descriptor: Int, threads: Int): Int
+    fun countTokens(handle: Long, text: ByteArray, count: Int): Int = -3
     fun begin(handle: Long, prompt: ByteArray, count: Int, outputLimit: Int): Int
     fun next(handle: Long, output: ByteArray, count: IntArray): Int
     fun cancel(handle: Long)
@@ -53,6 +54,18 @@ internal class NativeLlmStream(
         if (phase != Phase.CREATED || verifiedDescriptor < 0 || threads !in 1..8) fail()
         accept(native { api.load(current, verifiedDescriptor, threads) })
         phase = Phase.LOADED
+    }
+
+    /** Actual loaded vocabulary; worker-only, same special-token flags as begin. */
+    fun countTokens(text: String): Int {
+        val bytes = text.toByteArray(Charsets.UTF_8)
+        try {
+            val current = checkedHandle()
+            if (phase != Phase.LOADED || bytes.size !in 1..16384 || bytes.any { it == 0.toByte() }) fail()
+            val result = native { api.countTokens(current, bytes, bytes.size) }; checkedHandle()
+            if (result !in 1..32768) fail(result)
+            return result
+        } finally { bytes.fill(0) }
     }
 
     /** Borrows preformatted bytes for this call; it retains no prompt/String. */

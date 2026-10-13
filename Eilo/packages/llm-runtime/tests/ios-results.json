@@ -64,7 +64,7 @@
       "libraries": [
         {
           "file": "build-ios-iphonesimulator/src/libllama.a",
-          "sha256": "1f66cc51da9123f1ba8e8e6809463855f2d2866736e4cf4e96b6c933d6269995"
+          "sha256": "e12321504271db780b9619a01f7f1b69d655e24ccf167cdef19339278993ccd6"
         },
         {
           "file": "build-ios-iphonesimulator/ggml/src/libggml.a",
@@ -76,7 +76,7 @@
         },
         {
           "file": "build-ios-iphonesimulator/ggml/src/libggml-base.a",
-          "sha256": "8be9e73e826f7dcfc568b7d617ce94e39256ff0b5be682f58a1a0df286c0b63f"
+          "sha256": "0b37a9ac16b8e4394f091f286f3990ee5c9f9c38dfb128627479c77386dbd9b8"
         }
       ],
       "network_symbols": "ABSENT",
@@ -133,7 +133,7 @@
       "libraries": [
         {
           "file": "build-ios-iphoneos/src/libllama.a",
-          "sha256": "31a64aaab559995ba96017fff5911475a2f3e975b96f30e0af6c459f26bcd934"
+          "sha256": "258412c282e8ec16759b4dad1fb5fcc6327af70f549df5b718304e0e0cc9dd8c"
         },
         {
           "file": "build-ios-iphoneos/ggml/src/libggml.a",
@@ -145,7 +145,7 @@
         },
         {
           "file": "build-ios-iphoneos/ggml/src/libggml-base.a",
-          "sha256": "1ca7208855d2527acf1f23968a69f63bc473946a0433a53f928fcd1239d2edf9"
+          "sha256": "c5c96c8cb782bd5524997c67a01da60dcb2e1c5deba3603d53b87bdc78dc4512"
         }
       ],
       "network_symbols": "ABSENT",
@@ -166,22 +166,22 @@
       "id": 1,
       "prompt": "The opposite of cold is",
       "tokens": 8,
-      "output": " heat, and the opposite of heat is",
-      "kind": "raw, not speech-approved"
+      "output": "The opposite of cold can be considered as",
+      "kind": "non-thinking guarded plain text, not speech-approved"
     },
     {
       "id": 2,
       "prompt": "One, two, three,",
       "tokens": 8,
-      "output": " four, five, six, seven,",
-      "kind": "raw, not speech-approved"
+      "output": "Ah, the sequence \"one, two",
+      "kind": "non-thinking guarded plain text, not speech-approved"
     },
     {
       "id": 3,
       "prompt": "The sky on a clear day is",
       "tokens": 8,
-      "output": " a brilliant blue, and the sun is",
-      "kind": "raw, not speech-approved"
+      "output": "The sky on a clear day is typically",
+      "kind": "non-thinking guarded plain text, not speech-approved"
     }
   ],
   "native_lifecycle_cases": [
@@ -192,6 +192,15 @@
     "concurrent_load_cancel",
     "concurrent_begin_cancel"
   ],
+  "controller_worker_cases": [
+    "signed_pack_three_completions",
+    "prompt_erased",
+    "no_speech",
+    "temp_removed"
+  ],
+  "prompt_budget": "Actual loaded vocabulary; context4096/recall512/output256 and deterministic trim PASS",
+  "template": "Pinned Qwen3 no-tools subset, enable_thinking=false; markup/UTF-8 output guard",
+  "pack_trust": "Ephemeral synthetic signing key/license evidence; no production trust",
   "microphone": "NOT USED",
   "physical_inference": "NOT RUN",
   "network": "No inference network clients/references; simulator OS-wide isolation NOT VERIFIED",
@@ -217,9 +226,7 @@
     }
   ],
   "remaining": [
-    "Kotlin binding",
-    "signed pack/controller attachment",
-    "non-thinking template",
+    "production app attachment/release trust",
     "speech policy",
     "physical performance",
     "vendor allocator/logits erasure"
