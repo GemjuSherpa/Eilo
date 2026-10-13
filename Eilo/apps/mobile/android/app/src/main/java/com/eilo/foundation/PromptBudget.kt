@@ -6,12 +6,12 @@ internal data class PromptPlan(val text:String,val promptTokens:Int,val recalled
  * conversation turns trim first; lowest-priority recall units trim from the end.
  */
 internal object PromptBudget {
-    fun recallText(units:List<String>):String = "Quoted context:\n"+units.joinToString("\n")
-    fun build(latest:String,history:List<QwenTurn> = emptyList(),recall:List<String> = emptyList(),outputLimit:Int=256,
+    fun recallText(units:List<String>):String = UntrustedMemory.section(units)
+    fun build(latest:String,history:List<QwenTurn> = emptyList(),recall:List<String> = emptyList(),outputLimit:Int=256,memoryAllowed:Boolean=false,
         count:(String)->Int={throw IllegalStateException("tokenizer unavailable")}):PromptPlan {
         require(outputLimit in 1..256 && history.size<=32 && recall.size<=32 && latest.isNotBlank())
         QwenTemplate.data(latest);history.forEach{QwenTemplate.data(it.text)};recall.forEach{QwenTemplate.data(it)}
-        val turns=history.toMutableList();val units=recall.toMutableList()
+        val turns=history.toMutableList();val units=if(memoryAllowed)recall.toMutableList() else mutableListOf()
         fun measured(text:String):Int { val n=count(text);check(n in 1..32768);return n }
         fun recallCount():Int { if(units.isEmpty())return 0;val text=try{QwenTemplate.data(recallText(units))}catch(_:IllegalArgumentException){return 32768};return if(text.toByteArray(Charsets.UTF_8).size>16384)32768 else measured(text) }
         while(units.isNotEmpty() && recallCount()>512)units.removeAt(units.lastIndex)
