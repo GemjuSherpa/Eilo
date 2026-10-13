@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-14",
+  "result": "FAIL",
+  "duplicate_symbols": 119,
+  "examples": [
+    "_cpuinfo_get_l1i_caches_count",
+    "_cpuinfo_get_uarchs",
+    "_kai_get_nr_matmul_clamp_f32_qai8dxp4x8_qsi4c32p4x8_16x4x32_neon_i8mm",
+    "_kai_get_rhs_packed_offset_rhs_pack_kxn_qsi8cxp_qsi8cx_neon",
+    "_kai_get_rhs_packed_offset_rhs_pack_nxk_f32p2vlx1biasf32_f32_f32_sme",
+    "_cpuinfo_mach_detect_topology",
+    "_kai_get_lhs_offset_lhs_quant_pack_qai8dxp_f32",
+    "_cpuinfo_get_l1d_cache"
+  ],
+  "log_sha256": "7d9c44ee69ed0ee861da8567ec6d9fcb37ed799571ae7ccf452486d06166499b",
+  "resolution": "Narrow ASR dynamic library exports; unchanged vendor static library; no duplicate suppression. Device embedding/signing remains unverified."
+}

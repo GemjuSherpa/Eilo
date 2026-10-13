@@ -56,6 +56,7 @@
 		C9D1DB1818A6D80EBCE17FF6 /* CapabilityPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */; };
 		9CD7395D98B8954A24F3850B /* DangerPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EFDB8A564DF65484EE7958 /* DangerPolicy.swift */; };
 		E3E47FF3295929BAC578218D /* NativeSpeechPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F8171AEE7A797A430F24AE /* NativeSpeechPolicy.swift */; };
+		0A08561603A8F75864EFA54D /* GenericSpokenTurn.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF11B8C6614D2FDE8277A5B /* GenericSpokenTurn.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -113,6 +114,7 @@
 		271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CapabilityPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/CapabilityPolicy.swift"; sourceTree = "<group>"; };
 		80EFDB8A564DF65484EE7958 /* DangerPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DangerPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/DangerPolicy.swift"; sourceTree = "<group>"; };
 		A9F8171AEE7A797A430F24AE /* NativeSpeechPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeSpeechPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeSpeechPolicy.swift"; sourceTree = "<group>"; };
+		EAF11B8C6614D2FDE8277A5B /* GenericSpokenTurn.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GenericSpokenTurn.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/GenericSpokenTurn.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +165,7 @@
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
 				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
+				EAF11B8C6614D2FDE8277A5B /* GenericSpokenTurn.swift */,
 				A9F8171AEE7A797A430F24AE /* NativeSpeechPolicy.swift */,
 				80EFDB8A564DF65484EE7958 /* DangerPolicy.swift */,
 				271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */,
@@ -396,6 +399,7 @@
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
 				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
+				0A08561603A8F75864EFA54D /* GenericSpokenTurn.swift in Sources */,
 				E3E47FF3295929BAC578218D /* NativeSpeechPolicy.swift in Sources */,
 				9CD7395D98B8954A24F3850B /* DangerPolicy.swift in Sources */,
 				C9D1DB1818A6D80EBCE17FF6 /* CapabilityPolicy.swift in Sources */,
