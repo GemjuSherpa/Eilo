@@ -178,6 +178,11 @@ public final class NativeController: @unchecked Sendable {
     if outcome == .unavailable && !dispatch(.failure, failure: .unavailable, token: ticket.token) { return .cancelled }
     return outcome
   }
+  private var continuationToken:GenerationToken?,continuationCancel:(()->Void)?
+  func prepareContinuation(_ token:GenerationToken,cancel:@escaping()->Void)->Bool{
+    lock.lock();defer{lock.unlock()};guard continuationToken !== token,!stopping,[.thinking,.speaking].contains(currentState),accepts(token) else{return false}
+    continuationToken=token;continuationCancel=cancel;return true
+  }
   private var speechWork: SpeechWorkTicket?
   func prepareSpeechWork(_ token:GenerationToken,cancel:@escaping()->Void)->SpeechWorkTicket? {
     lock.lock();defer{lock.unlock()}
@@ -206,6 +211,7 @@ public final class NativeController: @unchecked Sendable {
   public var token: GenerationToken? { lock.lock(); defer { lock.unlock() }; return activeToken }
   func invalidateGeneration() {
     activeToken?.cancel(); activeToken = nil; stoppedOperationID=UUID()
+    let continuation=continuationCancel;continuationCancel=nil;continuationToken=nil;continuation?()
     let speech=speechWork;speechWork=nil;speech?.cancelled=true;speech?.cancel()
     let previous = llmWork; llmWork = nil; previous?.cancelled = true
     previous?.cancel() // Signal only; worker destruction/join never runs in this monitor.

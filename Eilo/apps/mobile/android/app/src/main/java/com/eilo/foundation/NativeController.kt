@@ -186,6 +186,12 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (outcome == LlmJobResult.UNAVAILABLE && !dispatch(ControllerEvent.FAILURE, failure = SafeError.UNAVAILABLE, token = ticket.token)) return LlmJobResult.CANCELLED
         return outcome
     }
+    private var continuationToken: GenerationToken? = null
+    private var continuationCancel: (() -> Unit)? = null
+    @Synchronized internal fun prepareContinuation(token: GenerationToken, cancel: () -> Unit): Boolean {
+        if (continuationToken === token || stopping || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING) || !accepts(token)) return false
+        continuationToken = token; continuationCancel = cancel; return true
+    }
     private var speechWork: SpeechWorkTicket? = null
     @Synchronized internal fun prepareSpeechWork(token: GenerationToken, cancel: () -> Unit): SpeechWorkTicket? {
         if (speechWork != null || stopping || speakerRequired || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING) || !accepts(token)) return null
@@ -218,6 +224,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun token(): GenerationToken? = activeToken
     private fun invalidateGeneration() {
         activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
+        val continuation = continuationCancel; continuationCancel = null; continuationToken = null; continuation?.invoke()
         val speech = speechWork; speechWork = null; speech?.cancelled = true
         try { speech?.cancel?.invoke() } catch (_: Exception) { diagnostics.record(SafeComponent.SPEECH, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
         val previous = llmWork; llmWork = null
