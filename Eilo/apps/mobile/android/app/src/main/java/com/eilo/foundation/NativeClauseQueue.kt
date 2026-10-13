@@ -47,6 +47,7 @@ internal class NativeClauseQueue private constructor(
         if (text.isBlank() || text.toByteArray(Charsets.UTF_8).size > 1024 || text.any { it == '\u0000' } || waiting.size >= 4 || !authorized(ticket.token, text)) {
             fail(); return@speechTransaction false
         }
+        if (closed || ticket.cancelled || !controller.canApproveSpeech(ticket.token)) return@speechTransaction false
         val clause = Clause(text); ledger.produced(clause.id); waiting.addLast(clause); pump(); !closed
     }
     /** Decoded, policy-approved text fragments only. Hold punctuation until whitespace,
@@ -86,7 +87,7 @@ internal class NativeClauseQueue private constructor(
         catch (_: Exception) { fail(); return }
         if (closed || active !== clause) { clause.timeout?.cancel(); clause.timeout = null; return }
         val text = clause.text; clause.text = null
-        if (text == null || !authorized(ticket.token, text) || !sink.enqueue(ticket.token, text) { event(clause, it) }) {
+        if (text == null || !authorized(ticket.token, text) || closed || ticket.cancelled || !controller.canApproveSpeech(ticket.token) || !sink.enqueue(ticket.token, text) { event(clause, it) }) {
             if (active === clause) fail()
         }
     }
