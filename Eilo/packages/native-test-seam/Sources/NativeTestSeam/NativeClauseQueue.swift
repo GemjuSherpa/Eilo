@@ -36,6 +36,7 @@ final class NativeClauseQueue {
   @discardableResult func enqueue(_ text:String)->Bool{controller.speechTransaction(ticket){
     guard !closed,!sealed else{return false}
     guard !text.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,text.utf8.count<=1024,!text.contains("\0"),waiting.count<4,authorized(ticket.token,text) else{fail();return false}
+    guard !closed,!ticket.cancelled,controller.accepts(ticket.token) else{return false}
     let clause=Clause(text);ledger.produced(clause.id);waiting.append(clause);pump();return !closed
   }}
   /// Decoded policy-approved fragments only; hold punctuation until whitespace.
@@ -68,7 +69,7 @@ final class NativeClauseQueue {
     clause.timeout=scheduler.schedule(60_000){[weak self,weak clause] in if let clause{self?.event(clause,.failed)}}
     guard !closed,active===clause else{clause.timeout?.cancel();clause.timeout=nil;return}
     let text=clause.text;clause.text=nil
-    guard let text,authorized(ticket.token,text),sink.enqueue(ticket.token,text:text,event:{[weak self,clause] in self?.event(clause,$0)}) else{if active===clause{fail()};return}
+    guard let text,authorized(ticket.token,text),!closed,!ticket.cancelled,controller.accepts(ticket.token),sink.enqueue(ticket.token,text:text,event:{[weak self,clause] in self?.event(clause,$0)}) else{if active===clause{fail()};return}
   }
   private func event(_ clause:Clause,_ event:OfflineSpeechEvent){_ = controller.speechTransaction(ticket){
     guard !closed,active===clause else{return false}

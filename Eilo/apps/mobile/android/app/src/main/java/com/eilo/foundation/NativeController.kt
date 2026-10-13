@@ -253,6 +253,8 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     private var currentState = ControllerState.STOPPED
     private var currentError: SafeError? = null
+    /** Native pre-speech revalidation; this grants no model readiness or permissions. */
+    @Synchronized internal fun canApproveSpeech(token:GenerationToken):Boolean = !stopping && !speakerRequired && currentState in listOf(ControllerState.THINKING,ControllerState.SPEAKING) && accepts(token)
     @Synchronized fun state(): ControllerState = currentState
     @Synchronized fun error(): SafeError? = currentError
     /** Native attachment check; call before acquiring capture/delivery locks. */
