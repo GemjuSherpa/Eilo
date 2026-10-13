@@ -23,6 +23,7 @@ internal enum class LlmJobResult { COMPLETED, CANCELLED, UNAVAILABLE }
 internal class LlmControllerJob private constructor(
     private val controller: NativeController,
     private val prompt: ByteArray,
+    private val completion:(LlmJobResult)->Unit,
 ) {
     private val cancelled = AtomicBoolean(false)
     private val promptGate = Any()
@@ -49,7 +50,7 @@ internal class LlmControllerJob private constructor(
         !cancelled.get() && controller.llmWorkAllowed(ticket)
 
     private fun run(ticket: LlmWorkTicket, store: PackStore, selection: LlmPackSelection,
-        threads: Int, limit: Int, api: NativeLlmApi,
+        threads: Int, limit: Int, api: NativeLlmApi, request:GenericReplyRequest?,
         openDescriptor: (File, LlmArtifactPin) -> LlmVerifiedDescriptor,
         consume: (ByteArray, Int) -> Unit,
     ) {
@@ -67,7 +68,13 @@ internal class LlmControllerJob private constructor(
                 if (cancelled.get() || ticket.cancelled || ticket.token.cancelled) throw LlmFailure(LlmFailureReason.CANCELLED)
                 promptBorrowed = true
             }
-            try { loaded.begin(prompt, limit) }
+            try {
+                if(request==null)loaded.begin(prompt,limit) else {
+                    val plan=PromptBudget.build(request.latest,history=request.history,outputLimit=limit,count=loaded::countTokens)
+                    val planned=plan.text.toByteArray(Charsets.UTF_8)
+                    try { if(!current(ticket))throw LlmFailure(LlmFailureReason.CANCELLED);loaded.begin(planned,limit) } finally {planned.fill(0)}
+                }
+            }
             finally { synchronized(promptGate) { prompt.fill(0); promptBorrowed = false } }
             var pieces = 0
             while (loaded.withNextPiece { bytes, count ->
@@ -88,7 +95,7 @@ internal class LlmControllerJob private constructor(
             val accepted = controller.finishLlmWork(ticket, outcome) { lease?.verified() == true && !cancelled.get() }
             lease?.close()
             result = if (cleanupFailed) LlmJobResult.UNAVAILABLE else accepted
-            done.countDown() // Native destruction/prompt cleanup/controller detachment all precede this barrier.
+            done.countDown();completion(result!!) // Native destruction/prompt cleanup/controller detachment all precede this barrier.
         }
     }
 
@@ -101,12 +108,13 @@ internal class LlmControllerJob private constructor(
             threads: Int = 2, api: NativeLlmApi = UnavailableLlmApi,
             openDescriptor: (File, LlmArtifactPin) -> LlmVerifiedDescriptor = LlmModelDescriptor::open,
             workerThreadAllowed: () -> Boolean = { Thread.currentThread() !== Looper.getMainLooper()?.thread },
+            request:GenericReplyRequest?=null,completion:(LlmJobResult)->Unit={},
             consume: (ByteArray, Int) -> Unit,
         ): LlmControllerJob? {
             if (prompt.size !in 1..16384 || prompt.any { it == 0.toByte() } || outputLimit !in 1..256 || threads !in 1..8) {
                 prompt.fill(0); return null
             }
-            val job = LlmControllerJob(controller, prompt)
+            val job = LlmControllerJob(controller, prompt,completion)
             val ticket = controller.prepareLlmWork(token, job::requestCancellation)
             if (ticket == null) { prompt.fill(0); return null }
             val submittingThread = Thread.currentThread()
@@ -117,11 +125,11 @@ internal class LlmControllerJob private constructor(
                     if (!separateWorker) {
                         // Reject inline executors before store hashing/native create.
                         prompt.fill(0)
-                        job.result = controller.finishLlmWork(ticket, LlmJobResult.UNAVAILABLE); job.done.countDown()
-                    } else job.run(ticket, store, selection, threads, outputLimit, api, openDescriptor, consume)
+                        job.result = controller.finishLlmWork(ticket, LlmJobResult.UNAVAILABLE); job.done.countDown();completion(job.result!!)
+                    } else job.run(ticket, store, selection, threads, outputLimit, api, request, openDescriptor, consume)
                 }
             } catch (_: Exception) {
-                prompt.fill(0); job.result = controller.finishLlmWork(ticket, LlmJobResult.UNAVAILABLE); job.done.countDown()
+                prompt.fill(0); job.result = controller.finishLlmWork(ticket, LlmJobResult.UNAVAILABLE); job.done.countDown();completion(job.result!!)
             }
             return job
         }

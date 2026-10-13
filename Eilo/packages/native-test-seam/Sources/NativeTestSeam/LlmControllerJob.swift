@@ -39,10 +39,11 @@ final class LlmWorkTicket {
 /// Raw consumers perform bounded native buffer work and gain no speech rights.
 final class LlmControllerJob {
   private let controller: NativeController, prompt: LlmOwnedPrompt
+  private let completion:(LlmJobResult)->Void
   private let gate = NSCondition()
   private var cancelled = false, stream: NativeLlmStream?, result: LlmJobResult?, workerThread: Thread?
   private static let worker = DispatchQueue(label: "com.eilo.llm.worker")
-  private init(controller: NativeController, prompt: LlmOwnedPrompt) { self.controller = controller; self.prompt = prompt }
+  private init(controller: NativeController, prompt: LlmOwnedPrompt, completion:@escaping(LlmJobResult)->Void) { self.controller = controller; self.prompt = prompt;self.completion=completion }
   func requestCancellation() {
     prompt.cancel()
     gate.lock(); cancelled = true; let current = stream; gate.unlock()
@@ -63,10 +64,10 @@ final class LlmControllerJob {
     let accepted = controller.finishLlmWork(ticket, result: stopped || ticket.cancelled || ticket.token.cancelled ? .cancelled : outcome,
       verified: { lease?.verified() == true && !self.stopped })
     lease?.close()
-    gate.lock(); result = accepted; gate.broadcast(); gate.unlock()
+    gate.lock(); result = accepted; gate.broadcast(); gate.unlock();completion(accepted)
   }
   private func run(_ ticket: LlmWorkTicket, store: PackStore, selection: LlmPackSelection,
-                   threads: Int, limit: Int, api: NativeLlmAPI,
+                   threads: Int, limit: Int, api: NativeLlmAPI, request:GenericReplyRequest?,
                    open: (URL, LlmArtifactPin) throws -> LlmVerifiedDescriptor,
                    consume: (UnsafeBufferPointer<UInt8>) throws -> Void) {
     gate.lock(); workerThread = Thread.current; gate.unlock()
@@ -80,7 +81,13 @@ final class LlmControllerJob {
           self.gate.lock(); self.stream = candidate; self.gate.unlock()
           if !self.current(ticket) { candidate.requestCancellation() }
         })
-      try prompt.withBorrow { try loaded.begin($0, outputLimit: limit) }
+      if let request {
+        let plan=try PromptBudget.build(latest:request.latest,history:request.history,outputLimit:limit,count:loaded.countTokens)
+        var bytes=Array(plan.text.utf8);defer{bytes.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)}}
+        let planned=try bytes.withUnsafeBufferPointer{try LlmOwnedPrompt($0)};defer{planned.cancel()}
+        guard planned.claim(),current(ticket) else{throw LlmFailure.cancelled}
+        prompt.cancel();try planned.withBorrow{try loaded.begin($0,outputLimit:limit)}
+      }else{try prompt.withBorrow { try loaded.begin($0, outputLimit: limit) }}
       var pieces = 0, rejected = false
       while try loaded.withNextPiece({ bytes in
         guard pieces < limit else { rejected = true; return }
@@ -99,15 +106,16 @@ final class LlmControllerJob {
                      open: @escaping (URL, LlmArtifactPin) throws -> LlmVerifiedDescriptor = LlmModelDescriptor.open,
                      schedule: (@escaping () -> Void) throws -> Void = { work in worker.async(execute: DispatchWorkItem(block: work)) },
                      workerAllowed: @escaping () -> Bool = { !Thread.isMainThread },
+                     request:GenericReplyRequest?=nil,completion:@escaping(LlmJobResult)->Void={_ in},
                      consume: @escaping (UnsafeBufferPointer<UInt8>) throws -> Void) -> LlmControllerJob? {
     guard prompt.claim() else { return nil } // Never erase an already transferred live prompt.
     guard (1...256).contains(outputLimit), (1...8).contains(threads) else { prompt.cancel(); return nil }
-    let job = LlmControllerJob(controller: controller, prompt: prompt)
+    let job = LlmControllerJob(controller: controller, prompt: prompt,completion:completion)
     guard let ticket = controller.prepareLlmWork(token, cancel: { [weak job] in job?.requestCancellation() }) else { prompt.cancel(); return nil }
     let caller = Thread.current
     do { try schedule {
       guard Thread.current !== caller, workerAllowed() else { job.finish(ticket, .unavailable); return }
-      job.run(ticket, store: store, selection: selection, threads: threads, limit: outputLimit, api: api, open: open, consume: consume)
+      job.run(ticket, store: store, selection: selection, threads: threads, limit: outputLimit, api: api, request:request, open: open, consume: consume)
     } } catch { job.finish(ticket, .unavailable) }
     return job
   }
