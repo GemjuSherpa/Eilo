@@ -6,7 +6,7 @@ The model is loaded from a duplicated, independently verified open file descript
 
 Bounds: 1–8 CPU threads, 4,096 total prompt/output tokens, 16,384 prompt bytes, 1–256 generated tokens, 128-token prefill batches, and 1,024 bytes per returned token piece. These are hard adapter safety limits; prompt trimming, memory budgets and continuation policy belong to later tasks. A raw piece can split UTF-8 and contains no speech authorization. No prompt/template, memory, tool, display or TTS integration is provided here. VC-LLM-02 must configure the actual non-thinking template before conversational release.
 
-The normal mobile app compiles the Swift binding with an unavailable default and does not link/load this runtime or change its missing-model gate. The separate Swift simulator evaluation links and executes the actual CPU runtime; device SDK linking is also checked. Kotlin binding, trusted production attachment, physical inference/quality/performance and vendor allocator/logits retention remain open. The KV clear is not a complete private-memory erasure claim. The adapter suppresses llama/ggml process-wide logs and installs content-free fatal/terminate hooks; fatal assertions still terminate the process. A future shared-runtime integration must retain this logging boundary and review these process-wide hooks.
+The normal mobile app compiles Swift and Kotlin bindings with unavailable defaults and does not link/load this runtime or change its missing-model gate. Separate Swift simulator and Kotlin/JNI emulator evaluations execute the actual CPU runtime; iOS device SDK linking and all four Android ABI links are checked. Trusted production attachment, physical inference/quality/performance and vendor allocator/logits retention remain open. The KV clear is not a complete private-memory erasure claim. The adapter suppresses llama/ggml process-wide logs and installs content-free fatal/terminate hooks; fatal assertions still terminate the process. A future shared-runtime integration must retain this logging boundary and review these process-wide hooks.
 
 ## Pin and licensing
 
@@ -73,4 +73,30 @@ cd packages/native-test-seam
 swift test --filter NativeLlmStreamTests
 ```
 
-This checkpoint leaves VC-LLM-01 partial. Production signed-pack/controller attachment, Kotlin binding, non-thinking configuration, downstream speech policy and physical performance/retention evidence remain separate work.
+This checkpoint leaves VC-LLM-01 partial. Production signed-pack/controller attachment, non-thinking configuration, downstream speech policy and physical performance/retention evidence remain separate work.
+
+## Android Kotlin/JNI binding evaluation
+
+`NativeLlmStream.kt` borrows an already verified immutable descriptor and bounded preformatted prompt bytes on one serialized worker. It checks the supplied current lease before and after native calls, exposes raw pieces through a synchronous borrowed 1,024-byte scratch, and clears scratch after every callback. Only `requestCancellation` runs concurrently; close/destruction belongs to the worker after decode returns. Join the worker before releasing its last stream reference. Prompt, descriptor and raw output do not cross JS. Consumers must revalidate downstream controller transactions before display, speech or storage.
+
+JNI IDs are opaque, positive and never reused during the process. A four-entry lifetime bound includes removed entries still retained by an active worker. Per-entry worker gates reject concurrent decode/load calls; a brief registry gate protects lookup/removal. Cancellation does not wait behind model decoding. Destroy invalidates the ID and atomically cancels; an active call retains the C core until returning. Invalid IDs/array lengths are rejected without dereferencing arbitrary pointers. Scratch copies in C++ are cleared on exit.
+
+`NativeLlmRuntime` attempts the fixed app-packaged `eilo_llm_jni` library only when explicitly enabled in Debug. Its ABI probe grants no model trust/readiness. The ordinary app never calls this loader and packages no runtime/model/evaluator. A failed loader instance never retries. Unit tests cover defaults, fixed loading, failure mapping, bounds, split UTF-8, lifetime, revocation and concurrent cancellation.
+
+From `Eilo`, with the existing pinned source/model and booted API35 ARM64 emulator:
+
+```sh
+python3 packages/llm-runtime/check_android.py \
+  --ndk /Users/gemju/Library/Android/sdk/ndk/27.1.12297006 \
+  --java-home /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home \
+  --android-sdk /Users/gemju/Library/Android/sdk \
+  --serial emulator-5554
+```
+
+Use your installed paths and the explicit existing emulator serial. `--compile-only` skips emulator execution and needs no serial. The script verifies the original source, builds CPU static libraries and strictly compiles/links the binding for arm64-v8a, armeabi-v7a, x86 and x86_64 at API26. GPU/RPC/dynamic backends/server/network tools are disabled. ELF LOAD segments have at least 16 KB alignment; this is not 16 KB page-size execution or ZIP packaging evidence. The other three ABIs are link-only, and 32-bit model execution/performance is not established.
+
+An ignored Gradle init file adds only the explicit evaluator source and ARM64 library to a temporary Debug APK. The manifest removes INTERNET permission. The evaluator checks actual permission denial and native IPv4/IPv6 TCP/IPv4 UDP socket denial before inference; these probes initiate no connection or send. The generic model is streamed into a private temporary slot, hashed using the exact descriptor later borrowed by C++, and deleted afterwards. No microphone or personal data is used.
+
+Three generic eight-token completions, seven real lifecycle cases, four JNI registry/bounds cases and three default-gate cases execute in Android ART. The release-flag gate is tested inside Debug, not by executing a Release APK. Failure/timeout cleanup stops the evaluator and attempts to restore a complete normal APK even if temporary-file cleanup fails. Restoration checks absence of the evaluation library/assets/DEX classes/instrumentation and preserves existing app data. A restoration failure fails the command rather than publishing a successful report. Results are in ignored `.local/llm/android-results.json`; [recorded results](tests/android-results.json) contain generic fixtures and build metadata only.
+
+The evaluation APK has no Internet permission; the restored normal app retains its existing network capabilities. This isolated result does not establish whole-app traffic privacy or physical Android/iPhone inference. ggml's known fatal-backtrace fork/execlp references remain reported; Android process-fork denial is not claimed. Actual non-thinking configuration, speech policy, vendor retention and production signed-pack/controller attachment still gate conversational use.
