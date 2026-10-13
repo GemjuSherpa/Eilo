@@ -159,7 +159,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     @Synchronized internal fun llmWorkAllowed(ticket: LlmWorkTicket): Boolean =
         ticket.controller === this && llmWork === ticket && !ticket.cancelled &&
-            currentState == ControllerState.THINKING && !stopping && accepts(ticket.token)
+            currentState in setOf(ControllerState.THINKING, ControllerState.SPEAKING) && !stopping && accepts(ticket.token)
 
     /** Borrowed raw output only. This transaction grants no speech/display/storage permission.
      * Consumer must perform only bounded native buffer work: no IO, inference or worker join.
@@ -186,9 +186,34 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (outcome == LlmJobResult.UNAVAILABLE && !dispatch(ControllerEvent.FAILURE, failure = SafeError.UNAVAILABLE, token = ticket.token)) return LlmJobResult.CANCELLED
         return outcome
     }
+    private var speechWork: SpeechWorkTicket? = null
+    @Synchronized internal fun prepareSpeechWork(token: GenerationToken, cancel: () -> Unit): SpeechWorkTicket? {
+        if (speechWork != null || stopping || speakerRequired || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING) || !accepts(token)) return null
+        return SpeechWorkTicket(this, token, cancel).also { speechWork = it }
+    }
+    /** Short native buffer/SDK scheduling transaction only; no IO, inference or joins. */
+    @Synchronized internal fun speechTransaction(ticket: SpeechWorkTicket, action: () -> Boolean): Boolean {
+        if (speechWork !== ticket || ticket.cancelled || stopping || speakerRequired || !accepts(ticket.token) || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING)) return false
+        return try { action() && speechWork === ticket && !ticket.cancelled && accepts(ticket.token) } catch (_: Exception) { stop(); false }
+    }
+    @Synchronized internal fun speechStarted(ticket: SpeechWorkTicket): Boolean = speechTransaction(ticket) {
+        clearIdle(); playback.begin(ticket.token); currentState = ControllerState.SPEAKING; true
+    }
+    @Synchronized internal fun speechGap(ticket: SpeechWorkTicket): Boolean = speechTransaction(ticket) {
+        playback.finish(ticket.token); currentState = ControllerState.THINKING; true
+    }
+    @Synchronized internal fun finishSpeechWork(ticket: SpeechWorkTicket) {
+        if (!speechTransaction(ticket) { true }) return
+        speechWork = null; ticket.cancelled = true
+        // A sealed empty queue ends the turn as well; this transition performs no SDK work.
+        currentState = ControllerState.SPEAKING
+        dispatch(ControllerEvent.PLAYBACK_FINISHED, token = ticket.token)
+    }
     @Synchronized fun token(): GenerationToken? = activeToken
     private fun invalidateGeneration() {
         activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
+        val speech = speechWork; speechWork = null; speech?.cancelled = true
+        try { speech?.cancel?.invoke() } catch (_: Exception) { diagnostics.record(SafeComponent.SPEECH, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
         val previous = llmWork; llmWork = null
         if (previous != null) {
             previous.cancelled = true
