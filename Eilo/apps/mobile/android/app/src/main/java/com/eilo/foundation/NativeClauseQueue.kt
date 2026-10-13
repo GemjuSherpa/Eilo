@@ -27,6 +27,7 @@ internal class NativeClauseQueue private constructor(
 ) {
     private class Clause(text: String) { val id = UUID.randomUUID(); var text: String? = text }
     private lateinit var ticket: SpeechWorkTicket
+    private val ledger = PlaybackLedger()
     private val waiting = ArrayDeque<Clause>()
     private var active: Clause? = null
     private var fragment = ""
@@ -45,7 +46,7 @@ internal class NativeClauseQueue private constructor(
         if (text.isBlank() || text.toByteArray(Charsets.UTF_8).size > 1024 || text.any { it == '\u0000' } || waiting.size >= 4 || !authorized(ticket.token, text)) {
             fail(); return@speechTransaction false
         }
-        waiting.addLast(Clause(text)); pump(); !closed
+        val clause = Clause(text); ledger.produced(clause.id); waiting.addLast(clause); pump(); !closed
     }
     /** Decoded, policy-approved text fragments only. Hold punctuation until whitespace,
      * so a split decimal/token does not force a premature clause. Never truncate text. */
@@ -87,6 +88,7 @@ internal class NativeClauseQueue private constructor(
     private fun event(clause: Clause, event: OfflineSpeechEvent) {
         controller.speechTransaction(ticket) {
             if (closed || active !== clause) return@speechTransaction false
+            ledger.event(clause.id, event)
             when (event) {
                 OfflineSpeechEvent.STARTED -> controller.speechStarted(ticket)
                 OfflineSpeechEvent.FINISHED -> { active = null; controller.speechGap(ticket); pump(); true }
@@ -95,6 +97,7 @@ internal class NativeClauseQueue private constructor(
         }
     }
     private fun fail() { clear(); controller.dispatch(ControllerEvent.FAILURE, failure = SafeError.UNAVAILABLE, token = ticket.token) }
-    private fun clear() { closed = true; fragment = ""; active?.text = null; active = null; waiting.forEach { it.text = null }; waiting.clear(); sink.cancel() }
+    private fun clear() { ledger.cancel(active?.id, waiting.map { it.id }); if (!controller.speechPrivacyCurrent(ticket)) ledger.clear(); closed = true; fragment = ""; active?.text = null; active = null; waiting.forEach { it.text = null }; waiting.clear(); sink.cancel() }
+    fun progress(permitted: () -> Boolean = { false }): List<PlaybackProgress> = controller.speechMetadata(ticket, permitted, ledger)
     fun cancel() { controller.speechTransaction(ticket) { controller.cancelGeneration(); true } }
 }

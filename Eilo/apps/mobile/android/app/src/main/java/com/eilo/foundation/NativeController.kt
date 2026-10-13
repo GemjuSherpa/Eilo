@@ -202,6 +202,12 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized internal fun speechGap(ticket: SpeechWorkTicket): Boolean = speechTransaction(ticket) {
         playback.finish(ticket.token); currentState = ControllerState.THINKING; true
     }
+    /** Metadata access is native-only, default-denied, and serialized with privacy changes. */
+    @Synchronized internal fun speechMetadata(ticket: SpeechWorkTicket, permitted: () -> Boolean, ledger: PlaybackLedger): List<PlaybackProgress> {
+        if (ticket.token.privacyEpoch != privacyEpoch || locked) { ledger.clear(); return emptyList() }
+        return if (permitted()) ledger.snapshot() else emptyList()
+    }
+    @Synchronized internal fun speechPrivacyCurrent(ticket: SpeechWorkTicket): Boolean = ticket.token.privacyEpoch == privacyEpoch && !locked
     @Synchronized internal fun finishSpeechWork(ticket: SpeechWorkTicket) {
         if (!speechTransaction(ticket) { true }) return
         speechWork = null; ticket.cancelled = true

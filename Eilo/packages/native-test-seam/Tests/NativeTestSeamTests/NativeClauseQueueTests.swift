@@ -30,4 +30,11 @@ final class NativeClauseQueueTests:XCTestCase {
     let c2=controller(),s2=Sink();let q2=try XCTUnwrap(NativeClauseQueue.create(controller:c2,token:c2.token!,sink:s2,authorized:{_,_ in true}));XCTAssertTrue(q2.append(String(repeating:"x",count:1024)));XCTAssertFalse(q2.append("y"));XCTAssertTrue(s2.texts.isEmpty)
   }
 
+  func testProgressDistinguishesStopRequestFromSdkCompletion()throws{let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}))
+    q.enqueue("First.");q.enqueue("Second.");s.callbacks[0](.started);XCTAssertTrue(q.progress().isEmpty);_ = c.stop();let records=q.progress{true};XCTAssertEqual(records.count,2);XCTAssertTrue(records[0].sdkStarted);XCTAssertTrue(records[0].interruptionRequested);XCTAssertFalse(records[0].sdkFinished);XCTAssertFalse(records[0].sdkInterrupted);XCTAssertTrue(records[1].discardedBeforeStart)
+    s.callbacks[0](.finished);XCTAssertEqual(records,q.progress{true});_ = c.privacyTransition(.lock);XCTAssertTrue(q.progress{true}.isEmpty)
+  }
+  func testSdkCompletionAndInterruptionAreSeparate()throws{for event in [OfflineSpeechEvent.finished,.interrupted]{let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}));q.enqueue("First.");s.callbacks[0](.started);s.callbacks[0](event);let record=try XCTUnwrap(q.progress{true}.first);XCTAssertEqual(record.sdkFinished,event == .finished);XCTAssertEqual(record.sdkInterrupted,event == .interrupted)}}
+  func testProgressLedgerIsBounded(){let ledger=PlaybackLedger();for _ in 0..<40{ledger.produced(UUID())};XCTAssertEqual(ledger.snapshot().count,32);XCTAssertTrue(ledger.snapshot().allSatisfy{$0.produced && $0.queued});ledger.clear();XCTAssertTrue(ledger.snapshot().isEmpty)}
+
 }

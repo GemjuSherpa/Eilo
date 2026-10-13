@@ -37,4 +37,11 @@ class NativeClauseQueueTest {
         val c2=controller();val s2=Sink();val q2=NativeClauseQueue.create(c2,c2.token()!!,s2){_,_->true}!!;assertTrue(q2.append("x".repeat(1024)));assertFalse(q2.append("y"));assertTrue(s2.texts.isEmpty())
     }
 
+    @Test fun progressDistinguishesStopRequestFromSdkCompletion(){val c=controller();val s=Sink();val q=NativeClauseQueue.create(c,c.token()!!,s){_,_->true}!!
+        q.enqueue("First.");q.enqueue("Second.");s.callbacks[0](OfflineSpeechEvent.STARTED);assertTrue(q.progress().isEmpty());c.stop();val records=q.progress{true};assertEquals(2,records.size);assertTrue(records[0].sdkStarted);assertTrue(records[0].interruptionRequested);assertFalse(records[0].sdkFinished);assertFalse(records[0].sdkInterrupted);assertTrue(records[1].discardedBeforeStart)
+        s.callbacks[0](OfflineSpeechEvent.FINISHED);assertEquals(records,q.progress{true});c.privacyTransition(PrivacyChange.LOCK);assertTrue(q.progress{true}.isEmpty())
+    }
+    @Test fun sdkCompletionAndInterruptionAreSeparate(){for(event in listOf(OfflineSpeechEvent.FINISHED,OfflineSpeechEvent.INTERRUPTED)){val c=controller();val s=Sink();val q=NativeClauseQueue.create(c,c.token()!!,s){_,_->true}!!;q.enqueue("First.");s.callbacks[0](OfflineSpeechEvent.STARTED);s.callbacks[0](event);val record=q.progress{true}.single();assertEquals(event==OfflineSpeechEvent.FINISHED,record.sdkFinished);assertEquals(event==OfflineSpeechEvent.INTERRUPTED,record.sdkInterrupted)} }
+    @Test fun progressLedgerIsBoundedAndContainsNoContent(){val ledger=PlaybackLedger();repeat(40){ledger.produced(java.util.UUID.randomUUID())};assertEquals(32,ledger.snapshot().size);assertTrue(ledger.snapshot().all{it.produced && it.queued});ledger.clear();assertTrue(ledger.snapshot().isEmpty())}
+
 }
