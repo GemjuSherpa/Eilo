@@ -222,9 +222,16 @@ public final class NativeController: @unchecked Sendable {
     speechWork=nil;ticket.cancelled=true;currentState = .speaking;_ = dispatch(.playbackFinished,token:ticket.token)
   }
   private lazy var playback=PlaybackRejection(now:{[weak self] in self?.clock.milliseconds() ?? 0})
-  func recognitionAllowed(_ token:GenerationToken)->Bool{lock.lock();defer{lock.unlock()};return currentState == .capturing && accepts(token) && playback.allowsAudio}
+  private var interruptedCapture:GenerationToken?,independentCapture:(()->Bool)?
+  func recognitionAllowed(_ token:GenerationToken)->Bool{
+    lock.lock();defer{lock.unlock()};guard currentState == .capturing,accepts(token) else{return false}
+    if playback.allowsAudio{return true}
+    // Only the exact replacement token can use a continuously verified native separation lease.
+    guard interruptedCapture===token,let verify=independentCapture,verify(),interruptedCapture===token,accepts(token) else{return false};return true
+  }
   public var token: GenerationToken? { lock.lock(); defer { lock.unlock() }; return activeToken }
   func invalidateGeneration() {
+    interruptedCapture=nil;independentCapture=nil
     activeToken?.cancel(); activeToken = nil; stoppedOperationID=UUID()
     let continuation=continuationCancel;continuationCancel=nil;continuationToken=nil;continuation?()
     let speech=speechWork;speechWork=nil;speech?.cancelled=true;speech?.cancel()
@@ -339,7 +346,7 @@ public final class NativeController: @unchecked Sendable {
   }
   /// Cancellation precedes the replacement token. No capture reopen or revival after Stop.
   /// The lease must represent independently verified echo-separated user speech.
-  func interruptReply(_ token:GenerationToken,independentSpeechStillVerified:()->Bool)->GenerationToken? {
+  func interruptReply(_ token:GenerationToken,independentSpeechStillVerified:@escaping()->Bool)->GenerationToken? {
     lock.lock();defer{lock.unlock()}
     guard !stopping,accepts(token),[.thinking,.speaking].contains(currentState),independentSpeechStillVerified(),accepts(token) else{return nil}
     clearIdle();invalidateGeneration();playback.cancel()
@@ -348,7 +355,7 @@ public final class NativeController: @unchecked Sendable {
       try effects.cancelWork()
       guard generation==expected,privacyEpoch==epoch,!locked else{return nil}
       guard independentSpeechStillVerified(),permissionGranted(),modelStatus == .ready else{stop();return nil}
-      issueGeneration();currentState = .capturing;hasConversation=true;return activeToken
+      issueGeneration();currentState = .capturing;hasConversation=true;interruptedCapture=activeToken;independentCapture=independentSpeechStillVerified;return activeToken
     }catch{stop();return nil}
   }
   @discardableResult public func stop() -> Bool {

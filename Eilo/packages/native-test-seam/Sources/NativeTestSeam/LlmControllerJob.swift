@@ -39,13 +39,13 @@ final class LlmWorkTicket {
 /// Raw consumers perform bounded native buffer work and gain no speech rights.
 final class LlmControllerJob {
   private let controller: NativeController, prompt: LlmOwnedPrompt
-  private let completion:(LlmJobResult)->Void
+  private let completion:(LlmJobResult)->Void,request:GenericReplyRequest?
   private let gate = NSCondition()
   private var cancelled = false, stream: NativeLlmStream?, result: LlmJobResult?, workerThread: Thread?
   private static let worker = DispatchQueue(label: "com.eilo.llm.worker")
-  private init(controller: NativeController, prompt: LlmOwnedPrompt, completion:@escaping(LlmJobResult)->Void) { self.controller = controller; self.prompt = prompt;self.completion=completion }
+  private init(controller: NativeController, prompt: LlmOwnedPrompt, completion:@escaping(LlmJobResult)->Void,request:GenericReplyRequest?) { self.controller = controller; self.prompt = prompt;self.completion=completion;self.request=request }
   func requestCancellation() {
-    prompt.cancel()
+    request?.cancel();prompt.cancel()
     gate.lock(); cancelled = true; let current = stream; gate.unlock()
     current?.requestCancellation()
   }
@@ -59,7 +59,7 @@ final class LlmControllerJob {
   private var stopped: Bool { gate.lock(); defer { gate.unlock() }; return cancelled }
   private func current(_ ticket: LlmWorkTicket) -> Bool { !stopped && controller.llmWorkAllowed(ticket) }
   private func finish(_ ticket: LlmWorkTicket, _ outcome: LlmJobResult, lease: LlmPackLease? = nil) {
-    prompt.cancel()
+    request?.cancel();prompt.cancel()
     gate.lock(); let old = stream; stream = nil; gate.unlock(); old?.close()
     let accepted = controller.finishLlmWork(ticket, result: stopped || ticket.cancelled || ticket.token.cancelled ? .cancelled : outcome,
       verified: { lease?.verified() == true && !self.stopped })
@@ -109,9 +109,9 @@ final class LlmControllerJob {
                      request:GenericReplyRequest?=nil,completion:@escaping(LlmJobResult)->Void={_ in},
                      consume: @escaping (UnsafeBufferPointer<UInt8>) throws -> Void) -> LlmControllerJob? {
     guard prompt.claim() else { return nil } // Never erase an already transferred live prompt.
-    guard (1...256).contains(outputLimit), (1...8).contains(threads) else { prompt.cancel(); return nil }
-    let job = LlmControllerJob(controller: controller, prompt: prompt,completion:completion)
-    guard let ticket = controller.prepareLlmWork(token, cancel: { [weak job] in job?.requestCancellation() }) else { prompt.cancel(); return nil }
+    guard (1...256).contains(outputLimit), (1...8).contains(threads) else { prompt.cancel();request?.cancel(); return nil }
+    let job = LlmControllerJob(controller: controller, prompt: prompt,completion:completion,request:request)
+    guard let ticket = controller.prepareLlmWork(token, cancel: { [weak job] in job?.requestCancellation() }) else { prompt.cancel();request?.cancel(); return nil }
     let caller = Thread.current
     do { try schedule {
       guard Thread.current !== caller, workerAllowed() else { job.finish(ticket, .unavailable); return }

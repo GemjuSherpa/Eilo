@@ -56,9 +56,23 @@ import Darwin
     guard let secondFinal=secondAsr.poll(finish:true) else{throw LlmFailure.unavailable}
     let second=GenericSpokenTurn(controller:c,token:followup,sink:IOSClauseSink(speech),configured:true,starter:GenericSpokenTurn.localReply(controller:c,store:store,selection:selection))
     try check(second.submit(secondFinal,confidence:0.95));try pump(until:{c.state == .standby || c.state == .error || c.state == .stopped},seconds:180);try check(c.state == .standby)
+    let secondPost=c.token!;let secondTail=ProcessInfo.processInfo.systemUptime+0.35;try pump(until:{ProcessInfo.processInfo.systemUptime>=secondTail},seconds:1)
+    guard let oldCapture=c.beginGenericFollowup(secondPost) else{throw LlmFailure.unavailable}
+    let interrupted=GenericSpokenTurn(controller:c,token:oldCapture,sink:IOSClauseSink(speech),configured:true,starter:{_,_,consume,complete in
+      try! Array("This is a generic sentence for an interruption check. Another generic sentence should be cancelled. ".utf8).withUnsafeBufferPointer{try consume($0)};complete(.completed);return true
+    })
+    try check(interrupted.submit(AsrText(text:"Say a sentence.",final:true),confidence:0.95));try pump(until:{c.state == .speaking || c.state == .error},seconds:10);try check(c.state == .speaking)
+    let vad=ConfirmedSpeechInterruption(oldCapture);var interruption:InterruptionActivation?
+    for _ in 0..<8{interruption=vad.advance(1,independentUserSpeech:true)}
+    guard let interruption,let replacement=GenericSpokenTurn.replacing(interruption,controller:c,sink:IOSClauseSink(speech),configured:true,independentSpeechStillVerified:{true},starter:GenericSpokenTurn.localReply(controller:c,store:store,selection:selection)) else{throw LlmFailure.unavailable}
+    let replacementToken=c.token!;try check(oldCapture.cancelled && c.recognitionAllowed(replacementToken));try check(interruption.apply(c,independentSpeechStillVerified:{true})==nil)
+    let replacementAsr=StreamingAsr(replacementToken,allowed:{c.recognitionAllowed(replacementToken)},open:{try NativeAsrStream(directory:CommandLine.arguments[6],verified:{!replacementToken.cancelled})})
+    try question.withUnsafeBufferPointer{p in for offset in stride(from:0,to:p.count,by:320){try check(replacementAsr.accept(UnsafeBufferPointer(rebasing:p[offset..<min(offset+320,p.count)])))}}
+    guard let replacementFinal=replacementAsr.poll(finish:true) else{throw LlmFailure.unavailable}
+    try check(replacement.submit(replacementFinal,confidence:0.95));try check(!replacement.submit(replacementFinal,confidence:0.95));try pump(until:{c.state == .standby || c.state == .error || c.state == .stopped},seconds:180);try check(c.state == .standby)
     try check(c.endConversation());try check(c.beginGenericFollowup(c.token!)==nil)
     c.stop();speech.close();try FileManager.default.removeItem(at:root);try check(!FileManager.default.fileExists(atPath:root.path))
-    let report:[String:Any]=["tasks":["VC-JOIN-01","VC-JOIN-02"],"spoken_turns":2,"followup_without_wake":"PASS","bounded_completed_context":"PASS","scripted_suffix_handoff":"PASS","end_clears_session":"PASS","platform":"iPhone 18 Pro ARM64 simulator","microphone":"NOT USED","history_persistence":"NONE","wake_activation":"PASS","ASR_final_once":"PASS","signed_cpu_worker":"PASS","configured_clause_policy":"PASS","SDK_speech_completion":"PASS","normal_unknown_offline_gate":"PASS","temporary_signed_pack_removed":true]
+    let report:[String:Any]=["tasks":["VC-JOIN-01","VC-JOIN-02","VC-JOIN-03"],"completed_generated_spoken_turns":3,"interrupted_scripted_reply":1,"old_SDK_start_before_replacement":"PASS","exactly_one_replacement":"PASS","interruption_evidence":"Synthetic VAD and independent separation lease; not physical echo evidence","followup_without_wake":"PASS","bounded_completed_context":"PASS","scripted_suffix_handoff":"PASS","end_clears_session":"PASS","platform":"iPhone 18 Pro ARM64 simulator","microphone":"NOT USED","history_persistence":"NONE","wake_activation":"PASS","ASR_final_once":"PASS","signed_cpu_worker":"PASS","configured_clause_policy":"PASS","SDK_speech_completion":"PASS","normal_unknown_offline_gate":"PASS","temporary_signed_pack_removed":true]
     let data=try JSONSerialization.data(withJSONObject:report,options:[.sortedKeys]);print("EILO_JOIN_RESULT\t"+String(decoding:data,as:UTF8.self))
   }
   static func main(){do{try run()}catch{fputs("Joined evaluation unavailable.\n",stderr);exit(1)}}

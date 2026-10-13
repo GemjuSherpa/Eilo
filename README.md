@@ -21,8 +21,9 @@ The repository contains a React Native application, shared contracts/design toke
 | S03: model installation | Reviewed; signed-manifest, checksum, staging/resume/activation and readiness mechanisms implemented. Production distribution configuration remains unavailable. |
 | S04: guest/audio setup | Reviewed and merged; explicit consent, native control and capture foundations implemented. Physical/background feasibility blockers remain. |
 | S05: wake/turn recognition | Local implementations reviewed and merged in PR #41. Synthetic wake/ASR and lifecycle evidence is recorded; production attachment and physical voice acceptance remain partial. [Evidence](Eilo/docs/sprints/S05_TURN_COMPLETION_REVIEW.md). |
-| S06 / VC-LLM-01 | CPU core, Swift/Kotlin bindings and signed model leases reviewed/merged. Android controller-worker checkpoint awaits review: turn-bound tickets, Stop/privacy cancellation, borrowed raw-output revalidation and cleanup barrier. Swift worker, production app attachment and physical inference remain open. [Evidence](Eilo/docs/sprints/S06_ANDROID_LLM_WORKER_REVIEW.md). |
-| Wake/VAD, streaming ASR, local replies, offline TTS and protected history | Planned pipeline; not a completed integrated voice experience. |
+| S06 | Native CPU bindings, signed/controller workers, non-thinking/budgeting and offline speech implementations reviewed/merged in PR #47. Physical voice/model comparison, production attachment and vendor retention remain open. [Evidence](Eilo/docs/sprints/S06_COMPLETION_REVIEW.md). |
+| S07 | Remaining native capability/danger/clause policies and generic turn/follow-up/replacement integration are prepared for review. Actual synthetic simulator ASR/CPU/SDK trials pass; physical and production acceptance remain open. [Evidence](Eilo/docs/sprints/S07_REVIEW.md). |
+| Production voice and protected history | Normal app readiness remains gated. Explicit synthetic joined voice evaluations exist; protected durable history is not implemented. |
 
 **The current app is not an end-to-end conversation demo.** Production model trust, download origins and license approvals are not configured. Start remains gated by native readiness; do not bypass it to present a synthetic fixture as a working product. History selection does not enable encrypted storage that has not been implemented.
 

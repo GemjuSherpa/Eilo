@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-14",
+  "simulator": "iPhone 18 Pro / iOS27",
+  "udid": "E01AE333-A393-48F6-AAD7-579F0A5DB1F8",
+  "tasks": [
+    {
+      "task_label": "capabilities",
+      "normal_app_build": "PASS",
+      "install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "local_proof_sha256": "40e63f8099337a2592723ea0c1f11aa981b443d74c605a3e32dedad50b62eafc"
+    },
+    {
+      "task_label": "danger",
+      "normal_app_build": "PASS",
+      "install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "local_proof_sha256": "989efc626a19ea790b72d0bff98788bc2417fb8d5c0cffacaad41de34d148e9b"
+    },
+    {
+      "task_label": "clause",
+      "normal_app_build": "PASS",
+      "install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "local_proof_sha256": "36d541ea26f2de7a8fdcababaf81a235c89b079944fc86f613c6c1879bbd23e6"
+    },
+    {
+      "task_label": "join01",
+      "normal_app_build": "PASS",
+      "install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "local_proof_sha256": "0f234b234bac5fa93dafced3c2b322679444b4d3070811c735c7a6b877d3ebc4"
+    },
+    {
+      "task_label": "join02",
+      "normal_app_build": "PASS",
+      "install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "local_proof_sha256": "d3acfc045b124e78af4cec67f9888bb1f4af5d67aa56f6f44e2f6b8b07cb5026"
+    },
+    {
+      "task_label": "join03",
+      "normal_app_build": "PASS",
+      "install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "local_proof_sha256": "8840703ad6e7c7041aaedda0e81dd89be1ec231766a53d8401df708b34e4d7f1"
+    }
+  ],
+  "final_native_tests": {
+    "Swift": 217,
+    "Android": 267
+  },
+  "workspace_tests": {
+    "mobile": 9,
+    "contracts": 33
+  },
+  "joined_native_evaluation": "PASS; synthetic state/endpoint/confidence/separation and offline voice evidence only",
+  "physical": "NOT RUN; connected iPhone offline, no physical Android",
+  "normal_app_voice_readiness": "UNAVAILABLE",
+  "semantic_review": "pending_review"
+}

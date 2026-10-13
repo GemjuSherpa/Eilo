@@ -110,7 +110,7 @@ import Darwin
       guard let job=LlmControllerJob.submit(controller:c,token:token,store:store,selection:selection,prompt:owned,outputLimit:96,consume:{piece in try guardOutput.append(piece);pieces+=1}) else{throw LlmFailure.unavailable}
       try check(job.awaitCompletion(timeout:120) == .completed && owned.cleared && c.state == .thinking)
       try guardOutput.finish();try check(!output.isEmpty && pieces<=96)
-      let record:[String:Any]=["id":id,"output":output,"generated_tokens":pieces,"token_limit":96,"review_status":"pending_review","kind":"generic synthetic candidate, not speech-approved"]
+      let record:[String:Any]=["id":id,"output":output,"generated_tokens":pieces,"token_limit":96,"review_status":"pending_review","kind":"generic synthetic candidate, not speech-approved","lexical_screen_would_allow":NativeSpeechPolicy(controller:c,token:token,configured:true).allows(token,output)]
       let data=try JSONSerialization.data(withJSONObject:record,options:[.sortedKeys,.withoutEscapingSlashes]);print(String(decoding:data,as:UTF8.self))
       output=""
     }

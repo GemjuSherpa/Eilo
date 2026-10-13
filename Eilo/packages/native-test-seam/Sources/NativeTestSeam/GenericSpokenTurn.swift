@@ -1,6 +1,14 @@
 import Foundation
 
-struct GenericReplyRequest{let latest:String,history:[QwenTurn]}
+/// Owns queued request references; cancellation clears them even before worker scheduling.
+/// Immutable String/allocator erasure cannot be certified by releasing references.
+final class GenericReplyRequest {
+  private let lock=NSLock();private var input:String,turns:[QwenTurn]
+  init(latest:String,history:[QwenTurn]){input=latest;turns=history}
+  var latest:String{lock.lock();defer{lock.unlock()};return input}
+  var history:[QwenTurn]{lock.lock();defer{lock.unlock()};return turns}
+  func cancel(){lock.lock();defer{lock.unlock()};input="";turns.removeAll()}
+}
 /// Native-only asynchronous seam. Real adapters are supplied explicitly; defaults
 /// remain unavailable. A starter must schedule inference, never run it inline.
 typealias GenericReplyStarter=(GenerationToken,GenericReplyRequest,@escaping(UnsafeBufferPointer<UInt8>)throws->Void,@escaping(LlmJobResult)->Void)->Bool
@@ -34,6 +42,12 @@ final class GenericSpokenTurn {
     })
     if !accepted{guardOutput.cancel();_ = controller.dispatch(.failure,failure:.unavailable,token:token)}
     return accepted
+  }
+  /// Only confirmed native user speech plus a still-valid separation lease can replace.
+  /// A transcript or VAD probability alone cannot authorize full-duplex capture.
+  static func replacing(_ activation:InterruptionActivation,controller:NativeController,sink:any NativeClauseSink,configured:Bool=false,independentSpeechStillVerified:@escaping()->Bool={false},starter:@escaping GenericReplyStarter={_,_,_,_ in false})->GenericSpokenTurn? {
+    guard configured,let token=activation.apply(controller,independentSpeechStillVerified:independentSpeechStillVerified) else{return nil}
+    return GenericSpokenTurn(controller:controller,token:token,sink:sink,configured:true,starter:starter)
   }
   static func localReply(controller:NativeController,store:PackStore,selection:LlmPackSelection,api:NativeLlmAPI = .linked,limit:Int=96)->GenericReplyStarter {
     {token,request,consume,completion in

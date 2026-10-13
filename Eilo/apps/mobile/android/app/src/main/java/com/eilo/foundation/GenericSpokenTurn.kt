@@ -1,7 +1,13 @@
 package com.eilo.foundation
 import java.util.concurrent.Executor
 
-internal data class GenericReplyRequest(val latest:String,val history:List<QwenTurn> = emptyList())
+/** Queued request references clear immediately on cancellation; not forensic erasure. */
+internal class GenericReplyRequest(latest:String,history:List<QwenTurn> = emptyList()) {
+    private var input=latest;private var turns=history.toList()
+    val latest:String @Synchronized get()=input
+    val history:List<QwenTurn> @Synchronized get()=turns.toList()
+    @Synchronized fun cancel(){input="";turns=emptyList()}
+}
 internal fun interface GenericReplyStarter {fun start(token:GenerationToken,request:GenericReplyRequest,consume:(ByteArray,Int)->Unit,complete:(LlmJobResult)->Unit):Boolean}
 /** Native asynchronous seam; no JS/history storage, microphone or readiness override. */
 internal class GenericSpokenTurn(private val controller:NativeController,private val token:GenerationToken,private val sink:NativeClauseSink,private val configured:Boolean=false,private val starter:GenericReplyStarter=GenericReplyStarter{_,_,_,_->false}) {
@@ -30,6 +36,12 @@ internal class GenericSpokenTurn(private val controller:NativeController,private
         accepted
     }
     companion object {
+        /** Only a confirmed activation and current native separation lease replace speech. */
+        fun replacing(activation:InterruptionActivation,controller:NativeController,sink:NativeClauseSink,configured:Boolean=false,verified:()->Boolean={false},starter:GenericReplyStarter=GenericReplyStarter{_,_,_,_->false}):GenericSpokenTurn? {
+            if(!configured)return null
+            val token=try{activation.apply(controller,verified)}catch(_:Exception){controller.stop();null} ?: return null
+            return GenericSpokenTurn(controller,token,sink,true,starter)
+        }
         fun localReply(controller:NativeController,worker:Executor,store:PackStore,selection:LlmPackSelection,api:NativeLlmApi=UnavailableLlmApi,limit:Int=96)=GenericReplyStarter{token,request,consume,complete->
             LlmControllerJob.submit(controller,token,worker,store,selection,"Native generic request".toByteArray(),outputLimit=limit,api=api,request=request,completion=complete,consume=consume)!=null
         }

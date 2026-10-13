@@ -325,5 +325,6 @@ class LlmControllerJobTest {
             val job = submit(f, c, q, api)!!; q.drain(); result(job, LlmJobResult.UNAVAILABLE)
             assertEquals(ControllerState.ERROR, c.state()); assertEquals(1, api.destroys)
         }
-    }
+    }    @Test fun queuedGenericRequestClearsBeforeWorkerOnStopAndPrivacy(){for(change in listOf(null,PrivacyChange.LOCK,PrivacyChange.PRIVATE_SESSION,PrivacyChange.IDENTITY_RESET)){Fixture().use{f->val c=controller();val q=Queue();val request=GenericReplyRequest("Synthetic request",listOf(QwenTurn(QwenRole.ASSISTANT,"Synthetic context")));val prompt=byteArrayOf(65);val job=LlmControllerJob.submit(c,c.token()!!,q,f.store,f.selection,prompt,api=Api(),openDescriptor=f::open,workerThreadAllowed={true},request=request,consume={_,_->fail("cancelled output")})!!;if(change==null)c.stop()else c.privacyTransition(change);assertTrue(request.latest.isEmpty());assertTrue(request.history.isEmpty());assertTrue(prompt.all{it==0.toByte()});assertEquals(0,f.opens);q.drain();result(job,LlmJobResult.CANCELLED);assertEquals(0,f.opens)}}}
+
 }
