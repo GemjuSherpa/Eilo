@@ -1,0 +1,9 @@
+# S06 / VC-LLM-02 review
+
+Android and Swift render a restricted no-tools subset of the pinned Qwen3 template. The generation suffix is the official empty thinking block used when `enable_thinking=False`; this is a hard template setting, not a request phrased in the prompt. Only fixed native rules become system content. User/history angle markers are escaped and roles are native enums.
+
+Three golden fixtures are rendered from the existing official tokenizer configuration (template SHA-256 `a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8`) and matched byte-for-byte by both native renderers. Reproduce with the existing model-build environment and `packages/llm-runtime/check_template.py --tokenizer-config .local/model-build/qwen/tokenizer_config.json`. The [Qwen model documentation](https://huggingface.co/Qwen/Qwen3-1.7B) describes the template setting.
+
+The worker-confined output guard reconstructs split UTF-8, rejects angle markup including split thinking/role/tool tags, NUL, malformed bytes, stale leases and output above 16384 bytes. A rejection permanently closes the guard. Its plain-text fragments grant no speech/display/history authorization. S07's pre-speech policy remains required, and this filter does not prove semantic safety or injection immunity.
+
+Validation: four focused tests per platform, strict Swift compile and Android lint pass. Actual signed-pack/controller-worker CPU generation produced three bounded non-thinking guarded completions on the same simulator, with six native lifecycle cases, three unavailable-default gates and both ARM64 iOS SDK links passing. Synthetic signing/license evidence only; no microphone or physical inference. Normal app build and three fresh ten-second simulator launches precede commit. Default app model readiness remains unavailable.

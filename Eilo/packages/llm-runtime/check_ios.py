@@ -111,7 +111,7 @@ def evaluate(udid, executable, selected, builds):
         if kind != 'GEN' or int(identifier) != index + 1 or not 1 <= int(count) <= 8 or not 1 <= len(raw) <= 8192:
             raise ValueError('invalid bounded raw completion')
         cases.append({'id': index + 1, 'prompt': prompts[index], 'tokens': int(count),
-                      'output': raw.decode('utf-8'), 'kind': 'raw, not speech-approved'})
+                      'output': raw.decode('utf-8'), 'kind': 'non-thinking guarded plain text, not speech-approved'})
     defaults = default_gates(udid)
     report = {'task': 'VC-LLM-01', 'platform': 'iOS ARM64 simulator / actual Swift C ABI',
               'device': selected['name'], 'udid': udid, 'runtime': PROVENANCE['runtime'],
@@ -119,12 +119,13 @@ def evaluate(udid, executable, selected, builds):
               'CPU_registry_only': 'PASS', 'same_open_model_descriptor_SHA256': 'PASS',
               'cases': cases, 'native_lifecycle_cases': expected.split(','),
               'controller_worker_cases': ['signed_pack_three_completions', 'prompt_erased', 'no_speech', 'temp_removed'],
+              'template': 'Pinned Qwen3 no-tools subset, enable_thinking=false; markup/UTF-8 output guard',
               'pack_trust': 'Ephemeral synthetic signing key/license evidence; no production trust',
               'microphone': 'NOT USED', 'physical_inference': 'NOT RUN',
               'network': 'No inference network clients/references; simulator OS-wide isolation NOT VERIFIED',
               'app_attachment': 'NOT ENABLED; default linked API unavailable',
               'default_gate_cases': defaults,
-              'remaining': ['production app attachment/release trust', 'non-thinking template',
+              'remaining': ['production app attachment/release trust',
                             'speech policy', 'physical performance', 'vendor allocator/logits erasure']}
     (CACHE / 'ios-results.json').write_text(json.dumps(report, indent=2) + '\n')
     print('Swift/C ABI iOS simulator: three real CPU completions and six lifecycle cases PASS; device SDK link PASS, physical execution NOT RUN.')
