@@ -91,6 +91,7 @@ internal class LlmPackLease private constructor(
     fun openStream(
         allowed: () -> Boolean, threads: Int = 2, api: NativeLlmApi = UnavailableLlmApi,
         openDescriptor: (File, LlmArtifactPin) -> LlmVerifiedDescriptor = LlmModelDescriptor::open,
+        created: (NativeLlmStream) -> Unit = {},
     ): NativeLlmStream {
         fun current() = verified() && try { allowed() } catch (_: Exception) { false }
         var stream: NativeLlmStream? = null
@@ -99,6 +100,9 @@ internal class LlmPackLease private constructor(
             openDescriptor(file, pin).use { descriptor ->
                 check(current() && descriptor.value >= 0)
                 val candidate = NativeLlmStream(::current, api); stream = candidate
+                // Publish only the cancellation signal before the potentially long load.
+                // Creation/load/destruction still belong exclusively to this worker.
+                created(candidate)
                 candidate.load(descriptor.value, threads)
             }
             check(current()) // Descriptor-close failure/revocation cannot publish a stream.

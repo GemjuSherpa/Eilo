@@ -191,6 +191,52 @@ class LlmEvaluationInstrumentation : Instrumentation() {
             check(failed && boundaryReached)
         }
     }
+    private fun thinkingController(): NativeController = NativeController(
+        effects = object : ControllerEffects {
+            override fun startCapture() = true // Synthetic state setup, no AudioRecord/microphone.
+            override fun playClause(clause: String) { error("raw output not speech") }
+            override fun cancelWork() {}
+            override fun releaseCapture() {}
+            override fun clearVolatileContext() {}
+        },
+        permission = object : MicrophonePermissionAdapter {
+            override fun status() = MicrophonePermission.GRANTED
+            override fun request(completion: (MicrophonePermission) -> Unit) { completion(status()) }
+        }, models = ModelReadinessAdapter { ModelStatus.READY },
+    ).apply {
+        check(dispatch(ControllerEvent.START))
+        check(dispatch(ControllerEvent.SPEECH_DETECTED, token = token()))
+        check(dispatch(ControllerEvent.ENDPOINT, token = token()))
+    }
+    /** Observe the real JNI worker gate before Stop, not merely a Kotlin pre-load latch. */
+    private fun controllerLoadStop(signed: SignedPackFixture, real: NativeLlmApi) {
+        val controller = thinkingController()
+        val worker = java.util.concurrent.Executors.newSingleThreadExecutor()
+        val entered = CountDownLatch(1); val id = java.util.concurrent.atomic.AtomicLong(0)
+        val destroyed = java.util.concurrent.atomic.AtomicInteger(0)
+        val api = object : NativeLlmApi by real {
+            override fun load(handle: Long, descriptor: Int, threads: Int): Int {
+                id.set(handle); entered.countDown(); return real.load(handle, descriptor, threads)
+            }
+            override fun destroy(handle: Long) { real.destroy(handle); destroyed.incrementAndGet() }
+        }
+        val prompt = "The opposite of cold is".toByteArray()
+        val job = LlmControllerJob.submit(controller, controller.token()!!, worker, signed.store, signed.selection,
+            prompt, 8, api = api, consume = { _, _ -> error("stopped job released piece") }) ?: error("job unavailable")
+        try {
+            check(entered.await(30, TimeUnit.SECONDS))
+            val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5)
+            var active = LlmEvaluationProbe.workerActive(id.get())
+            while (!active && System.nanoTime() < deadline) { Thread.sleep(1); active = LlmEvaluationProbe.workerActive(id.get()) }
+            check(active)
+            check(controller.stop())
+            check(job.awaitCompletion(30, TimeUnit.SECONDS) == LlmJobResult.CANCELLED)
+            check(destroyed.get() == 1 && prompt.all { it == 0.toByte() } && controller.state() == ControllerState.STOPPED)
+        } finally {
+            job.requestCancellation(); worker.shutdown()
+            check(worker.awaitTermination(30, TimeUnit.SECONDS))
+        }
+    }
     override fun onStart() {
         val context = targetContext; val work = File(context.filesDir, "llm-evaluation")
         val report = File(context.filesDir, "llm-android-results.json")
@@ -212,22 +258,34 @@ class LlmEvaluationInstrumentation : Instrumentation() {
                 val prompts = listOf("The opposite of cold is", "One, two, three,", "The sky on a clear day is")
                 for ((index, prompt) in prompts.withIndex()) {
                     stage = "completion_${index + 1}"
-                    val lease = signed.lease()
-                    try { lease.openStream({ true }, api = api).use { stream ->
-                        check(LlmEvaluationProbe.cpuOnly()); begin(stream, prompt)
+                    val controller = thinkingController()
+                    val worker = java.util.concurrent.Executors.newSingleThreadExecutor()
+                    val ownedPrompt = prompt.toByteArray()
                         // Only these frozen generic outputs are copied for a report.
                         val output = ByteArray(8192); var length = 0; var tokens = 0
+                        var borrowed: ByteArray? = null
+                        var job: LlmControllerJob? = null
                         try {
-                            while (stream.withNextPiece { piece, n ->
-                                check(length + n <= output.size); piece.copyInto(output, length, 0, n); length += n
-                            }) { tokens++; check(tokens <= 8) }
-                            check(tokens > 0 && length > 0)
+                            job = LlmControllerJob.submit(controller, controller.token()!!, worker, signed.store, signed.selection,
+                                ownedPrompt, 8, api = api, consume = { piece, n ->
+                                    check(Thread.holdsLock(controller) && Thread.currentThread() !== android.os.Looper.getMainLooper().thread)
+                                    check(length + n <= output.size); piece.copyInto(output, length, 0, n); length += n
+                                    borrowed = piece; tokens++; check(tokens <= 8)
+                                }) ?: error("job unavailable")
+                            check(job.awaitCompletion(60, TimeUnit.SECONDS) == LlmJobResult.COMPLETED)
+                            check(LlmEvaluationProbe.cpuOnly() && tokens > 0 && length > 0)
+                            check(ownedPrompt.all { it == 0.toByte() } && borrowed!!.all { it == 0.toByte() })
+                            check(controller.state() == ControllerState.THINKING) // Raw completion grants no speech.
                             cases.put(JSONObject().put("id", index + 1).put("prompt", prompt).put("tokens", tokens)
                                 .put("output", output.copyOfRange(0, length).toString(Charsets.UTF_8))
-                                .put("kind", "raw completion, not speech-approved"))
-                        } finally { output.fill(0) }
-                    } } finally { lease.close() }
+                                .put("kind", "controller-worker raw completion, not speech-approved"))
+                        } finally {
+                            job?.requestCancellation(); worker.shutdown()
+                            check(worker.awaitTermination(30, TimeUnit.SECONDS))
+                            output.fill(0); ownedPrompt.fill(0)
+                        }
                 }
+                stage = "controller_stop_during_native_load"; controllerLoadStop(signed, api)
                 stage = "signed_pack_revocation"
                 val signedLease = signed.lease()
                 val revokePack = object : NativeLlmApi by api {
@@ -279,10 +337,13 @@ class LlmEvaluationInstrumentation : Instrumentation() {
                     .put("pack_lease_cases", JSONArray(listOf("signed_pack_descriptor_generation", "failed_activation_rejects_raw_piece",
                         "descriptor_hash_size_symlink_directory_fifo_and_close")))
                     .put("pack_trust", "Ephemeral synthetic test key/license evidence only; no production trust configured")
+                    .put("controller_worker_cases", JSONArray(listOf("signed_pack_worker_three_completions",
+                        "controller_stop_during_observed_native_load", "owned_prompt_and_borrowed_piece_erased",
+                        "completion_keeps_thinking_without_speech")))
                     .put("native_lifecycle_cases", JSONArray(listOf("pre_cancel", "corrupt_gguf", "post_token_cancel",
                         "lease_revocation", "concurrent_load_cancel", "concurrent_begin_cancel", "destroy_during_load")))
                     .put("default_gate_cases", JSONArray(listOf("ordinary_debug", "debug_with_release_flag", "unavailable_api")))
-                    .put("microphone", "NOT USED").put("remaining", JSONArray(listOf("production pack/controller attachment",
+                    .put("microphone", "NOT USED").put("remaining", JSONArray(listOf("Swift controller worker and production app attachment",
                         "physical performance", "non-thinking configuration", "speech policy", "vendor allocator/logits erasure")))
                     .toString(2))
             }
