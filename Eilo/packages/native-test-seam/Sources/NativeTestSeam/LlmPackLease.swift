@@ -89,7 +89,8 @@ final class LlmPackLease {
     } catch { throw LlmFailure.unavailable }
   }
   func openStream(allowed: @escaping () -> Bool, threads: Int = 2, api: NativeLlmAPI = .linked,
-                  openDescriptor: (URL, LlmArtifactPin) throws -> LlmVerifiedDescriptor = LlmModelDescriptor.open) throws -> NativeLlmStream {
+                  openDescriptor: (URL, LlmArtifactPin) throws -> LlmVerifiedDescriptor = LlmModelDescriptor.open,
+                  created: (NativeLlmStream) -> Void = { _ in }) throws -> NativeLlmStream {
     func current() -> Bool { verified() && allowed() }
     guard current(), (1...8).contains(threads) else { throw LlmFailure.unavailable }
     var stream: NativeLlmStream?, descriptor: LlmVerifiedDescriptor?
@@ -97,6 +98,7 @@ final class LlmPackLease {
       let owned = try openDescriptor(file, pin); descriptor = owned
       guard current(), owned.value >= 0 else { throw LlmFailure.unavailable }
       let candidate = try NativeLlmStream(allowed: current, api: api); stream = candidate
+      created(candidate) // Cancellation is published before the potentially long load.
       try candidate.load(verifiedDescriptor: owned.value, threads: threads)
       try owned.close(); descriptor = nil
       guard current() else { throw LlmFailure.unavailable }
