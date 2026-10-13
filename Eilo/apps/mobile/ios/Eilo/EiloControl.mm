@@ -1,4 +1,5 @@
 #import "EiloControl.h"
+#import <AVFoundation/AVFoundation.h>
 #import <React_RCTAppDelegate/RCTDefaultReactNativeFactoryDelegate.h>
 #import "Eilo-Swift.h"
 @implementation EiloControl {
