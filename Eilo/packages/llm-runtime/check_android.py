@@ -165,6 +165,8 @@ def evaluate(args, libraries, builds):
                 or report.get('model_sha256') != PROVENANCE['model']['sha256']
                 or report.get('destroy_load_worker_gate_observed') is not True
                 or report.get('destroy_load_native_status') not in (0, -2)
+                or report.get('pack_lease_cases') != ['signed_pack_descriptor_generation', 'failed_activation_rejects_raw_piece',
+                                                    'descriptor_hash_size_symlink_directory_fifo_and_close']
                 or report.get('native_lifecycle_cases') != expected_lifecycle):
             raise ValueError('native Android report failed')
         device('shell', 'run-as', 'com.eilo', 'test', '!', '-e', work)
