@@ -1,6 +1,6 @@
 import Foundation
 /// Pure data encoder with no action/tool/privacy dispatch. Retrieval and native
-/// protected-memory authorization belong to S08; recall defaults to excluded.
+/// protected-memory authorization belong to S09/S10/S12; recall defaults to excluded.
 enum UntrustedMemory {
   static let begin="EILO_UNTRUSTED_MEMORY_BEGIN",end="EILO_UNTRUSTED_MEMORY_END"
   static func section(_ units:[String])throws->String{

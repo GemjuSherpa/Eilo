@@ -2,7 +2,7 @@ package com.eilo.foundation
 
 /** Pure native data encoding, never an action/tool/privacy-command dispatcher.
  * No retrieval/storage/auth implementation is inferred. PromptBudget defaults to
- * excluding recall; S08 must supply native protected-memory eligibility.
+ * excluding recall; S09/S10/S12 must supply native protected-memory eligibility.
  */
 internal object UntrustedMemory {
     const val BEGIN="EILO_UNTRUSTED_MEMORY_BEGIN"
