@@ -192,6 +192,11 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult func speechStarted(_ ticket:SpeechWorkTicket)->Bool {speechTransaction(ticket){clearIdle();playback.begin(ticket.token);currentState = .speaking;return true}}
   @discardableResult func speechGap(_ ticket:SpeechWorkTicket)->Bool {speechTransaction(ticket){_ = playback.finish(ticket.token);currentState = .thinking;return true}}
+  func speechMetadata(_ ticket:SpeechWorkTicket,permitted:()->Bool,ledger:PlaybackLedger)->[PlaybackProgress]{
+    lock.lock();defer{lock.unlock()};guard ticket.token.privacyEpoch==privacyEpoch,!locked else{ledger.clear();return []}
+    return permitted() ? ledger.snapshot():[]
+  }
+  func speechPrivacyCurrent(_ ticket:SpeechWorkTicket)->Bool{lock.lock();defer{lock.unlock()};return ticket.token.privacyEpoch==privacyEpoch && !locked}
   func finishSpeechWork(_ ticket:SpeechWorkTicket){
     lock.lock();defer{lock.unlock()};guard speechTransaction(ticket,{true}) else{return}
     speechWork=nil;ticket.cancelled=true;currentState = .speaking;_ = dispatch(.playbackFinished,token:ticket.token)
