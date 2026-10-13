@@ -54,6 +54,7 @@
 		A772AE914674172FF0100EB5 /* BoundedContinuation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82621E2660AFB6C280172DF9 /* BoundedContinuation.swift */; };
 		7FCFF77E75D46E058464E38D /* PersonaPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC13372207E8A4776904D9 /* PersonaPolicy.swift */; };
 		C9D1DB1818A6D80EBCE17FF6 /* CapabilityPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */; };
+		9CD7395D98B8954A24F3850B /* DangerPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EFDB8A564DF65484EE7958 /* DangerPolicy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,6 +110,7 @@
 		82621E2660AFB6C280172DF9 /* BoundedContinuation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BoundedContinuation.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/BoundedContinuation.swift"; sourceTree = "<group>"; };
 		10AC13372207E8A4776904D9 /* PersonaPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PersonaPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PersonaPolicy.swift"; sourceTree = "<group>"; };
 		271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CapabilityPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/CapabilityPolicy.swift"; sourceTree = "<group>"; };
+		80EFDB8A564DF65484EE7958 /* DangerPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DangerPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/DangerPolicy.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
 				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
+				80EFDB8A564DF65484EE7958 /* DangerPolicy.swift */,
 				271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */,
 				10AC13372207E8A4776904D9 /* PersonaPolicy.swift */,
 				82621E2660AFB6C280172DF9 /* BoundedContinuation.swift */,
@@ -390,6 +393,7 @@
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
 				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
+				9CD7395D98B8954A24F3850B /* DangerPolicy.swift in Sources */,
 				C9D1DB1818A6D80EBCE17FF6 /* CapabilityPolicy.swift in Sources */,
 				7FCFF77E75D46E058464E38D /* PersonaPolicy.swift in Sources */,
 				A772AE914674172FF0100EB5 /* BoundedContinuation.swift in Sources */,
