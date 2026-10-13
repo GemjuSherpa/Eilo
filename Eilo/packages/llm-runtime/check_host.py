@@ -87,7 +87,7 @@ def compile_contract():
     run([*base, '-fsanitize=address,undefined', HERE / 'tests/contract.cc', '-o', CACHE / 'contract'], 'contract-compile.log')
     run([CACHE / 'contract'], 'contract.log')
     result = (CACHE / 'contract.log').read_text().strip()
-    if result != '27 scripted C ABI lifecycle scenarios PASS':
+    if result != '31 scripted C ABI lifecycle scenarios PASS':
         raise ValueError('contract report mismatch')
     return base
 
@@ -151,7 +151,7 @@ def evaluate(base, libraries, options, process_refs):
                       'output': raw.decode('utf-8'), 'kind': 'raw completion, not speech-approved'})
     result = {'task': 'VC-LLM-01', 'platform': f'{platform.system()} {platform.machine()} native CPU',
               'runtime': PROVENANCE['runtime'], 'model': PROVENANCE['model'], 'build_options': options,
-              'contract_scenarios': 27, 'sanitizers': 'ASan/UBSan PASS (adapter/scripted backend only)',
+              'contract_scenarios': 31, 'sanitizers': 'ASan/UBSan PASS (adapter/scripted backend only)',
               'native_lifecycle_cases': lines[-1].split('\t')[1].split(','),
               'network': {'policy': 'all network operations denied for inference process',
                           'IPv4_TCP': 'DENIED', 'IPv6_TCP': 'DENIED', 'IPv4_UDP': 'DENIED'},
@@ -162,7 +162,7 @@ def evaluate(base, libraries, options, process_refs):
               'remaining': ['mobile bindings/pack lease/controller integration', 'non-thinking template',
                             'speech policy', 'vendor allocator/logits retention audit', 'phone performance']}
     (CACHE / 'host-results.json').write_text(json.dumps(result, indent=2) + '\n')
-    print('27 scripted lifecycle scenarios, three real CPU completions and six real lifecycle cases PASS; inference network probes denied.')
+    print('31 scripted lifecycle scenarios, three real CPU completions and six real lifecycle cases PASS; inference network probes denied.')
 
 
 def main():
@@ -173,7 +173,7 @@ def main():
     verify_source()
     base = compile_contract()
     if args.contract_only:
-        print('27 scripted C ABI lifecycle scenarios PASS with ASan/UBSan.')
+        print('31 scripted C ABI lifecycle scenarios PASS with ASan/UBSan.')
         return
     libraries, options, process_refs = build_runtime()
     evaluate(base, libraries, options, process_refs)

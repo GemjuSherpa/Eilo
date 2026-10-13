@@ -63,6 +63,7 @@
     "debug_with_release_flag",
     "unavailable_api"
   ],
+  "prompt_budget": "Actual loaded vocabulary; context4096/recall512/output256 and deterministic trim PASS",
   "microphone": "NOT USED",
   "remaining": [
     "Swift controller worker and production app attachment",
@@ -90,10 +91,10 @@
     {
       "abi": "arm64-v8a",
       "target": "aarch64-linux-android26",
-      "jni_sha256": "489ddb97af91bac6d879155b084f1b79229993b8eb3545c5c0dff6bd4950dd8c",
+      "jni_sha256": "30b4284af6ad9b767b43d2eb177e1d0107d4a9cb63ff91aa28c30d463f8857d6",
       "evaluation_compile_define": "EILO_LLM_EVALUATION",
       "CPU_only_build_options": {
-        "CMAKE_TOOLCHAIN_FILE": "${NDK}/build/cmake/android.toolchain.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "/Users/gemju/Library/Android/sdk/ndk/27.1.12297006/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "arm64-v8a",
         "ANDROID_PLATFORM": "android-26",
         "ANDROID_STL": "c++_static",
@@ -159,10 +160,10 @@
     {
       "abi": "armeabi-v7a",
       "target": "armv7a-linux-androideabi26",
-      "jni_sha256": "4dd229b08a4b135f8c215b2cefd009e3875f7cc5cb407d475745911d3ecaa720",
+      "jni_sha256": "63bb2fd2d521742e1f997795414fec65af19026efc880c3161ebf7d48420228e",
       "evaluation_compile_define": "EILO_LLM_EVALUATION",
       "CPU_only_build_options": {
-        "CMAKE_TOOLCHAIN_FILE": "${NDK}/build/cmake/android.toolchain.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "/Users/gemju/Library/Android/sdk/ndk/27.1.12297006/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "armeabi-v7a",
         "ANDROID_PLATFORM": "android-26",
         "ANDROID_STL": "c++_static",
@@ -227,10 +228,10 @@
     {
       "abi": "x86",
       "target": "i686-linux-android26",
-      "jni_sha256": "d86e8258cb8bea6bce9bc3f1db3107be11dfe8b717710a9d4b1ce7ad11d94f97",
+      "jni_sha256": "8b958190dee62e20d2e3a7db5e5b60c759da245a97ba5f5effcb7487e1dd439d",
       "evaluation_compile_define": "EILO_LLM_EVALUATION",
       "CPU_only_build_options": {
-        "CMAKE_TOOLCHAIN_FILE": "${NDK}/build/cmake/android.toolchain.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "/Users/gemju/Library/Android/sdk/ndk/27.1.12297006/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "x86",
         "ANDROID_PLATFORM": "android-26",
         "ANDROID_STL": "c++_static",
@@ -295,10 +296,10 @@
     {
       "abi": "x86_64",
       "target": "x86_64-linux-android26",
-      "jni_sha256": "b4cf3b1a5e3073f9cb75f83ed8178ce21b08f80f6d62b681db25a79afe9389d5",
+      "jni_sha256": "d17271e40a5d97a3bf14e1360e1ec73d87a9854a3c94d1821e5e4a7841eb2e53",
       "evaluation_compile_define": "EILO_LLM_EVALUATION",
       "CPU_only_build_options": {
-        "CMAKE_TOOLCHAIN_FILE": "${NDK}/build/cmake/android.toolchain.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "/Users/gemju/Library/Android/sdk/ndk/27.1.12297006/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "x86_64",
         "ANDROID_PLATFORM": "android-26",
         "ANDROID_STL": "c++_static",
@@ -362,7 +363,7 @@
     }
   ],
   "source_modifications": "NONE",
-  "apk_sha256": "b9bec15ba482e3eeec8ba8b0355a776b93ae3cb74f4cc2ef7340473365945f6f",
+  "apk_sha256": "4b3f459da2c52f3c8b92adfa22ad6d50684dc4100fa670cd350900b311cc605a",
   "page_size": "4096",
   "temporary_model_removed": true,
   "physical_inference": "NOT RUN",

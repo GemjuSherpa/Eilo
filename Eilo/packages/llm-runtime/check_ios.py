@@ -101,7 +101,7 @@ def evaluate(udid, executable, selected, builds):
              model['sha256'], model['bytes'], corrupt.name], 'ios-binding.log', timeout=240)
     lines = (CACHE / 'ios-binding.log').read_text().splitlines()
     expected = 'pre_cancel,corrupt_gguf,post_token_cancel,lease_revocation,concurrent_load_cancel,concurrent_begin_cancel'
-    if len(lines) != 5 or lines[3] != f'LIFECYCLE\t{expected}\tPASS' or lines[4] != 'WORKER\tsigned_pack_three_completions,prompt_erased,no_speech,temp_removed\tPASS':
+    if len(lines) != 6 or lines[3] != f'LIFECYCLE\t{expected}\tPASS' or lines[4] != 'BUDGET\tactual_vocab,context4096,recall512,output256,preserve_rules_latest\tPASS' or lines[5] != 'WORKER\tsigned_pack_three_completions,prompt_erased,no_speech,temp_removed\tPASS':
         raise ValueError('binding evaluation report mismatch')
     prompts = ['The opposite of cold is', 'One, two, three,', 'The sky on a clear day is']
     cases = []
@@ -119,6 +119,7 @@ def evaluate(udid, executable, selected, builds):
               'CPU_registry_only': 'PASS', 'same_open_model_descriptor_SHA256': 'PASS',
               'cases': cases, 'native_lifecycle_cases': expected.split(','),
               'controller_worker_cases': ['signed_pack_three_completions', 'prompt_erased', 'no_speech', 'temp_removed'],
+              'prompt_budget': 'Actual loaded vocabulary; context4096/recall512/output256 and deterministic trim PASS',
               'template': 'Pinned Qwen3 no-tools subset, enable_thinking=false; markup/UTF-8 output guard',
               'pack_trust': 'Ephemeral synthetic signing key/license evidence; no production trust',
               'microphone': 'NOT USED', 'physical_inference': 'NOT RUN',

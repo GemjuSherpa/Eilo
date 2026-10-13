@@ -19,6 +19,10 @@ EiloLlm *eilo_llm_create(void);
 int32_t eilo_llm_load(EiloLlm *, int32_t verified_model_fd, int32_t threads);
 /* Preformatted native prompt only; no chat-template/policy/speech authorization.
  * <=16384 bytes, <=4096 total prompt+output tokens, output limit 1..256. */
+/* Loaded worker-only tokenizer, same vocabulary/special-token flags as begin.
+ * Positive count (including counts above context budget), or negative error.
+ * No inference/KV allocation; <=16384 input bytes; scratch is cleared. */
+int32_t eilo_llm_count_tokens(EiloLlm *, const char *text, int32_t bytes);
 int32_t eilo_llm_begin(EiloLlm *, const char *prompt, int32_t bytes, int32_t output_limit);
 /* TOKEN copies a raw token byte piece, which may split UTF-8; never speech-ready.
  * Caller provides exactly 1024 bytes, clears them after use and rechecks the current

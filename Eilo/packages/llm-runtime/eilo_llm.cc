@@ -128,6 +128,21 @@ extern "C" int32_t eilo_llm_load(EiloLlm *h, int32_t fd, int32_t threads) {
   } catch (...) { return h->stop(EILO_LLM_UNAVAILABLE); }
 }
 
+extern "C" int32_t eilo_llm_count_tokens(EiloLlm *h, const char *text, int32_t bytes) {
+  if (!h) return EILO_LLM_INVALID;
+  if (h->stopped()) return h->stop(EILO_LLM_CANCELLED);
+  if (h->state != EiloLlm::State::loaded || !text || bytes < 1 || bytes > 16384 || std::memchr(text, 0, bytes))
+    return h->stop(EILO_LLM_INVALID);
+  try {
+    Tokens tokens;
+    int count = llama_tokenize(llama_model_get_vocab(h->model), text, bytes, tokens.data.data(), kContext, true, true);
+    if (h->stopped()) return h->stop(EILO_LLM_CANCELLED);
+    // Negative required capacity is a count, not an error; bound before negation.
+    if (count < 0 && count >= -32768) count = -count;
+    return count >= 1 && count <= 32768 ? count : h->stop(EILO_LLM_UNAVAILABLE);
+  } catch (...) { return h->stop(EILO_LLM_UNAVAILABLE); }
+}
+
 extern "C" int32_t eilo_llm_begin(EiloLlm *h, const char *prompt, int32_t bytes, int32_t limit) {
   if (!h) return EILO_LLM_INVALID;
   if (h->stopped()) return h->stop(EILO_LLM_CANCELLED);
