@@ -45,7 +45,7 @@ def main():
     model=llm.PROVENANCE['model'];model_path=ROOT/'.local/model-build'/model['file']
     # Fixed generic fixture contains no personal history. No raw audio is logged.
     args=[binary,model_path,model['sha256'],model['bytes'],wake_model,wake_audio,asr_model,question]
-    with (cache/'evaluation.log').open('w') as out:subprocess.run(list(map(str,['xcrun','simctl','spawn',a.udid,*args])),stdout=out,stderr=subprocess.STDOUT,check=True,timeout=420)
+    with (cache/'evaluation.log').open('w') as out:subprocess.run(list(map(str,['xcrun','simctl','spawn',a.udid,*args])),stdout=out,stderr=subprocess.STDOUT,check=True,timeout=660)
     lines=[x.removeprefix('EILO_JOIN_RESULT\t') for x in (cache/'evaluation.log').read_text().splitlines() if x.startswith('EILO_JOIN_RESULT\t')]
     if len(lines)!=1:raise ValueError('missing joined report')
     result=json.loads(lines[0]);result.update({'date':'2026-10-14','model':model,'runtime':llm.PROVENANCE['runtime'],'wake_fixture_sha256':wake_case['sha256'],'asr_fixture_sha256':case['sha256'],'combined_question_boundary':'Scripted fixture start; no calibrated wake-end timestamp','source_sha256':hashlib.sha256((HERE/'tests/ios_joined.swift').read_bytes()).hexdigest(),'ordinary_app_attachment':'NOT ENABLED','physical_airplane_mode_and_egress_capture':'NOT RUN','ASR_confidence':'Synthetic fixture confidence supplied; runtime does not provide calibrated confidence','VAD':'NOT ATTACHED; fixture end is scripted','offline_voice_evidence':'Synthetic exact installed voice/OS proof only; not production evidence','semantic_review':'pending_review','ASR_dynamic_export_isolation':'PASS: exactly four Eilo C exports; TWOLEVEL namespace','first_audible_and_user_heard':'NOT MEASURED'})

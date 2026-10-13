@@ -133,6 +133,8 @@ All 175 stable task IDs and dependency edges are preserved. The existing source 
 
 ## S07 — Safe generic conversation integration
 
+14 October 2026: remaining implementation tasks are prepared in sprint/s07-conversation-completion for a single final PR. See [S07 review](../Eilo/docs/sprints/S07_REVIEW.md); physical/production/semantic acceptance remains partial. Baseline status labels below are historical planning values.
+
 - VC-BEHAV-01 — AI identity and supportive persona (dependencies: VC-LLM-02; baseline: planned)
 - VC-BEHAV-02 — Uncertainty and capability boundaries (dependencies: VC-BEHAV-01; baseline: planned)
 - VC-BEHAV-03 — Imminent-danger response policy (dependencies: VC-BEHAV-01; baseline: planned)
@@ -260,8 +262,8 @@ All 175 stable task IDs and dependency edges are preserved. The existing source 
 ## S18 — Build distribution and release readiness
 
 - VC-DEVOPS-03 — Mobile build signing and staging (dependencies: VC-DEVOPS-02; baseline: planned)
-- VC-DEVOPS-04 — Owner controlled release gates (dependencies: VC-DEVOPS-03; baseline: planned)
+- VC-DEVOPS-04 — Gemju Sherpa controlled release gates (dependencies: VC-DEVOPS-03; baseline: planned)
 
 Verification: task count 175; unique stable IDs 175; all dependencies in the same or an earlier sprint. Same-sprint tasks must still follow dependency order. Detailed requirements, focused tests and historical evidence remain in baseline JSON v1.5.
 
-Current Git exception: owner authorizes setup Git operations only in repositories newly created for this task. Existing repositories must not be accessed. The exception does not authorize later implementation, deployment or publication.
+Current Git authorization (14 October 2026): Gemju Sherpa grants full Git command access in GemjuSherpa/Eilo for project tasks. Use a sprint branch and separate task branches; build/test before commit, push and merge each task into the sprint branch, then open a PR to main for review. For S07, complete remaining dependency-ready tasks in one continuous run and open one final PR. Do not merge main automatically or access unrelated repositories. Paid services, deployment and publication require separate authorization. Physical/production acceptance remains distinct from implementation review.

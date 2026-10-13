@@ -39,8 +39,14 @@ fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
 class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter(), private val models: ModelReadinessAdapter = MissingModelReadiness()) {
     private val playback=PlaybackRejection(clock::milliseconds)
-    @Synchronized internal fun recognitionAllowed(token:GenerationToken):Boolean =
-        currentState==ControllerState.CAPTURING && accepts(token) && playback.allowsAudio()
+    private var interruptedCapture:GenerationToken?=null
+    private var independentCapture:(()->Boolean)?=null
+    @Synchronized internal fun recognitionAllowed(token:GenerationToken):Boolean {
+        if(currentState!=ControllerState.CAPTURING || !accepts(token))return false
+        if(playback.allowsAudio())return true
+        val verify=independentCapture ?: return false
+        return try {interruptedCapture===token && verify() && interruptedCapture===token && accepts(token)}catch(_:Exception){stop();false}
+    }
     @Synchronized fun modelStatus(): ModelStatus = try { models.status() } catch (_: Exception) { ModelStatus.CORRUPT }
     @Synchronized fun modelsChanged() { if(modelStatus()!=ModelStatus.READY) { stop();if(currentState==ControllerState.STOPPED)currentState=ControllerState.SETUP } else if(currentState==ControllerState.SETUP) currentState=ControllerState.STOPPED }
     @Synchronized fun setOutputGain(gain:Float):Boolean {
@@ -238,6 +244,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     @Synchronized fun token(): GenerationToken? = activeToken
     private fun invalidateGeneration() {
+        interruptedCapture=null;independentCapture=null
         activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
         val continuation = continuationCancel; continuationCancel = null; continuationToken = null
         try { continuation?.invoke() } catch (_: Exception) { diagnostics.record(SafeComponent.MODEL, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
@@ -372,7 +379,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
             effects.cancelWork()
             if(generation!=expected || privacyEpoch!=epoch || locked)return null
             if(!verified() || !permissionGranted() || modelStatus()!=ModelStatus.READY){stop();return null}
-            issueGeneration();currentState=ControllerState.CAPTURING;hasConversation=true;activeToken
+            issueGeneration();currentState=ControllerState.CAPTURING;hasConversation=true;interruptedCapture=activeToken;independentCapture=verified;activeToken
         }catch(_:Exception){stop();null}
     }
     @Synchronized fun stop(): Boolean {

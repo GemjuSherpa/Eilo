@@ -52,6 +52,8 @@ def main():
         case['ratings'] = None
     report = {'task': 'VC-BEHAV-01', 'policy_version': fixture['policy_version'],
               'fixture_sha256': hashlib.sha256(fixtures_path.read_bytes()).hexdigest(),
+              'fixed_system_rules_sha256': hashlib.sha256((fixture['privileged_rules']+json.loads((HERE/'tests/capability-fixtures.json').read_text())['rules']+json.loads((HERE/'tests/danger-fixtures.json').read_text())['rules']).encode()).hexdigest(),
+              'purpose': 'S07 final combined-policy regression; semantic acceptance remains pending',
               'platform': 'iOS ARM64 simulator, actual signed-pack/controller CPU worker',
               'model': model, 'runtime': runtime.PROVENANCE['runtime'], 'native_link': record,
               'cases': cases, 'reviewer': 'Gemju Sherpa', 'review_status': 'pending_review',

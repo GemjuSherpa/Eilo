@@ -23,7 +23,7 @@ internal enum class LlmJobResult { COMPLETED, CANCELLED, UNAVAILABLE }
 internal class LlmControllerJob private constructor(
     private val controller: NativeController,
     private val prompt: ByteArray,
-    private val completion:(LlmJobResult)->Unit,
+    private val completion:(LlmJobResult)->Unit,private val request:GenericReplyRequest?,
 ) {
     private val cancelled = AtomicBoolean(false)
     private val promptGate = Any()
@@ -33,6 +33,7 @@ internal class LlmControllerJob private constructor(
     @Volatile private var result: LlmJobResult? = null
 
     fun requestCancellation(): Boolean {
+        request?.cancel()
         synchronized(promptGate) {
             cancelled.set(true)
             if (!promptBorrowed) prompt.fill(0)
@@ -89,6 +90,7 @@ internal class LlmControllerJob private constructor(
         } catch (_: LinkageError) { outcome = LlmJobResult.UNAVAILABLE }
         catch (_: Exception) { outcome = if (cancelled.get() || ticket.cancelled || ticket.token.cancelled) LlmJobResult.CANCELLED else LlmJobResult.UNAVAILABLE }
         finally {
+            request?.cancel()
             synchronized(promptGate) { prompt.fill(0); promptBorrowed = false }
             try { stream.getAndSet(null)?.close() } catch (_: Exception) { cleanupFailed = true; outcome = LlmJobResult.UNAVAILABLE }
             if (cancelled.get() || ticket.cancelled || ticket.token.cancelled) outcome = LlmJobResult.CANCELLED
@@ -112,11 +114,11 @@ internal class LlmControllerJob private constructor(
             consume: (ByteArray, Int) -> Unit,
         ): LlmControllerJob? {
             if (prompt.size !in 1..16384 || prompt.any { it == 0.toByte() } || outputLimit !in 1..256 || threads !in 1..8) {
-                prompt.fill(0); return null
+                prompt.fill(0);request?.cancel(); return null
             }
-            val job = LlmControllerJob(controller, prompt,completion)
+            val job = LlmControllerJob(controller, prompt,completion,request)
             val ticket = controller.prepareLlmWork(token, job::requestCancellation)
-            if (ticket == null) { prompt.fill(0); return null }
+            if (ticket == null) { prompt.fill(0);request?.cancel(); return null }
             val submittingThread = Thread.currentThread()
             try {
                 worker.execute {
@@ -124,12 +126,12 @@ internal class LlmControllerJob private constructor(
                         catch (_: LinkageError) { false } catch (_: Exception) { false }
                     if (!separateWorker) {
                         // Reject inline executors before store hashing/native create.
-                        prompt.fill(0)
+                        prompt.fill(0);request?.cancel()
                         job.result = controller.finishLlmWork(ticket, LlmJobResult.UNAVAILABLE); job.done.countDown();completion(job.result!!)
                     } else job.run(ticket, store, selection, threads, outputLimit, api, request, openDescriptor, consume)
                 }
             } catch (_: Exception) {
-                prompt.fill(0); job.result = controller.finishLlmWork(ticket, LlmJobResult.UNAVAILABLE); job.done.countDown();completion(job.result!!)
+                prompt.fill(0);request?.cancel(); job.result = controller.finishLlmWork(ticket, LlmJobResult.UNAVAILABLE); job.done.countDown();completion(job.result!!)
             }
             return job
         }

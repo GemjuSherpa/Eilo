@@ -15,5 +15,5 @@ final class ConfirmedSpeechInterruption {
 final class InterruptionActivation {
   private let token:GenerationToken
   fileprivate init(_ token:GenerationToken){self.token=token}
-  func apply(_ controller:NativeController,independentSpeechStillVerified:()->Bool)->GenerationToken?{controller.interruptReply(token,independentSpeechStillVerified:independentSpeechStillVerified)}
+  func apply(_ controller:NativeController,independentSpeechStillVerified:@escaping()->Bool)->GenerationToken?{controller.interruptReply(token,independentSpeechStillVerified:independentSpeechStillVerified)}
 }
