@@ -94,7 +94,7 @@ jobs:
           cd apps/mobile
           bundle install --jobs 4
           cd ios
-          bundle exec pod install --deployment
+          bash ../../../scripts/install-ios-pods.sh
       - name: Swift XCTest adapter fixtures
         working-directory: Eilo/packages/native-test-seam
         run: swift test
