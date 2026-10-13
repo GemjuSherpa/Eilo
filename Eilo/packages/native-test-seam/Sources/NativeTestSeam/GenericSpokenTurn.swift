@@ -6,22 +6,25 @@ struct GenericReplyRequest{let latest:String,history:[QwenTurn]}
 typealias GenericReplyStarter=(GenerationToken,GenericReplyRequest,@escaping(UnsafeBufferPointer<UInt8>)throws->Void,@escaping(LlmJobResult)->Void)->Bool
 final class GenericSpokenTurn {
   private let controller:NativeController,token:GenerationToken,sink:any NativeClauseSink,starter:GenericReplyStarter,configured:Bool
+  private var user="",reply=""
   private var submitted=false,queue:NativeClauseQueue?,output:NonThinkingOutput?
   init(controller:NativeController,token:GenerationToken,sink:any NativeClauseSink,configured:Bool=false,starter:@escaping GenericReplyStarter={_,_,_,_ in false}){self.controller=controller;self.token=token;self.sink=sink;self.configured=configured;self.starter=starter}
   /// Final text from the bounded native ASR worker only; never ambient or JS text.
   /// Unknown confidence asks for clarification, never invents a runtime confidence.
-  @discardableResult func submit(_ final:AsrText,confidence:Float?,ambiguous:Bool=false,overlap:Bool=false,history:[QwenTurn]=[])->Bool {
+  @discardableResult func submit(_ final:AsrText,confidence:Float?,ambiguous:Bool=false,overlap:Bool=false)->Bool {
     controller.lock.lock();defer{controller.lock.unlock()}
     guard configured,!submitted,final.final,controller.recognitionAllowed(token) else{return false}
     submitted=true
     let request:String
     switch RecognitionPolicy.decide(final.text,confidence:confidence,ambiguous:ambiguous,overlap:overlap){case .clarify:request=RecognitionPolicy.clarification;case .conversation(let text):request=text}
+    guard let history=controller.genericContext(token) else{return false}
+    user=request==RecognitionPolicy.clarification ? "":request
     guard controller.dispatch(.endpoint,token:token) else{return false}
     let policy=NativeSpeechPolicy(controller:controller,token:token,configured:true)
-    guard let q=NativeClauseQueue.create(controller:controller,token:token,sink:sink,authorized:policy.allows) else{return false};queue=q
+    guard let q=NativeClauseQueue.create(controller:controller,token:token,sink:sink,completed:{[weak self] t in if let self{self.controller.recordGenericTurn(t,user:self.user,reply:self.reply);self.user="";self.reply=""}},cleared:{[weak self] in self?.user="";self?.reply="";self?.output?.cancel()},authorized:policy.allows) else{return false};queue=q
     let fixed = request==RecognitionPolicy.clarification ? request : (DangerPolicy.recognizes(request) ? DangerPolicy.response:CapabilityPolicy.response(request))
-    if let fixed{return q.enqueue(fixed) && q.seal()}
-    let guardOutput=NonThinkingOutput(current:{[weak self] in self.map{!$0.token.cancelled} ?? false},emit:{text in if !q.append(text){throw LlmFailure.unavailable}});output=guardOutput
+    if let fixed{reply=fixed;return q.enqueue(fixed) && q.seal()}
+    let guardOutput=NonThinkingOutput(current:{[weak self] in self.map{!$0.token.cancelled} ?? false},emit:{[weak self] text in guard let self,self.reply.utf8.count+text.utf8.count<=4096 else{throw LlmFailure.unavailable};self.reply+=text;if !q.append(text){throw LlmFailure.unavailable}});output=guardOutput
     let accepted=starter(token,GenericReplyRequest(latest:request,history:history),{try guardOutput.append($0)},{[weak self] result in
       guard let self else{return};self.controller.lock.lock();defer{self.controller.lock.unlock()}
       guard !self.token.cancelled else{guardOutput.cancel();return}

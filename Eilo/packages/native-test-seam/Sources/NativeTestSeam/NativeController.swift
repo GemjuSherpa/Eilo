@@ -116,6 +116,7 @@ public final class NativeController: @unchecked Sendable {
   var idleTask: (any IdleCancellation)?
   var idleStarted: UInt64?
   var hasConversation=false
+  private var genericDialogue:[QwenTurn]=[]
   func clearIdle() { let previous=idleTask; idleTask=nil; idleStarted=nil; previous?.cancel() }
   func updateIdle() {
     clearIdle()
@@ -134,13 +135,26 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult func endSessionPreservingCapture() -> Bool {
     guard permissionGranted() else { stop(); return false }
-    clearIdle(); invalidateGeneration(); hasConversation=false
+    clearIdle(); invalidateGeneration(); hasConversation=false;genericDialogue.removeAll()
     let expectedGeneration=generation, expectedEpoch=privacyEpoch
     do {
       playback.cancel();try effects.cancelWork(); try effects.clearVolatileContext()
       guard generation == expectedGeneration, privacyEpoch == expectedEpoch else { return false }
       sessionID=UUID(); currentState = .standby; issueGeneration(); return true
     } catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.controller,.unexpected,.error); return false }
+  }
+  /// Volatile native dialogue only, no durable history/recall. Controller monitor owns it.
+  func genericContext(_ token:GenerationToken)->[QwenTurn]? {
+    lock.lock();defer{lock.unlock()};guard accepts(token),hasConversation,[.capturing,.thinking,.speaking].contains(currentState) else{return nil};return genericDialogue
+  }
+  func recordGenericTurn(_ token:GenerationToken,user:String,reply:String){
+    lock.lock();defer{lock.unlock()};guard accepts(token),hasConversation,[.thinking,.speaking].contains(currentState),!user.isEmpty,!reply.isEmpty,user.utf8.count<=4096,reply.utf8.count<=4096 else{return}
+    genericDialogue += [QwenTurn(role:.user,text:user),QwenTurn(role:.assistant,text:reply)]
+    while genericDialogue.count>8 || genericDialogue.reduce(0,{$0+$1.text.utf8.count})>8192{genericDialogue.removeFirst(2)}
+  }
+  /// An active post-reply session can capture a follow-up without another wake event.
+  func beginGenericFollowup(_ expected:GenerationToken)->GenerationToken? {
+    lock.lock();defer{lock.unlock()};guard currentState == .standby,hasConversation,accepts(expected),playback.allowsAudio,dispatch(.speechDetected,token:expected) else{return nil};return activeToken
   }
   var sessionID = UUID()
   let privateGate: any PrivateEffectGate
@@ -342,7 +356,7 @@ public final class NativeController: @unchecked Sendable {
     if stopping { return true }
     stopping=true; defer { stopping=false }
     startIntent=nil; capturePending=false; captureIntent=nil
-    clearIdle(); hasConversation=false
+    clearIdle(); hasConversation=false;genericDialogue.removeAll()
     invalidateGeneration()
     currentState = .stopped; currentError = nil;playback.cancel()
     var failed = false

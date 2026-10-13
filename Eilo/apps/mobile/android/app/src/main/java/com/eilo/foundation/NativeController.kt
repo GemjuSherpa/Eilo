@@ -115,6 +115,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private var idleTask: IdleCancellation? = null
     private var idleStarted: Long? = null
     private var hasConversation = false
+    private val genericDialogue=mutableListOf<QwenTurn>()
     private fun clearIdle() {
         val previous=idleTask; idleTask=null; idleStarted=null
         try { previous?.cancel() } catch (_: Exception) { diagnostics.record(SafeComponent.CONTROLLER,SafeError.UNEXPECTED,SafeSeverity.WARNING) }
@@ -136,13 +137,24 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     private fun endSessionPreservingCapture(): Boolean {
         if (!permissionGranted()) { stop(); return false }
-        clearIdle(); invalidateGeneration(); hasConversation=false
+        clearIdle(); invalidateGeneration(); hasConversation=false;genericDialogue.clear()
         val expectedGeneration=generation; val expectedEpoch=privacyEpoch
         return try {
             playback.cancel();effects.cancelWork(); effects.clearVolatileContext()
             if (generation != expectedGeneration || privacyEpoch != expectedEpoch) return false
             sessionId=UUID.randomUUID(); currentState=ControllerState.STANDBY; issueGeneration(); true
         } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CONTROLLER,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
+    }
+    /** Volatile native context only; never a protected-history or persistence authority. */
+    @Synchronized internal fun genericContext(token:GenerationToken):List<QwenTurn>? = if(accepts(token) && hasConversation && currentState in listOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING))genericDialogue.toList() else null
+    @Synchronized internal fun recordGenericTurn(token:GenerationToken,user:String,reply:String){
+        if(!accepts(token) || !hasConversation || currentState !in listOf(ControllerState.THINKING,ControllerState.SPEAKING) || user.isEmpty() || reply.isEmpty() || user.toByteArray().size>4096 || reply.toByteArray().size>4096)return
+        genericDialogue+=listOf(QwenTurn(QwenRole.USER,user),QwenTurn(QwenRole.ASSISTANT,reply))
+        while(genericDialogue.size>8 || genericDialogue.sumOf{it.text.toByteArray().size}>8192){genericDialogue.removeAt(0);genericDialogue.removeAt(0)}
+    }
+    @Synchronized internal fun beginGenericFollowup(expected:GenerationToken):GenerationToken? {
+        if(currentState!=ControllerState.STANDBY || !hasConversation || !accepts(expected) || !playback.allowsAudio() || !dispatch(ControllerEvent.SPEECH_DETECTED,token=expected))return null
+        return activeToken
     }
     private var sessionId = UUID.randomUUID()
     private var privacyEpoch = 0L
@@ -367,7 +379,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (stopping) return true
         stopping=true
         startIntent=null; capturePending=false; captureIntent=null
-        clearIdle(); hasConversation=false
+        clearIdle(); hasConversation=false;genericDialogue.clear()
         invalidateGeneration()
         currentState = ControllerState.STOPPED
         playback.cancel()

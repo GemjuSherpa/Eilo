@@ -34,18 +34,31 @@ import Darwin
     var wake=try audio(CommandLine.arguments[5]);defer{wake.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)}}
     var activation:WakeActivation?
     wake.withUnsafeBufferPointer{p in for offset in stride(from:0,to:p.count,by:320){if activation==nil{activation=detector.process(standby,input:UnsafeBufferPointer(rebasing:p[offset..<min(offset+320,p.count)]),sampleRate:16000)}}}
+    var question=try audio(CommandLine.arguments[7]);defer{question.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)}}
+    let handoff=WakeQuestionHandoff();try question.withUnsafeBufferPointer{try check(handoff.offer(UnsafeBufferPointer(rebasing:$0[0..<320]),startSample:0))}
     try check(activation?.apply(c)==true);detector.close();let capture=c.token!
     let asr=StreamingAsr(capture,allowed:{c.recognitionAllowed(capture)},open:{try NativeAsrStream(directory:CommandLine.arguments[6],verified:{!capture.cancelled})})
-    var question=try audio(CommandLine.arguments[7]);defer{question.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)}}
-    try question.withUnsafeBufferPointer{p in for offset in stride(from:0,to:p.count,by:320){try check(asr.accept(UnsafeBufferPointer(rebasing:p[offset..<min(offset+320,p.count)])))}}
+    // Scripted fixture boundary; no claim of a calibrated real wake-end timestamp.
+    try check(handoff.activate(capture,firstQuestionSample:0,allowed:{c.recognitionAllowed(capture)},consume:{try check(asr.accept($0))}))
+    try question.withUnsafeBufferPointer{p in for offset in stride(from:320,to:p.count,by:320){try check(handoff.offer(UnsafeBufferPointer(rebasing:p[offset..<min(offset+320,p.count)]),startSample:UInt64(offset)))}}
+    handoff.close()
     guard let final=asr.poll(finish:true),!final.text.isEmpty else{throw LlmFailure.unavailable}
     let plain=try IOSSystemSpeech();let voices=plain.voices();try check(!OfflineVoiceRegistry().refresh(voices));plain.shutdown();guard let voice=voices.first else{throw LlmFailure.unavailable}
     let backend=try IOSSystemSpeech(evidence:[IOSOfflineVoiceEvidence(voiceID:voice.id,osBuild:ProcessInfo.processInfo.operatingSystemVersionString)])
     let speech=IOSOfflineSpeech(backend:backend,allowed:{!$0.cancelled});var ready:Bool?;speech.refresh(requested:voice.id){ready=$0};try pump(until:{ready != nil},seconds:10);try check(ready==true)
     let turn=GenericSpokenTurn(controller:c,token:capture,sink:IOSClauseSink(speech),configured:true,starter:GenericSpokenTurn.localReply(controller:c,store:store,selection:selection))
     try check(turn.submit(final,confidence:0.95));try pump(until:{c.state == .standby || c.state == .error || c.state == .stopped},seconds:180);try check(c.state == .standby)
+    let postReply=c.token!;let tailDeadline=ProcessInfo.processInfo.systemUptime+0.35
+    try pump(until:{ProcessInfo.processInfo.systemUptime>=tailDeadline},seconds:1)
+    guard let followup=c.beginGenericFollowup(postReply),c.genericContext(followup)?.count==2 else{throw LlmFailure.unavailable}
+    let secondAsr=StreamingAsr(followup,allowed:{c.recognitionAllowed(followup)},open:{try NativeAsrStream(directory:CommandLine.arguments[6],verified:{!followup.cancelled})})
+    try question.withUnsafeBufferPointer{p in for offset in stride(from:0,to:p.count,by:320){try check(secondAsr.accept(UnsafeBufferPointer(rebasing:p[offset..<min(offset+320,p.count)])))}}
+    guard let secondFinal=secondAsr.poll(finish:true) else{throw LlmFailure.unavailable}
+    let second=GenericSpokenTurn(controller:c,token:followup,sink:IOSClauseSink(speech),configured:true,starter:GenericSpokenTurn.localReply(controller:c,store:store,selection:selection))
+    try check(second.submit(secondFinal,confidence:0.95));try pump(until:{c.state == .standby || c.state == .error || c.state == .stopped},seconds:180);try check(c.state == .standby)
+    try check(c.endConversation());try check(c.beginGenericFollowup(c.token!)==nil)
     c.stop();speech.close();try FileManager.default.removeItem(at:root);try check(!FileManager.default.fileExists(atPath:root.path))
-    let report:[String:Any]=["task":"VC-JOIN-01","platform":"iPhone 18 Pro ARM64 simulator","microphone":"NOT USED","history_persistence":"NONE","wake_activation":"PASS","ASR_final_once":"PASS","signed_cpu_worker":"PASS","configured_clause_policy":"PASS","SDK_speech_completion":"PASS","normal_unknown_offline_gate":"PASS","temporary_signed_pack_removed":true]
+    let report:[String:Any]=["tasks":["VC-JOIN-01","VC-JOIN-02"],"spoken_turns":2,"followup_without_wake":"PASS","bounded_completed_context":"PASS","scripted_suffix_handoff":"PASS","end_clears_session":"PASS","platform":"iPhone 18 Pro ARM64 simulator","microphone":"NOT USED","history_persistence":"NONE","wake_activation":"PASS","ASR_final_once":"PASS","signed_cpu_worker":"PASS","configured_clause_policy":"PASS","SDK_speech_completion":"PASS","normal_unknown_offline_gate":"PASS","temporary_signed_pack_removed":true]
     let data=try JSONSerialization.data(withJSONObject:report,options:[.sortedKeys]);print("EILO_JOIN_RESULT\t"+String(decoding:data,as:UTF8.self))
   }
   static func main(){do{try run()}catch{fputs("Joined evaluation unavailable.\n",stderr);exit(1)}}
