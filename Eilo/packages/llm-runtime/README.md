@@ -122,4 +122,22 @@ Focused tests, using existing toolchains:
 swift test --filter LlmPackLeaseTests
 ```
 
-The ordinary app still has unavailable runtime/model readiness. Production controller worker attachment, configured release trust, physical inference/performance, non-thinking configuration, speech policy and vendor allocator/logits retention remain open.
+The ordinary app still has unavailable runtime/model readiness. Configured release trust, physical inference/performance, non-thinking configuration, speech policy and vendor allocator/logits retention remain open.
+
+## Android controller worker
+
+`LlmControllerJob` registers a controller-issued ticket before scheduling one current thinking-turn job on a separate native executor. It resolves a signed `LlmPackLease`, publishes the stream's short cancellation signal before loading, and exclusively owns load/prefill/decode/close. Default Android main-thread and inline-executor execution are rejected before model IO. No ordinary app caller, runtime packaging or readiness override is installed.
+
+Submission transfers exclusive ownership of the bounded prompt byte array, including on rejection. Cancelled queued prompts clear immediately; an active prefill keeps the prompt borrowed until the native call returns, then clears it. Stop/privacy/generation/route/permission transitions invalidate tickets and signal native cancellation without joining/destructing inside the controller. Raw borrowed pieces and final completion revalidate the token and pack epoch under that same controller monitor. Consumers must perform only bounded native buffer work, retain no scratch and do no IO, inference or joining there. Completed raw generation stays thinking and grants no speech/display/storage rights.
+
+`awaitCompletion` is a lifecycle cleanup barrier after prompt/native/lease cleanup and controller detachment, not a latency claim. Await it and terminate the dedicated executor off UI/controller/capture threads before releasing worker resources. Pack revocation rejects output but does not independently interrupt an active call; private model slots remain immutable. Prompt formatting, non-thinking configuration, speech policy and vendor-retention evidence remain separate gates.
+
+The same explicit `check_android.py` command above runs three real generic eight-token completions through this worker on the existing API35 ARM64 emulator, observes the actual JNI load gate before controller Stop, and verifies once-only destruction, prompt/piece clearing and no speech state. All previous native cases, denied socket probes and normal APK restoration remain required. Signing and license configuration and controller permission/readiness effects are synthetic evaluator-only; no microphone is opened. Swift worker integration and physical inference are not verified by this Android run.
+
+Focused tests use the existing JDK/SDK from `Eilo/apps/mobile/android`:
+
+```sh
+./gradlew :app:testDebugUnitTest --tests 'com.eilo.foundation.LlmControllerJobTest' --offline --max-workers=2
+```
+
+[Review scope and reproduction](../../docs/sprints/S06_ANDROID_LLM_WORKER_REVIEW.md) and [generic actual results](tests/android-results.json) keep the parent VC-LLM-01 acceptance partial.
