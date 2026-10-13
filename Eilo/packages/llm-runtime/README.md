@@ -100,3 +100,26 @@ An ignored Gradle init file adds only the explicit evaluator source and ARM64 li
 Three generic eight-token completions, seven real lifecycle cases, four JNI registry/bounds cases and three default-gate cases execute in Android ART. The release-flag gate is tested inside Debug, not by executing a Release APK. Failure/timeout cleanup stops the evaluator and attempts to restore a complete normal APK even if temporary-file cleanup fails. Restoration checks absence of the evaluation library/assets/DEX classes/instrumentation and preserves existing app data. A restoration failure fails the command rather than publishing a successful report. Results are in ignored `.local/llm/android-results.json`; [recorded results](tests/android-results.json) contain generic fixtures and build metadata only.
 
 The evaluation APK has no Internet permission; the restored normal app retains its existing network capabilities. This isolated result does not establish whole-app traffic privacy or physical Android/iPhone inference. ggml's known fatal-backtrace fork/execlp references remain reported; Android process-fork denial is not claimed. Actual non-thinking configuration, speech policy, vendor retention and production signed-pack/controller attachment still gate conversational use.
+
+## Verified pack model opening
+
+Native Kotlin/Swift `LlmPackLease` resolves a signed-store snapshot against reviewed native configuration: exact pack/runtime, artifact ID, role `llm`, `.gguf`, SHA-256, byte count, Apache-2.0 and license-evidence hash. It selects by ID rather than manifest order. Signature, runtime compatibility, all file hashes and configured license approvals must pass first. There is no JS selector or default production trust/key/caller configuration.
+
+Resolve and open on one native worker. `openStream` combines the revocable store epoch/lease with the caller's current controller/session/privacy predicate. It rejects invalid state before opening, after descriptor hashing, after model load and after descriptor close. Replacements and failed activation revoke outstanding leases even when model bytes are unchanged. The stream rechecks the combined predicate after decode and clears/rejects stale pieces. The controller must separately call `requestCancellation` to interrupt an active native call and join its worker before releasing it. Later display/speech/storage transactions also require their own current-generation checks.
+
+The default native opener uses read-only/no-follow/nonblocking/close-on-exec flags, rejects nonregular files and wrong sizes, hashes the same open descriptor in 64 KB scratch, rewinds it and borrows it into the C++ loader. The C core duplicates the descriptor before the wrapper closes it. Hash, native load and close failures cannot publish a stream; raw backend errors do not escape. A path replacement after hashing cannot substitute another file for that open descriptor. The caller still keeps app-private slots immutable and revokes before known maintenance; arbitrary in-place modification after hashing is not prevented by this API.
+
+Android's public atomic duplication/flag verification API is available from API30; this opener fails closed on older runtimes. The app foundation remains API26 and the proposed model cohort remains Android15+/8 GB. API30 physical execution is not established by this gate. Darwin uses the corresponding native flags. A copied read-only Android model now syncs through a read descriptor, preserving source/destination protection instead of requiring a writable reopen.
+
+The same explicit Android evaluator now runs the three generic real Q4 completions through an ephemeral signed pack and this descriptor boundary. It injects an activation failure at the verified before-pointer boundary, then rejects a piece already decoded from the old epoch. Native tests also reject wrong hash/size, symlink, directory and FIFO descriptors and verify close. The fixture's generated signing key and synthetic license-evidence token are test-only; no production trust/license approval is installed. The temporary signed store/model is removed and the normal APK restored. [Review and exact coverage](../../docs/sprints/S06_LLM_PACK_LEASE_REVIEW.md) distinguishes actual Android CPU execution, Darwin descriptor tests and remaining physical/production gates.
+
+Focused tests, using existing toolchains:
+
+```sh
+# From Eilo/apps/mobile/android with installed JAVA_HOME/ANDROID_HOME:
+./gradlew :app:testDebugUnitTest --tests 'com.eilo.foundation.LlmPackLeaseTest' --offline --max-workers=2
+# From Eilo/packages/native-test-seam:
+swift test --filter LlmPackLeaseTests
+```
+
+The ordinary app still has unavailable runtime/model readiness. Production controller worker attachment, configured release trust, physical inference/performance, non-thinking configuration, speech policy and vendor allocator/logits retention remain open.

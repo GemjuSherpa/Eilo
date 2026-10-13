@@ -37,6 +37,12 @@
   ],
   "destroy_load_worker_gate_observed": true,
   "destroy_load_native_status": -2,
+  "pack_lease_cases": [
+    "signed_pack_descriptor_generation",
+    "failed_activation_rejects_raw_piece",
+    "descriptor_hash_size_symlink_directory_fifo_and_close"
+  ],
+  "pack_trust": "Ephemeral synthetic test key/license evidence only; no production trust configured",
   "native_lifecycle_cases": [
     "pre_cancel",
     "corrupt_gguf",
@@ -78,7 +84,8 @@
     {
       "abi": "arm64-v8a",
       "target": "aarch64-linux-android26",
-      "jni_sha256": "07e0a55f1bf8a22c22ac9f9d00870998855b81599a53e991a09660f990130c1e",
+      "jni_sha256": "3da4347406dcea683d2ea6a78d539b53d0edb535ffec8678125c42b5c43fb42b",
+      "evaluation_compile_define": "EILO_LLM_EVALUATION",
       "CPU_only_build_options": {
         "CMAKE_TOOLCHAIN_FILE": "${NDK}/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "arm64-v8a",
@@ -141,13 +148,13 @@
         ]
       },
       "JNI_probe_socket_symbols": "present for explicit permission-denial probes",
-      "execution": "ART/JNI API35 ARM64 emulator PASS",
-      "evaluation_compile_define": "EILO_LLM_EVALUATION"
+      "execution": "ART/JNI API35 ARM64 emulator PASS"
     },
     {
       "abi": "armeabi-v7a",
       "target": "armv7a-linux-androideabi26",
-      "jni_sha256": "dedfcb2e94f12add0f58c9ecc4a30464a5ea568974dbc92d2f4d5f578f339705",
+      "jni_sha256": "d4800f186f59cd1ae6d65daf1352be2fa7d11e369d1463248e8680d62544457d",
+      "evaluation_compile_define": "EILO_LLM_EVALUATION",
       "CPU_only_build_options": {
         "CMAKE_TOOLCHAIN_FILE": "${NDK}/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "armeabi-v7a",
@@ -209,13 +216,13 @@
         ]
       },
       "JNI_probe_socket_symbols": "present for explicit permission-denial probes",
-      "execution": "NOT RUN",
-      "evaluation_compile_define": "EILO_LLM_EVALUATION"
+      "execution": "NOT RUN"
     },
     {
       "abi": "x86",
       "target": "i686-linux-android26",
-      "jni_sha256": "368dd1acf69ae9fa7949b70b069e199b8b92e1128b1d95d271f7ae42534d9511",
+      "jni_sha256": "9a479a477277db0f1b4aafc5b252815aac4acd219dadebab4942c992318ed621",
+      "evaluation_compile_define": "EILO_LLM_EVALUATION",
       "CPU_only_build_options": {
         "CMAKE_TOOLCHAIN_FILE": "${NDK}/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "x86",
@@ -277,13 +284,13 @@
         ]
       },
       "JNI_probe_socket_symbols": "present for explicit permission-denial probes",
-      "execution": "NOT RUN",
-      "evaluation_compile_define": "EILO_LLM_EVALUATION"
+      "execution": "NOT RUN"
     },
     {
       "abi": "x86_64",
       "target": "x86_64-linux-android26",
-      "jni_sha256": "49a9f1967177285a787f200d73d27cb742012d45537d7b38b3990a84b0376bb4",
+      "jni_sha256": "c38724bdb4f35d12fb6baabb9134440e0027fa4aefd753ea91c6d9632492848a",
+      "evaluation_compile_define": "EILO_LLM_EVALUATION",
       "CPU_only_build_options": {
         "CMAKE_TOOLCHAIN_FILE": "${NDK}/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "x86_64",
@@ -345,12 +352,11 @@
         ]
       },
       "JNI_probe_socket_symbols": "present for explicit permission-denial probes",
-      "execution": "NOT RUN",
-      "evaluation_compile_define": "EILO_LLM_EVALUATION"
+      "execution": "NOT RUN"
     }
   ],
   "source_modifications": "NONE",
-  "apk_sha256": "61e8260ce156c2efc2d76f617731b7bc64cef2b8d09415722c372791091941ce",
+  "apk_sha256": "5c2230d8b13f9367afa00e155ceef35f2a9c5aa962940159a81f4643fd872aca",
   "page_size": "4096",
   "temporary_model_removed": true,
   "physical_inference": "NOT RUN",
