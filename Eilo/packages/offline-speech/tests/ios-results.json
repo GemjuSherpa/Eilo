@@ -1,0 +1,11 @@
+{
+  "default_unknown_offline_gate": "PASS",
+  "first_audible_audio_seconds": "NOT MEASURED; SDK start is not audible playback evidence",
+  "microphone": "NOT USED",
+  "offline_evidence": "Synthetic exact-voice/OS test record only; no production approval",
+  "physical_airplane_mode_and_traffic": "NOT RUN",
+  "platform": "iOS27 ARM64 iPhone 18 Pro simulator",
+  "SDK_start_callback_seconds": 0.05120658333180472,
+  "SDK_synthesis_completion": "PASS",
+  "task": "VC-VOICE-03"
+}
