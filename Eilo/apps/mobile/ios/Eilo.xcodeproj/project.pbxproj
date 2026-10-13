@@ -42,6 +42,7 @@
 		BB4F5D565A63F913D51BB909 /* PlaybackRejection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */; };
 		5D0333AAA5D7E1B3DD9056C2 /* ConfirmedSpeechInterruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861E892B57EF25A976AF7B7C /* ConfirmedSpeechInterruption.swift */; };
 		D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */; };
+		D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +86,7 @@
 		D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackRejection.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PlaybackRejection.swift"; sourceTree = "<group>"; };
 		861E892B57EF25A976AF7B7C /* ConfirmedSpeechInterruption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConfirmedSpeechInterruption.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/ConfirmedSpeechInterruption.swift"; sourceTree = "<group>"; };
 		D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeLlmStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeLlmStream.swift"; sourceTree = "<group>"; };
+		D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LlmPackLease.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/LlmPackLease.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				51FCD120463949438E6CBF76 /* RecognitionPolicy.swift */,
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
+				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
 				804BAE9C01C6884AFE9DCF3B /* StreamingAsr.swift */,
 				B9470D1DBF42722EF654FFBA /* EndpointDetector.swift */,
 				220727614D5FFD1BC4470824 /* WakeQuestionHandoff.swift */,
@@ -353,6 +356,7 @@
 				8F7489F34E3E281FD61E409C /* RecognitionPolicy.swift in Sources */,
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
+				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
 				B4E231E417AAB80055EC3E79 /* StreamingAsr.swift in Sources */,
 				C694858D16F14EDDD9C21D0A /* EndpointDetector.swift in Sources */,
 				320C11DB509CAA220A0F2E73 /* WakeQuestionHandoff.swift in Sources */,

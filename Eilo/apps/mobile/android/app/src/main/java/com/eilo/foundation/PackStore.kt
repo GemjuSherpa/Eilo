@@ -54,7 +54,9 @@ class PackStore(private val root: File, trust: Map<String,ByteArray>, private va
     for(proof in proofs) {
      cancel.check();VerifiedArtifact.verify(checked,proof.index,proof.file,cancel)
      val destination=PackFiles.child(pending,checked.manifest.artifacts[proof.index].filename)
-     Files.copy(proof.file.toPath(),destination.toPath());java.io.FileOutputStream(destination,true).use { it.fd.sync() }
+     // Copies can inherit read-only model permissions. Sync the copied bytes
+     // without reopening for writes or relaxing their protection.
+     Files.copy(proof.file.toPath(),destination.toPath());java.io.FileInputStream(destination).use { it.fd.sync() }
     }
     PackFiles.atomic(PackFiles.child(pending,".manifest"),checked.signedPayload());PackFiles.atomic(PackFiles.child(pending,".signature"),checked.signatureBytes());PackFiles.atomic(PackFiles.child(pending,".key"),checked.keyId.toByteArray())
     step(PackActivationStep.COPIED);checked.manifest.artifacts.indices.forEach { VerifiedArtifact.verify(checked,it,PackFiles.child(pending,checked.manifest.artifacts[it].filename),cancel) }

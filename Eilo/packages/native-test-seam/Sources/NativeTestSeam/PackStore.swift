@@ -31,6 +31,13 @@ public final class PackStore {
     lock.lock();defer { lock.unlock() };guard let current=try active(),current.digest==pack.digest,current.manifest.artifacts.indices.contains(index) else { throw PackFailure.unavailable }
     let (_,versions)=try directories();return try PackFiles.child(PackFiles.child(versions,current.digest),current.manifest.artifacts[index].filename)
   }
+  /// One serialized signature/license/hash snapshot; consumers bind it to epoch.
+  func verifiedFiles() throws -> (VerifiedPack, [URL])? {
+    lock.lock(); defer { lock.unlock() }
+    guard let current = try active() else { return nil }
+    let (_, versions) = try directories(), slot = try PackFiles.child(versions, current.digest)
+    return (current, try current.manifest.artifacts.map { try PackFiles.child(slot, $0.filename) })
+  }
   public func activate(_ pack: VerifiedPack,proofs: [VerifiedArtifact],cancel: PackCancellation,step: (PackActivationStep)throws->Void = { _ in }) throws {
     lock.lock();defer { lock.unlock() };Self.epochLock.lock();Self.version=UUID();Self.epochLock.unlock();let checked=try verify(pack.signedPayload,pack.signatureBytes,pack.keyID)
     guard checked.manifest.artifacts.allSatisfy({ licenseEvidence.contains($0.licenseEvidence) }) else { throw PackFailure.activation }

@@ -10,6 +10,10 @@ import android.system.OsConstants
 import java.io.File
 import java.io.RandomAccessFile
 import java.security.MessageDigest
+import java.security.KeyPairGenerator
+import java.security.Signature
+import java.security.spec.ECGenParameterSpec
+import java.nio.file.Files
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
@@ -130,6 +134,63 @@ class LlmEvaluationInstrumentation : Instrumentation() {
             return result.get()!!
         } finally { worker.join(30000); api.destroy(id) }
     }
+    private fun descriptorChecks(work: File) {
+        val small = File(work, "descriptor-fixture").apply { writeBytes(byteArrayOf(1, 2, 3, 4)) }
+        val digest = MessageDigest.getInstance("SHA-256").digest(small.readBytes()).joinToString("") { "%02x".format(it) }
+        val pin = LlmArtifactPin("model", digest, 4, "c".repeat(64))
+        val owned = LlmModelDescriptor.open(small, pin)
+        ParcelFileDescriptor.fromFd(owned.value).use { borrowed ->
+            val data = ByteArray(4); check(Os.read(borrowed.fileDescriptor, data, 0, 4) == 4)
+            check(data.contentEquals(byteArrayOf(1, 2, 3, 4))); data.fill(0)
+        }
+        owned.close(); owned.close()
+        try { ParcelFileDescriptor.fromFd(owned.value).use { }; error("closed fixture descriptor reused") }
+        catch (_: java.io.IOException) { }
+        val symlink = File(work, "descriptor-link")
+        Files.createSymbolicLink(symlink.toPath(), small.toPath())
+        val fifo = File(work, "descriptor-fifo"); Os.mkfifo(fifo.absolutePath, 384)
+        for ((file, selected) in listOf(small to pin.copy(sha256 = "d".repeat(64)), small to pin.copy(bytes = 5),
+            symlink to pin, work to pin, fifo to pin)) {
+            expect(LlmFailureReason.UNAVAILABLE) { LlmModelDescriptor.open(file, selected).close() }
+        }
+    }
+    private class SignedPackFixture(work: File, model: File, hash: String, size: Long, progress: (String) -> Unit) {
+        private val evidence = "c".repeat(64)
+        private val runtime = "8345f333951c661d166b00e6f9362e553768f292"
+        private val key = KeyPairGenerator.getInstance("EC").apply { initialize(ECGenParameterSpec("secp256r1")) }.generateKeyPair()
+        private val trust = mapOf("evaluation-key" to key.public.encoded)
+        val store = PackStore(File(work, "signed-pack-store"), trust, runtime, setOf(evidence))
+        val selection = LlmPackSelection("evaluation-pack", runtime, LlmArtifactPin("model", hash, size, evidence))
+        val pack: VerifiedPack
+        val proofs: List<VerifiedArtifact>
+        init {
+            val artifact = JSONObject().put("id", "model").put("filename", "model.gguf").put("role", "llm")
+                .put("url", "https://models.example.test/model.gguf").put("sha256", hash).put("bytes", size)
+                .put("license", "Apache-2.0").put("licenseEvidence", evidence)
+            // Android's JSONStringer escapes URL slashes. The reviewed manifest
+            // grammar deliberately accepts plain ASCII strings, so normalize this
+            // fixed synthetic payload BEFORE signing; never rewrite signed input.
+            val payload = JSONObject().put("schema", 1).put("packId", "evaluation-pack").put("revision", 1)
+                .put("runtimeRevision", runtime).put("minAndroid", 35).put("minIos", 18)
+                .put("artifacts", JSONArray().put(artifact)).toString().replace("\\/", "/").toByteArray()
+            val signer = Signature.getInstance("SHA256withECDSA"); signer.initSign(key.private); signer.update(payload)
+            progress("signed_manifest_signature")
+            pack = VerifiedPack.verify(payload, signer.sign(), "evaluation-key", "ES256", trust, runtime)
+            progress("signed_model_proof")
+            proofs = listOf(VerifiedArtifact.verify(pack, 0, model))
+            progress("signed_store_activation")
+            store.activate(pack, proofs, PackCancellation()) { progress("signed_activation_" + it.name.lowercase()) }
+        }
+        fun lease() = LlmPackLease.resolve(store, selection)
+        fun failActivationAndRevoke() {
+            var failed = false; var boundaryReached = false
+            try { store.activate(pack, proofs, PackCancellation()) { if (it == PackActivationStep.BEFORE_POINTER) {
+                boundaryReached = true; error("evaluation unavailable")
+            } } }
+            catch (_: Exception) { failed = true }
+            check(failed && boundaryReached)
+        }
+    }
     override fun onStart() {
         val context = targetContext; val work = File(context.filesDir, "llm-evaluation")
         val report = File(context.filesDir, "llm-android-results.json")
@@ -142,13 +203,17 @@ class LlmEvaluationInstrumentation : Instrumentation() {
             val api = NativeLlmRuntime(true).load() ?: error("evaluation unavailable")
             check(LlmEvaluationProbe.networkDenied())
             stage = "registry"; val registryCases = registry(api)
+            stage = "descriptor_validation"; descriptorChecks(work)
+            stage = "signed_pack_activation"
+            val signed = SignedPackFixture(work, File(work, "model.gguf"), hash, bytes) { stage = it }
             stage = "model_hash"
             descriptor(File(work, "model.gguf"), true).use { model ->
                 val cases = JSONArray()
                 val prompts = listOf("The opposite of cold is", "One, two, three,", "The sky on a clear day is")
                 for ((index, prompt) in prompts.withIndex()) {
                     stage = "completion_${index + 1}"
-                    make(model.fd, api).use { stream ->
+                    val lease = signed.lease()
+                    try { lease.openStream({ true }, api = api).use { stream ->
                         check(LlmEvaluationProbe.cpuOnly()); begin(stream, prompt)
                         // Only these frozen generic outputs are copied for a report.
                         val output = ByteArray(8192); var length = 0; var tokens = 0
@@ -161,8 +226,20 @@ class LlmEvaluationInstrumentation : Instrumentation() {
                                 .put("output", output.copyOfRange(0, length).toString(Charsets.UTF_8))
                                 .put("kind", "raw completion, not speech-approved"))
                         } finally { output.fill(0) }
+                    } } finally { lease.close() }
+                }
+                stage = "signed_pack_revocation"
+                val signedLease = signed.lease()
+                val revokePack = object : NativeLlmApi by api {
+                    override fun next(handle: Long, output: ByteArray, count: IntArray): Int {
+                        val status = api.next(handle, output, count); signed.failActivationAndRevoke(); return status
                     }
                 }
+                try { signedLease.openStream({ true }, api = revokePack).use { stream ->
+                    begin(stream, prompts[0])
+                    expect(LlmFailureReason.UNAVAILABLE) { stream.withNextPiece { _, _ -> error("revoked pack fixture released") } }
+                    check(!signedLease.verified())
+                } } finally { signedLease.close() }
                 stage = "pre_cancel"
                 NativeLlmStream({ true }, api).use { stream ->
                     check(stream.requestCancellation()); expect(LlmFailureReason.CANCELLED) { stream.load(model.fd) }
@@ -199,6 +276,9 @@ class LlmEvaluationInstrumentation : Instrumentation() {
                     .put("INTERNET_permission", "ABSENT").put("network_probes", "DENIED")
                     .put("model_sha256", hash).put("cases", cases).put("registry_cases", JSONArray(registryCases))
                     .put("destroy_load_worker_gate_observed", true).put("destroy_load_native_status", destroyStatus)
+                    .put("pack_lease_cases", JSONArray(listOf("signed_pack_descriptor_generation", "failed_activation_rejects_raw_piece",
+                        "descriptor_hash_size_symlink_directory_fifo_and_close")))
+                    .put("pack_trust", "Ephemeral synthetic test key/license evidence only; no production trust configured")
                     .put("native_lifecycle_cases", JSONArray(listOf("pre_cancel", "corrupt_gguf", "post_token_cancel",
                         "lease_revocation", "concurrent_load_cancel", "concurrent_begin_cancel", "destroy_during_load")))
                     .put("default_gate_cases", JSONArray(listOf("ordinary_debug", "debug_with_release_flag", "unavailable_api")))
@@ -207,8 +287,21 @@ class LlmEvaluationInstrumentation : Instrumentation() {
                     .toString(2))
             }
             result.putString("eilo_llm_evaluation", "PASS"); passed = true
-        } catch (_: Exception) {
+        } catch (error: Exception) {
             result.putString("eilo_llm_evaluation", "FAIL"); result.putString("eilo_llm_stage", stage)
+            val errno = (error.cause as? android.system.ErrnoException)?.errno
+            result.putString("eilo_llm_file_failure", when (errno) {
+                OsConstants.EACCES -> "permission_denied"
+                OsConstants.EISDIR -> "directory_open"
+                else -> "unavailable"
+            })
+            result.putString("eilo_llm_failure_type", when (error) {
+                is java.io.IOException -> "file_io"
+                is IllegalArgumentException -> "invalid_argument"
+                is IllegalStateException -> "invalid_state"
+                is java.security.GeneralSecurityException -> "signature"
+                else -> "unavailable"
+            })
         } catch (_: LinkageError) {
             result.putString("eilo_llm_evaluation", "FAIL"); result.putString("eilo_llm_stage", stage)
         } finally {
