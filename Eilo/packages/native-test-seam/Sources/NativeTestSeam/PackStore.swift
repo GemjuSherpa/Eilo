@@ -54,7 +54,7 @@ public final class PackStore {
       for proof in proofs {
         try cancel.check();_=try VerifiedArtifact.verify(checked,index:proof.index,file:proof.file,cancel:cancel)
         let dest=try PackFiles.child(pending,checked.manifest.artifacts[proof.index].filename);try FileManager.default.copyItem(at:proof.file,to:dest)
-        let h=try FileHandle(forWritingTo:dest);try h.synchronize();try h.close()
+        let h=try FileHandle(forReadingFrom:dest);try h.synchronize();try h.close()
       }
       try PackFiles.atomic(PackFiles.child(pending,".manifest"),checked.signedPayload);try PackFiles.atomic(PackFiles.child(pending,".signature"),checked.signatureBytes);try PackFiles.atomic(PackFiles.child(pending,".key"),Data(checked.keyID.utf8))
       try step(.copied);for i in checked.manifest.artifacts.indices { _=try VerifiedArtifact.verify(checked,index:i,file:PackFiles.child(pending,checked.manifest.artifacts[i].filename),cancel:cancel) }

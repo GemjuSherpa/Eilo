@@ -101,7 +101,7 @@ def evaluate(udid, executable, selected, builds):
              model['sha256'], model['bytes'], corrupt.name], 'ios-binding.log', timeout=240)
     lines = (CACHE / 'ios-binding.log').read_text().splitlines()
     expected = 'pre_cancel,corrupt_gguf,post_token_cancel,lease_revocation,concurrent_load_cancel,concurrent_begin_cancel'
-    if len(lines) != 4 or lines[-1] != f'LIFECYCLE\t{expected}\tPASS':
+    if len(lines) != 5 or lines[3] != f'LIFECYCLE\t{expected}\tPASS' or lines[4] != 'WORKER\tsigned_pack_three_completions,prompt_erased,no_speech,temp_removed\tPASS':
         raise ValueError('binding evaluation report mismatch')
     prompts = ['The opposite of cold is', 'One, two, three,', 'The sky on a clear day is']
     cases = []
@@ -118,11 +118,13 @@ def evaluate(udid, executable, selected, builds):
               'model': model, 'builds': builds, 'source_modifications': 'NONE',
               'CPU_registry_only': 'PASS', 'same_open_model_descriptor_SHA256': 'PASS',
               'cases': cases, 'native_lifecycle_cases': expected.split(','),
+              'controller_worker_cases': ['signed_pack_three_completions', 'prompt_erased', 'no_speech', 'temp_removed'],
+              'pack_trust': 'Ephemeral synthetic signing key/license evidence; no production trust',
               'microphone': 'NOT USED', 'physical_inference': 'NOT RUN',
               'network': 'No inference network clients/references; simulator OS-wide isolation NOT VERIFIED',
               'app_attachment': 'NOT ENABLED; default linked API unavailable',
               'default_gate_cases': defaults,
-              'remaining': ['Kotlin binding', 'signed pack/controller attachment', 'non-thinking template',
+              'remaining': ['production app attachment/release trust', 'non-thinking template',
                             'speech policy', 'physical performance', 'vendor allocator/logits erasure']}
     (CACHE / 'ios-results.json').write_text(json.dumps(report, indent=2) + '\n')
     print('Swift/C ABI iOS simulator: three real CPU completions and six lifecycle cases PASS; device SDK link PASS, physical execution NOT RUN.')

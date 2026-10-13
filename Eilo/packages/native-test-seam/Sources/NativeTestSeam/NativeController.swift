@@ -150,11 +150,41 @@ public final class NativeController: @unchecked Sendable {
   var stoppedOperationID=UUID()
   var generation: UInt64 = 0
   var activeToken: GenerationToken?
+  private var llmWork: LlmWorkTicket?
+  func prepareLlmWork(_ token: GenerationToken, cancel: @escaping () -> Void) -> LlmWorkTicket? {
+    lock.lock(); defer { lock.unlock() }
+    guard !stopping, currentState == .thinking, accepts(token), llmWork == nil else { return nil }
+    let ticket = LlmWorkTicket(controller: self, token: token, cancel: cancel); llmWork = ticket; return ticket
+  }
+  func llmWorkAllowed(_ ticket: LlmWorkTicket) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    return ticket.controller === self && llmWork === ticket && !ticket.cancelled &&
+      !stopping && currentState == .thinking && accepts(ticket.token)
+  }
+  /// Bounded borrowed native buffer work only; no IO/inference/join or speech rights.
+  func consumeLlmPiece(_ ticket: LlmWorkTicket, verified: () -> Bool,
+                       bytes: UnsafeBufferPointer<UInt8>, consume: (UnsafeBufferPointer<UInt8>) throws -> Void) -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    guard llmWorkAllowed(ticket), verified(), llmWorkAllowed(ticket) else { return false }
+    do { try consume(bytes); return verified() && llmWorkAllowed(ticket) }
+    catch { stop(); return false }
+  }
+  func finishLlmWork(_ ticket: LlmWorkTicket, result: LlmJobResult, verified: () -> Bool = { false }) -> LlmJobResult {
+    lock.lock(); defer { lock.unlock() }
+    guard llmWorkAllowed(ticket) else { return .cancelled }
+    let outcome: LlmJobResult = result == .completed && !verified() ? .unavailable : result
+    guard llmWorkAllowed(ticket) else { return .cancelled }
+    llmWork = nil; ticket.cancelled = true
+    if outcome == .unavailable && !dispatch(.failure, failure: .unavailable, token: ticket.token) { return .cancelled }
+    return outcome
+  }
   private lazy var playback=PlaybackRejection(now:{[weak self] in self?.clock.milliseconds() ?? 0})
   func recognitionAllowed(_ token:GenerationToken)->Bool{lock.lock();defer{lock.unlock()};return currentState == .capturing && accepts(token) && playback.allowsAudio}
   public var token: GenerationToken? { lock.lock(); defer { lock.unlock() }; return activeToken }
   func invalidateGeneration() {
     activeToken?.cancel(); activeToken = nil; stoppedOperationID=UUID()
+    let previous = llmWork; llmWork = nil; previous?.cancelled = true
+    previous?.cancel() // Signal only; worker destruction/join never runs in this monitor.
     if generation == 9_007_199_254_740_991 { sessionID = UUID(); generation = 0 } else { generation += 1 }
   }
   func issueGeneration() { invalidateGeneration(); activeToken = GenerationToken(sessionID,generation,privacyEpoch) }
