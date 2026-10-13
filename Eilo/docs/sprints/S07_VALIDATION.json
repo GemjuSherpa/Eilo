@@ -51,6 +51,13 @@
       "install": "PASS",
       "fresh_ten_second_launches": 3,
       "local_proof_sha256": "ddfd1f3109b56d684a841daba0c0e0547fd53484268e287dd212eb3e28822536"
+    },
+    {
+      "task_label": "ci",
+      "normal_app_build": "PASS",
+      "install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "local_proof_sha256": "3e04a5e0ad6dd4abf0e8771ebc5fdc9b42c4bbf5b6564d5cab04b26efca12aa6"
     }
   ],
   "final_native_tests": {
@@ -65,5 +72,6 @@
   "physical": "NOT RUN; connected iPhone offline, no physical Android",
   "normal_app_voice_readiness": "UNAVAILABLE",
   "semantic_review": "pending_review",
-  "persona_lexical_screen": "PASS: nine nontruncated synthetic candidates after exact-refusal fix; semantic review pending"
+  "persona_lexical_screen": "PASS: nine nontruncated synthetic candidates after exact-refusal fix; semantic review pending",
+  "locked_pod_install": "PASS; lockfiles unchanged; bounded deployment retry, hosted status assessed separately"
 }

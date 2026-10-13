@@ -1,0 +1,9 @@
+# S07 — iOS CI reproducibility checkpoint
+
+14 October 2026. PR #49's initial hosted iOS job failed during locked CocoaPods installation. React Native's one-shot Maven availability probe selected source Core instead of the locked prebuilt Core graph; deployment mode correctly rejected that change. Failure: run38459288699/job115509978300, before Swift tests or app compilation.
+
+The workflow now calls `scripts/install-ios-pods.sh` from apps/mobile/ios. It runs the unchanged `bundle exec pod install --deployment` command with at most three fresh attempts, five seconds apart. A final failure still fails the job. No vendor code, package version, dependency lock, checksum validation, authentication, deployment gate or public provider is changed. This addresses transient selection failures; sustained provider outages or actual lock drift still fail.
+
+Actual local existing-bundle deployment installation PASS: 87 pods/88 declared dependencies, locked graph preserved. Gemfile.lock and Podfile.lock bytes match committed HEAD. Bash and workflow YAML syntax checks PASS. Normal same iPhone 18 Pro simulator build/install/three fresh ten-second launches PASS after installation and restoration of personal project formatting. CocoaPods reformatted the client project; the original personal project/signing deltas were restored exactly over the committed sprint source entries. Personal plist/S02 deltas remain unchanged. No generated Pods/client-format changes are staged.
+
+Native 218 Swift / 268 Android suites and the refusal/model regressions already pass on the same source; this workflow-only change adds no unrelated runtime tests. New hosted PR checks must be assessed at the final pushed head; the initial failed job is retained as evidence. No physical voice, production acceptance or main merge is implied.
