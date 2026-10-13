@@ -53,6 +53,7 @@
 		60ADCD6EC48953F7DB063C4D /* UntrustedMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A543AEC31429F3B2D592E /* UntrustedMemory.swift */; };
 		A772AE914674172FF0100EB5 /* BoundedContinuation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82621E2660AFB6C280172DF9 /* BoundedContinuation.swift */; };
 		7FCFF77E75D46E058464E38D /* PersonaPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC13372207E8A4776904D9 /* PersonaPolicy.swift */; };
+		C9D1DB1818A6D80EBCE17FF6 /* CapabilityPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -107,6 +108,7 @@
 		850A543AEC31429F3B2D592E /* UntrustedMemory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UntrustedMemory.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/UntrustedMemory.swift"; sourceTree = "<group>"; };
 		82621E2660AFB6C280172DF9 /* BoundedContinuation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BoundedContinuation.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/BoundedContinuation.swift"; sourceTree = "<group>"; };
 		10AC13372207E8A4776904D9 /* PersonaPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PersonaPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PersonaPolicy.swift"; sourceTree = "<group>"; };
+		271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CapabilityPolicy.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/CapabilityPolicy.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
 				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
+				271F10F91F5C3881996F06A4 /* CapabilityPolicy.swift */,
 				10AC13372207E8A4776904D9 /* PersonaPolicy.swift */,
 				82621E2660AFB6C280172DF9 /* BoundedContinuation.swift */,
 				850A543AEC31429F3B2D592E /* UntrustedMemory.swift */,
@@ -387,6 +390,7 @@
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
 				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
+				C9D1DB1818A6D80EBCE17FF6 /* CapabilityPolicy.swift in Sources */,
 				7FCFF77E75D46E058464E38D /* PersonaPolicy.swift in Sources */,
 				A772AE914674172FF0100EB5 /* BoundedContinuation.swift in Sources */,
 				60ADCD6EC48953F7DB063C4D /* UntrustedMemory.swift in Sources */,
