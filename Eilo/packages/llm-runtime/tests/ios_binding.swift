@@ -120,7 +120,7 @@ import Darwin
       output.withUnsafeMutableBufferPointer { $0.initialize(repeating: 0) }
     }
     let budgetStream = try make(fd)
-    let plan = try PromptBudget.build(latest:"Name one colour.",history:(0..<16).map{_ in QwenTurn(role:.user,text:String(repeating:"Generic earlier context. ",count:100))},recall:(0..<6).map{_ in String(repeating:"Generic recalled fact. ",count:60)},count:budgetStream.countTokens)
+    let plan = try PromptBudget.build(latest:"Name one colour.",history:(0..<16).map{_ in QwenTurn(role:.user,text:String(repeating:"Generic earlier context. ",count:100))},recall:(0..<6).map{_ in String(repeating:"Generic recalled fact. ",count:60)},memoryAllowed:true,count:budgetStream.countTokens)
     try check(plan.promptTokens+plan.outputLimit<=4096 && plan.recalledTokens<=512 && plan.droppedHistory>0 && plan.droppedRecall>0 && plan.text.contains(QwenTemplate.rules) && plan.text.contains("Name one colour."))
     try check(try budgetStream.countTokens(plan.text)==plan.promptTokens)
     try begin(budgetStream,plan.text);try check(try budgetStream.withNextPiece{_ in});budgetStream.close()

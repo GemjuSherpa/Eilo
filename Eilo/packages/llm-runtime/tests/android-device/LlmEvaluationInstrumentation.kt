@@ -256,7 +256,7 @@ class LlmEvaluationInstrumentation : Instrumentation() {
             descriptor(File(work, "model.gguf"), true).use { model ->
                 val cases = JSONArray()
                 make(model.fd,api).use { stream ->
-                    val plan=PromptBudget.build("Name one colour.",List(16){QwenTurn(QwenRole.USER,"Generic earlier context. ".repeat(100))},List(6){"Generic recalled fact. ".repeat(60)},count=stream::countTokens)
+                    val plan=PromptBudget.build("Name one colour.",List(16){QwenTurn(QwenRole.USER,"Generic earlier context. ".repeat(100))},List(6){"Generic recalled fact. ".repeat(60)},memoryAllowed=true,count=stream::countTokens)
                     check(plan.promptTokens+plan.outputLimit<=4096 && plan.recalledTokens<=512 && plan.droppedHistory>0 && plan.droppedRecall>0)
                     check(plan.text.contains(QwenTemplate.RULES) && plan.text.contains("Name one colour."))
                     check(stream.countTokens(plan.text)==plan.promptTokens);begin(stream,plan.text);check(stream.withNextPiece{_,_->})

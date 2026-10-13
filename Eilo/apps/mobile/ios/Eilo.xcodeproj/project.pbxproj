@@ -50,6 +50,7 @@
 		95FDD1206B8251B1F7D8BEAE /* PlaybackProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1B7E8C510A61B4F946777B /* PlaybackProgress.swift */; };
 		5E7299E0CC4E9F13B4F9CC56 /* QwenTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C0D1BDDC3E2E952EE8D066 /* QwenTemplate.swift */; };
 		A6CFDFEF4077D1A015616DE5 /* PromptBudget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E2D66FC47F6FAE977D3320 /* PromptBudget.swift */; };
+		60ADCD6EC48953F7DB063C4D /* UntrustedMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A543AEC31429F3B2D592E /* UntrustedMemory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -101,6 +102,7 @@
 		FC1B7E8C510A61B4F946777B /* PlaybackProgress.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackProgress.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PlaybackProgress.swift"; sourceTree = "<group>"; };
 		96C0D1BDDC3E2E952EE8D066 /* QwenTemplate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QwenTemplate.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/QwenTemplate.swift"; sourceTree = "<group>"; };
 		62E2D66FC47F6FAE977D3320 /* PromptBudget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PromptBudget.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PromptBudget.swift"; sourceTree = "<group>"; };
+		850A543AEC31429F3B2D592E /* UntrustedMemory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UntrustedMemory.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/UntrustedMemory.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
 				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
+				850A543AEC31429F3B2D592E /* UntrustedMemory.swift */,
 				62E2D66FC47F6FAE977D3320 /* PromptBudget.swift */,
 				96C0D1BDDC3E2E952EE8D066 /* QwenTemplate.swift */,
 				FC1B7E8C510A61B4F946777B /* PlaybackProgress.swift */,
@@ -378,6 +381,7 @@
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
 				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
+				60ADCD6EC48953F7DB063C4D /* UntrustedMemory.swift in Sources */,
 				A6CFDFEF4077D1A015616DE5 /* PromptBudget.swift in Sources */,
 				5E7299E0CC4E9F13B4F9CC56 /* QwenTemplate.swift in Sources */,
 				95FDD1206B8251B1F7D8BEAE /* PlaybackProgress.swift in Sources */,
