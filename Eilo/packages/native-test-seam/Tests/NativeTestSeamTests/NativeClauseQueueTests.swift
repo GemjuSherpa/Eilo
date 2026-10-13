@@ -37,4 +37,11 @@ final class NativeClauseQueueTests:XCTestCase {
   func testSdkCompletionAndInterruptionAreSeparate()throws{for event in [OfflineSpeechEvent.finished,.interrupted]{let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}));q.enqueue("First.");s.callbacks[0](.started);s.callbacks[0](event);let record=try XCTUnwrap(q.progress{true}.first);XCTAssertEqual(record.sdkFinished,event == .finished);XCTAssertEqual(record.sdkInterrupted,event == .interrupted)}}
   func testProgressLedgerIsBounded(){let ledger=PlaybackLedger();for _ in 0..<40{ledger.produced(UUID())};XCTAssertEqual(ledger.snapshot().count,32);XCTAssertTrue(ledger.snapshot().allSatisfy{$0.produced && $0.queued});ledger.clear();XCTAssertTrue(ledger.snapshot().isEmpty)}
 
+  final class Timer:IdleScheduler{var fire:()->Void={};struct Cancel:IdleCancellation{func cancel(){}};func schedule(_ delayMilliseconds:UInt64,task:@escaping()->Void)->any IdleCancellation{XCTAssertEqual(delayMilliseconds,60_000);fire=task;return Cancel()}}
+  func testMissingSdkCompletionTimesOutAndLateCallbacksCannotDrain()throws{let c=controller(),s=Sink(),timer=Timer();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,scheduler:timer,authorized:{_,_ in true}));q.enqueue("First.");q.enqueue("Second.");timer.fire();s.callbacks[0](.finished);XCTAssertEqual(s.texts,["First."]);XCTAssertGreaterThan(s.stops,0);XCTAssertEqual(c.state,.error);XCTAssertTrue(try XCTUnwrap(q.progress{true}.first).failed)}
+
+  func testSpeechReceiverPublishesBeforeCancellationAndRechecksStop(){let c=controller();var published=false,cancelled=false;XCTAssertNotNil(c.prepareSpeechWork(c.token!,cancel:{XCTAssertTrue(published);cancelled=true},publish:{_ in published=true}));_ = c.stop();XCTAssertTrue(cancelled)
+    let stopped=controller(),token=stopped.token!;XCTAssertNil(stopped.prepareSpeechWork(token,cancel:{},publish:{_ in _ = stopped.stop()}));XCTAssertTrue(token.cancelled)
+  }
+
 }

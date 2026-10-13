@@ -184,10 +184,11 @@ public final class NativeController: @unchecked Sendable {
     continuationToken=token;continuationCancel=cancel;return true
   }
   private var speechWork: SpeechWorkTicket?
-  func prepareSpeechWork(_ token:GenerationToken,cancel:@escaping()->Void)->SpeechWorkTicket? {
+  func prepareSpeechWork(_ token:GenerationToken,cancel:@escaping()->Void,publish:(SpeechWorkTicket)->Void={_ in})->SpeechWorkTicket? {
     lock.lock();defer{lock.unlock()}
     guard speechWork==nil,!stopping,!speakerRequired,[.thinking,.speaking].contains(currentState),accepts(token) else{return nil}
-    let ticket=SpeechWorkTicket(controller:self,token:token,cancel:cancel);speechWork=ticket;return ticket
+    let ticket=SpeechWorkTicket(controller:self,token:token,cancel:cancel);publish(ticket)
+    guard !stopping,accepts(token) else{ticket.cancelled=true;return nil};speechWork=ticket;return ticket
   }
   /// Short native buffer/SDK scheduling transaction only; no IO, inference or joins.
   func speechTransaction(_ ticket:SpeechWorkTicket,_ action:()->Bool)->Bool {

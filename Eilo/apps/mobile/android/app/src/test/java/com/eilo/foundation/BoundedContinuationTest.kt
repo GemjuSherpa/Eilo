@@ -15,4 +15,6 @@ class BoundedContinuationTest {
     @Test fun cancellationDuringBudgetAndIrreducibleContextFailClosed(){val p=policy();assertNull(p.next{p.requestCancellation();it.length});assertNull(p.next{it.length});val ht=token();val huge=BoundedContinuation.create(controllers[ht]!!,ht,"x".repeat(4000),requestedLonger=true,allowed={true})!!;assertNull(huge.next{it.length})}
     @Test fun onePolicyPerGenerationAndControllerStopRevokes(){val t=token();val p=policy(t);assertNull(BoundedContinuation.create(controllers[t]!!,t,"Reset.",requestedLonger=true,allowed={true}));val chunk=p.next{it.length}!!;controllers[t]!!.stop();assertFalse(p.complete(chunk,"Late.",8,true));assertNull(p.next{it.length})}
 
+    @Test fun failedCancellationSignalCannotPreventStopCleanup(){val t=token();val c=controllers[t]!!;assertTrue(c.prepareContinuation(t){throw IllegalStateException("synthetic")});assertTrue(c.stop());assertEquals("stopped",c.snapshot()["state"]);assertTrue(t.cancelled)}
+
 }
