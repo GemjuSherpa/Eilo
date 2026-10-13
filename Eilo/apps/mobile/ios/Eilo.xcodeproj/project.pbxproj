@@ -44,6 +44,7 @@
 		D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */; };
 		D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */; };
 		83D23B29B6175CA7F30BD993 /* LlmControllerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9495B96F15052CAC1E4FD5B7 /* LlmControllerJob.swift */; };
+		E7DD5C3EB7EEA67DBC888572 /* OfflineVoiceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7632265487B1BBE51299F76C /* OfflineVoiceRegistry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,6 +90,7 @@
 		D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeLlmStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeLlmStream.swift"; sourceTree = "<group>"; };
 		D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LlmPackLease.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/LlmPackLease.swift"; sourceTree = "<group>"; };
 		9495B96F15052CAC1E4FD5B7 /* LlmControllerJob.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LlmControllerJob.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/LlmControllerJob.swift"; sourceTree = "<group>"; };
+		7632265487B1BBE51299F76C /* OfflineVoiceRegistry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OfflineVoiceRegistry.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/OfflineVoiceRegistry.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
 				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
+				7632265487B1BBE51299F76C /* OfflineVoiceRegistry.swift */,
 				9495B96F15052CAC1E4FD5B7 /* LlmControllerJob.swift */,
 				804BAE9C01C6884AFE9DCF3B /* StreamingAsr.swift */,
 				B9470D1DBF42722EF654FFBA /* EndpointDetector.swift */,
@@ -360,6 +363,7 @@
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
 				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
+				E7DD5C3EB7EEA67DBC888572 /* OfflineVoiceRegistry.swift in Sources */,
 				83D23B29B6175CA7F30BD993 /* LlmControllerJob.swift in Sources */,
 				B4E231E417AAB80055EC3E79 /* StreamingAsr.swift in Sources */,
 				C694858D16F14EDDD9C21D0A /* EndpointDetector.swift in Sources */,
