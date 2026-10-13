@@ -151,9 +151,52 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private var stoppedOperationId=UUID.randomUUID()
     private var generation = 0L
     private var activeToken: GenerationToken? = null
+    private var llmWork: LlmWorkTicket? = null
+    /** Mint/attach before scheduling. One native model job per current thinking turn. */
+    @Synchronized internal fun prepareLlmWork(token: GenerationToken, cancel: () -> Boolean): LlmWorkTicket? {
+        if (stopping || currentState != ControllerState.THINKING || !accepts(token) || llmWork != null) return null
+        return LlmWorkTicket(this, token, cancel).also { llmWork = it }
+    }
+    @Synchronized internal fun llmWorkAllowed(ticket: LlmWorkTicket): Boolean =
+        ticket.controller === this && llmWork === ticket && !ticket.cancelled &&
+            currentState == ControllerState.THINKING && !stopping && accepts(ticket.token)
+
+    /** Borrowed raw output only. This transaction grants no speech/display/storage permission.
+     * Consumer must perform only bounded native buffer work: no IO, inference or worker join.
+     * Token and pack checks are serialized with Stop/privacy transitions. */
+    @Synchronized internal fun consumeLlmPiece(ticket: LlmWorkTicket, verified: () -> Boolean,
+        bytes: ByteArray, count: Int, consume: (ByteArray, Int) -> Unit): Boolean {
+        if (!llmWorkAllowed(ticket)) return false
+        return try {
+            if (!verified() || !llmWorkAllowed(ticket)) return false
+            consume(bytes, count)
+            verified() && llmWorkAllowed(ticket)
+        } catch (_: Exception) { stop(); false }
+    }
+    /** Completion does not advance to speaking; non-thinking and speech policy are separate gates. */
+    @Synchronized internal fun finishLlmWork(ticket: LlmWorkTicket, result: LlmJobResult,
+        verified: () -> Boolean = { false }): LlmJobResult {
+        if (!llmWorkAllowed(ticket)) return LlmJobResult.CANCELLED
+        val outcome = if (result == LlmJobResult.COMPLETED) {
+            try { if (verified()) result else LlmJobResult.UNAVAILABLE }
+            catch (_: Exception) { LlmJobResult.UNAVAILABLE }
+        } else result
+        if (!llmWorkAllowed(ticket)) return LlmJobResult.CANCELLED
+        llmWork = null; ticket.cancelled = true
+        if (outcome == LlmJobResult.UNAVAILABLE && !dispatch(ControllerEvent.FAILURE, failure = SafeError.UNAVAILABLE, token = ticket.token)) return LlmJobResult.CANCELLED
+        return outcome
+    }
     @Synchronized fun token(): GenerationToken? = activeToken
     private fun invalidateGeneration() {
         activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
+        val previous = llmWork; llmWork = null
+        if (previous != null) {
+            previous.cancelled = true
+            // Signal only: never join or destroy while holding this controller monitor.
+            try { if (!previous.cancel()) diagnostics.record(SafeComponent.MODEL, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
+            catch (_: LinkageError) { diagnostics.record(SafeComponent.MODEL, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
+            catch (_: Exception) { diagnostics.record(SafeComponent.MODEL, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
+        }
         if (generation == 9007199254740991L) { sessionId = UUID.randomUUID(); generation = 0 } else generation++
     }
     private fun issueGeneration() {
