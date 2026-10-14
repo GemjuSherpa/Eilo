@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "task": "VC-GATE-02",
+  "duration_seconds": 3600,
+  "cadence_seconds": 60,
+  "turn_count": 60,
+  "resource_period_seconds": 60,
+  "question_catalog_sha256": "0c7f5d34db8098549b1b424834cf5c39b336293be38e0abc55e84a74aa42ce8d",
+  "final_window_minutes": [
+    45,
+    60
+  ],
+  "targets": {
+    "median_ms": 1500,
+    "p95_ms": 3000,
+    "battery_points_per_hour": 15,
+    "rss_bytes_exclusive": 2500000000,
+    "pack_bytes_exclusive": 2000000000
+  },
+  "screen_off": true,
+  "background_consent_required": true,
+  "permitted_generic_locked_policy_required": true
+}
