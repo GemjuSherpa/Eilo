@@ -43,3 +43,26 @@ MUSAN noise-only clips use first 30s; they do not supply speech-positive VAD lab
 requires separately provisioned ffmpeg binary hash; decoding rejects duration-limit clips.
 Record decoder version/license with its hash in local receipts; no decoder is installed here.
 Full extracted corpus receipts/licenses remain local; index receipts pin the approved archive.
+
+VC-DATA-03: `benchmark.py --manifest <frozen/manifest.json> --output <local/report.json>`
+produces NOT_RUN with no adapter. Add `--adapter <local executable> --adapter-metadata
+<local metadata.json>` to run or `--predictions <local predictions.json>` to score saved
+results. Each adapter receives request/response JSON paths; request has schema_version=1,
+id, task, audio (absolute frozen WAV), rate=16000. Response has id and transcript for ASR;
+commands also requires command (ten target words, unknown or silence); VAD uses sorted,
+non-overlapping [[start_seconds,end_seconds],...]. Runner supplies elapsed seconds including
+process/model startup. Metadata requires kind native/external/synthetic, name and SHA-256
+of binary, model and config. Predictions pin canonical manifest digest and exact case IDs.
+Metadata is a supplied declaration; runner verifies adapter binary, while the adapter must
+verify/load the exact declared model/config. Provision and audit local adapters before use;
+the executable inherits host privileges, and this runner does not sandbox network access.
+No model/adapter is downloaded or implicitly selected. Existing native Moonshine host
+runtime can be wrapped with this protocol; missing native VAD/command wiring stays open.
+
+Scoring reports micro WER/CER after NFKC/casefold/alphanumeric normalization, confusion counts,
+command accuracy, 20ms midpoint VAD counts/F1/miss/false-positive rates and desktop RTF.
+RTF includes adapter process startup and is not device latency. Noise-only VAD miss rate/F1
+remain null when undefined. Public speech corpora without endpoint annotations must not be
+used to fabricate VAD truth; annotate a reviewed local held-out set for positive VAD tests.
+Synthetic adapters cannot establish public-corpus results. No transcript/path/speaker is
+included in reports. All six physical gates are always NOT_RUN.
