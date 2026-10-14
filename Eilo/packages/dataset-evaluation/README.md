@@ -66,3 +66,19 @@ remain null when undefined. Public speech corpora without endpoint annotations m
 used to fabricate VAD truth; annotate a reviewed local held-out set for positive VAD tests.
 Synthetic adapters cannot establish public-corpus results. No transcript/path/speaker is
 included in reports. All six physical gates are always NOT_RUN.
+
+VC-DATA-04: `noise.py mix --clean <speech manifest> --noise <MUSAN noise manifest>
+--output <new local directory> --snr 20 10 0 --seed 0` produces deterministic file/offset
+choices, looped noise, RMS-scaled SNR and joint gain reduction to avoid clipping. Requested
+and quantized achieved SNR (within 0.5dB), gain, hashes and both parent manifest digests are
+recorded. Silent inputs cannot define SNR and are rejected. No noise/music is treated as an
+annotated positive VAD corpus. Mixed clips retain clean reference and held-out split.
+
+`noise.py compare --baseline <reviewed report.json> --current <report.json>
+--tolerances <local policy.json> --output <regression.json>` exits 2 on regression.
+Policy is explicit absolute tolerances, e.g. `{"wer":0.02,"command_accuracy":0.02}`.
+Baseline/current must share frozen manifest, scoring/normalization and adapter config.
+Recomputed global and every slice metric catch regressions hidden by averages. Null/missing
+metrics or NOT_RUN reports fail closed. Tolerances are reviewed engineering policies, not
+physical acceptance thresholds. Baselines remain local and require a deliberate review;
+CI does not create a real-corpus baseline from synthetic speech.
