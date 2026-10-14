@@ -182,3 +182,42 @@ Without reviewed annotations, use `vad_diagnostics.py --manifest PATH --config C
 RESULT` with the same expected config/model hash variables. It verifies the corpus and emits
 aggregate execution/detected-duration counts labelled EXECUTED_UNSCORED. It cannot produce F1,
 miss rate or false-positive rate. The scoring runner still rejects weak public VAD labels.
+
+### Human time-aligned VAD review (VC-DATA-08)
+
+Prepare a local listening copy without transcript, speaker, category or model labels:
+
+```sh
+python3 annotations.py prepare --manifest /absolute/frozen/manifest.json --output /absolute/local-review-pack
+```
+
+Open `review.html` locally in a browser. It embeds the selected audio and contains no network
+resources; keep it local and retain NOTICE.txt and the original archive license/component records.
+It is not a shareable report. The pack is limited to 100 clips and 50 MiB of audio; no new audio
+or model download occurs. Use a reviewer pseudonym, listen to each whole clip and enter audible
+human speech boundaries in seconds. Include unintelligible speech; exclude music without speech,
+breath and mechanical sounds. Mark [] only after explicitly reviewing no speech. Leave uncertain
+clips unreviewed. Do not use model predictions to fill or adjudicate labels.
+
+Save a draft before closing. Reload using the local file picker or paste its JSON under
+“Resume by pasting saved JSON”; no extension permission change is needed for pasted JSON.
+Export reviewed labels only after every clip and the listening declaration are confirmed.
+Label edits clear the associated confirmation. Review timestamps are generated on final export.
+
+```sh
+python3 annotations.py import --manifest /absolute/frozen/manifest.json \
+  --review /absolute/vad-reviewed.json --output /absolute/frozen/reviewed-vad-manifest.json
+```
+
+Write the derived manifest beside the frozen source so relative audio paths remain valid. Import
+revalidates actual audio hashes/format, exact source hash, all IDs/PCM hashes/sample counts, integer
+sample intervals, completeness, declaration and timestamp. It creates a VAD-only manifest with
+transcripts and speaker identifiers removed, retaining license/receipt provenance. Original files
+and prior NOT_RUN/unscored reports are never overwritten. The normal benchmark runner validates
+the embedded review and its hash before any public VAD inference/scoring; a status string alone
+cannot enable scoring. Existing ASR/command and synthetic workflows are unchanged.
+
+These checks establish consistency and recorded reviewer declarations, not reviewer identity,
+proof of listening, annotation accuracy or independence. Review the labels themselves separately;
+PR approval of tooling is not approval of acoustic truth. No real reviewed labels or VAD scores
+are created automatically. Physical gates remain NOT_RUN; production stays NOT_ENABLED.

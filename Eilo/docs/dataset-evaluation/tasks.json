@@ -5,44 +5,73 @@
       "id": "VC-DATA-01",
       "branch": "task/vc-data-01-manifests",
       "pr": "https://github.com/GemjuSherpa/Eilo/pull/52",
-      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "status": "REVIEWED_AND_MERGED",
       "parent_scope": "S08 acoustic corpus prerequisite",
-      "physical_acceptance": "NOT_RUN"
+      "physical_acceptance": "NOT_RUN",
+      "main_integration_pr": "https://github.com/GemjuSherpa/Eilo/pull/58"
     },
     {
       "id": "VC-DATA-02",
       "branch": "task/vc-data-02-preprocessing",
       "pr": "https://github.com/GemjuSherpa/Eilo/pull/53",
-      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "status": "REVIEWED_AND_MERGED",
       "parent_scope": "S08 acoustic corpus prerequisite",
-      "physical_acceptance": "NOT_RUN"
+      "physical_acceptance": "NOT_RUN",
+      "main_integration_pr": "https://github.com/GemjuSherpa/Eilo/pull/58"
     },
     {
       "id": "VC-DATA-03",
       "branch": "task/vc-data-03-benchmarks",
       "pr": "https://github.com/GemjuSherpa/Eilo/pull/54",
-      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "status": "REVIEWED_AND_MERGED",
       "parent_scope": "S08 acoustic corpus prerequisite",
-      "physical_acceptance": "NOT_RUN"
+      "physical_acceptance": "NOT_RUN",
+      "main_integration_pr": "https://github.com/GemjuSherpa/Eilo/pull/58"
     },
     {
       "id": "VC-DATA-04",
       "branch": "task/vc-data-04-noise-regression",
       "pr": "https://github.com/GemjuSherpa/Eilo/pull/55",
-      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "status": "REVIEWED_AND_MERGED",
       "parent_scope": "S08 acoustic corpus prerequisite",
-      "physical_acceptance": "NOT_RUN"
+      "physical_acceptance": "NOT_RUN",
+      "main_integration_pr": "https://github.com/GemjuSherpa/Eilo/pull/58"
     },
     {
       "id": "VC-DATA-05",
       "branch": "task/vc-data-05-reports-ci",
       "pr": "https://github.com/GemjuSherpa/Eilo/pull/56",
-      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "status": "REVIEWED_AND_MERGED",
       "parent_scope": "S08 acoustic corpus prerequisite",
+      "physical_acceptance": "NOT_RUN",
+      "main_integration_pr": "https://github.com/GemjuSherpa/Eilo/pull/58"
+    },
+    {
+      "id": "VC-DATA-06",
+      "branch": "task/vc-data-06-regression-locks",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/59",
+      "status": "REVIEWED_AND_MERGED_TO_DEPENDENCY_BRANCH",
+      "main_integration": "PENDING_CURRENT_SPRINT_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "id": "VC-DATA-07",
+      "branch": "task/vc-data-07-native-vad",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/60",
+      "status": "REVIEWED_AND_MERGED_TO_DEPENDENCY_BRANCH",
+      "main_integration": "PENDING_CURRENT_SPRINT_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "id": "VC-DATA-08",
+      "branch": "task/vc-data-08-reviewed-annotations",
+      "sprint": "sprint/vad-annotation-review",
+      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "scope": "Blind local listening packs and bound human VAD label imports",
       "physical_acceptance": "NOT_RUN"
     }
   ],
   "existing_stable_ids": "PRESERVED",
-  "real_vad": "NOT_RUN",
-  "real_regression_baseline": "PENDING_REVIEW"
+  "real_vad": "EXECUTED_UNSCORED_PENDING_HUMAN_TIME_ALIGNED_ANNOTATIONS",
+  "real_regression_baseline": "REVIEWED_DIAGNOSTIC_CANDIDATE_REPEAT_PASS_NOT_PRODUCT_ACCEPTANCE"
 }
