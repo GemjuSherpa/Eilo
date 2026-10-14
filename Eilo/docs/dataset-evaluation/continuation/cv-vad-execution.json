@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "EXECUTED_UNSCORED",
+  "reason": "No reviewed time-aligned annotations; no F1/miss/false-positive claim",
+  "manifest_sha256": "179aea3809003783b2b3121767c31922c9760b7ce30e0aa0d2b5e2ff3912e249",
+  "dataset": "common_voice",
+  "release": "26.0-2026-06-12-en-AU-MDC-2026-07-20",
+  "config_sha256": "3a6744bfdcd4a35519b8e9989ae48085522db34267583ef465c03b6f414d9a6e",
+  "adapter_sha256": "08210652d04069273bbf03695339c251be6373d9015544fa05ecca2330485e65",
+  "model_sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
+  "settings": {
+    "threshold": 0.5,
+    "min_silence_duration": 0.5,
+    "min_speech_duration": 0.16,
+    "window_size": 512,
+    "max_speech_duration": 30,
+    "rate": 16000,
+    "threads": 1,
+    "provider": "cpu",
+    "tail_policy": "zero-pad-last-window-flush-clamp-to-original-samples"
+  },
+  "slices": {
+    "common_voice": {
+      "clips": 30,
+      "audio_seconds": 129.516,
+      "detected_seconds": 86.93599999999998,
+      "segments": 30
+    }
+  },
+  "elapsed_seconds": 2.0825947080156766,
+  "physical_gates": {
+    "capture": "NOT_RUN",
+    "interruption": "NOT_RUN",
+    "endurance": "NOT_RUN",
+    "standby": "NOT_RUN",
+    "screen_off": "NOT_RUN",
+    "device_latency": "NOT_RUN"
+  },
+  "production_readiness": "NOT_ENABLED"
+}

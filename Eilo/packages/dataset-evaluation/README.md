@@ -143,3 +143,81 @@ GitHub Actions run normal/optimized tests, compile/registry checks and smoke wit
 corpora, microphone or dependency installation. Only allowlisted synthetic summaries are
 uploaded with seven-day retention using pinned official actions. No real audio/transcript,
 credentials or corpora are cached/uploaded. Full hosted foundation checks remain separate.
+
+### Locked diagnostic regression candidates (VC-DATA-06)
+
+`baseline.py candidate --manifest PATH --baseline REPORT --tolerances POLICY --output LOCK`
+creates a content-addressed candidate for PR review. `baseline.py check --manifest PATH
+--baseline REPORT --lock LOCK --current REPORT --output RESULT` verifies the same corpus,
+case identities, reference counts, durations, baseline report and tolerance policy before
+comparing every slice. Existing output evidence is never overwritten. Exit 2 indicates a
+regression. Locks detect content changes; they are not signatures or proof of reviewer approval.
+Keep full manifests and case reports locally; publish only aggregate summaries and digests.
+
+Review the proposed tolerance policy with the task PR. A comparison PASS means repeatability
+within this frozen diagnostic suite; it does not establish product quality, corpus coverage,
+physical-device feasibility or approval of a release. No automatic acceptance mechanism is added.
+Historical v1 reports must not be silently relabelled: the checked-in continuation evidence
+records an explicit ASR/command-only compatibility mapping for the v2 partial-VAD-frame fix.
+VAD comparisons require fresh v2 scoring.
+
+### Native file-only VAD (VC-DATA-07)
+
+`native_vad_adapter.py` implements the existing request/response contract with the pinned
+sherpa-onnx 1.13.8 C API via Python ctypes. It uses the approved local Silero v5 model,
+CPU/one thread/16 kHz, threshold 0.5, minimum speech 160 ms and silence 500 ms. Inputs are
+bounded to 30 seconds. Each clip gets a fresh detector, 512-sample windows, zero padding of
+the final window, explicit flush, clamping to the original duration, reset and destruction.
+Native returned segments are freed after consumption. No microphone, application or download
+is activated by this adapter. Model/runtime/license provenance is in vad-provenance.json.
+
+Set `EILO_DATA_VAD_CONFIG` to a local JSON with `runtime_version`, `settings` (exact SETTINGS
+from the adapter), `library`, `runtime_files` (path/sha256 entries), and `model` (path/sha256).
+Use the normal benchmark runner and adapter metadata to score reviewed annotations. The config
+and model hashes must match EILO_DATA_ADAPTER_CONFIG_SHA256 and EILO_DATA_ADAPTER_MODEL_SHA256;
+the runner supplies those variables from its metadata. The wrapper, config, model and runtime
+are all pinned. Do not edit source or pins to accommodate a different ABI without review.
+
+Without reviewed annotations, use `vad_diagnostics.py --manifest PATH --config CONFIG --output
+RESULT` with the same expected config/model hash variables. It verifies the corpus and emits
+aggregate execution/detected-duration counts labelled EXECUTED_UNSCORED. It cannot produce F1,
+miss rate or false-positive rate. The scoring runner still rejects weak public VAD labels.
+
+### Human time-aligned VAD review (VC-DATA-08)
+
+Prepare a local listening copy without transcript, speaker, category or model labels:
+
+```sh
+python3 annotations.py prepare --manifest /absolute/frozen/manifest.json --output /absolute/local-review-pack
+```
+
+Open `review.html` locally in a browser. It embeds the selected audio and contains no network
+resources; keep it local and retain NOTICE.txt and the original archive license/component records.
+It is not a shareable report. The pack is limited to 100 clips and 50 MiB of audio; no new audio
+or model download occurs. Use a reviewer pseudonym, listen to each whole clip and enter audible
+human speech boundaries in seconds. Include unintelligible speech; exclude music without speech,
+breath and mechanical sounds. Mark [] only after explicitly reviewing no speech. Leave uncertain
+clips unreviewed. Do not use model predictions to fill or adjudicate labels.
+
+Save a draft before closing. Reload using the local file picker or paste its JSON under
+“Resume by pasting saved JSON”; no extension permission change is needed for pasted JSON.
+Export reviewed labels only after every clip and the listening declaration are confirmed.
+Label edits clear the associated confirmation. Review timestamps are generated on final export.
+
+```sh
+python3 annotations.py import --manifest /absolute/frozen/manifest.json \
+  --review /absolute/vad-reviewed.json --output /absolute/frozen/reviewed-vad-manifest.json
+```
+
+Write the derived manifest beside the frozen source so relative audio paths remain valid. Import
+revalidates actual audio hashes/format, exact source hash, all IDs/PCM hashes/sample counts, integer
+sample intervals, completeness, declaration and timestamp. It creates a VAD-only manifest with
+transcripts and speaker identifiers removed, retaining license/receipt provenance. Original files
+and prior NOT_RUN/unscored reports are never overwritten. The normal benchmark runner validates
+the embedded review and its hash before any public VAD inference/scoring; a status string alone
+cannot enable scoring. Existing ASR/command and synthetic workflows are unchanged.
+
+These checks establish consistency and recorded reviewer declarations, not reviewer identity,
+proof of listening, annotation accuracy or independence. Review the labels themselves separately;
+PR approval of tooling is not approval of acoustic truth. No real reviewed labels or VAD scores
+are created automatically. Physical gates remain NOT_RUN; production stays NOT_ENABLED.
