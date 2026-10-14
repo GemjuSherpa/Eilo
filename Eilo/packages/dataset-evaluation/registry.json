@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-14",
+  "datasets": [
+    {
+      "id": "common_voice", "version": "UNSELECTED", "locale": "en",
+      "license": "CC0-1.0", "license_status": "RECHECK_SELECTED_RELEASE",
+      "source": "https://mozilladatacollective.com/datasets",
+      "terms_source": "https://community.mozilladatacollective.com/faq-why-cant-i-re-host-or-share-common-voice-datasets-that-i-download-from-mdc/",
+      "download_url": null, "sha256": null, "bytes": null,
+      "checksum_status": "NOT_DOWNLOADED", "permission": "ACCOUNT_AND_TERMS_REQUIRED",
+      "redistribution": "NO_REHOST_UNDER_MDC_TERMS", "purpose": ["asr"],
+      "attribution": "Mozilla Common Voice contributors; pin dataset card and datasheet before use"
+    },
+    {
+      "id": "musan", "version": "SLR17-2015", "locale": "mixed",
+      "license": "CC-BY-4.0", "license_status": "PUBLISHER_VERIFIED",
+      "source": "https://www.openslr.org/17/",
+      "terms_source": "https://www.openslr.org/17/",
+      "download_url": "https://openslr.elda.org/resources/17/musan.tar.gz",
+      "sha256": null, "bytes": null, "checksum_status": "NOT_DOWNLOADED",
+      "permission": "APPROVED_BY_USER_2026_10_14", "redistribution": "DO_NOT_COMMIT_AUDIO",
+      "purpose": ["noise", "vad_negative"],
+      "attribution": "David Snyder, Guoguo Chen, Daniel Povey (2015), MUSAN: A Music, Speech, and Noise Corpus; retain per-file attribution/license records"
+    },
+    {
+      "id": "speech_commands", "version": "0.02", "locale": "en",
+      "license": "CC-BY-4.0", "license_status": "VERIFY_ARCHIVE_LICENSE",
+      "source": "https://www.tensorflow.org/datasets/catalog/speech_commands",
+      "terms_source": "https://github.com/tensorflow/docs/blob/master/site/en/r1/tutorials/sequences/audio_recognition.md",
+      "download_url": "https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz",
+      "sha256": null, "bytes": null, "checksum_status": "NOT_DOWNLOADED",
+      "permission": "APPROVED_BY_USER_2026_10_14", "redistribution": "DO_NOT_COMMIT_AUDIO",
+      "purpose": ["commands", "asr"],
+      "attribution": "Pete Warden (2018), Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition; retain archive LICENSE"
+    }
+  ]
+}
