@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "task": "VC-VERIFY-02",
+  "configurations": [
+    {
+      "id": "ios-built-in",
+      "platform": "iOS",
+      "status": "NOT_RUN",
+      "reason": "Connected iPhone17 Pro Max/iOS26.6.1. App microphone/VAD/joined model/verified voice attachment and frozen acoustic corpus remain open.",
+      "samples": []
+    },
+    {
+      "id": "android-built-in",
+      "platform": "Android",
+      "status": "NOT_RUN",
+      "reason": "No physical Android available.",
+      "samples": []
+    }
+  ]
+}
