@@ -1,0 +1,11 @@
+# VC-GATE-02 — screen-off endurance evidence prerequisite
+
+Partial, awaiting Gemju Sherpa review. Physical N06/N08/A13 workload NOT_RUN. `packages/voice-latency/screen_off.py` reuses the full60-minute acoustic/resource accounting and additionally requires screen-off at every sample, reviewed background consent, permitted execution, generic locked-audio policy approval, no keepalive workaround, exact policy revision and lifecycle trace checksum. Default records remain NOT_RUN; declaration validation is not a platform-compliance audit.
+
+Four focused synthetic regressions PASS in ordinary/optimized Python. They test permission/policy/keepalive/screen/capture gaps and incomplete runs, without a physical lock/background experiment. Full repeated foreground regression coverage runs in the final combined suite. Reproduce with `python3 -m unittest discover -s Eilo/packages/voice-latency -p 'test_screen_off.py'` and `python3 Eilo/packages/voice-latency/screen_off.py`; measured reports require `--corpus-root` and actual local acoustic evidence. Input construction is in `test_screen_off.py`, exact allowlisted fields in `screen_off.py`/`endurance.py`.
+
+Current iOS `AppDelegate.swift` calls Stop on scene resignation and protected-data loss. Android `BackgroundCapturePolicy.kt` requires unlocked operation. These source-policy observations explain why screen-off acceptance cannot be measured as implemented; they are not physical experiment failures or evidence of OS impossibility. No entitlement, service policy, readiness or privacy gate is changed. Simulator/local schema success cannot reopen them. The paired iPhone is available; the app's required behavior/pipeline is unavailable. Android hardware remains missing.
+
+Same simulator normal build/install and three fresh ten-second startup checks precede commit; actual results in `S08_GATE02_VALIDATION.json`. Branch `task/s08-vc-gate-02-screen-off-evidence` → `sprint/s08-feasibility-evidence`, then final PR for review. Main merge requires Gemju Sherpa. Personal Xcode/plist/S02 deltas preserved and excluded.
+
+Complete VC-AUDIO-09/10 and reviewed legitimate locked/background pipeline before a real60-minute run. Do not infer App Review approval, use silent audio/JS keepalives, claim support, or proceed to persistent memory.
