@@ -1,0 +1,149 @@
+{
+  "historical_report_sha256": "dbd95ef438fbe9321e55b4752b0cddd0d22d198563f40ccf246174fc2dd8f61e",
+  "compatibility": "v1 to v2: ASR/command counters unchanged; no VAD cases",
+  "baseline_candidate": {
+    "schema_version": 1,
+    "purpose": "DIAGNOSTIC_REGRESSION",
+    "review_status": "CANDIDATE_FOR_PR_REVIEW",
+    "manifest_sha256": "0fcf9940317730f9bc6f2efd2a80f4774df4ea610b0b43b6f362e8b69c8003fa",
+    "report_sha256": "651029f020c1663ac5cdc835b52c138e59667877fbf42b0a44cddb0ca5965db7",
+    "tolerances": {
+      "wer": 0,
+      "cer": 0,
+      "command_accuracy": 0,
+      "command_target_accuracy": 0
+    },
+    "tolerances_sha256": "6cc5a94a4e27113883c5d57f66d2d476ad9d89596faf05ca698d24860d36ff7b",
+    "physical_gates": {
+      "capture": "NOT_RUN",
+      "interruption": "NOT_RUN",
+      "endurance": "NOT_RUN",
+      "standby": "NOT_RUN",
+      "screen_off": "NOT_RUN",
+      "device_latency": "NOT_RUN"
+    }
+  },
+  "repeat": {
+    "schema_version": 1,
+    "status": "PASS",
+    "manifest_sha256": "0fcf9940317730f9bc6f2efd2a80f4774df4ea610b0b43b6f362e8b69c8003fa",
+    "changes": [
+      {
+        "slice": "all",
+        "metric": "wer",
+        "before": 0.3333333333333333,
+        "after": 0.3333333333333333,
+        "delta": 0.0,
+        "tolerance": 0,
+        "regression": false
+      },
+      {
+        "slice": "all",
+        "metric": "cer",
+        "before": 0.2556390977443609,
+        "after": 0.2556390977443609,
+        "delta": 0.0,
+        "tolerance": 0,
+        "regression": false
+      },
+      {
+        "slice": "all",
+        "metric": "command_accuracy",
+        "before": 0.9,
+        "after": 0.9,
+        "delta": 0.0,
+        "tolerance": 0,
+        "regression": false
+      },
+      {
+        "slice": "all",
+        "metric": "command_target_accuracy",
+        "before": 0.6666666666666666,
+        "after": 0.6666666666666666,
+        "delta": 0.0,
+        "tolerance": 0,
+        "regression": false
+      },
+      {
+        "slice": "speech_commands",
+        "metric": "wer",
+        "before": 0.3333333333333333,
+        "after": 0.3333333333333333,
+        "delta": 0.0,
+        "tolerance": 0,
+        "regression": false
+      },
+      {
+        "slice": "speech_commands",
+        "metric": "cer",
+        "before": 0.2556390977443609,
+        "after": 0.2556390977443609,
+        "delta": 0.0,
+        "tolerance": 0,
+        "regression": false
+      },
+      {
+        "slice": "speech_commands",
+        "metric": "command_accuracy",
+        "before": 0.9,
+        "after": 0.9,
+        "delta": 0.0,
+        "tolerance": 0,
+        "regression": false
+      },
+      {
+        "slice": "speech_commands",
+        "metric": "command_target_accuracy",
+        "before": 0.6666666666666666,
+        "after": 0.6666666666666666,
+        "delta": 0.0,
+        "tolerance": 0,
+        "regression": false
+      }
+    ],
+    "physical_gates": {
+      "capture": "NOT_RUN",
+      "interruption": "NOT_RUN",
+      "endurance": "NOT_RUN",
+      "standby": "NOT_RUN",
+      "screen_off": "NOT_RUN",
+      "device_latency": "NOT_RUN"
+    },
+    "baseline_lock_sha256": "577fe7e6cd81cf43712d8974ea482c50284f956519fa158d177d4031f30d7ff8",
+    "purpose": "DIAGNOSTIC_REGRESSION",
+    "review_status": "CANDIDATE_FOR_PR_REVIEW"
+  },
+  "metrics": {
+    "count": 30,
+    "word_errors": 10,
+    "reference_words": 30,
+    "character_errors": 34,
+    "reference_characters": 133,
+    "wer": 0.3333333333333333,
+    "cer": 0.2556390977443609,
+    "command_accuracy": 0.9,
+    "confusion": {
+      "down -> down": 3,
+      "go -> go": 1,
+      "left -> left": 1,
+      "left -> unknown": 1,
+      "stop -> stop": 1,
+      "unknown -> unknown": 21,
+      "up -> unknown": 1,
+      "yes -> unknown": 1
+    },
+    "command_accuracy_by_label": {
+      "down": 1.0,
+      "go": 1.0,
+      "left": 0.5,
+      "stop": 1.0,
+      "unknown": 1.0,
+      "up": 0.0,
+      "yes": 0.0
+    },
+    "command_balanced_accuracy": 0.6428571428571429,
+    "command_target_count": 9,
+    "command_target_accuracy": 0.6666666666666666,
+    "rtf": 0.3204731628610077
+  }
+}
