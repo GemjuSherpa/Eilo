@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-14",
+  "task": "VC-GATE-03",
+  "scope": "measurement/reporting prerequisite only",
+  "implementation_status": "partial",
+  "physical_acceptance": "NOT_RUN",
+  "review": "pending_review",
+  "branch": "task/s08-vc-gate-03-standby-evidence",
+  "sprint": "sprint/s08-feasibility-evidence",
+  "checks": {
+    "python_compile": "PASS",
+    "focused_synthetic_tests_normal": 4,
+    "focused_synthetic_tests_optimized": 4,
+    "simulator_normal_app_build_install": "PASS",
+    "fresh_ten_second_launches": 3
+  },
+  "physical_prerequisites": "Native real capture/VAD/joined model/verified voice and reviewed acoustic corpus unavailable; locked/background capture denied by current policy; Android phone unavailable."
+}
