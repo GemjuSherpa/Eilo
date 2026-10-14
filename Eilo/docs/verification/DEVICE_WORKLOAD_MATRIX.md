@@ -6,12 +6,12 @@ Status: protocol ready for review, physical-device matrix provisional. No perfor
 
 | Environment | OS | Purpose | Evidence status |
 |---|---|---|---|
-| Owner's iPhone, model/RAM not yet supplied | iOS 26.6.1 | Future physical iOS lifecycle/performance trials | Not run; model/RAM and device connection pending |
+| Gemju Sherpa’s iPhone 17 Pro Max (iPhone18,2), RAM unverified | iOS 26.6.1/build23G83 | Future physical iOS lifecycle/performance trials | Connected 14 October 2026; RAM/voice/corpus/pipeline eligibility pending; physical latency not run |
 | Physical Android | Not available | Android thermal/battery/audio/background gates | Unavailable; affected release scope blocked until obtained |
 | iPhone 18 Pro simulator on M5 Mac | iOS 27.0 | Shell build/launch and development only | S01 checks; no phone performance claim |
 | Eilo_API35 ARM64 emulator | Android 15/API35 | Shell build/launch and native fixtures | S01 checks; no phone performance claim |
 
-Provisional support candidates from baseline: Android15+/iOS18+, 8GB phones. Owner's unspecified iPhone has not been asserted to meet these assumptions. A new support matrix requires review.
+Provisional support candidates from baseline: Android15+/iOS18+, 8GB phones. The connected iPhone has not been asserted to meet the unverified RAM/voice/workload assumptions. A new support matrix requires review.
 
 ## Frozen workload definitions (synthetic fixtures only)
 
@@ -28,4 +28,6 @@ Provisional support candidates from baseline: Android15+/iOS18+, 8GB phones. Own
 
 Routes: built-in speaker/microphone, wired headset where supported, Bluetooth HFP; record actual hardware/model and routing changes. Repeat N01/N02/N04 per supported route. Test lock/unlock, app background/foreground, microphone denial/revocation, call interruption, route disconnect, private/history modes and airplane mode after asset installation. No capture tests occur before their separately approved task.
 
-Dataset acquisition/generation and exact hashes are pending ASR/wake/model task selection; this is a premeasurement protocol, not a frozen audio corpus. No real conversations or personal recordings may be collected for debugging. Do not begin target measurements until the owner reviews device eligibility and fixture inventory.
+Dataset acquisition/generation and exact hashes are pending ASR/wake/model task selection; this is a premeasurement protocol, not a frozen audio corpus. No real conversations or personal recordings may be collected for debugging. Do not begin target measurements until Gemju Sherpa reviews device eligibility and fixture inventory.
+
+14 October 2026: device metadata confirms connected physical iPhone 17 Pro Max/iPhone18,2, iOS26.6.1/build23G83. The friendly device name is not hardware evidence. VC-VERIFY-02 measurement tooling freezes the 20-cold/80-warm question schedule in `packages/voice-latency/tests/turn-plan.json`; acoustic corpus preparation/approval remains pending. No phone latency/endurance/standby pass is inferred. See `packages/voice-latency/README.md`.
