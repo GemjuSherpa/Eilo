@@ -70,3 +70,12 @@ class BenchmarkTests(unittest.TestCase):
         value['manifest_sha256'] = canonical_digest(manifest)
         with self.assertRaises(ValueError):
             report(manifest, value)
+
+    def test_command_imbalance_is_visible(self):
+        cases = [{'correct': 1, 'confusion': ['unknown', 'unknown'], 'seconds': 0,
+                  'audio_seconds': 1}] * 9 + [{'correct': 0, 'confusion': ['yes', 'unknown'],
+                                              'seconds': 0, 'audio_seconds': 1}]
+        metrics = aggregate(cases)
+        self.assertEqual(metrics['command_accuracy'], 0.9)
+        self.assertEqual(metrics['command_balanced_accuracy'], 0.5)
+        self.assertEqual(metrics['command_target_accuracy'], 0)

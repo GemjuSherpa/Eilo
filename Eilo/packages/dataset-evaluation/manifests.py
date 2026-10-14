@@ -61,7 +61,21 @@ def receipt(registry, dataset, archive, license_evidence):
             'attribution': item['attribution'], 'permission': item['permission']}
 
 
+def validate_receipt(value):
+    require(value['schema_version'] == 1, 'invalid receipt schema')
+    require(value['dataset'] in ('common_voice', 'musan', 'speech_commands'), 'unknown receipt corpus')
+    require(isinstance(value['version'], str) and value['version'] != 'UNSELECTED', 'unselected receipt')
+    require(value['permission'].startswith('APPROVED_BY_USER'), 'corpus permission required')
+    require(value['license'] in ('CC0-1.0', 'CC-BY-4.0'), 'unreviewed corpus license')
+    for key in ('sha256', 'license_evidence_sha256'):
+        require(re.fullmatch('[0-9a-f]{64}', value[key]), 'invalid receipt checksum')
+    require(type(value['bytes']) is int and value['bytes'] > 0, 'invalid receipt archive size')
+    require(value['checksum_status'] in ('LOCAL_OBSERVED', 'PUBLISHER_VERIFIED'), 'unverified receipt')
+    return value
+
+
 def verify_receipt(value, archive):
+    validate_receipt(value)
     require(value['checksum_status'] in ('LOCAL_OBSERVED', 'PUBLISHER_VERIFIED'), 'unverified receipt')
     require(Path(archive).stat().st_size == value['bytes'], 'archive size changed')
     require(sha256(archive) == value['sha256'], 'archive checksum changed')

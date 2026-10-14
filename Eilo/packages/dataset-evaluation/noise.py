@@ -11,7 +11,7 @@ from manifests import canonical_digest, require, safe_path, sha256
 
 NOISE_RECIPE = 'seeded-loop-rms-snr-joint-headroom-v1'
 LOWER = {'wer', 'cer', 'rtf', 'vad_false_positive_rate', 'vad_miss_rate'}
-HIGHER = {'command_accuracy', 'vad_f1'}
+HIGHER = {'command_accuracy', 'command_balanced_accuracy', 'command_target_accuracy', 'vad_f1'}
 
 
 def rms(samples):

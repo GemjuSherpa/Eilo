@@ -82,3 +82,35 @@ Recomputed global and every slice metric catch regressions hidden by averages. N
 metrics or NOT_RUN reports fail closed. Tolerances are reviewed engineering policies, not
 physical acceptance thresholds. Baselines remain local and require a deliberate review;
 CI does not create a real-corpus baseline from synthetic speech.
+
+VC-DATA-05: `reporting.py --report <local report.json> --output <local report directory>`
+exports summary.json and summary.html with escaped content, no scripts/external resources,
+only metrics/provenance/slices and truthful physical gates. Per-case data is omitted.
+`smoke.py --output <temporary directory>` verifies mixing/scoring/regression/JSON/HTML with
+a generated tone and fixed synthetic transcript. It performs no recognition and never
+establishes dataset accuracy. GitHub Actions executes normal/optimized Python tests,
+compilation, registry validation and this smoke. Only allowlisted synthetic aggregate reports are uploaded as a seven-day CI artifact;
+no corpus/transcript/credentials are cached or uploaded. Workflow uses read-only permissions,
+a pinned checkout action, existing hosted Python and the public-repository cost guard.
+No dependency installation or dataset/model download is performed by CI.
+
+Local execution helpers (VC-DATA-03 integration verified with VC-DATA-05):
+`extract_subset.py --archive <approved archive> --receipt <receipt.json> --output <new local
+subset> --limit 100 --seed 0` rechecks SHA/size, rejects links/traversal/oversized files,
+validates the full archive before writing and extracts only selected official-test clips plus
+licenses/metadata. Speech Commands LICENSE must name Attribution 4.0 International.
+MUSAN extraction selects only noise; root is `<subset>/musan`. Never extract unverified
+archives with extractall. Generated receipts and extracted samples remain ignored.
+
+`native_asr_adapter.py` wraps the existing local macOS Moonshine host executable, checking
+vendor archive/extracted libraries and every model file against existing asr-runtime
+provenance before each run. `EILO_DATA_ASR_CONFIG` points to a local JSON containing executable,
+executable_sha256, cache, provenance, provenance_sha256 and model_sha256 (canonical digest
+of provenance.model). Metadata binary hash pins this adapter script; config hash pins this
+JSON, and model hash pins provenance.model. Command labels are exact normalized ASR words
+with unknown fallback: this is an ASR-derived command baseline, not Eilo command controller
+or wake-word acceptance. Native VAD remains unavailable and is reported NOT_RUN.
+
+Command reports also expose per-reference-label accuracy, balanced accuracy over observed
+labels, target-word count and target-only accuracy. Missing labels are not assigned invented
+scores. Always inspect sample counts and unknown-class imbalance before interpreting accuracy.

@@ -90,7 +90,7 @@ def decode_mp3(path, decoder, expected_sha256):
     with tempfile.TemporaryDirectory() as temp:
         output = Path(temp) / 'decoded.wav'
         subprocess.run([str(Path(decoder).resolve()), '-nostdin', '-v', 'error', '-threads', '1',
-                        '-i', str(Path(path).resolve()), '-t', '30', '-ac', '1', '-ar', '16000',
+                        '-protocol_whitelist', 'file', '-f', 'mp3', '-i', str(Path(path).resolve()), '-t', '30', '-ac', '1', '-ar', '16000',
                         '-acodec', 'pcm_s16le', '-fflags', '+bitexact', '-flags:a', '+bitexact',
                         str(output)], check=True, capture_output=True, timeout=60)
         # Reject potentially truncated long clips rather than changing the transcript.

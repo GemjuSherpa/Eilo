@@ -5,7 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 from audio import RATE, RECIPE, decode_mp3, read_wav, write_wav
-from manifests import canonical_digest, require, safe_path, sha256
+from manifests import canonical_digest, require, safe_path, sha256, validate_receipt
 
 COMMANDS = {'yes', 'no', 'up', 'down', 'left', 'right', 'on', 'off', 'stop', 'go'}
 
@@ -44,6 +44,7 @@ def candidates(dataset, root, split):
 
 def freeze(dataset, root, output, release, receipt, split='test', limit=100, seed=0,
            decoder=None, decoder_sha256=None):
+    validate_receipt(receipt)
     require(type(limit) is int and 1 <= limit <= 10000, 'invalid sample limit')
     require(type(seed) is int, 'invalid seed')
     require(release != 'UNSELECTED' and receipt['version'] == release and receipt['dataset'] == dataset,

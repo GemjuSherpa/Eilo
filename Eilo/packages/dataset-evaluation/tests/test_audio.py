@@ -38,7 +38,9 @@ class AudioTests(unittest.TestCase):
             (root / 'testing_list.txt').write_text('yes/alice_nohash_0.wav\n')
             write_wav(root / 'yes/alice_nohash_0.wav', [10] * 160)
             receipt = {'version': '0.02', 'dataset': 'speech_commands',
-                       'permission': 'APPROVED_BY_USER_TEST', 'checksum_status': 'LOCAL_OBSERVED'}
+                       'permission': 'APPROVED_BY_USER_TEST', 'checksum_status': 'LOCAL_OBSERVED',
+                       'schema_version': 1, 'sha256': '0' * 64, 'bytes': 1,
+                       'license': 'CC-BY-4.0', 'license_evidence_sha256': '1' * 64}
             a = freeze('speech_commands', root, Path(temp) / 'a', '0.02', receipt)
             b = freeze('speech_commands', root, Path(temp) / 'b', '0.02', receipt)
             self.assertEqual(a, b)
@@ -53,6 +55,8 @@ class AudioTests(unittest.TestCase):
             root = Path(temp)
             (root / 'testing_list.txt').write_text('../escape.wav\n')
             receipt = {'version': '0.02', 'dataset': 'speech_commands',
-                       'permission': 'APPROVED_BY_USER_TEST', 'checksum_status': 'LOCAL_OBSERVED'}
+                       'permission': 'APPROVED_BY_USER_TEST', 'checksum_status': 'LOCAL_OBSERVED',
+                       'schema_version': 1, 'sha256': '0' * 64, 'bytes': 1,
+                       'license': 'CC-BY-4.0', 'license_evidence_sha256': '1' * 64}
             with self.assertRaises(ValueError):
                 freeze('speech_commands', root, root / 'output', '0.02', receipt)
