@@ -1,0 +1,46 @@
+name: VC-DATA synthetic evaluation
+on:
+  pull_request:
+    paths: ['Eilo/packages/dataset-evaluation/**', '.github/workflows/vc-data-evaluation.yml']
+  push:
+    branches: ['sprint/**', 'task/vc-data-**']
+    paths: ['Eilo/packages/dataset-evaluation/**', '.github/workflows/vc-data-evaluation.yml']
+permissions:
+  contents: read
+concurrency:
+  group: vc-data-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  synthetic:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: Eilo/packages/dataset-evaluation
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Compile and verify registry
+        run: |
+          python3 -m compileall -q .
+          python3 manifests.py
+      - name: Deterministic synthetic tests (no corpora/models/microphone)
+        run: |
+          python3 -m unittest discover -s tests -v
+          python3 -O -m unittest discover -s tests -v
+      - name: Generate privacy-reduced synthetic JSON and HTML
+        run: python3 smoke.py --output "$RUNNER_TEMP/vc-data-reports"
+      - name: Upload only synthetic aggregate summaries
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: vc-data-synthetic-summaries
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/vc-data-reports/summary.json
+            ${{ runner.temp }}/vc-data-reports/summary.html
+            ${{ runner.temp }}/vc-data-reports/not-run/summary.json
+            ${{ runner.temp }}/vc-data-reports/not-run/summary.html
+            ${{ runner.temp }}/vc-data-reports/regression.json

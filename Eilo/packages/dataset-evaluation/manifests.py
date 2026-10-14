@@ -42,7 +42,9 @@ def validate_registry(value):
                 'invalid archive size')
         require(item['checksum_status'] in ('NOT_DOWNLOADED', 'LOCAL_OBSERVED', 'PUBLISHER_VERIFIED'),
                 'invalid checksum status')
-        if item['checksum_status'] != 'NOT_DOWNLOADED':
+        if item['checksum_status'] == 'NOT_DOWNLOADED':
+            require(item['sha256'] is None and item['bytes'] is None, 'unexpected unverified checksum')
+        else:
             require(item['sha256'] is not None and item['bytes'] is not None, 'missing receipt')
         require(item['version'] != 'UNSELECTED' or item['sha256'] is None, 'release not selected')
     return value
@@ -54,14 +56,38 @@ def receipt(registry, dataset, archive, license_evidence):
     require(item['permission'].startswith('APPROVED_BY_USER'), 'download/use approval required')
     require(item['version'] != 'UNSELECTED', 'select release first')
     require(Path(license_evidence).is_file(), 'local license evidence required')
-    return {'schema_version': 1, 'dataset': dataset, 'version': item['version'],
+    result = {'schema_version': 1, 'dataset': dataset, 'version': item['version'],
             'source': item['source'], 'sha256': sha256(archive),
             'bytes': Path(archive).stat().st_size, 'checksum_status': 'LOCAL_OBSERVED',
             'license': item['license'], 'license_evidence_sha256': sha256(license_evidence),
             'attribution': item['attribution'], 'permission': item['permission']}
+    if item['sha256'] is not None:
+        require(result['sha256'] == item['sha256'] and result['bytes'] == item['bytes'],
+                'archive does not match pinned registry')
+        result['checksum_status'] = item['checksum_status']
+        if 'publisher_checksum_source' in item:
+            result['publisher_checksum_source'] = item['publisher_checksum_source']
+    for field in ('checksum_scope', 'archive_format'):
+        if field in item:
+            result[field] = item[field]
+    return validate_receipt(result)
+
+
+def validate_receipt(value):
+    require(value['schema_version'] == 1, 'invalid receipt schema')
+    require(value['dataset'] in ('common_voice', 'musan', 'speech_commands'), 'unknown receipt corpus')
+    require(isinstance(value['version'], str) and value['version'] != 'UNSELECTED', 'unselected receipt')
+    require(value['permission'].startswith('APPROVED_BY_USER'), 'corpus permission required')
+    require(value['license'] in ('CC0-1.0', 'CC-BY-4.0'), 'unreviewed corpus license')
+    for key in ('sha256', 'license_evidence_sha256'):
+        require(re.fullmatch('[0-9a-f]{64}', value[key]), 'invalid receipt checksum')
+    require(type(value['bytes']) is int and value['bytes'] > 0, 'invalid receipt archive size')
+    require(value['checksum_status'] in ('LOCAL_OBSERVED', 'PUBLISHER_VERIFIED'), 'unverified receipt')
+    return value
 
 
 def verify_receipt(value, archive):
+    validate_receipt(value)
     require(value['checksum_status'] in ('LOCAL_OBSERVED', 'PUBLISHER_VERIFIED'), 'unverified receipt')
     require(Path(archive).stat().st_size == value['bytes'], 'archive size changed')
     require(sha256(archive) == value['sha256'], 'archive checksum changed')

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "tasks": [
+    {
+      "id": "VC-DATA-01",
+      "branch": "task/vc-data-01-manifests",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/52",
+      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "parent_scope": "S08 acoustic corpus prerequisite",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "id": "VC-DATA-02",
+      "branch": "task/vc-data-02-preprocessing",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/53",
+      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "parent_scope": "S08 acoustic corpus prerequisite",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "id": "VC-DATA-03",
+      "branch": "task/vc-data-03-benchmarks",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/54",
+      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "parent_scope": "S08 acoustic corpus prerequisite",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "id": "VC-DATA-04",
+      "branch": "task/vc-data-04-noise-regression",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/55",
+      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "parent_scope": "S08 acoustic corpus prerequisite",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "id": "VC-DATA-05",
+      "branch": "task/vc-data-05-reports-ci",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/56",
+      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "parent_scope": "S08 acoustic corpus prerequisite",
+      "physical_acceptance": "NOT_RUN"
+    }
+  ],
+  "existing_stable_ids": "PRESERVED",
+  "real_vad": "NOT_RUN",
+  "real_regression_baseline": "PENDING_REVIEW"
+}

@@ -3,36 +3,72 @@
   "checked_on": "2026-10-14",
   "datasets": [
     {
-      "id": "common_voice", "version": "UNSELECTED", "locale": "en",
-      "license": "CC0-1.0", "license_status": "RECHECK_SELECTED_RELEASE",
-      "source": "https://mozilladatacollective.com/datasets",
-      "terms_source": "https://community.mozilladatacollective.com/faq-why-cant-i-re-host-or-share-common-voice-datasets-that-i-download-from-mdc/",
-      "download_url": null, "sha256": null, "bytes": null,
-      "checksum_status": "NOT_DOWNLOADED", "permission": "ACCOUNT_AND_TERMS_REQUIRED",
-      "redistribution": "NO_REHOST_UNDER_MDC_TERMS", "purpose": ["asr"],
-      "attribution": "Mozilla Common Voice contributors; pin dataset card and datasheet before use"
+      "id": "common_voice",
+      "version": "26.0-2026-06-12-en-AU-MDC-2026-07-20",
+      "locale": "en-AU",
+      "license": "CC0-1.0",
+      "license_status": "DATASET_CARD_AND_TERMS_VERIFIED",
+      "source": "https://mozilladatacollective.com/datasets/cmrt710620013mm071t45y6wb",
+      "terms_source": "https://mozilladatacollective.com/terms/consumers",
+      "download_url": null,
+      "sha256": "ca484adf2c8290569043500ebae092071c07bf3372250c8b77c35968f3426e34",
+      "bytes": 2238607360,
+      "checksum_status": "LOCAL_OBSERVED",
+      "permission": "APPROVED_BY_USER_2026_10_14_ACCOUNT_AND_DATASET_TERMS",
+      "redistribution": "NO_REHOST_UNDER_MDC_TERMS",
+      "purpose": [
+        "asr"
+      ],
+      "attribution": "Mozilla Common Voice contributors / MDC Curators Australian English validated subset; no speaker identification or rehosting",
+      "dataset_id": "cmrt710620013mm071t45y6wb",
+      "checksum_scope": "Safari-decompressed tar; original gzip checksum unavailable",
+      "archive_format": "tar",
+      "provider_archive_size": "1.94 GB compressed",
+      "split": "MDC curator speaker-disjoint train/dev/test"
     },
     {
-      "id": "musan", "version": "SLR17-2015", "locale": "mixed",
-      "license": "CC-BY-4.0", "license_status": "PUBLISHER_VERIFIED",
+      "id": "musan",
+      "version": "SLR17-2015",
+      "locale": "mixed",
+      "license": "CC-BY-4.0",
+      "license_status": "PUBLISHER_VERIFIED",
       "source": "https://www.openslr.org/17/",
       "terms_source": "https://www.openslr.org/17/",
       "download_url": "https://openslr.elda.org/resources/17/musan.tar.gz",
-      "sha256": null, "bytes": null, "checksum_status": "NOT_DOWNLOADED",
-      "permission": "APPROVED_BY_USER_2026_10_14", "redistribution": "DO_NOT_COMMIT_AUDIO",
-      "purpose": ["noise", "vad_negative"],
-      "attribution": "David Snyder, Guoguo Chen, Daniel Povey (2015), MUSAN: A Music, Speech, and Noise Corpus; retain per-file attribution/license records"
+      "sha256": "86d1061c7e15b5c9e906777685c519701df51bfde3001e1070dcc9ffac955ee1",
+      "bytes": 11086114085,
+      "checksum_status": "LOCAL_OBSERVED",
+      "permission": "APPROVED_BY_USER_2026_10_14",
+      "redistribution": "DO_NOT_COMMIT_AUDIO",
+      "purpose": [
+        "noise",
+        "vad_negative"
+      ],
+      "attribution": "David Snyder, Guoguo Chen, Daniel Povey (2015), MUSAN: A Music, Speech, and Noise Corpus; retain per-file attribution/license records",
+      "license_scope": "CC-BY-4.0 corpus compilation; component licenses differ",
+      "selected_component": "noise/free-sound only; Public Domain per embedded inventory",
+      "component_inventory_required": true
     },
     {
-      "id": "speech_commands", "version": "0.02", "locale": "en",
-      "license": "CC-BY-4.0", "license_status": "VERIFY_ARCHIVE_LICENSE",
+      "id": "speech_commands",
+      "version": "0.02",
+      "locale": "en",
+      "license": "CC-BY-4.0",
+      "license_status": "ARCHIVE_LICENSE_VERIFIED",
       "source": "https://www.tensorflow.org/datasets/catalog/speech_commands",
       "terms_source": "https://github.com/tensorflow/docs/blob/master/site/en/r1/tutorials/sequences/audio_recognition.md",
       "download_url": "https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz",
-      "sha256": null, "bytes": null, "checksum_status": "NOT_DOWNLOADED",
-      "permission": "APPROVED_BY_USER_2026_10_14", "redistribution": "DO_NOT_COMMIT_AUDIO",
-      "purpose": ["commands", "asr"],
-      "attribution": "Pete Warden (2018), Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition; retain archive LICENSE"
+      "sha256": "af14739ee7dc311471de98f5f9d2c9191b18aedfe957f4a6ff791c709868ff58",
+      "bytes": 2428923189,
+      "checksum_status": "PUBLISHER_VERIFIED",
+      "permission": "APPROVED_BY_USER_2026_10_14",
+      "redistribution": "DO_NOT_COMMIT_AUDIO",
+      "purpose": [
+        "commands",
+        "asr"
+      ],
+      "attribution": "Pete Warden (2018), Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition; retain archive LICENSE",
+      "publisher_checksum_source": "https://raw.githubusercontent.com/tensorflow/datasets/6fc425c793373442974e36fa066e0c5a31f77981/tensorflow_datasets/datasets/speech_commands/checksums.tsv"
     }
   ]
 }
