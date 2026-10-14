@@ -76,9 +76,10 @@
       "id": "VC-DATA-09",
       "branch": "task/vc-data-09-paired-noise-evidence",
       "sprint": "sprint/asr-noise-evidence",
-      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "status": "REVIEWED_AND_MERGED",
       "scope": "Paired Common Voice and MUSAN ASR noise evidence with exact PCM reproduction",
-      "physical_acceptance": "NOT_RUN"
+      "physical_acceptance": "NOT_RUN",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/62"
     }
   ],
   "existing_stable_ids": "PRESERVED",
