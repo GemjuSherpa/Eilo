@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "scope": "NATIVE_PROBABILITY_CORE_EVALUATION",
+  "host": {
+    "status": "EXECUTED_SYNTHETIC",
+    "windows_per_stream": 32,
+    "valid_samples": 16001,
+    "first_probability": 0.01201203465,
+    "repeat_max_abs_delta": 0,
+    "post_final_rejected": true
+  },
+  "provenance_sha256": "98d55bbed203a4bad2dfd8875577f7f3ee8d023ea37a143c291669d579fef631",
+  "library_sha256": "11aa24c1b1ff9c4381e24981e7af1f60e6437ce7b8e3751517a3f183b32a95dd",
+  "source_sha256": {
+    "eilo_vad.cc": "18402a67ee703d446c5bd44c59e018981b181afd3288afccf2c4a1dc10f9f118",
+    "eilo_vad_onnx.cc": "c0962a35f9a5ca28da00fcafc050c201971dc7a82ef3bcd1556d1ace55a40051",
+    "eilo_vad.h": "0d08a66e8c8ee39f82fc1344832de2b2afe80f09a6508e78433829a102acf517"
+  },
+  "corpora": [
+    {
+      "dataset": "common_voice",
+      "manifest_sha256": "179aea3809003783b2b3121767c31922c9760b7ce30e0aa0d2b5e2ff3912e249",
+      "clips": 30,
+      "valid_samples": 2072256,
+      "native_windows": 4059,
+      "windows_ge_0_8": 2204,
+      "windows_le_0_2": 1515,
+      "status": "EXECUTED_UNSCORED",
+      "quality_acceptance": "NOT_ASSESSED"
+    },
+    {
+      "dataset": "speech_commands",
+      "manifest_sha256": "0fcf9940317730f9bc6f2efd2a80f4774df4ea610b0b43b6f362e8b69c8003fa",
+      "clips": 30,
+      "valid_samples": 469841,
+      "native_windows": 939,
+      "windows_ge_0_8": 335,
+      "windows_le_0_2": 494,
+      "status": "EXECUTED_UNSCORED",
+      "quality_acceptance": "NOT_ASSESSED"
+    },
+    {
+      "dataset": "musan",
+      "manifest_sha256": "b6812fcdb073751f18475d9fcf908a599be078d2d0237d0682950809c8670fa9",
+      "clips": 12,
+      "valid_samples": 3770626,
+      "native_windows": 7369,
+      "windows_ge_0_8": 15,
+      "windows_le_0_2": 7127,
+      "status": "EXECUTED_UNSCORED",
+      "quality_acceptance": "NOT_ASSESSED"
+    }
+  ],
+  "physical_gates": {
+    "capture": "NOT_RUN",
+    "interruption": "NOT_RUN",
+    "endurance": "NOT_RUN",
+    "standby": "NOT_RUN",
+    "screen_off": "NOT_RUN",
+    "device_latency": "NOT_RUN"
+  },
+  "production_readiness": "NOT_ENABLED",
+  "ios_simulator": {
+    "status": "EXECUTED_SYNTHETIC",
+    "windows_per_stream": 32,
+    "valid_samples": 16001,
+    "first_probability": 0.01201203465,
+    "repeat_max_abs_delta": 0,
+    "post_final_rejected": true
+  },
+  "ios_device_compile": "PASS_NOT_EXECUTED",
+  "android_compile": {
+    "arm64-v8a": "PASS_OBJECTS_ONLY_NOT_LINKED_OR_EXECUTED",
+    "armeabi-v7a": "PASS_OBJECTS_ONLY_NOT_LINKED_OR_EXECUTED",
+    "x86_64": "PASS_OBJECTS_ONLY_NOT_LINKED_OR_EXECUTED",
+    "x86": "PASS_OBJECTS_ONLY_NOT_LINKED_OR_EXECUTED"
+  }
+}
