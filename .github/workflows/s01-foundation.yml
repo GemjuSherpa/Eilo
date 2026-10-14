@@ -43,6 +43,11 @@ jobs:
         run: |
           python3 -m unittest discover -s packages/llm-runtime -p 'test_*.py'
           python3 -O -m unittest discover -s packages/llm-runtime -p 'test_*.py'
+      - name: Acoustic latency evidence fixtures (synthetic, no microphone)
+        run: |
+          python3 -m unittest discover -s packages/voice-latency -p 'test_*.py'
+          python3 -O -m unittest discover -s packages/voice-latency -p 'test_*.py'
+          python3 packages/voice-latency/measure.py
   android:
     if: github.event.repository.private == false
     runs-on: ubuntu-24.04

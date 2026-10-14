@@ -1,0 +1,527 @@
+{
+  "schema": 1,
+  "task": "VC-VERIFY-02",
+  "protocol": "N01-v1",
+  "sample_count": 100,
+  "cold_count": 20,
+  "warm_count": 80,
+  "quantile": "nearest_rank",
+  "targets_ms": {
+    "median": 1500,
+    "p95": 3000
+  },
+  "questions": [
+    "What is a simple way to organize a busy day?",
+    "What could I do for a quiet evening at home?",
+    "How can I start a friendly conversation?",
+    "Suggest a small indoor hobby I could try.",
+    "How can I make a daily routine easier to follow?",
+    "What is a simple way to take a short break?",
+    "Suggest a relaxing activity after a busy day.",
+    "How can I prepare for a new hobby?",
+    "What could I do when a plan changes?",
+    "Suggest a small goal for this week."
+  ],
+  "schedule": [
+    {
+      "id": "turn-001",
+      "condition": "cold",
+      "question_index": 0
+    },
+    {
+      "id": "turn-002",
+      "condition": "cold",
+      "question_index": 1
+    },
+    {
+      "id": "turn-003",
+      "condition": "cold",
+      "question_index": 2
+    },
+    {
+      "id": "turn-004",
+      "condition": "cold",
+      "question_index": 3
+    },
+    {
+      "id": "turn-005",
+      "condition": "cold",
+      "question_index": 4
+    },
+    {
+      "id": "turn-006",
+      "condition": "cold",
+      "question_index": 5
+    },
+    {
+      "id": "turn-007",
+      "condition": "cold",
+      "question_index": 6
+    },
+    {
+      "id": "turn-008",
+      "condition": "cold",
+      "question_index": 7
+    },
+    {
+      "id": "turn-009",
+      "condition": "cold",
+      "question_index": 8
+    },
+    {
+      "id": "turn-010",
+      "condition": "cold",
+      "question_index": 9
+    },
+    {
+      "id": "turn-011",
+      "condition": "cold",
+      "question_index": 0
+    },
+    {
+      "id": "turn-012",
+      "condition": "cold",
+      "question_index": 1
+    },
+    {
+      "id": "turn-013",
+      "condition": "cold",
+      "question_index": 2
+    },
+    {
+      "id": "turn-014",
+      "condition": "cold",
+      "question_index": 3
+    },
+    {
+      "id": "turn-015",
+      "condition": "cold",
+      "question_index": 4
+    },
+    {
+      "id": "turn-016",
+      "condition": "cold",
+      "question_index": 5
+    },
+    {
+      "id": "turn-017",
+      "condition": "cold",
+      "question_index": 6
+    },
+    {
+      "id": "turn-018",
+      "condition": "cold",
+      "question_index": 7
+    },
+    {
+      "id": "turn-019",
+      "condition": "cold",
+      "question_index": 8
+    },
+    {
+      "id": "turn-020",
+      "condition": "cold",
+      "question_index": 9
+    },
+    {
+      "id": "turn-021",
+      "condition": "warm",
+      "question_index": 0
+    },
+    {
+      "id": "turn-022",
+      "condition": "warm",
+      "question_index": 1
+    },
+    {
+      "id": "turn-023",
+      "condition": "warm",
+      "question_index": 2
+    },
+    {
+      "id": "turn-024",
+      "condition": "warm",
+      "question_index": 3
+    },
+    {
+      "id": "turn-025",
+      "condition": "warm",
+      "question_index": 4
+    },
+    {
+      "id": "turn-026",
+      "condition": "warm",
+      "question_index": 5
+    },
+    {
+      "id": "turn-027",
+      "condition": "warm",
+      "question_index": 6
+    },
+    {
+      "id": "turn-028",
+      "condition": "warm",
+      "question_index": 7
+    },
+    {
+      "id": "turn-029",
+      "condition": "warm",
+      "question_index": 8
+    },
+    {
+      "id": "turn-030",
+      "condition": "warm",
+      "question_index": 9
+    },
+    {
+      "id": "turn-031",
+      "condition": "warm",
+      "question_index": 0
+    },
+    {
+      "id": "turn-032",
+      "condition": "warm",
+      "question_index": 1
+    },
+    {
+      "id": "turn-033",
+      "condition": "warm",
+      "question_index": 2
+    },
+    {
+      "id": "turn-034",
+      "condition": "warm",
+      "question_index": 3
+    },
+    {
+      "id": "turn-035",
+      "condition": "warm",
+      "question_index": 4
+    },
+    {
+      "id": "turn-036",
+      "condition": "warm",
+      "question_index": 5
+    },
+    {
+      "id": "turn-037",
+      "condition": "warm",
+      "question_index": 6
+    },
+    {
+      "id": "turn-038",
+      "condition": "warm",
+      "question_index": 7
+    },
+    {
+      "id": "turn-039",
+      "condition": "warm",
+      "question_index": 8
+    },
+    {
+      "id": "turn-040",
+      "condition": "warm",
+      "question_index": 9
+    },
+    {
+      "id": "turn-041",
+      "condition": "warm",
+      "question_index": 0
+    },
+    {
+      "id": "turn-042",
+      "condition": "warm",
+      "question_index": 1
+    },
+    {
+      "id": "turn-043",
+      "condition": "warm",
+      "question_index": 2
+    },
+    {
+      "id": "turn-044",
+      "condition": "warm",
+      "question_index": 3
+    },
+    {
+      "id": "turn-045",
+      "condition": "warm",
+      "question_index": 4
+    },
+    {
+      "id": "turn-046",
+      "condition": "warm",
+      "question_index": 5
+    },
+    {
+      "id": "turn-047",
+      "condition": "warm",
+      "question_index": 6
+    },
+    {
+      "id": "turn-048",
+      "condition": "warm",
+      "question_index": 7
+    },
+    {
+      "id": "turn-049",
+      "condition": "warm",
+      "question_index": 8
+    },
+    {
+      "id": "turn-050",
+      "condition": "warm",
+      "question_index": 9
+    },
+    {
+      "id": "turn-051",
+      "condition": "warm",
+      "question_index": 0
+    },
+    {
+      "id": "turn-052",
+      "condition": "warm",
+      "question_index": 1
+    },
+    {
+      "id": "turn-053",
+      "condition": "warm",
+      "question_index": 2
+    },
+    {
+      "id": "turn-054",
+      "condition": "warm",
+      "question_index": 3
+    },
+    {
+      "id": "turn-055",
+      "condition": "warm",
+      "question_index": 4
+    },
+    {
+      "id": "turn-056",
+      "condition": "warm",
+      "question_index": 5
+    },
+    {
+      "id": "turn-057",
+      "condition": "warm",
+      "question_index": 6
+    },
+    {
+      "id": "turn-058",
+      "condition": "warm",
+      "question_index": 7
+    },
+    {
+      "id": "turn-059",
+      "condition": "warm",
+      "question_index": 8
+    },
+    {
+      "id": "turn-060",
+      "condition": "warm",
+      "question_index": 9
+    },
+    {
+      "id": "turn-061",
+      "condition": "warm",
+      "question_index": 0
+    },
+    {
+      "id": "turn-062",
+      "condition": "warm",
+      "question_index": 1
+    },
+    {
+      "id": "turn-063",
+      "condition": "warm",
+      "question_index": 2
+    },
+    {
+      "id": "turn-064",
+      "condition": "warm",
+      "question_index": 3
+    },
+    {
+      "id": "turn-065",
+      "condition": "warm",
+      "question_index": 4
+    },
+    {
+      "id": "turn-066",
+      "condition": "warm",
+      "question_index": 5
+    },
+    {
+      "id": "turn-067",
+      "condition": "warm",
+      "question_index": 6
+    },
+    {
+      "id": "turn-068",
+      "condition": "warm",
+      "question_index": 7
+    },
+    {
+      "id": "turn-069",
+      "condition": "warm",
+      "question_index": 8
+    },
+    {
+      "id": "turn-070",
+      "condition": "warm",
+      "question_index": 9
+    },
+    {
+      "id": "turn-071",
+      "condition": "warm",
+      "question_index": 0
+    },
+    {
+      "id": "turn-072",
+      "condition": "warm",
+      "question_index": 1
+    },
+    {
+      "id": "turn-073",
+      "condition": "warm",
+      "question_index": 2
+    },
+    {
+      "id": "turn-074",
+      "condition": "warm",
+      "question_index": 3
+    },
+    {
+      "id": "turn-075",
+      "condition": "warm",
+      "question_index": 4
+    },
+    {
+      "id": "turn-076",
+      "condition": "warm",
+      "question_index": 5
+    },
+    {
+      "id": "turn-077",
+      "condition": "warm",
+      "question_index": 6
+    },
+    {
+      "id": "turn-078",
+      "condition": "warm",
+      "question_index": 7
+    },
+    {
+      "id": "turn-079",
+      "condition": "warm",
+      "question_index": 8
+    },
+    {
+      "id": "turn-080",
+      "condition": "warm",
+      "question_index": 9
+    },
+    {
+      "id": "turn-081",
+      "condition": "warm",
+      "question_index": 0
+    },
+    {
+      "id": "turn-082",
+      "condition": "warm",
+      "question_index": 1
+    },
+    {
+      "id": "turn-083",
+      "condition": "warm",
+      "question_index": 2
+    },
+    {
+      "id": "turn-084",
+      "condition": "warm",
+      "question_index": 3
+    },
+    {
+      "id": "turn-085",
+      "condition": "warm",
+      "question_index": 4
+    },
+    {
+      "id": "turn-086",
+      "condition": "warm",
+      "question_index": 5
+    },
+    {
+      "id": "turn-087",
+      "condition": "warm",
+      "question_index": 6
+    },
+    {
+      "id": "turn-088",
+      "condition": "warm",
+      "question_index": 7
+    },
+    {
+      "id": "turn-089",
+      "condition": "warm",
+      "question_index": 8
+    },
+    {
+      "id": "turn-090",
+      "condition": "warm",
+      "question_index": 9
+    },
+    {
+      "id": "turn-091",
+      "condition": "warm",
+      "question_index": 0
+    },
+    {
+      "id": "turn-092",
+      "condition": "warm",
+      "question_index": 1
+    },
+    {
+      "id": "turn-093",
+      "condition": "warm",
+      "question_index": 2
+    },
+    {
+      "id": "turn-094",
+      "condition": "warm",
+      "question_index": 3
+    },
+    {
+      "id": "turn-095",
+      "condition": "warm",
+      "question_index": 4
+    },
+    {
+      "id": "turn-096",
+      "condition": "warm",
+      "question_index": 5
+    },
+    {
+      "id": "turn-097",
+      "condition": "warm",
+      "question_index": 6
+    },
+    {
+      "id": "turn-098",
+      "condition": "warm",
+      "question_index": 7
+    },
+    {
+      "id": "turn-099",
+      "condition": "warm",
+      "question_index": 8
+    },
+    {
+      "id": "turn-100",
+      "condition": "warm",
+      "question_index": 9
+    }
+  ]
+}

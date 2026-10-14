@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-14",
+  "task": "VC-VERIFY-02",
+  "scope": "acoustic measurement prerequisite; not a physical latency trial",
+  "requirements": [
+    "N01",
+    "A12"
+  ],
+  "implementation": "partial",
+  "verification": "partial",
+  "review": "pending_review",
+  "previous_pr": {
+    "number": 49,
+    "merged": true,
+    "merge_commit": "1bdc3f9bc7d8a9bd37818631df4e89c9b55dec96",
+    "final_ci_run": 38461280611,
+    "javascript": "PASS",
+    "android": "PASS",
+    "ios-and-history": "PASS"
+  },
+  "device": {
+    "hardware_kind": "physical",
+    "hardware_model": "iPhone17 Pro Max",
+    "product_type": "iPhone18,2",
+    "os": "26.6.1",
+    "os_build": "23G83",
+    "connection": "wired,paired,developer mode enabled",
+    "RAM": "NOT VERIFIED",
+    "latency_trial": "NOT RUN"
+  },
+  "checks": {
+    "python_compile": "PASS",
+    "synthetic_evidence_tests": {
+      "normal": 20,
+      "optimized": 20,
+      "result": "PASS"
+    },
+    "workspace_lint": "PASS",
+    "workspace_typecheck": "PASS",
+    "mobile_tests": 9,
+    "contract_tests": 33,
+    "existing_jest_warning": "React act warnings remain in the existing passing App tests",
+    "same_simulator": {
+      "model": "iPhone18 Pro",
+      "os": "27.0",
+      "normal_build_install": "PASS",
+      "fresh_ten_second_launches": 3,
+      "result": "PASS"
+    }
+  },
+  "physical_summary": {
+    "schema": 1,
+    "task": "VC-VERIFY-02",
+    "plan_sha256": "0c7f5d34db8098549b1b424834cf5c39b336293be38e0abc55e84a74aa42ce8d",
+    "evidence_structure": "VALID",
+    "physical_acceptance": "REVIEW_REQUIRED",
+    "configurations": [
+      {
+        "id": "ios-built-in",
+        "platform": "iOS",
+        "status": "NOT_RUN",
+        "reason": "Connected iPhone17 Pro Max/iOS26.6.1. App microphone/VAD/joined model/verified voice attachment and frozen acoustic corpus remain open.",
+        "cold": null,
+        "warm": null,
+        "overall": null
+      },
+      {
+        "id": "android-built-in",
+        "platform": "Android",
+        "status": "NOT_RUN",
+        "reason": "No physical Android available.",
+        "cold": null,
+        "warm": null,
+        "overall": null
+      }
+    ]
+  },
+  "blocked": [
+    "Verified native microphone/wake/VAD/ASR/LLM/policy/installed offline voice app attachment",
+    "Physical model/voice/license/trust and acoustic input corpus review",
+    "Independent acoustic recorder/calibration and reviewed actual annotations",
+    "Physical Android unavailable"
+  ],
+  "branches": {
+    "sprint": "sprint/s08-latency-evidence",
+    "task": "task/s08-vc-verify-02-latency-evidence"
+  },
+  "main_merge": "NOT AUTHORIZED before review",
+  "personal_changes": "Preserve and exclude Xcode signing/project formatting, plist ordering and S02 review edits"
+}
