@@ -2,7 +2,7 @@
   "schema": 1,
   "task": "VC-VOICE-06",
   "status": "NOT_RUN",
-  "reason": "Physical iPhone is offline; physical Android is unavailable. SDK simulator/emulator completion does not establish physical offline voice quality.",
+  "reason": "iPhone17 Pro Max is connected; independent acoustic first-audio/offline traffic evidence and Gemju Sherpa intelligibility ratings remain uncollected. Physical Android unavailable. SDK/simulator completion is not physical quality evidence.",
   "platforms": [
     {
       "platform": "iOS",

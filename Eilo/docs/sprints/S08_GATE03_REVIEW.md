@@ -1,0 +1,13 @@
+# VC-GATE-03 — eight-hour standby evidence prerequisite
+
+Partial, awaiting Gemju Sherpa review. N03/N07/N08/A13/A14 physical acceptance NOT_RUN. No actual eight-hour ambient run, capture availability or battery result is claimed.
+
+`packages/voice-latency/standby.py` checks481 minute observations across eight full hours,100 directed wake attempts spread every288seconds, complete false-activation events, and exact activation accounting. Frozen phrase: Hey, Eilo (Ay-loh). A real nonpersonal8h acoustic ambient corpus/hash still needs preparation/review. Native trace/continuous capture, reviewed locked generic policy/consent/permitted execution, screen-off observations and no-charging battery are supplied evidence declarations, not something the tool can verify from a checksum alone.
+
+Targets:≥95/100 directed detections,≤1 false activation/8h,≤2 battery points/hour, native peak RSS<2.5GB, pack<2GB, uninterrupted permitted availability and no crash/thermal shutdown/automatic revival. Misses, capture gaps, excess false triggers and forbidden revival remain failures. INCOMPLETE runs preserve reason/observed duration and cannot claim full-run metrics; NOT_RUN rows remain null. Separate force-quit/reboot/permission/route negative cases in S04 are still required; this tool does not replace them or authorize revival.
+
+Four synthetic regressions PASS ordinary/optimized Python. They construct artificial8h traces and never start physical capture. Reproduce `python3 -m unittest discover -s Eilo/packages/voice-latency -p 'test_standby.py'` and `python3 Eilo/packages/voice-latency/standby.py`. Default reports remain NOT_RUN. Exact fields in `standby.py`, `endurance.py` and `screen_off.py`; synthetic construction in `test_standby.py`. Review the real trace and frozen ambient inputs locally; do not commit raw audio/logs/identifiers.
+
+The connected iPhone's current normal app cannot run locked standby: iOS scene/protected-data policy stops capture, default model readiness is missing and production wake/VAD/voice attachment is absent. Android locked capture is denied and no phone exists. These implementation/hardware blockers are distinct from a measured physical trial failure or OS impossibility. No background entitlements, keepalive, trust/readiness overrides or persistent memory are introduced.
+
+Same iPhone18 Pro simulator build/install/three fresh ten-second starts precede commit; `S08_GATE03_VALIDATION.json` records results. Task `task/s08-vc-gate-03-standby-evidence` → `sprint/s08-feasibility-evidence`, final PR for review; main and personal Xcode/plist/S02 deltas preserved. S08 feasibility remains unproven.

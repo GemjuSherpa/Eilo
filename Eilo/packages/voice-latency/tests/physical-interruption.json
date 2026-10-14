@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "task": "VC-VERIFY-03",
+  "configurations": [
+    {
+      "id": "ios-built-in",
+      "platform": "iOS",
+      "status": "NOT_RUN",
+      "reason": "Native capture/separation pipeline and frozen acoustic corpus unavailable.",
+      "samples": [],
+      "noise_controls": []
+    },
+    {
+      "id": "android-built-in",
+      "platform": "Android",
+      "status": "NOT_RUN",
+      "reason": "Physical Android unavailable.",
+      "samples": [],
+      "noise_controls": []
+    }
+  ]
+}
