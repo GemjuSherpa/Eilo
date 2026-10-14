@@ -1,0 +1,590 @@
+{
+  "schema": 1,
+  "task": "VC-VERIFY-03",
+  "p95_target_ms": 300,
+  "observation_after_onset_seconds": 1,
+  "schedule": [
+    {
+      "id": "interrupt-001",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-002",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-003",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-004",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-005",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-006",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-007",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-008",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-009",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-010",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-011",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-012",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-013",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-014",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-015",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-016",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-017",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-018",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-019",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-020",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-021",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-022",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-023",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-024",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-025",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-026",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-027",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-028",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-029",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-030",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-031",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-032",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-033",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-034",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-035",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-036",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-037",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-038",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-039",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-040",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-041",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-042",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-043",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-044",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-045",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-046",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-047",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-048",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-049",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-050",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-051",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-052",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-053",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-054",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-055",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-056",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-057",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-058",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-059",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-060",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-061",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-062",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-063",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-064",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-065",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-066",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-067",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-068",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-069",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-070",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-071",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-072",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-073",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-074",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-075",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-076",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-077",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-078",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-079",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-080",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-081",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-082",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-083",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-084",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-085",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-086",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-087",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-088",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-089",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-090",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-091",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-092",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-093",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-094",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-095",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-096",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-097",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-098",
+      "clause_position": "middle",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-099",
+      "clause_position": "late",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    },
+    {
+      "id": "interrupt-100",
+      "clause_position": "early",
+      "question": "Hey, Eilo. Suggest a small goal for this week."
+    }
+  ],
+  "noise_controls": [
+    {
+      "id": "noise-01",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-02",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-03",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-04",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-05",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-06",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-07",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-08",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-09",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-10",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-11",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-12",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-13",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-14",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-15",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-16",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-17",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-18",
+      "kind": "synthetic room noise"
+    },
+    {
+      "id": "noise-19",
+      "kind": "non-directed synthetic speech"
+    },
+    {
+      "id": "noise-20",
+      "kind": "synthetic room noise"
+    }
+  ]
+}
