@@ -1,16 +1,19 @@
 """Bounded offline adapter runner and corpus-bound ASR/VAD/command scoring."""
 import argparse
+import hashlib
+import wave
 from collections import Counter
 import json
 import math
+import os
 from pathlib import Path
 import re
 import subprocess
 import tempfile
 import time
 import unicodedata
-from audio import RATE, read_wav
-from manifests import canonical_digest, require, safe_path, sha256
+from audio import RATE, read_wav, pcm_bytes
+from manifests import canonical_digest, require, safe_path, sha256, validate_receipt
 
 PHYSICAL_GATES = ('capture', 'interruption', 'endurance', 'standby', 'screen_off', 'device_latency')
 
@@ -54,7 +57,7 @@ def vad_counts(reference, predicted, duration):
     counts = Counter(tp=0, fp=0, fn=0, tn=0)
     # 20ms frame midpoints; the last partial frame counts once.
     for i in range(math.ceil(duration * 50)):
-        at = min((i + 0.5) / 50, duration - 1e-9)
+        at = (i / 50 + min((i + 1) / 50, duration)) / 2
         truth = any(a <= at < b for a, b in reference)
         found = any(a <= at < b for a, b in predicted)
         counts['tp' if truth and found else 'fn' if truth else 'fp' if found else 'tn'] += 1
@@ -65,6 +68,11 @@ def validate_manifest(manifest, root):
     require(manifest['schema_version'] == 1 and manifest['rate'] == RATE, 'invalid corpus schema/rate')
     require(manifest['kind'] in ('public_corpus', 'synthetic'), 'unknown evidence kind')
     require(0 < len(manifest['cases']) <= 10000, 'invalid corpus count')
+    if manifest['kind'] == 'public_corpus':
+        validate_receipt(manifest['receipt'])
+        require(manifest['receipt']['dataset'] == manifest['dataset']
+                and manifest['receipt']['version'] == manifest['release'], 'corpus receipt mismatch')
+        require(canonical_digest(manifest['receipt']) == manifest['receipt_sha256'], 'receipt changed')
     ids = set()
     for case in manifest['cases']:
         require(re.fullmatch('[0-9a-f]{24}', case['id']) and case['id'] not in ids, 'invalid/duplicate ID')
@@ -74,7 +82,14 @@ def validate_manifest(manifest, root):
         path = safe_path(root, case['path'])
         require(sha256(path) == case['sha256'], 'frozen audio changed')
         require(type(case['samples']) is int and 0 < case['samples'] <= RATE * 30, 'invalid sample count')
-        require(len(read_wav(path)) == case['samples'], 'sample count changed')
+        with wave.open(str(path), 'rb') as stream:
+            require((stream.getnchannels(), stream.getsampwidth(), stream.getframerate())
+                    == (1, 2, RATE), 'corpus WAV must already be normalized')
+        samples = read_wav(path)
+        require(len(samples) == case['samples'], 'sample count changed')
+        if 'pcm_sha256' in case:
+            require(hashlib.sha256(pcm_bytes(samples)).hexdigest() == case['pcm_sha256'], 'PCM changed')
+        require(isinstance(case['slice'], str) and 0 < len(case['slice']) <= 120, 'invalid slice')
         if case['task'] in ('asr', 'commands'):
             require(normalize(case['reference']), 'empty ASR reference')
         if case['task'] == 'vad':
@@ -137,6 +152,14 @@ def aggregate(cases):
     if commands:
         result['command_accuracy'] = sum(x['correct'] for x in commands) / len(commands)
         result['confusion'] = dict(sorted(Counter(' -> '.join(x['confusion']) for x in commands).items()))
+        by_label = {label: [x for x in commands if x['confusion'][0] == label]
+                    for label in sorted({x['confusion'][0] for x in commands})}
+        result['command_accuracy_by_label'] = {label: sum(x['correct'] for x in items) / len(items)
+                                               for label, items in by_label.items()}
+        result['command_balanced_accuracy'] = sum(result['command_accuracy_by_label'].values()) / len(by_label)
+        targets = [x for x in commands if x['confusion'][0] not in ('unknown', 'silence')]
+        result['command_target_count'] = len(targets)
+        result['command_target_accuracy'] = sum(x['correct'] for x in targets) / len(targets) if targets else None
     vad = [x for x in cases if 'vad' in x]
     if vad:
         totals = {key: sum(x['vad'][key] for x in vad) for key in ('tp', 'fp', 'fn', 'tn')}
@@ -154,13 +177,16 @@ def report(manifest, value=None):
             'dataset': manifest['dataset'], 'release': manifest['release'], 'kind': manifest['kind'],
             'physical_gates': {x: 'NOT_RUN' for x in PHYSICAL_GATES},
             'production_readiness': 'NOT_ENABLED', 'normalization': 'nfkc-casefold-alnum-v1',
-            'scoring': 'micro-WER-CER-frame20ms-VAD-v1'}
+            'scoring': 'micro-WER-CER-frame20ms-VAD-v2'}
     if value is None:
         return {**base, 'status': 'NOT_RUN', 'reason': 'No evaluated adapter predictions',
                 'cases': [], 'metrics': {'count': 0}, 'slices': {}}
     mapping = predictions(manifest, value)
     require(manifest['kind'] == 'synthetic' or value['adapter']['kind'] != 'synthetic',
             'synthetic adapter cannot establish public corpus results')
+    if manifest['kind'] == 'public_corpus':
+        require(all(case['task'] != 'vad' or case.get('annotation_status') == 'REVIEWED_TIME_ALIGNED'
+                    for case in manifest['cases']), 'reviewed time-aligned VAD annotations required')
     cases = [score_case(case, mapping[case['id']]) for case in manifest['cases']]
     slices = {name: aggregate([x for x in cases if x['slice'] == name])
               for name in sorted({x['slice'] for x in cases})}
@@ -172,6 +198,9 @@ def run_adapter(manifest, root, executable, metadata, timeout=120):
     validate_manifest(manifest, root)
     provenance(metadata)
     require(metadata['binary_sha256'] == sha256(executable), 'adapter binary checksum changed')
+    if manifest['kind'] == 'public_corpus':
+        require(all(case['task'] != 'vad' or case.get('annotation_status') == 'REVIEWED_TIME_ALIGNED'
+                    for case in manifest['cases']), 'reviewed time-aligned VAD annotations required')
     outputs = []
     for case in manifest['cases']:
         with tempfile.TemporaryDirectory() as temp:
@@ -181,8 +210,12 @@ def run_adapter(manifest, root, executable, metadata, timeout=120):
             start = time.monotonic()
             # Explicit local adapter contract: executable request.json response.json.
             # Runner never passes truth labels/transcripts to the adapter.
+            environment = os.environ.copy()
+            environment['EILO_DATA_ADAPTER_CONFIG_SHA256'] = metadata['config_sha256']
+            environment['EILO_DATA_ADAPTER_MODEL_SHA256'] = metadata['model_sha256']
             subprocess.run([str(Path(executable).resolve()), str(request), str(response)],
-                           check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=timeout)
+                           check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                           timeout=timeout, env=environment)
             elapsed = time.monotonic() - start
             require(response.stat().st_size <= 65536, 'unbounded adapter response')
             output = json.loads(response.read_text())

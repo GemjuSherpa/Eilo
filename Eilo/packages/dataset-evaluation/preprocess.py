@@ -3,9 +3,10 @@ import argparse
 import csv
 import hashlib
 import json
+import platform
 from pathlib import Path
 from audio import RATE, RECIPE, decode_mp3, read_wav, write_wav
-from manifests import canonical_digest, require, safe_path, sha256
+from manifests import canonical_digest, require, safe_path, sha256, validate_receipt
 
 COMMANDS = {'yes', 'no', 'up', 'down', 'left', 'right', 'on', 'off', 'stop', 'go'}
 
@@ -35,15 +36,22 @@ def candidates(dataset, root, split):
                    'speaker': opaque(Path(path).name.split('_nohash_')[0]), 'task': 'commands'}
     elif dataset == 'musan':
         # Noise-only negatives; speech/music have no time-aligned speech annotations.
-        for path in sorted((root / 'noise').rglob('*.wav')):
+        license_path = safe_path(root, 'noise/free-sound/LICENSE')
+        require('All selected recordings were marked as in the Public Domain' in license_path.read_text(),
+                'MUSAN free-sound license inventory changed')
+        for path in sorted((root / 'noise/free-sound').rglob('*.wav')):
             yield {'path': path.relative_to(root).as_posix(), 'task': 'vad', 'vad': [],
-                   'speaker': opaque(path.relative_to(root).as_posix()), 'slice': 'noise_only'}
+                   'speaker': opaque(path.relative_to(root).as_posix()), 'slice': 'noise_only',
+                   'annotation_status': 'CORPUS_CATEGORY_WEAK_LABEL',
+                   'component_license': 'Public Domain per MUSAN embedded inventory',
+                   'component_license_sha256': sha256(license_path)}
     else:
         raise ValueError('unknown corpus')
 
 
 def freeze(dataset, root, output, release, receipt, split='test', limit=100, seed=0,
-           decoder=None, decoder_sha256=None):
+           decoder=None, decoder_sha256=None, decoder_kind='ffmpeg'):
+    validate_receipt(receipt)
     require(type(limit) is int and 1 <= limit <= 10000, 'invalid sample limit')
     require(type(seed) is int, 'invalid seed')
     require(release != 'UNSELECTED' and receipt['version'] == release and receipt['dataset'] == dataset,
@@ -67,7 +75,7 @@ def freeze(dataset, root, output, release, receipt, split='test', limit=100, see
         sample_id = opaque(dataset + ':' + release + ':' + row['path'])[:24]
         if source.suffix.lower() == '.mp3':
             require(decoder and decoder_sha256, 'approved pinned MP3 decoder required')
-            samples = decode_mp3(source, decoder, decoder_sha256)
+            samples = decode_mp3(source, decoder, decoder_sha256, decoder_kind)
         else:
             samples = read_wav(source, max_seconds=600 if dataset == 'musan' else 30)
         if dataset == 'musan':
@@ -81,7 +89,10 @@ def freeze(dataset, root, output, release, receipt, split='test', limit=100, see
         cases.append(case)
     manifest = {'schema_version': 1, 'dataset': dataset, 'release': release,
                 'receipt': receipt, 'receipt_sha256': canonical_digest(receipt),
-                'recipe': RECIPE, 'decoder_sha256': decoder_sha256, 'rate': RATE, 'seed': seed,
+                'recipe': RECIPE, 'decoder_sha256': decoder_sha256,
+                'decoder_kind': decoder_kind if decoder else None,
+                'decoder_environment': platform.platform() if decoder else None,
+                'rate': RATE, 'seed': seed,
                 'kind': 'public_corpus', 'cases': cases}
     (Path(output) / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     return manifest
@@ -98,10 +109,11 @@ def main():
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--decoder', type=Path)
     parser.add_argument('--decoder-sha256')
+    parser.add_argument('--decoder-kind', choices=['ffmpeg', 'afconvert'], default='ffmpeg')
     args = parser.parse_args()
     record = json.loads(args.receipt.read_text())
     manifest = freeze(args.dataset, args.root, args.output, record['version'], record,
-                      args.split, args.limit, args.seed, args.decoder, args.decoder_sha256)
+                      args.split, args.limit, args.seed, args.decoder, args.decoder_sha256, args.decoder_kind)
     print(f"Frozen {len(manifest['cases'])} held-out clips; no physical evidence.")
 
 
