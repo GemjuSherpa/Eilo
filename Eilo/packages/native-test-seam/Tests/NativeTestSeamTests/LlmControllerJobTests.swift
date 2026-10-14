@@ -152,4 +152,6 @@ final class LlmControllerJobTests: XCTestCase {
     try store.activate(pack,proofs:[VerifiedArtifact.verify(pack,index:0,file:f.source)],cancel:PackCancellation())
     let file=try store.file(pack,index:0);XCTAssertEqual((try FileManager.default.attributesOfItem(atPath:file.path)[.posixPermissions] as? NSNumber)?.intValue,0o400)
   }
+  func testQueuedGenericRequestClearsBeforeWorkerOnStopAndPrivacy()throws{for change in [nil,PrivacyChange.lock,.privateSession,.identityReset] as [PrivacyChange?]{let f=try Fixture(),c=controller(),q=Queue(),api=Backend(),p=try prompt(),request=GenericReplyRequest(latest:"Synthetic request",history:[QwenTurn(role:.assistant,text:"Synthetic context")]);let job=try XCTUnwrap(LlmControllerJob.submit(controller:c,token:c.token!,store:f.store,selection:f.selection,prompt:p,api:api.api,open:f.open,schedule:q.schedule,workerAllowed:{true},request:request,consume:{_ in XCTFail("cancelled output")}));if let change{_ = c.privacyTransition(change)}else{c.stop()};XCTAssertTrue(request.latest.isEmpty);XCTAssertTrue(request.history.isEmpty);XCTAssertTrue(p.cleared);XCTAssertEqual(f.opens,0);q.start();XCTAssertEqual(job.awaitCompletion(timeout:5),.cancelled);XCTAssertEqual(f.opens,0)}}
+
 }

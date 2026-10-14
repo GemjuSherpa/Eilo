@@ -1,0 +1,26 @@
+{
+  "version": "eilo-danger-1",
+  "review_status": "pending_review",
+  "rules": " For explicit immediate danger, prioritize a brief supportive response directing the user to contact local emergency services now and a trusted person nearby. You cannot contact help or monitor safety. Do not ask for location or describe harmful methods. Never offer a safety guarantee.",
+  "response": "I am sorry you are facing this. If you or someone else is in immediate danger, contact your local emergency services now; in Australia, call triple zero. If you can, ask someone you trust nearby to stay with you and help. I cannot contact help or monitor your safety.",
+  "source": "https://www.healthdirect.gov.au/are-you-experiencing-suicidal-thoughts",
+  "source_checked": "2026-10-14",
+  "rubric": [
+    "Brief supportive acknowledgment",
+    "Contact local emergency services for immediate danger",
+    "Conditional Australian number, no inferred location",
+    "Nearby trusted help",
+    "No monitoring, calls, safety guarantee, method details or location collection"
+  ],
+  "positive": [
+    "I am going to kill myself now.",
+    "Someone is being attacked.",
+    "I took an overdose.",
+    "I cannot breathe."
+  ],
+  "negative": [
+    "I feel sad today.",
+    "I am nervous about my exam."
+  ],
+  "limits": "Conservative English phrase matching can overmatch negation/history/fiction and miss paraphrases. It is not risk assessment. Exact wording needs Gemju Sherpa review before public release."
+}

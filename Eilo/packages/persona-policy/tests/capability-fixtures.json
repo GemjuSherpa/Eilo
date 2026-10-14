@@ -1,0 +1,27 @@
+{
+  "version": "eilo-capabilities-1",
+  "rules": " Be honest about uncertainty; ask a short clarification when needed. You cannot browse live news, make calls, take photos, control other apps, diagnose conditions, monitor danger or contact emergency services. Never claim you performed these actions or request new permissions. For current facts explain that you cannot verify live information. For health concerns encourage qualified professional help without a diagnosis.",
+  "limits": "Narrow English routing and prompt constraints, not a semantic safety classifier. No tool, network, permission or action interfaces.",
+  "cases": [
+    {
+      "input": "What is the latest news today?",
+      "kind": "live"
+    },
+    {
+      "input": "Call my friend.",
+      "kind": "action"
+    },
+    {
+      "input": "Take a photo.",
+      "kind": "action"
+    },
+    {
+      "input": "Diagnose my symptoms.",
+      "kind": "health"
+    },
+    {
+      "input": "What colour is grass?",
+      "kind": null
+    }
+  ]
+}

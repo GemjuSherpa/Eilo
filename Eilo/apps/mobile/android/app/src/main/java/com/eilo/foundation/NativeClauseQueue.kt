@@ -24,6 +24,7 @@ internal class AndroidClauseSink(private val speech: AndroidOfflineSpeech) : Nat
 internal class NativeClauseQueue private constructor(
     private val controller: NativeController, private val sink: NativeClauseSink, private val scheduler: IdleScheduler,
     private val authorized: (GenerationToken, String) -> Boolean,
+    private val completed:(GenerationToken)->Unit, private val cleared:()->Unit,
 ) {
     private class Clause(text: String) { val id = UUID.randomUUID(); var text: String? = text; var timeout: IdleCancellation? = null }
     private lateinit var ticket: SpeechWorkTicket
@@ -36,8 +37,8 @@ internal class NativeClauseQueue private constructor(
     companion object {
         private val timers = NativeIdleScheduler()
         fun create(controller: NativeController, token: GenerationToken, sink: NativeClauseSink,
-            scheduler: IdleScheduler = timers, authorized: (GenerationToken, String) -> Boolean = { _, _ -> false }): NativeClauseQueue? {
-            val queue = NativeClauseQueue(controller, sink, scheduler, authorized); val weak = WeakReference(queue)
+            scheduler: IdleScheduler = timers, completed:(GenerationToken)->Unit={},cleared:()->Unit={},authorized: (GenerationToken, String) -> Boolean = { _, _ -> false }): NativeClauseQueue? {
+            val queue = NativeClauseQueue(controller, sink, scheduler, authorized,completed,cleared); val weak = WeakReference(queue)
             queue.ticket = controller.prepareSpeechWork(token, cancel = { weak.get()?.clear() }, publish = { queue.ticket = it }) ?: return null
             return queue
         }
@@ -47,6 +48,7 @@ internal class NativeClauseQueue private constructor(
         if (text.isBlank() || text.toByteArray(Charsets.UTF_8).size > 1024 || text.any { it == '\u0000' } || waiting.size >= 4 || !authorized(ticket.token, text)) {
             fail(); return@speechTransaction false
         }
+        if (closed || ticket.cancelled || !controller.canApproveSpeech(ticket.token)) return@speechTransaction false
         val clause = Clause(text); ledger.produced(clause.id); waiting.addLast(clause); pump(); !closed
     }
     /** Decoded, policy-approved text fragments only. Hold punctuation until whitespace,
@@ -79,14 +81,14 @@ internal class NativeClauseQueue private constructor(
     }
     private fun pump() {
         if (closed || active != null) return
-        if (waiting.isEmpty()) { if (sealed) { closed = true; controller.finishSpeechWork(ticket) }; return }
+        if (waiting.isEmpty()) { if (sealed) { closed = true;completed(ticket.token); controller.finishSpeechWork(ticket) }; return }
         val clause = waiting.removeFirst(); active = clause
         val weak = WeakReference(this)
         try { clause.timeout = scheduler.schedule(60_000) { weak.get()?.event(clause, OfflineSpeechEvent.FAILED) } }
         catch (_: Exception) { fail(); return }
         if (closed || active !== clause) { clause.timeout?.cancel(); clause.timeout = null; return }
         val text = clause.text; clause.text = null
-        if (text == null || !authorized(ticket.token, text) || !sink.enqueue(ticket.token, text) { event(clause, it) }) {
+        if (text == null || !authorized(ticket.token, text) || closed || ticket.cancelled || !controller.canApproveSpeech(ticket.token) || !sink.enqueue(ticket.token, text) { event(clause, it) }) {
             if (active === clause) fail()
         }
     }
@@ -103,7 +105,7 @@ internal class NativeClauseQueue private constructor(
         }
     }
     private fun fail() { clear(); controller.dispatch(ControllerEvent.FAILURE, failure = SafeError.UNAVAILABLE, token = ticket.token) }
-    private fun clear() { ledger.cancel(active?.id, waiting.map { it.id }); if (!controller.speechPrivacyCurrent(ticket)) ledger.clear(); closed = true; fragment = ""; active?.timeout?.cancel(); active?.timeout = null; active?.text = null; active = null; waiting.forEach { it.text = null }; waiting.clear(); sink.cancel() }
+    private fun clear() { ledger.cancel(active?.id, waiting.map { it.id }); if (!controller.speechPrivacyCurrent(ticket)) ledger.clear(); closed = true; fragment = ""; active?.timeout?.cancel(); active?.timeout = null; active?.text = null; active = null; waiting.forEach { it.text = null }; waiting.clear();cleared(); sink.cancel() }
     fun progress(permitted: () -> Boolean = { false }): List<PlaybackProgress> = controller.speechMetadata(ticket, permitted, ledger)
     fun cancel() { controller.speechTransaction(ticket) { controller.cancelGeneration(); true } }
 }

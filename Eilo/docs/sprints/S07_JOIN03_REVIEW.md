@@ -1,0 +1,13 @@
+# S07 — VC-JOIN-03 interrupt and replace
+
+14 October 2026. Prepared for Gemju Sherpa review; physical acceptance remains partial.
+
+A confirmed native user-speech activation with current independent separation evidence now cancels old speech/generation before minting the replacement token. Only that token can use the continuously revalidated separation lease during the old playback tail. Ordinary app-output rejection and default-denied separation are preserved. Stale/reused activations, duplicate finals, late old output/SDK callbacks and privacy transitions cannot publish another turn. No transcript or high VAD probability alone grants echo separation.
+
+Queued generic prompt/context references now clear on Stop/privacy even before the inference worker executes. Worker cancellation and ownership tests verify no descriptor/native model opens after queued cancellation. This releases owned references, not certified immutable String/vendor allocator erasure. A native caller retains GenericSpokenTurn until completion/cancellation; no ordinary UI caller is enabled.
+
+Validation PASS: 217 Swift / 267 Android tests; strict Swift compilation; Android lint/normal Debug build/Release Kotlin compiler; workspace lint/typecheck/9 mobile+33 contract tests; three official non-thinking template goldens; same iPhone 18 Pro app build/install and three fresh ten-second launches after the final native changes. Three focused replacement tests per platform cover cancellation-before-new-speech, exactly-one submission, old queued/late output rejection, default/expired evidence, app-output VAD and stale privacy. An additional real worker/queue ownership regression checks Stop and three privacy transitions before execution.
+
+Explicit real simulator evaluation PASS: initial real wake→ASR→signed CPU→approved SDK reply, spoken follow-up with completed bounded context, an SDK-started scripted generic old reply, then exactly one real ASR→signed CPU→approved SDK replacement. The old reply seed, VAD and separation lease are synthetic to make interruption deterministic; no physical echo test is implied. Temporary signed pack cleanup passes. Evidence: `packages/conversation-integration/tests/ios-joined-results.json`; reproduction in that package's README.
+
+Not run: physical acoustic stop p95/echo separation, microphone/VAD/capture attachment, physical airplane-mode/egress, Android real joined pipeline, production trust/app/framework embedding, voice intelligibility and semantic danger/persona rubric approval. Connected iPhone was offline on 14 October. This is prepared implementation/evidence, not full sprint or release acceptance.

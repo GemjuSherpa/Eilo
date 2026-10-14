@@ -39,8 +39,14 @@ fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
 class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter(), private val models: ModelReadinessAdapter = MissingModelReadiness()) {
     private val playback=PlaybackRejection(clock::milliseconds)
-    @Synchronized internal fun recognitionAllowed(token:GenerationToken):Boolean =
-        currentState==ControllerState.CAPTURING && accepts(token) && playback.allowsAudio()
+    private var interruptedCapture:GenerationToken?=null
+    private var independentCapture:(()->Boolean)?=null
+    @Synchronized internal fun recognitionAllowed(token:GenerationToken):Boolean {
+        if(currentState!=ControllerState.CAPTURING || !accepts(token))return false
+        if(playback.allowsAudio())return true
+        val verify=independentCapture ?: return false
+        return try {interruptedCapture===token && verify() && interruptedCapture===token && accepts(token)}catch(_:Exception){stop();false}
+    }
     @Synchronized fun modelStatus(): ModelStatus = try { models.status() } catch (_: Exception) { ModelStatus.CORRUPT }
     @Synchronized fun modelsChanged() { if(modelStatus()!=ModelStatus.READY) { stop();if(currentState==ControllerState.STOPPED)currentState=ControllerState.SETUP } else if(currentState==ControllerState.SETUP) currentState=ControllerState.STOPPED }
     @Synchronized fun setOutputGain(gain:Float):Boolean {
@@ -115,6 +121,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     private var idleTask: IdleCancellation? = null
     private var idleStarted: Long? = null
     private var hasConversation = false
+    private val genericDialogue=mutableListOf<QwenTurn>()
     private fun clearIdle() {
         val previous=idleTask; idleTask=null; idleStarted=null
         try { previous?.cancel() } catch (_: Exception) { diagnostics.record(SafeComponent.CONTROLLER,SafeError.UNEXPECTED,SafeSeverity.WARNING) }
@@ -136,13 +143,24 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     private fun endSessionPreservingCapture(): Boolean {
         if (!permissionGranted()) { stop(); return false }
-        clearIdle(); invalidateGeneration(); hasConversation=false
+        clearIdle(); invalidateGeneration(); hasConversation=false;genericDialogue.clear()
         val expectedGeneration=generation; val expectedEpoch=privacyEpoch
         return try {
             playback.cancel();effects.cancelWork(); effects.clearVolatileContext()
             if (generation != expectedGeneration || privacyEpoch != expectedEpoch) return false
             sessionId=UUID.randomUUID(); currentState=ControllerState.STANDBY; issueGeneration(); true
         } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.CONTROLLER,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
+    }
+    /** Volatile native context only; never a protected-history or persistence authority. */
+    @Synchronized internal fun genericContext(token:GenerationToken):List<QwenTurn>? = if(accepts(token) && hasConversation && currentState in listOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING))genericDialogue.toList() else null
+    @Synchronized internal fun recordGenericTurn(token:GenerationToken,user:String,reply:String){
+        if(!accepts(token) || !hasConversation || currentState !in listOf(ControllerState.THINKING,ControllerState.SPEAKING) || user.isEmpty() || reply.isEmpty() || user.toByteArray().size>4096 || reply.toByteArray().size>4096)return
+        genericDialogue+=listOf(QwenTurn(QwenRole.USER,user),QwenTurn(QwenRole.ASSISTANT,reply))
+        while(genericDialogue.size>8 || genericDialogue.sumOf{it.text.toByteArray().size}>8192){genericDialogue.removeAt(0);genericDialogue.removeAt(0)}
+    }
+    @Synchronized internal fun beginGenericFollowup(expected:GenerationToken):GenerationToken? {
+        if(currentState!=ControllerState.STANDBY || !hasConversation || !accepts(expected) || !playback.allowsAudio() || !dispatch(ControllerEvent.SPEECH_DETECTED,token=expected))return null
+        return activeToken
     }
     private var sessionId = UUID.randomUUID()
     private var privacyEpoch = 0L
@@ -226,6 +244,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     @Synchronized fun token(): GenerationToken? = activeToken
     private fun invalidateGeneration() {
+        interruptedCapture=null;independentCapture=null
         activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
         val continuation = continuationCancel; continuationCancel = null; continuationToken = null
         try { continuation?.invoke() } catch (_: Exception) { diagnostics.record(SafeComponent.MODEL, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
@@ -253,6 +272,8 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     }
     private var currentState = ControllerState.STOPPED
     private var currentError: SafeError? = null
+    /** Native pre-speech revalidation; this grants no model readiness or permissions. */
+    @Synchronized internal fun canApproveSpeech(token:GenerationToken):Boolean = !stopping && !speakerRequired && currentState in listOf(ControllerState.THINKING,ControllerState.SPEAKING) && accepts(token)
     @Synchronized fun state(): ControllerState = currentState
     @Synchronized fun error(): SafeError? = currentError
     /** Native attachment check; call before acquiring capture/delivery locks. */
@@ -358,14 +379,14 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
             effects.cancelWork()
             if(generation!=expected || privacyEpoch!=epoch || locked)return null
             if(!verified() || !permissionGranted() || modelStatus()!=ModelStatus.READY){stop();return null}
-            issueGeneration();currentState=ControllerState.CAPTURING;hasConversation=true;activeToken
+            issueGeneration();currentState=ControllerState.CAPTURING;hasConversation=true;interruptedCapture=activeToken;independentCapture=verified;activeToken
         }catch(_:Exception){stop();null}
     }
     @Synchronized fun stop(): Boolean {
         if (stopping) return true
         stopping=true
         startIntent=null; capturePending=false; captureIntent=null
-        clearIdle(); hasConversation=false
+        clearIdle(); hasConversation=false;genericDialogue.clear()
         invalidateGeneration()
         currentState = ControllerState.STOPPED
         playback.cancel()
