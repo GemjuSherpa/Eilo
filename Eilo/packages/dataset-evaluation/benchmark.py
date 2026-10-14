@@ -185,8 +185,9 @@ def report(manifest, value=None):
     require(manifest['kind'] == 'synthetic' or value['adapter']['kind'] != 'synthetic',
             'synthetic adapter cannot establish public corpus results')
     if manifest['kind'] == 'public_corpus':
-        require(all(case['task'] != 'vad' or case.get('annotation_status') == 'REVIEWED_TIME_ALIGNED'
-                    for case in manifest['cases']), 'reviewed time-aligned VAD annotations required')
+        if any(case['task'] == 'vad' for case in manifest['cases']):
+            from annotations import validate_reviewed_manifest
+            validate_reviewed_manifest(manifest)
     cases = [score_case(case, mapping[case['id']]) for case in manifest['cases']]
     slices = {name: aggregate([x for x in cases if x['slice'] == name])
               for name in sorted({x['slice'] for x in cases})}
@@ -199,8 +200,9 @@ def run_adapter(manifest, root, executable, metadata, timeout=120):
     provenance(metadata)
     require(metadata['binary_sha256'] == sha256(executable), 'adapter binary checksum changed')
     if manifest['kind'] == 'public_corpus':
-        require(all(case['task'] != 'vad' or case.get('annotation_status') == 'REVIEWED_TIME_ALIGNED'
-                    for case in manifest['cases']), 'reviewed time-aligned VAD annotations required')
+        if any(case['task'] == 'vad' for case in manifest['cases']):
+            from annotations import validate_reviewed_manifest
+            validate_reviewed_manifest(manifest)
     outputs = []
     for case in manifest['cases']:
         with tempfile.TemporaryDirectory() as temp:

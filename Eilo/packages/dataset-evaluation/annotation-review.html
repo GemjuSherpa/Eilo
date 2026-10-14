@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-__SCRIPT_HASH__'; style-src 'unsafe-inline'; media-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Local VAD annotation review</title>
+<style>body{font:16px system-ui;max-width:900px;margin:2rem auto;padding:1rem;color:#172335;background:white}article{border:1px solid #c5cdd5;border-radius:8px;margin:1rem 0;padding:1rem}audio,textarea{display:block;width:100%;margin:.7rem 0}textarea{min-height:4rem}button,input{font:inherit;padding:.5rem}label{display:block;margin:.6rem 0}#status{white-space:pre-wrap}code{overflow-wrap:anywhere}</style>
+<h1>VAD listening review</h1>
+<p>This local file contains evaluation audio. Keep it local. No network connection or upload is used.</p>
+<p>Listen to each entire clip. Label audible human speech, including unintelligible speech; exclude music alone, breath and mechanical sounds. Enter start/end seconds as JSON pairs, for example [[0.12,0.85],[1.1,1.8]]. Endpoints are rounded to 16 kHz sample boundaries. Empty [] means explicitly reviewed no speech. Leave uncertain clips unreviewed. Do not consult model outputs. Save a draft before closing; reload a draft to resume.</p>
+<p>These annotations are reviewer declarations, not independently verified truth. Physical-device gates remain NOT_RUN.</p>
+<label>Reviewer pseudonym (letters, numbers, _, . or -) <input id="reviewer" maxlength="64" autocomplete="off"></label>
+<label>Load saved draft/review <input type="file" id="resume" accept="application/json,.json"></label>
+<details><summary>Resume by pasting saved JSON</summary><label>Saved draft JSON<textarea id="saved-json"></textarea></label><button id="load-json">Load pasted draft</button></details>
+<div id="clips"></div>
+<label><input type="checkbox" id="attest"> <span id="declaration"></span></label>
+<button id="draft">Save draft</button> <button id="export">Export reviewed labels</button>
+<p role="status" id="status"></p>
+<script>
+'use strict';
+const pack=__PACK__;
+const review=pack.review;
+const controls=[];
+const byId=id=>document.getElementById(id);
+byId('declaration').textContent=pack.declaration;
+review.cases.forEach((row,index)=>{
+ const article=document.createElement('article');
+ const heading=document.createElement('h2');heading.textContent=`Clip ${index+1} of ${review.cases.length}`;
+ const identity=document.createElement('code');identity.textContent=row.id;
+ const audio=document.createElement('audio');audio.controls=true;audio.preload='none';audio.src='data:audio/wav;base64,'+pack.audio[index];
+ const label=document.createElement('label');label.textContent='Speech intervals in seconds (JSON)';
+ const input=document.createElement('textarea');input.value='[]';input.setAttribute('aria-label',`Clip ${index+1} speech intervals`);label.append(input);
+ const done=document.createElement('input');done.type='checkbox';
+ input.addEventListener('input',()=>{done.checked=false;byId('attest').checked=false;});
+ const confirm=document.createElement('label');confirm.append(done,document.createTextNode(' I listened to the entire clip and reviewed these labels.'));
+ const time=document.createElement('p');time.textContent=`Duration: ${(row.samples/review.rate).toFixed(4)} seconds`;
+ article.append(heading,identity,audio,time,label,confirm);byId('clips').append(article);
+ controls.push({input,done});
+});
+function capture(final){
+ const out=JSON.parse(JSON.stringify(review));out.reviewer=byId('reviewer').value.trim();
+ out.cases.forEach((row,i)=>{
+  const pairs=JSON.parse(controls[i].input.value);
+  if(!Array.isArray(pairs)||pairs.length>3000)throw Error(`Clip ${i+1}: invalid intervals`);
+  let previous=0;
+  row.intervals_samples=pairs.map(pair=>{
+   if(!Array.isArray(pair)||pair.length!==2||!pair.every(Number.isFinite))throw Error(`Clip ${i+1}: enter numeric pairs`);
+   const [a,b]=pair.map(x=>Math.round(x*out.rate));
+   if(a<previous||a<0||a>=b||b>row.samples)throw Error(`Clip ${i+1}: unsorted, overlapping or out-of-bounds interval`);
+   previous=b;return [a,b];
+  });
+  row.status=controls[i].done.checked?'REVIEWED':'UNREVIEWED';
+ });
+ out.status=final?'REVIEWED':'DRAFT';out.reviewed_at=final?new Date().toISOString():'';
+ out.declaration=final?pack.declaration:'';
+ if(final&&(!/^[A-Za-z0-9_.-]{1,64}$/.test(out.reviewer)||!byId('attest').checked||out.cases.some(x=>x.status!=='REVIEWED')))throw Error('Supply a reviewer pseudonym, review every clip and confirm the listening declaration.');
+ return out;
+}
+function save(final){try{
+ const out=capture(final);const url=URL.createObjectURL(new Blob([JSON.stringify(out,null,2)+'\n'],{type:'application/json'}));
+ const a=document.createElement('a');a.href=url;a.download=final?'vad-reviewed.json':'vad-draft.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ byId('status').textContent=final?'Reviewed labels exported. Import with annotations.py to validate audio bindings.':'Draft saved. Labels remain unapproved.';
+}catch(error){byId('status').textContent=error.message;}}
+byId('draft').addEventListener('click',()=>save(false));byId('export').addEventListener('click',()=>save(true));
+function load(text){
+ if(text.length>20*1024*1024)throw Error('Draft exceeds 20 MiB.');
+ const saved=JSON.parse(text);
+ if(saved.source_manifest_sha256!==review.source_manifest_sha256||saved.cases.length!==review.cases.length)throw Error('Draft belongs to a different review pack.');
+ const values=saved.cases.map((row,i)=>{
+  const expected=review.cases[i];if(row.id!==expected.id||row.pcm_sha256!==expected.pcm_sha256||row.samples!==expected.samples||!Array.isArray(row.intervals_samples))throw Error('Draft audio binding changed.');
+  return {text:JSON.stringify(row.intervals_samples.map(pair=>pair.map(x=>x/review.rate))),done:row.status==='REVIEWED'};
+ });
+ values.forEach((v,i)=>{controls[i].input.value=v.text;controls[i].done.checked=v.done;});
+ byId('reviewer').value=saved.reviewer||'';byId('attest').checked=false;byId('status').textContent='Draft loaded. Reconfirm the declaration before exporting.';
+}
+byId('resume').addEventListener('change',async event=>{try{
+ const file=event.target.files[0];if(!file||file.size>20*1024*1024)throw Error('Select a JSON file under 20 MiB.');
+ load(await file.text());
+}catch(error){byId('status').textContent=error.message;}});
+byId('load-json').addEventListener('click',()=>{try{load(byId('saved-json').value);}catch(error){byId('status').textContent=error.message;}});
+</script></html>
