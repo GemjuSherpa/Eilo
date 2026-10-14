@@ -143,3 +143,20 @@ GitHub Actions run normal/optimized tests, compile/registry checks and smoke wit
 corpora, microphone or dependency installation. Only allowlisted synthetic summaries are
 uploaded with seven-day retention using pinned official actions. No real audio/transcript,
 credentials or corpora are cached/uploaded. Full hosted foundation checks remain separate.
+
+### Locked diagnostic regression candidates (VC-DATA-06)
+
+`baseline.py candidate --manifest PATH --baseline REPORT --tolerances POLICY --output LOCK`
+creates a content-addressed candidate for PR review. `baseline.py check --manifest PATH
+--baseline REPORT --lock LOCK --current REPORT --output RESULT` verifies the same corpus,
+case identities, reference counts, durations, baseline report and tolerance policy before
+comparing every slice. Existing output evidence is never overwritten. Exit 2 indicates a
+regression. Locks detect content changes; they are not signatures or proof of reviewer approval.
+Keep full manifests and case reports locally; publish only aggregate summaries and digests.
+
+Review the proposed tolerance policy with the task PR. A comparison PASS means repeatability
+within this frozen diagnostic suite; it does not establish product quality, corpus coverage,
+physical-device feasibility or approval of a release. No automatic acceptance mechanism is added.
+Historical v1 reports must not be silently relabelled: the checked-in continuation evidence
+records an explicit ASR/command-only compatibility mapping for the v2 partial-VAD-frame fix.
+VAD comparisons require fresh v2 scoring.
