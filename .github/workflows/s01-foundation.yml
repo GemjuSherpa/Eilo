@@ -48,6 +48,7 @@ jobs:
           python3 -m unittest discover -s packages/voice-latency -p 'test_*.py'
           python3 -O -m unittest discover -s packages/voice-latency -p 'test_*.py'
           python3 packages/voice-latency/measure.py
+          python3 packages/voice-latency/interruption.py
   android:
     if: github.event.repository.private == false
     runs-on: ubuntu-24.04
