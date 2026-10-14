@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "task": "VC-GATE-04",
+  "review_state": "PENDING_GEMJU_SHERPA",
+  "recommendation": "HOLD_PENDING_PHYSICAL_EVIDENCE",
+  "supported_configurations": [],
+  "persistent_memory_allowed": false,
+  "platforms": [
+    {
+      "platform": "iOS",
+      "configuration_id": "ios-built-in",
+      "gates": [
+        {
+          "task": "VC-GATE-01",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-foreground.json",
+          "sha256": "9339c9212f728f8ab985c3200f5a073e237491516e7b0a8292412b584bf45ebc",
+          "blocker": "Real pipeline, frozen acoustic corpus and hour-long resource trace not collected."
+        },
+        {
+          "task": "VC-GATE-02",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-screen-off.json",
+          "sha256": "e1b2ff0e46891d5e1f9b3d1ea6c6b6e1e9b0c6ca1340a19b531c1d253f0a7590",
+          "blocker": "Current lock/background policy denies the required audio; physical hour trial not run."
+        },
+        {
+          "task": "VC-GATE-03",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-standby.json",
+          "sha256": "7141d0b930054c127fd6e7e6b9502c77a94e855eba9111bcc09108a13737777e",
+          "blocker": "Locked standby denied; frozen8h ambient corpus and physical trace missing."
+        },
+        {
+          "task": "VC-VERIFY-02",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-turn-latency.json",
+          "sha256": "423260becc3eb2f3c753a4f89188183a0a21a98a2f37523a37d9096f88e69a42",
+          "blocker": "Real microphone/VAD/joined model/offline voice and acoustic timing missing."
+        },
+        {
+          "task": "VC-VERIFY-03",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-interruption.json",
+          "sha256": "a391f30672a7526ea74ec0226449417b055c18835686e57c614f7ff76b8676c7",
+          "blocker": "Native separation/capture pipeline and acoustic interruption timings missing."
+        },
+        {
+          "task": "VC-TURN-09",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "docs/sprints/S05_TURN_COMPLETION_REVIEW.md",
+          "sha256": "aaeb256093289f537f6c64626347aea92042436223ce0bb9d090ee7458b132b0",
+          "blocker": "100 physical directed and8h ambient wake trials not run."
+        },
+        {
+          "task": "VC-TURN-10",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "docs/sprints/S05_TURN_COMPLETION_REVIEW.md",
+          "sha256": "aaeb256093289f537f6c64626347aea92042436223ce0bb9d090ee7458b132b0",
+          "blocker": "200 physical accent/name/number/noise trials not run; retained six-fixture simulator WER15% is not physical evidence."
+        },
+        {
+          "task": "VC-LLM-06",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/llm-runtime/tests/physical-model-comparison.json",
+          "sha256": "fcfc4b955011c509fd880a75b609bd8c30788b3c5c25281dcd0938ccb6b0fbc3",
+          "blocker": "0.6B artifact/exact comparison adapter and physical CPU/quality/memory trial missing."
+        },
+        {
+          "task": "VC-VOICE-06",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/offline-speech/tests/physical-voice-trials.json",
+          "sha256": "74832c2680e9b54695719e500bec4e48f9fa15ec44fa2e8e1a77213bc4bf74cd",
+          "blocker": "Exact offline voice/traffic/acoustic timing/intelligibility trials not run."
+        }
+      ]
+    },
+    {
+      "platform": "Android",
+      "configuration_id": "android-built-in",
+      "gates": [
+        {
+          "task": "VC-GATE-01",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-foreground.json",
+          "sha256": "9339c9212f728f8ab985c3200f5a073e237491516e7b0a8292412b584bf45ebc",
+          "blocker": "Physical Android unavailable. Real pipeline, frozen acoustic corpus and hour-long resource trace not collected."
+        },
+        {
+          "task": "VC-GATE-02",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-screen-off.json",
+          "sha256": "e1b2ff0e46891d5e1f9b3d1ea6c6b6e1e9b0c6ca1340a19b531c1d253f0a7590",
+          "blocker": "Physical Android unavailable. Current lock/background policy denies the required audio; physical hour trial not run."
+        },
+        {
+          "task": "VC-GATE-03",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-standby.json",
+          "sha256": "7141d0b930054c127fd6e7e6b9502c77a94e855eba9111bcc09108a13737777e",
+          "blocker": "Physical Android unavailable. Locked standby denied; frozen8h ambient corpus and physical trace missing."
+        },
+        {
+          "task": "VC-VERIFY-02",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-turn-latency.json",
+          "sha256": "423260becc3eb2f3c753a4f89188183a0a21a98a2f37523a37d9096f88e69a42",
+          "blocker": "Physical Android unavailable. Real microphone/VAD/joined model/offline voice and acoustic timing missing."
+        },
+        {
+          "task": "VC-VERIFY-03",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/voice-latency/tests/physical-interruption.json",
+          "sha256": "a391f30672a7526ea74ec0226449417b055c18835686e57c614f7ff76b8676c7",
+          "blocker": "Physical Android unavailable. Native separation/capture pipeline and acoustic interruption timings missing."
+        },
+        {
+          "task": "VC-TURN-09",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "docs/sprints/S05_TURN_COMPLETION_REVIEW.md",
+          "sha256": "aaeb256093289f537f6c64626347aea92042436223ce0bb9d090ee7458b132b0",
+          "blocker": "Physical Android unavailable. 100 physical directed and8h ambient wake trials not run."
+        },
+        {
+          "task": "VC-TURN-10",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "docs/sprints/S05_TURN_COMPLETION_REVIEW.md",
+          "sha256": "aaeb256093289f537f6c64626347aea92042436223ce0bb9d090ee7458b132b0",
+          "blocker": "Physical Android unavailable. 200 physical accent/name/number/noise trials not run; retained six-fixture simulator WER15% is not physical evidence."
+        },
+        {
+          "task": "VC-LLM-06",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/llm-runtime/tests/physical-model-comparison.json",
+          "sha256": "fcfc4b955011c509fd880a75b609bd8c30788b3c5c25281dcd0938ccb6b0fbc3",
+          "blocker": "Physical Android unavailable. 0.6B artifact/exact comparison adapter and physical CPU/quality/memory trial missing."
+        },
+        {
+          "task": "VC-VOICE-06",
+          "physical_status": "NOT_RUN",
+          "evidence_kind": "unrun",
+          "artifact": "packages/offline-speech/tests/physical-voice-trials.json",
+          "sha256": "74832c2680e9b54695719e500bec4e48f9fa15ec44fa2e8e1a77213bc4bf74cd",
+          "blocker": "Physical Android unavailable. Exact offline voice/traffic/acoustic timing/intelligibility trials not run."
+        }
+      ]
+    }
+  ],
+  "policy_observations": [
+    {
+      "artifact": "apps/mobile/ios/Eilo/AppDelegate.swift",
+      "sha256": "26fef8b9fa86a3347e8cc9003c49fdb1f2677ce2776999bb53f4ce43e2875075",
+      "observation": "Default NativeController models are missing; PackStore trust map empty. Scene resignation/protected-data loss stop capture."
+    },
+    {
+      "artifact": "packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift",
+      "sha256": "81855a1c82ab8901b84683a1736c8f3b52f300f6ce6e45bfa6ddc02510731180",
+      "observation": "Start requires model readiness; default ModelReadiness is MissingModelReadiness. Lock invalidates generation and privacy work."
+    },
+    {
+      "artifact": "packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift",
+      "sha256": "077fba9d06ce4f406fec7c1d0e499c79bd954ae9e3482a4a872d66abb5c7715f",
+      "observation": "IOSCaptureEligibility uses false consent and a separately gated physical capability; no background pipeline attached."
+    },
+    {
+      "artifact": "apps/mobile/android/app/src/main/java/com/eilo/foundation/BackgroundCapturePolicy.kt",
+      "sha256": "b0f97259ce167741f2cf4ed1fc8d3d69d7ce4a1256d36f6a45eb165138791936",
+      "observation": "Capture eligibility requires unlocked state, permission and foreground or consented running service."
+    },
+    {
+      "artifact": "apps/mobile/android/app/src/main/java/com/eilo/MainApplication.kt",
+      "sha256": "e85739d6dc0b8c2d662e687781846ef1782db19425e74d8d23060c3248d4f242",
+      "observation": "Model PackStore trust map empty; native capture service is guarded by unlocked capture eligibility."
+    }
+  ]
+}

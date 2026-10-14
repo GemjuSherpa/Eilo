@@ -100,3 +100,37 @@ Latency = `(meaningful_reply_frame - true_speech_end_frame) × 1000 / sample_rat
 Connected hardware was read on 14 October 2026 as iPhone 17 Pro Max (`iPhone18,2`), iOS26.6.1/build23G83. Its friendly name mentions a different model; the actual hardware details govern. RAM, battery health, exact installed offline voice, frozen acoustic corpus and native pipeline attachment remain unverified. No physical Android is available. No physical N01 timing has been collected, and no supported-device claim is added.
 
 VC-VERIFY-03 interruption timing and S08 endurance/standby/feasibility decisions are separate work. This tool does not advance them or authorize persistent memory.
+
+## Remaining S08 evidence tools
+
+The following tools are measurement/reporting prerequisites. They do not start capture, generate real physical measurements, enable background capability or approve support. Both platform rows remain **NOT_RUN**. Schema checks and synthetic scores do not establish the truth of device/network/acoustic/resource declarations; review the actual independent local evidence.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Eilo/packages/voice-latency -p 'test_*.py'
+PYTHONDONTWRITEBYTECODE=1 python3 -O -m unittest discover -s Eilo/packages/voice-latency -p 'test_*.py'
+python3 Eilo/packages/voice-latency/interruption.py
+python3 Eilo/packages/voice-latency/endurance.py
+python3 Eilo/packages/voice-latency/screen_off.py
+python3 Eilo/packages/voice-latency/standby.py
+python3 Eilo/packages/voice-latency/decision.py
+```
+
+47 synthetic regressions pass in each mode. Tests create silent PCM fixtures and artificial timestamps/resource traces, not phone speech or an hour/eight-hour workload. Six tests protect the pending decision report against omitted dependencies, inferred approval and stale evidence. CI runs these without assets, microphone or new dependencies.
+
+| Task | Frozen workload | Inputs and conservative accounting |
+| --- | --- | --- |
+| VC-VERIFY-03 | 100 interruptions at early/middle/late clause positions,20 noise controls | Reviewed intelligible-onset→final-old-audio frames on independent same-clock WAVs;≥1s post-onset observation; p95≤300ms. Misses/cancellations/resumption/noise false triggers prevent passing. Later stale audio remains a separate lifecycle audit. |
+| VC-GATE-01 | 60min foreground,60 fixed question attempts,61 minute resource observations | True acoustic end→meaningful reply, final15 median/p95, uncharged battery≤15points/h, native peak RSS<2.5GB, pack<2GB, thermal/lifecycle observations and reviewed continuous-capture trace. Failures remain counted. |
+| VC-GATE-02 | Same60min workload, screen off throughout | Additional reviewed consent/permitted generic locked policy/exact policy revision/lifecycle trace/no keepalive workaround. Foreground samples cannot stand in for screen-off. |
+| VC-GATE-03 | 8h frozen nonpersonal ambient workload,100 scheduled directed wakes,481 minute observations | ≥95% recall,≤1 false activation/8h,≤2 battery points/h; activation count must reconcile every directed/false event. Capture gaps, forbidden revival, crash/shutdown fail. |
+| VC-GATE-04 | Both platform matrices, all nine prerequisite tasks | Pending report links checksum-pinned artifacts and source-policy observations. No supported configuration or persistent-memory approval is inferred. Recommendation HOLD_PENDING_PHYSICAL_EVIDENCE; decision remains for Gemju Sherpa. |
+
+Frozen plans live in `tests/interruption-plan.json`, `foreground-plan.json`, `screen-off-plan.json`, `standby-plan.json`. These freeze schedule and scoring; actual acoustic input and8h ambient corpus are still unprepared/unreviewed. The extra20 noise controls and100-wake standby schedule require protocol review, rather than silently asserting an existing measured workload. The decision is `docs/sprints/S08_FEASIBILITY_DECISION.json` and checks source hashes against files under Eilo; reviewed future physical results require a new decision report, not automatic promotion of this pending one.
+
+All report schemas use strict allowlisted keys in their corresponding module; complete synthetic constructions are in `test_interruption.py`, `test_endurance.py`, `test_screen_off.py`, `test_standby.py`. For real future acoustic reports, use the first three tools' optional `--corpus-root` pointing at ignored `.local` independent PCM16 recordings. Standby consumes a reviewed full trace and frozen ambient checksum, without reading or recording ambient audio. Hashes/declarations are traceability, not proof of content or continuous availability.
+
+Minute resource records include exact index, actual elapsed seconds (±5s cadence tolerance), battery percentage, charging=false, native RSS, thermal state, screen-off and capture availability. Start at elapsed0; final sample must cover the full duration. Peak RSS and intervening capture continuity need native-process/continuous traces, not only samples or JS heap. Actual turn emission times must follow the fixed cadence within5s. Reject clock drift, battery increase/charging, shifted cadence or missing samples. Report incomplete runs as INCOMPLETE with reason/observed duration and null full-run metrics; retain original failures when rerunning after a correction. Full annotated crash/capture/thermal outcomes are preserved as FAIL.
+
+For physical battery trials, disconnect charging after installing assets; a connected USB phone is not a valid battery test. Keep route, brightness, volume, room temperature, battery health and network state fixed/reviewed and include them in the locally retained protocol/trace. Thermal states are observed metadata, not temperature or heat-safety certification. Use only synthetic questions/ambient sound; no personal audio, conversation, serial, location or raw exception logs in reports.
+
+Current source policy stops iOS capture on scene inactivity/protected-data loss, and Android capture requires unlocked state. Empty production pack trust configuration and missing attached native wake/VAD/ASR/model/offline-voice pipeline block physical spoken turns. No capability flag is changed by these tools. Physical device availability is established separately from app capability. Android hardware remains unavailable. Review these gaps and legitimate platform behavior before any affected physical workload or persistent memory work.
