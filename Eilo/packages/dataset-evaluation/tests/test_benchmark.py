@@ -79,3 +79,14 @@ class BenchmarkTests(unittest.TestCase):
         self.assertEqual(metrics['command_accuracy'], 0.9)
         self.assertEqual(metrics['command_balanced_accuracy'], 0.5)
         self.assertEqual(metrics['command_target_accuracy'], 0)
+
+    def test_public_vad_weak_categories_cannot_be_gold(self):
+        manifest, value = fixture('vad')
+        manifest['kind'] = 'public_corpus'
+        manifest['cases'][0]['annotation_status'] = 'CORPUS_CATEGORY_WEAK_LABEL'
+        value['adapter']['kind'] = 'native'
+        value['manifest_sha256'] = canonical_digest(manifest)
+        with self.assertRaises(ValueError): report(manifest, value)
+
+    def test_partial_vad_frame_uses_actual_midpoint(self):
+        self.assertEqual(vad_counts([[0, 0.004]], [], 0.005), {'tp': 0, 'fp': 0, 'fn': 1, 'tn': 0})

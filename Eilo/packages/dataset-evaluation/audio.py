@@ -1,6 +1,5 @@
 """Deterministic offline PCM conversion, with explicit bounded decoder provenance."""
 import hashlib
-import math
 from pathlib import Path
 import struct
 import subprocess
@@ -83,16 +82,24 @@ def write_wav(path, samples):
     return hashlib.sha256(raw).hexdigest()
 
 
-def decode_mp3(path, decoder, expected_sha256):
+def decode_mp3(path, decoder, expected_sha256, kind='ffmpeg'):
     # Caller provisions/approves ffmpeg; no lookup, install or network input.
     require(sha256(decoder) == expected_sha256, 'decoder binary changed')
     require(Path(path).is_file() and Path(path).stat().st_size <= 16 * 1024 * 1024, 'oversized MP3')
     with tempfile.TemporaryDirectory() as temp:
         output = Path(temp) / 'decoded.wav'
-        subprocess.run([str(Path(decoder).resolve()), '-nostdin', '-v', 'error', '-threads', '1',
-                        '-protocol_whitelist', 'file', '-f', 'mp3', '-i', str(Path(path).resolve()), '-t', '30', '-ac', '1', '-ar', '16000',
-                        '-acodec', 'pcm_s16le', '-fflags', '+bitexact', '-flags:a', '+bitexact',
-                        str(output)], check=True, capture_output=True, timeout=60)
+        if kind == 'ffmpeg':
+            command = [str(Path(decoder).resolve()), '-nostdin', '-v', 'error', '-threads', '1',
+                       '-protocol_whitelist', 'file', '-f', 'mp3', '-i', str(Path(path).resolve()),
+                       '-t', '30', '-ac', '1', '-ar', '16000', '-acodec', 'pcm_s16le',
+                       '-fflags', '+bitexact', '-flags:a', '+bitexact', str(output)]
+        elif kind == 'afconvert':
+            command = [str(Path(decoder).resolve()), '-f', 'WAVE', '-d', 'LEI16@16000',
+                       '-c', '1', '--mix', '-r', '127', '--src-complexity', 'norm',
+                       str(Path(path).resolve()), str(output)]
+        else:
+            raise ValueError('unreviewed decoder kind')
+        subprocess.run(command, check=True, capture_output=True, timeout=60)
         # Reject potentially truncated long clips rather than changing the transcript.
         samples = read_wav(output)
         require(len(samples) < RATE * MAX_SECONDS, 'MP3 at duration limit; reject possible truncation')

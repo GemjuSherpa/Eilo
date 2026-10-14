@@ -73,3 +73,29 @@ class ExecutionTests(unittest.TestCase):
             path.write_text('{}')
             with patch.dict(os.environ, {'EILO_DATA_ADAPTER_CONFIG_SHA256': '0' * 64}):
                 with self.assertRaises(ValueError): verified_config(path)
+
+    def test_common_voice_subset_checks_disjoint_speakers(self):
+        from extract_subset import extract
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            archive_path = root / 'cv.tar'
+            def archive(train_speaker):
+                with tarfile.open(archive_path, 'w') as output:
+                    records = {'test.tsv': b'client_id\tpath\tsentence\na\tcase.mp3\thello\n',
+                               'train.tsv': ('client_id\tpath\tsentence\n' + train_speaker + '\ttrain.mp3\thi\n').encode(),
+                               'dev.tsv': b'client_id\tpath\tsentence\nc\tdev.mp3\thi\n',
+                               'clips/case.mp3': b'encoded fixture'}
+                    for name, data in records.items():
+                        item = tarfile.TarInfo(name)
+                        item.size = len(data)
+                        output.addfile(item, io.BytesIO(data))
+            archive('b')
+            receipt = {'schema_version': 1, 'dataset': 'common_voice', 'version': 'test-only',
+                       'license': 'CC0-1.0', 'permission': 'APPROVED_BY_USER_TEST',
+                       'checksum_status': 'LOCAL_OBSERVED', 'sha256': sha256(archive_path),
+                       'bytes': archive_path.stat().st_size, 'license_evidence_sha256': '1' * 64}
+            output = extract(archive_path, receipt, root / 'good', 1)
+            self.assertTrue((output / 'clips/case.mp3').exists())
+            archive('a')
+            receipt.update({'sha256': sha256(archive_path), 'bytes': archive_path.stat().st_size})
+            with self.assertRaises(ValueError): extract(archive_path, receipt, root / 'bad', 1)

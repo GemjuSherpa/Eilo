@@ -1,4 +1,3 @@
-import hashlib
 from pathlib import Path
 import tempfile
 import unittest
@@ -60,3 +59,39 @@ class AudioTests(unittest.TestCase):
                        'license': 'CC-BY-4.0', 'license_evidence_sha256': '1' * 64}
             with self.assertRaises(ValueError):
                 freeze('speech_commands', root, root / 'output', '0.02', receipt)
+
+    def test_musan_filters_reviewed_component_and_marks_weak_labels(self):
+        from preprocess import candidates
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'noise/free-sound').mkdir(parents=True)
+            (root / 'noise/sound-bible').mkdir(parents=True)
+            license_path = root / 'noise/free-sound/LICENSE'
+            license_path.write_text('All selected recordings were marked as in the Public Domain')
+            write_wav(root / 'noise/free-sound/a.wav', [100] * 160)
+            write_wav(root / 'noise/sound-bible/b.wav', [100] * 160)
+            rows = list(candidates('musan', root, 'test'))
+            self.assertEqual(len(rows), 1)
+            self.assertIn('free-sound', rows[0]['path'])
+            self.assertEqual(rows[0]['annotation_status'], 'CORPUS_CATEGORY_WEAK_LABEL')
+            license_path.write_text('changed terms')
+            with self.assertRaises(ValueError): list(candidates('musan', root, 'test'))
+
+    def test_pinned_afconvert_decode_and_oversized_output_rejection(self):
+        from unittest.mock import patch
+        from audio import decode_mp3
+        from manifests import sha256
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, decoder = root / 'source.mp3', root / 'decoder'
+            source.write_bytes(b'synthetic encoded input')
+            decoder.write_bytes(b'pinned test decoder')
+            def convert(command, **kwargs):
+                self.assertIn('--mix', command)
+                write_wav(command[-1], [100] * 160)
+            with patch('audio.subprocess.run', side_effect=convert):
+                self.assertEqual(decode_mp3(source, decoder, sha256(decoder), 'afconvert'), [100] * 160)
+            with self.assertRaises(ValueError): decode_mp3(source, decoder, '0' * 64, 'afconvert')
+            def too_long(command, **kwargs): write_wav(command[-1], [1] * 480000)
+            with patch('audio.subprocess.run', side_effect=too_long):
+                with self.assertRaises(ValueError): decode_mp3(source, decoder, sha256(decoder), 'afconvert')

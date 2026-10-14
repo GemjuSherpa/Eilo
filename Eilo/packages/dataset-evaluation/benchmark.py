@@ -57,7 +57,7 @@ def vad_counts(reference, predicted, duration):
     counts = Counter(tp=0, fp=0, fn=0, tn=0)
     # 20ms frame midpoints; the last partial frame counts once.
     for i in range(math.ceil(duration * 50)):
-        at = min((i + 0.5) / 50, duration - 1e-9)
+        at = (i / 50 + min((i + 1) / 50, duration)) / 2
         truth = any(a <= at < b for a, b in reference)
         found = any(a <= at < b for a, b in predicted)
         counts['tp' if truth and found else 'fn' if truth else 'fp' if found else 'tn'] += 1
@@ -177,13 +177,16 @@ def report(manifest, value=None):
             'dataset': manifest['dataset'], 'release': manifest['release'], 'kind': manifest['kind'],
             'physical_gates': {x: 'NOT_RUN' for x in PHYSICAL_GATES},
             'production_readiness': 'NOT_ENABLED', 'normalization': 'nfkc-casefold-alnum-v1',
-            'scoring': 'micro-WER-CER-frame20ms-VAD-v1'}
+            'scoring': 'micro-WER-CER-frame20ms-VAD-v2'}
     if value is None:
         return {**base, 'status': 'NOT_RUN', 'reason': 'No evaluated adapter predictions',
                 'cases': [], 'metrics': {'count': 0}, 'slices': {}}
     mapping = predictions(manifest, value)
     require(manifest['kind'] == 'synthetic' or value['adapter']['kind'] != 'synthetic',
             'synthetic adapter cannot establish public corpus results')
+    if manifest['kind'] == 'public_corpus':
+        require(all(case['task'] != 'vad' or case.get('annotation_status') == 'REVIEWED_TIME_ALIGNED'
+                    for case in manifest['cases']), 'reviewed time-aligned VAD annotations required')
     cases = [score_case(case, mapping[case['id']]) for case in manifest['cases']]
     slices = {name: aggregate([x for x in cases if x['slice'] == name])
               for name in sorted({x['slice'] for x in cases})}
@@ -195,6 +198,9 @@ def run_adapter(manifest, root, executable, metadata, timeout=120):
     validate_manifest(manifest, root)
     provenance(metadata)
     require(metadata['binary_sha256'] == sha256(executable), 'adapter binary checksum changed')
+    if manifest['kind'] == 'public_corpus':
+        require(all(case['task'] != 'vad' or case.get('annotation_status') == 'REVIEWED_TIME_ALIGNED'
+                    for case in manifest['cases']), 'reviewed time-aligned VAD annotations required')
     outputs = []
     for case in manifest['cases']:
         with tempfile.TemporaryDirectory() as temp:

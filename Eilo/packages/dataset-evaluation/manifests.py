@@ -42,7 +42,9 @@ def validate_registry(value):
                 'invalid archive size')
         require(item['checksum_status'] in ('NOT_DOWNLOADED', 'LOCAL_OBSERVED', 'PUBLISHER_VERIFIED'),
                 'invalid checksum status')
-        if item['checksum_status'] != 'NOT_DOWNLOADED':
+        if item['checksum_status'] == 'NOT_DOWNLOADED':
+            require(item['sha256'] is None and item['bytes'] is None, 'unexpected unverified checksum')
+        else:
             require(item['sha256'] is not None and item['bytes'] is not None, 'missing receipt')
         require(item['version'] != 'UNSELECTED' or item['sha256'] is None, 'release not selected')
     return value
@@ -54,11 +56,21 @@ def receipt(registry, dataset, archive, license_evidence):
     require(item['permission'].startswith('APPROVED_BY_USER'), 'download/use approval required')
     require(item['version'] != 'UNSELECTED', 'select release first')
     require(Path(license_evidence).is_file(), 'local license evidence required')
-    return {'schema_version': 1, 'dataset': dataset, 'version': item['version'],
+    result = {'schema_version': 1, 'dataset': dataset, 'version': item['version'],
             'source': item['source'], 'sha256': sha256(archive),
             'bytes': Path(archive).stat().st_size, 'checksum_status': 'LOCAL_OBSERVED',
             'license': item['license'], 'license_evidence_sha256': sha256(license_evidence),
             'attribution': item['attribution'], 'permission': item['permission']}
+    if item['sha256'] is not None:
+        require(result['sha256'] == item['sha256'] and result['bytes'] == item['bytes'],
+                'archive does not match pinned registry')
+        result['checksum_status'] = item['checksum_status']
+        if 'publisher_checksum_source' in item:
+            result['publisher_checksum_source'] = item['publisher_checksum_source']
+    for field in ('checksum_scope', 'archive_format'):
+        if field in item:
+            result[field] = item[field]
+    return validate_receipt(result)
 
 
 def validate_receipt(value):
