@@ -1,10 +1,10 @@
 name: VC-DATA synthetic evaluation
 on:
   pull_request:
-    paths: ['Eilo/packages/dataset-evaluation/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', '.github/workflows/vc-data-evaluation.yml']
   push:
-    branches: ['sprint/**', 'task/vc-data-**']
-    paths: ['Eilo/packages/dataset-evaluation/**', '.github/workflows/vc-data-evaluation.yml']
+    branches: ['sprint/**', 'task/vc-data-**', 'task/vc-turn-04-**']
+    paths: ['Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', '.github/workflows/vc-data-evaluation.yml']
 permissions:
   contents: read
 concurrency:
@@ -30,6 +30,10 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -v
           python3 -O -m unittest discover -s tests -v
+      - name: Native VAD sanitizer contracts (no models or capture)
+        run: |
+          python3 -m compileall -q ../vad-runtime
+          python3 ../vad-runtime/check_contract.py
       - name: Generate privacy-reduced synthetic JSON and HTML
         run: python3 smoke.py --output "$RUNNER_TEMP/vc-data-reports"
       - name: Upload only synthetic aggregate summaries
