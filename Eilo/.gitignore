@@ -12,3 +12,7 @@ coverage/
 .local/
 *.gguf
 *.safetensors
+
+# Python evaluation caches
+__pycache__/
+*.pyc
