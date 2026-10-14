@@ -160,3 +160,25 @@ physical-device feasibility or approval of a release. No automatic acceptance me
 Historical v1 reports must not be silently relabelled: the checked-in continuation evidence
 records an explicit ASR/command-only compatibility mapping for the v2 partial-VAD-frame fix.
 VAD comparisons require fresh v2 scoring.
+
+### Native file-only VAD (VC-DATA-07)
+
+`native_vad_adapter.py` implements the existing request/response contract with the pinned
+sherpa-onnx 1.13.8 C API via Python ctypes. It uses the approved local Silero v5 model,
+CPU/one thread/16 kHz, threshold 0.5, minimum speech 160 ms and silence 500 ms. Inputs are
+bounded to 30 seconds. Each clip gets a fresh detector, 512-sample windows, zero padding of
+the final window, explicit flush, clamping to the original duration, reset and destruction.
+Native returned segments are freed after consumption. No microphone, application or download
+is activated by this adapter. Model/runtime/license provenance is in vad-provenance.json.
+
+Set `EILO_DATA_VAD_CONFIG` to a local JSON with `runtime_version`, `settings` (exact SETTINGS
+from the adapter), `library`, `runtime_files` (path/sha256 entries), and `model` (path/sha256).
+Use the normal benchmark runner and adapter metadata to score reviewed annotations. The config
+and model hashes must match EILO_DATA_ADAPTER_CONFIG_SHA256 and EILO_DATA_ADAPTER_MODEL_SHA256;
+the runner supplies those variables from its metadata. The wrapper, config, model and runtime
+are all pinned. Do not edit source or pins to accommodate a different ABI without review.
+
+Without reviewed annotations, use `vad_diagnostics.py --manifest PATH --config CONFIG --output
+RESULT` with the same expected config/model hash variables. It verifies the corpus and emits
+aggregate execution/detected-duration counts labelled EXECUTED_UNSCORED. It cannot produce F1,
+miss rate or false-positive rate. The scoring runner still rejects weak public VAD labels.

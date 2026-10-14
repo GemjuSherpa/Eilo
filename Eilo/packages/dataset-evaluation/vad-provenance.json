@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "model": {
+    "name": "Silero VAD v5.0",
+    "license": "MIT",
+    "license_url": "https://raw.githubusercontent.com/snakers4/silero-vad/5cd2ba54db059f961e7545d4f211b44f005a6dfb/LICENSE",
+    "license_sha256": "2e63e9a38b6e8fc0c7bc37ce174caca1862870856c6daf5697cfb785e925520b",
+    "source_commit": "5cd2ba54db059f961e7545d4f211b44f005a6dfb",
+    "upstream_git_blob_sha1": "d0ccd9d7fc1f98033c04b4a2b03ed0e07e842a13",
+    "bytes": 2313101,
+    "sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/silero_vad_v5.onnx",
+    "digest_source": "locally observed SHA256; bytes independently match immutable upstream Git blob; mirror publisher digest unavailable"
+  },
+  "runtime": {
+    "version": "1.13.8",
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/v1.13.8/sherpa-onnx-v1.13.8-osx-arm64-shared-no-tts.tar.bz2",
+    "sha256": "91b96512c4fa1960f8a9ed5360a6c8dda53a4b5015d0590244f14086a234557a",
+    "digest_source": "publisher GitHub release asset SHA256",
+    "directory": "sherpa-onnx-v1.13.8-osx-arm64-shared-no-tts",
+    "files": [
+      {
+        "path": "include/sherpa-onnx/c-api/c-api.h",
+        "sha256": "2a1b95084be8fd1deb3228fcad2fd3f7f0258b64582f7402281ec174c7b7f4ce"
+      },
+      {
+        "path": "lib/libsherpa-onnx-c-api.dylib",
+        "sha256": "ae729669633008692c670d4e4c942db7ea5bdc38abc2f479516062d48849e9d1"
+      },
+      {
+        "path": "lib/libonnxruntime.dylib",
+        "sha256": "3567d114f7299d559993e536d605a6f46d7bc9d2542004accc80ee9bf5457f0b"
+      }
+    ]
+  },
+  "scope": "local desktop file evaluation only; no production or physical-device claim"
+}
