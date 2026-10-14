@@ -51,6 +51,7 @@ jobs:
           python3 packages/voice-latency/interruption.py
           python3 packages/voice-latency/endurance.py
           python3 packages/voice-latency/screen_off.py
+          python3 packages/voice-latency/standby.py
   android:
     if: github.event.repository.private == false
     runs-on: ubuntu-24.04

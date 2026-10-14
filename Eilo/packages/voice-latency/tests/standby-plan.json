@@ -1,0 +1,418 @@
+{
+  "schema": 1,
+  "task": "VC-GATE-03",
+  "duration_seconds": 28800,
+  "resource_period_seconds": 60,
+  "wake_phrase": "Hey, Eilo",
+  "pronunciation": "Ay-loh",
+  "ambient_corpus": "Requires frozen nonpersonal8h acoustic corpus/hash review before collection",
+  "directed_wakes": [
+    {
+      "id": "wake-001",
+      "seconds": 144
+    },
+    {
+      "id": "wake-002",
+      "seconds": 432
+    },
+    {
+      "id": "wake-003",
+      "seconds": 720
+    },
+    {
+      "id": "wake-004",
+      "seconds": 1008
+    },
+    {
+      "id": "wake-005",
+      "seconds": 1296
+    },
+    {
+      "id": "wake-006",
+      "seconds": 1584
+    },
+    {
+      "id": "wake-007",
+      "seconds": 1872
+    },
+    {
+      "id": "wake-008",
+      "seconds": 2160
+    },
+    {
+      "id": "wake-009",
+      "seconds": 2448
+    },
+    {
+      "id": "wake-010",
+      "seconds": 2736
+    },
+    {
+      "id": "wake-011",
+      "seconds": 3024
+    },
+    {
+      "id": "wake-012",
+      "seconds": 3312
+    },
+    {
+      "id": "wake-013",
+      "seconds": 3600
+    },
+    {
+      "id": "wake-014",
+      "seconds": 3888
+    },
+    {
+      "id": "wake-015",
+      "seconds": 4176
+    },
+    {
+      "id": "wake-016",
+      "seconds": 4464
+    },
+    {
+      "id": "wake-017",
+      "seconds": 4752
+    },
+    {
+      "id": "wake-018",
+      "seconds": 5040
+    },
+    {
+      "id": "wake-019",
+      "seconds": 5328
+    },
+    {
+      "id": "wake-020",
+      "seconds": 5616
+    },
+    {
+      "id": "wake-021",
+      "seconds": 5904
+    },
+    {
+      "id": "wake-022",
+      "seconds": 6192
+    },
+    {
+      "id": "wake-023",
+      "seconds": 6480
+    },
+    {
+      "id": "wake-024",
+      "seconds": 6768
+    },
+    {
+      "id": "wake-025",
+      "seconds": 7056
+    },
+    {
+      "id": "wake-026",
+      "seconds": 7344
+    },
+    {
+      "id": "wake-027",
+      "seconds": 7632
+    },
+    {
+      "id": "wake-028",
+      "seconds": 7920
+    },
+    {
+      "id": "wake-029",
+      "seconds": 8208
+    },
+    {
+      "id": "wake-030",
+      "seconds": 8496
+    },
+    {
+      "id": "wake-031",
+      "seconds": 8784
+    },
+    {
+      "id": "wake-032",
+      "seconds": 9072
+    },
+    {
+      "id": "wake-033",
+      "seconds": 9360
+    },
+    {
+      "id": "wake-034",
+      "seconds": 9648
+    },
+    {
+      "id": "wake-035",
+      "seconds": 9936
+    },
+    {
+      "id": "wake-036",
+      "seconds": 10224
+    },
+    {
+      "id": "wake-037",
+      "seconds": 10512
+    },
+    {
+      "id": "wake-038",
+      "seconds": 10800
+    },
+    {
+      "id": "wake-039",
+      "seconds": 11088
+    },
+    {
+      "id": "wake-040",
+      "seconds": 11376
+    },
+    {
+      "id": "wake-041",
+      "seconds": 11664
+    },
+    {
+      "id": "wake-042",
+      "seconds": 11952
+    },
+    {
+      "id": "wake-043",
+      "seconds": 12240
+    },
+    {
+      "id": "wake-044",
+      "seconds": 12528
+    },
+    {
+      "id": "wake-045",
+      "seconds": 12816
+    },
+    {
+      "id": "wake-046",
+      "seconds": 13104
+    },
+    {
+      "id": "wake-047",
+      "seconds": 13392
+    },
+    {
+      "id": "wake-048",
+      "seconds": 13680
+    },
+    {
+      "id": "wake-049",
+      "seconds": 13968
+    },
+    {
+      "id": "wake-050",
+      "seconds": 14256
+    },
+    {
+      "id": "wake-051",
+      "seconds": 14544
+    },
+    {
+      "id": "wake-052",
+      "seconds": 14832
+    },
+    {
+      "id": "wake-053",
+      "seconds": 15120
+    },
+    {
+      "id": "wake-054",
+      "seconds": 15408
+    },
+    {
+      "id": "wake-055",
+      "seconds": 15696
+    },
+    {
+      "id": "wake-056",
+      "seconds": 15984
+    },
+    {
+      "id": "wake-057",
+      "seconds": 16272
+    },
+    {
+      "id": "wake-058",
+      "seconds": 16560
+    },
+    {
+      "id": "wake-059",
+      "seconds": 16848
+    },
+    {
+      "id": "wake-060",
+      "seconds": 17136
+    },
+    {
+      "id": "wake-061",
+      "seconds": 17424
+    },
+    {
+      "id": "wake-062",
+      "seconds": 17712
+    },
+    {
+      "id": "wake-063",
+      "seconds": 18000
+    },
+    {
+      "id": "wake-064",
+      "seconds": 18288
+    },
+    {
+      "id": "wake-065",
+      "seconds": 18576
+    },
+    {
+      "id": "wake-066",
+      "seconds": 18864
+    },
+    {
+      "id": "wake-067",
+      "seconds": 19152
+    },
+    {
+      "id": "wake-068",
+      "seconds": 19440
+    },
+    {
+      "id": "wake-069",
+      "seconds": 19728
+    },
+    {
+      "id": "wake-070",
+      "seconds": 20016
+    },
+    {
+      "id": "wake-071",
+      "seconds": 20304
+    },
+    {
+      "id": "wake-072",
+      "seconds": 20592
+    },
+    {
+      "id": "wake-073",
+      "seconds": 20880
+    },
+    {
+      "id": "wake-074",
+      "seconds": 21168
+    },
+    {
+      "id": "wake-075",
+      "seconds": 21456
+    },
+    {
+      "id": "wake-076",
+      "seconds": 21744
+    },
+    {
+      "id": "wake-077",
+      "seconds": 22032
+    },
+    {
+      "id": "wake-078",
+      "seconds": 22320
+    },
+    {
+      "id": "wake-079",
+      "seconds": 22608
+    },
+    {
+      "id": "wake-080",
+      "seconds": 22896
+    },
+    {
+      "id": "wake-081",
+      "seconds": 23184
+    },
+    {
+      "id": "wake-082",
+      "seconds": 23472
+    },
+    {
+      "id": "wake-083",
+      "seconds": 23760
+    },
+    {
+      "id": "wake-084",
+      "seconds": 24048
+    },
+    {
+      "id": "wake-085",
+      "seconds": 24336
+    },
+    {
+      "id": "wake-086",
+      "seconds": 24624
+    },
+    {
+      "id": "wake-087",
+      "seconds": 24912
+    },
+    {
+      "id": "wake-088",
+      "seconds": 25200
+    },
+    {
+      "id": "wake-089",
+      "seconds": 25488
+    },
+    {
+      "id": "wake-090",
+      "seconds": 25776
+    },
+    {
+      "id": "wake-091",
+      "seconds": 26064
+    },
+    {
+      "id": "wake-092",
+      "seconds": 26352
+    },
+    {
+      "id": "wake-093",
+      "seconds": 26640
+    },
+    {
+      "id": "wake-094",
+      "seconds": 26928
+    },
+    {
+      "id": "wake-095",
+      "seconds": 27216
+    },
+    {
+      "id": "wake-096",
+      "seconds": 27504
+    },
+    {
+      "id": "wake-097",
+      "seconds": 27792
+    },
+    {
+      "id": "wake-098",
+      "seconds": 28080
+    },
+    {
+      "id": "wake-099",
+      "seconds": 28368
+    },
+    {
+      "id": "wake-100",
+      "seconds": 28656
+    }
+  ],
+  "targets": {
+    "recall_percent": 95,
+    "false_activations_per_8h": 1,
+    "battery_points_per_hour": 2,
+    "rss_bytes_exclusive": 2500000000,
+    "pack_bytes_exclusive": 2000000000
+  }
+}
