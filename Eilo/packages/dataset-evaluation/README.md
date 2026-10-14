@@ -30,3 +30,16 @@ never invent one. Reverify receipts before extracting archives with a separately
 extractor. Reject traversal/symlinks; preserve licenses outside the evaluation sample index.
 Physical capture, device latency, interruption, standby, endurance and screen-off gates remain
 NOT_RUN. Corpus scoring cannot change those gates or approve production model readiness.
+
+VC-DATA-02: `preprocess.py --dataset speech_commands --root <local extracted corpus>
+--receipt <receipt.json> --output <new ignored directory> --split test --limit 100 --seed 0`.
+Official testing/validation lists and CV test/dev TSVs determine held-out membership; train
+is rejected. No new random train/test split. Seeded SHA-256 ordering fixes sample selection,
+IDs anonymize source/speaker names, and normalized WAV plus PCM hashes freeze input. WAV
+PCM 8/16/24/32-bit mono/stereo converts to 16 kHz PCM16; integer area averaging on downsample
+and linear interpolation on upsample are a reproducible desktop baseline, not a high-fidelity
+production resampler. No gain normalization, trimming, padding or transcript-changing crop.
+MUSAN noise-only clips use first 30s; they do not supply speech-positive VAD labels. CV MP3
+requires separately provisioned ffmpeg binary hash; decoding rejects duration-limit clips.
+Record decoder version/license with its hash in local receipts; no decoder is installed here.
+Full extracted corpus receipts/licenses remain local; index receipts pin the approved archive.
