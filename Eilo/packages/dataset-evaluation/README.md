@@ -221,3 +221,29 @@ These checks establish consistency and recorded reviewer declarations, not revie
 proof of listening, annotation accuracy or independence. Review the labels themselves separately;
 PR approval of tooling is not approval of acoustic truth. No real reviewed labels or VAD scores
 are created automatically. Physical gates remain NOT_RUN; production stays NOT_ENABLED.
+
+### Paired clean/noisy ASR evidence (VC-DATA-09)
+
+`robustness.py` validates a complete paired 20/10/0 dB suite, reproducing every variant's PCM
+from the frozen clean/audio pool and seeded mixing recipe. It rejects altered inputs, pool,
+selection, SNR grid, parent references, slices, sample counts, mixing metadata and consistently
+rehashed audio that does not match the recipe. It requires the same adapter/model/config,
+normalization and current scoring on both reports. Validated report counters are bound to the
+actual manifest cases. Audio caching is bounded to two files.
+
+```sh
+python3 robustness.py --clean /local/clean/manifest.json --noise /local/musan/manifest.json \
+  --noisy /local/noisy/manifest.json --clean-report /local/clean-results.json \
+  --noisy-report /local/noisy-results.json --output /local/paired-summary
+```
+
+Create variants with `noise.py mix` and run both corpora with `benchmark.py` first. The paired
+summary emits aggregate JSON/HTML, provenance hashes and absolute metric deltas for all cases
+and each clean slice, with one clip per parent per SNR. No transcripts, clip/speaker IDs, audio,
+local paths or arbitrary adapter metadata are exported. Existing output evidence is not overwritten.
+
+Status is MEASURED_DIAGNOSTIC and quality acceptance NOT_ASSESSED. A noise delta is not a
+same-manifest regression PASS/FAIL; use baseline.py for that separate purpose. Desktop timing
+includes adapter startup/provenance verification and is not device latency. The selected MUSAN
+category pool does not establish reviewed VAD ground truth. No model, threshold, production
+readiness or physical gate is changed by this task.

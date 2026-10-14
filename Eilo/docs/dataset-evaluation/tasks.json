@@ -50,24 +50,34 @@
       "id": "VC-DATA-06",
       "branch": "task/vc-data-06-regression-locks",
       "pr": "https://github.com/GemjuSherpa/Eilo/pull/59",
-      "status": "REVIEWED_AND_MERGED_TO_DEPENDENCY_BRANCH",
-      "main_integration": "PENDING_CURRENT_SPRINT_REVIEW",
-      "physical_acceptance": "NOT_RUN"
+      "status": "REVIEWED_AND_MERGED",
+      "physical_acceptance": "NOT_RUN",
+      "main_integration_pr": "https://github.com/GemjuSherpa/Eilo/pull/61"
     },
     {
       "id": "VC-DATA-07",
       "branch": "task/vc-data-07-native-vad",
       "pr": "https://github.com/GemjuSherpa/Eilo/pull/60",
-      "status": "REVIEWED_AND_MERGED_TO_DEPENDENCY_BRANCH",
-      "main_integration": "PENDING_CURRENT_SPRINT_REVIEW",
-      "physical_acceptance": "NOT_RUN"
+      "status": "REVIEWED_AND_MERGED",
+      "physical_acceptance": "NOT_RUN",
+      "main_integration_pr": "https://github.com/GemjuSherpa/Eilo/pull/61"
     },
     {
       "id": "VC-DATA-08",
       "branch": "task/vc-data-08-reviewed-annotations",
       "sprint": "sprint/vad-annotation-review",
-      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "status": "REVIEWED_AND_MERGED",
       "scope": "Blind local listening packs and bound human VAD label imports",
+      "physical_acceptance": "NOT_RUN",
+      "main_integration_pr": "https://github.com/GemjuSherpa/Eilo/pull/61",
+      "pr": "https://github.com/GemjuSherpa/Eilo/pull/61"
+    },
+    {
+      "id": "VC-DATA-09",
+      "branch": "task/vc-data-09-paired-noise-evidence",
+      "sprint": "sprint/asr-noise-evidence",
+      "status": "AWAITING_INDEPENDENT_REVIEW",
+      "scope": "Paired Common Voice and MUSAN ASR noise evidence with exact PCM reproduction",
       "physical_acceptance": "NOT_RUN"
     }
   ],

@@ -1,0 +1,203 @@
+{
+  "adapter": {
+    "binary_sha256": "834bbe4763b525caf76a3a16f2237556349f7836096bb1e7ae9ec5b6e16fa514",
+    "config_sha256": "2f8cec190dc3cd1f45b19fa21fc2592be3b06941cee9199d1b7d18895af75d78",
+    "kind": "native",
+    "model_sha256": "63534d53df54c74b949569be98a413b6096f583a1e653a6c44024421da02bb71",
+    "name": "Moonshine v0.1.5 macOS ARM64 / ASR-derived command baseline"
+  },
+  "annotation_caveat": "MUSAN category pool is not reviewed time-aligned VAD truth",
+  "clean_manifest_sha256": "179aea3809003783b2b3121767c31922c9760b7ce30e0aa0d2b5e2ff3912e249",
+  "clean_report_sha256": "8d5576ab4a2f96572f4aacac2da20040da49b500e674a7aac74c9ad8d2aa071b",
+  "comparisons": [
+    {
+      "absolute_metric_delta": {
+        "cer": 0.06830818109610803,
+        "wer": 0.10699588477366256
+      },
+      "clean": {
+        "cer": 0.14138204924543288,
+        "character_errors": 178,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.1450570389828595,
+        "wer": 0.24691358024691357,
+        "word_errors": 60
+      },
+      "group": "all",
+      "noisy": {
+        "cer": 0.2096902303415409,
+        "character_errors": 264,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.14465799594572715,
+        "wer": 0.35390946502057613,
+        "word_errors": 86
+      },
+      "snr_db": 20
+    },
+    {
+      "absolute_metric_delta": {
+        "cer": 0.08578236695790309,
+        "wer": 0.13580246913580246
+      },
+      "clean": {
+        "cer": 0.14138204924543288,
+        "character_errors": 178,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.1450570389828595,
+        "wer": 0.24691358024691357,
+        "word_errors": 60
+      },
+      "group": "all",
+      "noisy": {
+        "cer": 0.22716441620333597,
+        "character_errors": 286,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.14676097546163122,
+        "wer": 0.38271604938271603,
+        "word_errors": 93
+      },
+      "snr_db": 10
+    },
+    {
+      "absolute_metric_delta": {
+        "cer": 0.23431294678316125,
+        "wer": 0.33333333333333337
+      },
+      "clean": {
+        "cer": 0.14138204924543288,
+        "character_errors": 178,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.1450570389828595,
+        "wer": 0.24691358024691357,
+        "word_errors": 60
+      },
+      "group": "all",
+      "noisy": {
+        "cer": 0.37569499602859413,
+        "character_errors": 473,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.13784270733398046,
+        "wer": 0.5802469135802469,
+        "word_errors": 141
+      },
+      "snr_db": 0
+    },
+    {
+      "absolute_metric_delta": {
+        "cer": 0.06830818109610803,
+        "wer": 0.10699588477366256
+      },
+      "clean": {
+        "cer": 0.14138204924543288,
+        "character_errors": 178,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.1450570389828595,
+        "wer": 0.24691358024691357,
+        "word_errors": 60
+      },
+      "group": "slice:common_voice",
+      "noisy": {
+        "cer": 0.2096902303415409,
+        "character_errors": 264,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.14465799594572715,
+        "wer": 0.35390946502057613,
+        "word_errors": 86
+      },
+      "snr_db": 20
+    },
+    {
+      "absolute_metric_delta": {
+        "cer": 0.08578236695790309,
+        "wer": 0.13580246913580246
+      },
+      "clean": {
+        "cer": 0.14138204924543288,
+        "character_errors": 178,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.1450570389828595,
+        "wer": 0.24691358024691357,
+        "word_errors": 60
+      },
+      "group": "slice:common_voice",
+      "noisy": {
+        "cer": 0.22716441620333597,
+        "character_errors": 286,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.14676097546163122,
+        "wer": 0.38271604938271603,
+        "word_errors": 93
+      },
+      "snr_db": 10
+    },
+    {
+      "absolute_metric_delta": {
+        "cer": 0.23431294678316125,
+        "wer": 0.33333333333333337
+      },
+      "clean": {
+        "cer": 0.14138204924543288,
+        "character_errors": 178,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.1450570389828595,
+        "wer": 0.24691358024691357,
+        "word_errors": 60
+      },
+      "group": "slice:common_voice",
+      "noisy": {
+        "cer": 0.37569499602859413,
+        "character_errors": 473,
+        "count": 30,
+        "reference_characters": 1259,
+        "reference_words": 243,
+        "rtf": 0.13784270733398046,
+        "wer": 0.5802469135802469,
+        "word_errors": 141
+      },
+      "snr_db": 0
+    }
+  ],
+  "dataset": "common_voice",
+  "kind": "public_corpus",
+  "noise_manifest_sha256": "b6812fcdb073751f18475d9fcf908a599be078d2d0237d0682950809c8670fa9",
+  "noisy_manifest_sha256": "c0b28f91df3782193de59183e96bee6d93f46d7c4cca262b77b47325d39aab8a",
+  "noisy_report_sha256": "5cb426517b9f76865bd11f4faf1bde89dbc44da24584b1e710ce36be1e1a69fe",
+  "physical_gates": {
+    "capture": "NOT_RUN",
+    "device_latency": "NOT_RUN",
+    "endurance": "NOT_RUN",
+    "interruption": "NOT_RUN",
+    "screen_off": "NOT_RUN",
+    "standby": "NOT_RUN"
+  },
+  "production_readiness": "NOT_ENABLED",
+  "quality_acceptance": "NOT_ASSESSED",
+  "recipe": "seeded-loop-rms-snr-joint-headroom-v1",
+  "release": "26.0-2026-06-12-en-AU-MDC-2026-07-20",
+  "schema_version": 1,
+  "seed": 0,
+  "status": "MEASURED_DIAGNOSTIC",
+  "timing_scope": "Desktop adapter execution includes startup and provenance checks; not device latency"
+}
