@@ -151,3 +151,29 @@ labels or quality/physical metrics are inferred.
 Normal builds remain free of this evaluation native runtime/model. Host JNI execution and
 four-ABI linking do not establish Android ART/phone execution. Report fields preserve those
 boundaries explicitly. Existing scripted unit tests run in ordinary CI without model downloads.
+
+## Explicit capture transport evaluation
+
+`VadCaptureTransport` copies four <=1600-sample frames into a fixed queue, rejects >=250 ms
+queue age/overflow, and coalesces scheduling onto one serial native inference worker. Stop
+revokes queued results immediately and schedules worker cleanup without waiting for another
+capture frame. `VadCaptureSlot` and controller-owned permits bind this to the exact capturing
+turn on iOS/Android; normal app entry points do not activate it. Capture PCM must be 16 kHz;
+other routes are rejected. No ASR suffix/audio owner, resampler or confidence is inferred.
+
+Use the same approved local cache/model/JNI build as the worker example, adding `--capture`
+and a **new** output directory:
+
+```sh
+python3 check_worker.py --capture --cache "$CACHE" --model "$MODEL" \
+  --output "$CAPTURE_OUTPUT" --java-home "$JAVA_RUNTIME" --android-sdk "$ANDROID_SDK" \
+  --jni-build "$JNI_BUILD" --udid "$SIMULATOR_UDID"
+```
+
+This opt-in path adds only `NativeVadCaptureRuntimeTest` to the host test invocation and links
+`swift_capture_probe.swift` for the already-booted iPhone18 Pro simulator. It uses synthetic
+zeros and the approved native model, verifies separate worker execution and exact quiet/EOF
+sample counts, and rejects Stop/cleanup revocation. `tests/capture-results.json` records five
+streams/161 model calls per platform. These are transport/model checks, not physical capture,
+Android ART or production readiness. Normal model-free controller/capture lifecycle tests run
+in standard CI; `tests/capture-packaging-results.json` records the normal artifact exclusions.

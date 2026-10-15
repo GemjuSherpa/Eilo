@@ -48,6 +48,25 @@ Stop/Pause/privacy/interruption/state exit and Stop while a real worker is block
 ForegroundCapture recorder-loop test confirms exact PCM16 copying, separate inference thread and
 worker-owned destruction. Normal same-simulator build/install/three ten-second launches PASS.
 
+## Joined native execution and final checks
+
+All three subtasks are complete for one sprint review: bounded transport, guarded native capture
+attachment, and joined native execution/packaging. `check_worker.py --capture` reuses the approved
+local model/runtime/JNI cache, verifies source and binary hashes, and makes no downloads. Actual
+iOS-simulator and macOS host JVM/JNI transports each open/close five streams and execute 161
+model calls. API assertions verify create/process/destroy use the separate serial worker.
+Quiet input ends at exactly 80,000 samples, seven-sample EOF stays INCOMPLETE, Stop during actual
+inference suppresses outcomes, Stop without another frame closes state, and model revocation
+during final cleanup suppresses the final result. No speech accuracy or physical delay is inferred.
+
+Final checks PASS: 259 Swift tests; 311 Android tests with zero failures/errors/skips; Android lint
+and normal Debug/Release builds; same iPhone18 Pro simulator build/install/three fresh ten-second
+launches; workspace lint/typecheck, nine mobile and 33 contract tests; 56 dataset tests; native
+ASAN/UBSAN contracts; Python compilation and Git secret scan. Source/model/binary hashes and
+aggregate results are in packages/vad-runtime/tests/capture-{results,packaging-results}.json.
+Normal APKs exclude VAD JNI/model assets; normal iOS has no native VAD C imports or ONNX weights.
+All model files, local configs, dependency links and raw build logs remain uncommitted.
+
 ## Acceptance boundary
 
 Physical voice, Android ART/device capture, route changes, latency, battery, screen-lock/background
