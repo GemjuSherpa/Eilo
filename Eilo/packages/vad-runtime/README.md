@@ -58,3 +58,40 @@ Output is aggregate execution evidence with source/provenance/library hashes, sy
 replay and finalization checks, and optional corpus window counts. No probabilities are converted
 into public VAD accuracy without reviewed labels. Model/audio/raw scores/transcripts/clip or speaker
 IDs/local paths are not committed. All physical gates remain NOT_RUN; production NOT_ENABLED.
+
+## Duration-aware endpoint receiver
+
+`EndpointDetector.swift` and `EndpointDetector.kt` retain their strict 320-sample legacy API and
+provide a separate native-window path. The native path consumes the model's actual probability,
+absolute start sample, valid sample count and final flag once. It rejects gaps, duplicates,
+mixed clock APIs, invalid scores/counts and nonfinal partial windows. Padded samples never count.
+
+`NativeVadEndpointBridge` checks a native controller/model lease when requesting input capacity
+and before/after consuming a result. Revocation or closure is permanent for that receiver. It
+rejects a result computed while the lease was lost, including an otherwise complete endpoint.
+Default verification denies input. A native owner must still check its lease before model calls,
+close/destroy the native stream on terminal results, and revalidate the controller token before
+committing a returned decision. This receiver owns no native model handle and opens no capture.
+
+Read `inputCapacity` before inference. Buffer a full 512-sample window unless the true input ends
+or a hard budget requires a shorter final call. Never pad an intermediate window. Five native
+high windows confirm the unchanged 2,560-sample/160 ms threshold. Silence completion requires at
+least 8,000 valid low samples; full windows observe this at 8,192 samples/512 ms, not an invented
+500 ms timestamp. Unknown scores reset silence/high runs. Before confirmed speech, the capacity
+shrinks to 128 after 156 windows so the final call ends exactly at 80,000 samples/five seconds.
+After speech, it shrinks to 256 at the 480,000-sample/30-second cap. A larger window is rejected.
+Early EOF without a qualifying endpoint returns INCOMPLETE and cannot be promoted to a completed
+utterance. Interruption, echo-separated speech and ASR confidence policies are unchanged.
+
+Actual native-to-Swift simulator reproduction (existing verified cache/model only):
+
+```sh
+python3 Eilo/packages/vad-runtime/check_ios_endpoint.py --cache /local/existing/kws \
+  --model /local/approved/silero_vad_v5.onnx --output /local/new-endpoint-evidence \
+  --udid E01AE333-A393-48F6-AAD7-579F0A5DB1F8
+```
+
+This links the actual C ABI into a synthetic-silence Swift probe, using verified temporary copies
+for execution. It verifies 157 windows/80,000 valid samples/NO_SPEECH and separately scripts lease
+revocation; it is not microphone, classifier accuracy, interruption latency or Android JNI evidence.
+Swift/Kotlin native-handle owners and capture-worker attachment remain the next integration work.

@@ -1,0 +1,4 @@
+module CEiloVad {
+  header "eilo_vad.h"
+  export *
+}
