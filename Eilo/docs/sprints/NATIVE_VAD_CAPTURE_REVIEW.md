@@ -26,6 +26,28 @@ PASS using existing dependencies. Normal iPhone18 Pro simulator build/install an
 10-second launches precede the task commit. Shared dependency resolution uses the previously
 created ignored Metro override, with no package installation or committed configuration change.
 
+## Capture and controller attachment
+
+Both IOSCaptureEffects and Android ForegroundCapture now offer explicit native-only VAD setup.
+Capture-run slots reject late setup after Stop/detach and incompatible route rates. Recorder taps
+and PCM16 reads feed the copied queue; native model construction/inference/destruction occur on
+the dedicated inference worker. No normal AppDelegate/service caller or runtime/model activation
+is added. A caller must supply an independently verified, disk-free model capability and runtime.
+
+A controller-owned permit requires the exact effects instance, current capturing token and existing
+recognition/echo policy. Generation/privacy invalidation, Stop/Pause/interruption and state exit
+revoke it before stale audio can be accepted. Result metadata is rechecked inside the controller
+serialization boundary, then retires the permit. Failure produces only the existing unavailable
+code. No-speech/incomplete metadata cannot create text or imply ASR confidence. Follow-up callbacks
+must only enqueue native work; they do not run inference under the controller lock.
+
+Attachment checks: 259 Swift and 311 Android tests PASS, zero failures/errors/skips; Android lint
+and Debug/Release compilation PASS. Tests cover default denial, wrong effects/token/state, setup
+revocation, unsupported rate, EOF/duplicate retirement, model revocation during processing,
+Stop/Pause/privacy/interruption/state exit and Stop while a real worker is blocked. A synthetic
+ForegroundCapture recorder-loop test confirms exact PCM16 copying, separate inference thread and
+worker-owned destruction. Normal same-simulator build/install/three ten-second launches PASS.
+
 ## Acceptance boundary
 
 Physical voice, Android ART/device capture, route changes, latency, battery, screen-lock/background

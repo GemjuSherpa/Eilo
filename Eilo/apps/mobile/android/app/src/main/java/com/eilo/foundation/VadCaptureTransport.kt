@@ -12,6 +12,7 @@ internal class VadCaptureTransport(
     private val verified: () -> Boolean = { false },
     private val open: () -> VadStream = { error("VAD unavailable") },
     private val now: () -> Long = System::nanoTime,
+    private val failure: (() -> Boolean) -> Unit = {},
     private val output: (VadCaptureOutcome, () -> Boolean) -> Unit = { _, _ -> },
 ) {
     private val monitor=Any()
@@ -20,6 +21,7 @@ internal class VadCaptureTransport(
     private val times=LongArray(4)
     private var head=0; private var size=0; private var queuedSamples=0
     private var accepting=true; private var active=true; private var scheduled=false; private var eof=false
+    private var failed=false
     private var lastClock: Long?=null
     // Worker-confined fields.
     private var delivery: VadWindowDelivery?=null
@@ -28,7 +30,7 @@ internal class VadCaptureTransport(
     fun current()=synchronized(monitor) { active }
     private fun allowed()=try { current() && verified() && current() } catch (_: Exception) { false }
     private fun clearLocked() { storage.fill(0f);counts.fill(0);times.fill(0);head=0;size=0;queuedSamples=0 }
-    private fun revokeLocked() { active=false;accepting=false;clearLocked() }
+    private fun revokeLocked() { failed=true;active=false;accepting=false;clearLocked() }
     private fun claimLocked():Boolean { if(scheduled)return false;scheduled=true;return true }
     private fun enqueue(start:Boolean) { if(start) worker.execute(::drain) }
     fun submit(pcm:FloatArray,count:Int,sampleRate:Int):Boolean {
@@ -71,7 +73,7 @@ internal class VadCaptureTransport(
         enqueue(start)
     }
     fun close() {
-        val start=synchronized(monitor) { revokeLocked();claimLocked() }
+        val start=synchronized(monitor) { revokeLocked();failed=false;claimLocked() }
         enqueue(start)
     }
     private fun drain() {
@@ -91,7 +93,7 @@ internal class VadCaptureTransport(
                     }
                 }
             }
-            if(revoked) { cleanup();synchronized(monitor) { scheduled=false };return }
+            if(revoked) { cleanup();synchronized(monitor) { scheduled=false };reportFailure();return }
             val current=delivery ?: VadWindowDelivery(::allowed,open).also { delivery=it }
             val event=if(final)current.finish() else current.accept(scratch,count,current.acceptedSamples())
             scratch.fill(0f)
@@ -101,8 +103,10 @@ internal class VadCaptureTransport(
     private fun complete(event:VadDeliveryEvent) {
         val outcome=VadCaptureOutcome(event.result,delivery?.acceptedSamples() ?: 0,event.consumedSamples)
         cleanup()
-        synchronized(monitor) { accepting=false;clearLocked();scheduled=false;if(event.result==EndpointResult.INVALID)active=false }
-        if(allowed())output(outcome,::allowed)
+        synchronized(monitor) { accepting=false;clearLocked();scheduled=false;if(event.result==EndpointResult.INVALID){if(active)failed=true;active=false} }
+        if(event.result==EndpointResult.INVALID)reportFailure() else if(allowed())output(outcome,::allowed)
     }
+    private fun failureCurrent()=synchronized(monitor) { failed }
+    private fun reportFailure() { if(failureCurrent())failure(::failureCurrent) }
     private fun cleanup() { scratch.fill(0f);delivery?.close();delivery=null }
 }

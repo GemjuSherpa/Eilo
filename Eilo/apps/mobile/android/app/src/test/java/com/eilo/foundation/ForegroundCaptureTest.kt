@@ -102,4 +102,42 @@ class ForegroundCaptureTest {
         capture.beginCapture({started=it},{failed=true}); w.next()
         assertFalse(started); assertTrue(failed)
     }
+    @Test fun realCaptureLoopCopiesPcmToSeparateVadWorkerAndStopClosesThere() {
+        val recorder=java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r,"synthetic-recorder") }
+        val inference=java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r,"synthetic-vad") }
+        val installed=java.util.concurrent.CountDownLatch(1)
+        val processed=java.util.concurrent.CountDownLatch(3)
+        val closed=java.util.concurrent.CountDownLatch(1)
+        val errors=java.util.concurrent.ConcurrentLinkedQueue<String>()
+        val device=DeviceSpy();device.onRead={320}
+        val capture=ForegroundCapture(recorder,{true},{device})
+        val c=testController(effects=capture)
+        var cursor=0
+        val api=object:NativeVadApi {
+            override fun create(model:String):Long { if(Thread.currentThread().name!="synthetic-vad")errors.add("create thread");return 1 }
+            override fun process(handle:Long,pcm:FloatArray,count:Int,final:Boolean):NativeVadObservation {
+                if(Thread.currentThread().name!="synthetic-vad" || pcm.take(count).any{it!=42f/32768})errors.add("PCM or thread")
+                val start=cursor;cursor+=count;processed.countDown();return NativeVadObservation(0.95f,start,count,final)
+            }
+            override fun destroy(handle:Long) { if(Thread.currentThread().name!="synthetic-vad")errors.add("close thread");closed.countDown() }
+        }
+        try {
+            assertTrue(c.dispatch(ControllerEvent.START))
+            val deadline=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(5)
+            while(c.token()==null && System.nanoTime()<deadline)Thread.yield()
+            assertNotNull(c.token());assertTrue(c.dispatch(ControllerEvent.SPEECH_DETECTED,token=c.token()))
+            inference.execute {
+                if(!capture.connectVad(c,c.token()!!,inference,"/synthetic/model",{true},api))errors.add("attachment")
+                installed.countDown()
+            }
+            assertTrue(installed.await(5,java.util.concurrent.TimeUnit.SECONDS))
+            assertTrue(processed.await(5,java.util.concurrent.TimeUnit.SECONDS));assertTrue(c.stop())
+            assertTrue(closed.await(5,java.util.concurrent.TimeUnit.SECONDS));assertTrue(errors.toString(),errors.isEmpty())
+            assertEquals(ControllerState.STOPPED,c.state());assertEquals(1,device.closes)
+        } finally {
+            c.stop();recorder.shutdown();inference.shutdown()
+            assertTrue(recorder.awaitTermination(5,java.util.concurrent.TimeUnit.SECONDS))
+            assertTrue(inference.awaitTermination(5,java.util.concurrent.TimeUnit.SECONDS))
+        }
+    }
 }
