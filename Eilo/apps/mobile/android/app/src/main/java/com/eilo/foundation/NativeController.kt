@@ -243,7 +243,28 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         dispatch(ControllerEvent.PLAYBACK_FINISHED, token = ticket.token)
     }
     @Synchronized fun token(): GenerationToken? = activeToken
+    private var vadCapture:VadCapturePermit?=null
+    @Synchronized internal fun prepareVadCapture(permit:VadCapturePermit,capture:ControllerEffects,token:GenerationToken):Boolean {
+        if(effects!==capture || !recognitionAllowed(token) || vadCapture?.active()==true || !permit.active())return false
+        vadCapture=permit;return true
+    }
+    @Synchronized internal fun abandonVadCapture(permit:VadCapturePermit) { if(vadCapture===permit)vadCapture=null;permit.revoke() }
+    /** Metadata only; accepted must enqueue native follow-up, never inference under this monitor. */
+    @Synchronized internal fun finishVadCapture(permit:VadCapturePermit,token:GenerationToken,outcome:VadCaptureOutcome,active:()->Boolean,accepted:(VadCaptureOutcome)->Unit):Boolean {
+        try {
+            if(vadCapture!==permit || !permit.active() || !recognitionAllowed(token) || !active() || outcome.result !in listOf(EndpointResult.COMPLETE,EndpointResult.LIMIT,EndpointResult.NO_SPEECH,EndpointResult.INCOMPLETE) || outcome.totalSamples !in 0..480000 || outcome.lastChunkConsumed !in 0..minOf(1600,outcome.totalSamples))return false
+            vadCapture=null;accepted(outcome);return true
+        } finally { abandonVadCapture(permit) }
+    }
+    @Synchronized internal fun failVadCapture(permit:VadCapturePermit,token:GenerationToken,active:()->Boolean):Boolean {
+        try {
+            if(vadCapture!==permit || !permit.active() || !recognitionAllowed(token) || !active())return false
+            return dispatch(ControllerEvent.FAILURE,SafeError.UNAVAILABLE,token)
+        } finally { abandonVadCapture(permit) }
+    }
+    private fun revokeVadCapture(){val previous=vadCapture;vadCapture=null;previous?.revoke()}
     private fun invalidateGeneration() {
+        revokeVadCapture()
         interruptedCapture=null;independentCapture=null
         activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
         val continuation = continuationCancel; continuationCancel = null; continuationToken = null
@@ -317,6 +338,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if(event==ControllerEvent.PLAYBACK_FINISHED && token!=null)playback.finish(token)
         if (event == ControllerEvent.START || event == ControllerEvent.SPEECH_DETECTED || event == ControllerEvent.PLAYBACK_FINISHED || event == ControllerEvent.RESUME) issueGeneration()
         if ((event == ControllerEvent.PAUSE || event == ControllerEvent.FAILURE) && !stop()) return false
+        if(next!=ControllerState.CAPTURING)revokeVadCapture()
         currentState = next
         if (event == ControllerEvent.SPEECH_DETECTED) hasConversation=true
         try { updateIdle() } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; return false }

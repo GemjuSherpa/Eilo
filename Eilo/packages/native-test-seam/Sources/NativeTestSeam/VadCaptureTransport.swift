@@ -21,6 +21,8 @@ final class VadCaptureTransport: @unchecked Sendable {
   private var counts = [Int](repeating: 0, count: 4), times = [UInt64](repeating: 0, count: 4)
   private var head = 0, size = 0, queuedSamples = 0
   private var accepting = true, active = true, scheduled = false, eof = false
+  private var failed=false
+  private let failure: (@escaping () -> Bool) -> Void
   private var lastClock: UInt64?
   // Worker-only fields. Stop never touches these or waits for inference.
   private var delivery: VadWindowDelivery?
@@ -28,8 +30,9 @@ final class VadCaptureTransport: @unchecked Sendable {
   init(schedule: @escaping (@escaping () -> Void) -> Void, verified: @escaping () -> Bool = { false },
        open: @escaping () throws -> VadStream = { throw VadFailure.unavailable },
        now: @escaping () -> UInt64 = { DispatchTime.now().uptimeNanoseconds },
-       output: @escaping (VadCaptureOutcome, @escaping () -> Bool) -> Void = { _,_ in }) {
-    self.schedule=schedule; self.verified=verified; self.open=open; self.now=now; self.output=output
+       output: @escaping (VadCaptureOutcome, @escaping () -> Bool) -> Void = { _,_ in },
+       failure: @escaping (@escaping () -> Bool) -> Void = { _ in }) {
+    self.failure=failure; self.schedule=schedule; self.verified=verified; self.open=open; self.now=now; self.output=output
   }
   var retainedSamples: Int { lock.lock(); defer { lock.unlock() }; return queuedSamples }
   func current() -> Bool { lock.lock(); defer { lock.unlock() }; return active }
@@ -38,7 +41,7 @@ final class VadCaptureTransport: @unchecked Sendable {
     counts = [Int](repeating: 0, count: 4); times = [UInt64](repeating: 0, count: 4)
     head=0; size=0; queuedSamples=0
   }
-  private func revokeLocked() { active=false; accepting=false; clearLocked() }
+  private func revokeLocked() { failed=true; active=false; accepting=false; clearLocked() }
   private func claimLocked() -> Bool { if scheduled { return false }; scheduled=true; return true }
   @discardableResult func submit(_ pcm: UnsafeBufferPointer<Float>, sampleRate: Int) -> Bool {
     lock.lock()
@@ -65,7 +68,7 @@ final class VadCaptureTransport: @unchecked Sendable {
   }
   /// Immediate revoke/queue erasure; native scratch/state cleanup is always worker-owned.
   func close() {
-    lock.lock(); revokeLocked(); let start=claimLocked(); lock.unlock()
+    lock.lock(); revokeLocked(); failed=false; let start=claimLocked(); lock.unlock()
     if start { schedule { [self] in drain() } }
   }
   private func allowed() -> Bool { current() && verified() && current() }
@@ -73,7 +76,7 @@ final class VadCaptureTransport: @unchecked Sendable {
     while true {
       lock.lock()
       if !active {
-        clearLocked(); lock.unlock(); cleanup(); lock.lock(); scheduled=false; lock.unlock(); return
+        clearLocked(); lock.unlock(); cleanup(); lock.lock(); scheduled=false; lock.unlock(); reportFailure(); return
       }
       if size==0 {
         let final=eof
@@ -101,10 +104,13 @@ final class VadCaptureTransport: @unchecked Sendable {
     let outcome=VadCaptureOutcome(result:event.result,totalSamples:delivery?.acceptedSamples ?? 0,lastChunkConsumed:event.consumedSamples)
     cleanup()
     lock.lock(); accepting=false; clearLocked(); scheduled=false
-    if event.result == .invalid { active=false }
+    if event.result == .invalid { if active { failed=true }; active=false }
     lock.unlock()
-    if allowed() { output(outcome,{ [weak self] in self?.allowed() ?? false }) }
+    if event.result == .invalid { reportFailure() }
+    else if allowed() { output(outcome,{ [weak self] in self?.allowed() ?? false }) }
   }
+  private func failureCurrent() -> Bool { lock.lock(); defer { lock.unlock() }; return failed }
+  private func reportFailure() { if failureCurrent() { failure { [weak self] in self?.failureCurrent() ?? false } } }
   private func cleanup() {
     scratch.withUnsafeMutableBufferPointer { $0.initialize(repeating:0) }
     delivery?.close(); delivery=nil
