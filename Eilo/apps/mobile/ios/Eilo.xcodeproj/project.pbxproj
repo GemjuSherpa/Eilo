@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A0D04A040000000000000001 /* NativeVadStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A040000000000000002 /* NativeVadStream.swift */; };
 		01FE29C99545AD6A1DC65053 /* IOSCaptureEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */; };
 		03FE7B1EF9C9065B5C75545F /* PackManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BD97AC57B222560095251D /* PackManifest.swift */; };
 		06219C35A05D1E3F53BAF6E3 /* AudioInterruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2714425033B445EF7376149 /* AudioInterruption.swift */; };
@@ -60,6 +61,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A0D04A040000000000000002 /* NativeVadStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeVadStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeVadStream.swift"; sourceTree = "<group>"; };
 		02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackIntegrity.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Eilo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eilo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Eilo/Images.xcassets; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				D40DE436F1818DB2F66D0446 /* PlaybackRejection.swift */,
 				51FCD120463949438E6CBF76 /* RecognitionPolicy.swift */,
 				121735391666D6AEED84AC08 /* NativeAsrStream.swift */,
+				A0D04A040000000000000002 /* NativeVadStream.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
 				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
 				EAF11B8C6614D2FDE8277A5B /* GenericSpokenTurn.swift */,
@@ -397,6 +400,7 @@
 				BB4F5D565A63F913D51BB909 /* PlaybackRejection.swift in Sources */,
 				8F7489F34E3E281FD61E409C /* RecognitionPolicy.swift in Sources */,
 				CCDC8AA706FCF09B104D6D42 /* NativeAsrStream.swift in Sources */,
+				A0D04A040000000000000001 /* NativeVadStream.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
 				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
 				0A08561603A8F75864EFA54D /* GenericSpokenTurn.swift in Sources */,
