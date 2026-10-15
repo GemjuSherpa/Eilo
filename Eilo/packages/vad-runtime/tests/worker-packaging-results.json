@@ -1,0 +1,26 @@
+{
+  "debug": {
+    "sha256": "d05500e8232bc2c477fd70ced513da3d10a8554be80da65e94ca1771f0cf6331",
+    "evaluation_vad_runtime_and_weights": "ABSENT"
+  },
+  "release": {
+    "sha256": "0540a5d5ac781328eaccc6decfb6ad03f9efcb876f065a9c66e52b24c4d1d73b",
+    "evaluation_vad_runtime_and_weights": "ABSENT"
+  },
+  "ios_normal": {
+    "native_vad_c_imports": "ABSENT",
+    "onnx_weights": "ABSENT",
+    "simulator_build": "PASS",
+    "startup": "3_FRESH_10_SECOND_LAUNCHES_PASS"
+  },
+  "validation": {
+    "swift_tests": 245,
+    "android_tests": 295,
+    "workspace_mobile_tests": 9,
+    "workspace_contract_tests": 33,
+    "dataset_tests_normal_and_optimized": 56,
+    "native_sanitizer_contracts": "PASS",
+    "physical_gates": "NOT_RUN",
+    "production_readiness": "NOT_ENABLED"
+  }
+}

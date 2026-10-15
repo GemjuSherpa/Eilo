@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "scope": "JOINED_NATIVE_VAD_WORKER_SYNTHETIC",
+  "ios_simulator": {
+    "scope": "IOS_SIMULATOR_NATIVE_WORKER",
+    "synthetic": true,
+    "quiet_valid_samples": 80000,
+    "odd_chunk_valid_samples": 80000,
+    "eof_valid_samples": 7,
+    "native_calls": 317,
+    "opens": 5,
+    "closes": 5,
+    "revocation_rejected": true,
+    "cleanup_revocation_rejected": true,
+    "physical": "NOT_RUN"
+  },
+  "host_jvm_jni": {
+    "scope": "MACOS_JVM_NATIVE_JNI_WORKER",
+    "synthetic": true,
+    "quiet_valid_samples": 80000,
+    "odd_chunk_valid_samples": 80000,
+    "eof_valid_samples": 7,
+    "native_calls": 317,
+    "opens": 5,
+    "closes": 5,
+    "revocation_rejected": true,
+    "cleanup_revocation_rejected": true,
+    "jni_stale_handle_rejected": true,
+    "jni_invalid_count_revoked": true,
+    "physical": "NOT_RUN"
+  },
+  "model_sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
+  "jni_sha256": "4b37693400610da3e5ad21fe498f1d48090c2977a2882fe84970f1d5d06bfe7e",
+  "source_sha256": {
+    "packages/native-test-seam/Sources/NativeTestSeam/EndpointDetector.swift": "2339f7471f3532cc93cb764e9b74e420f327987e412d185b4dc941377edf50cd",
+    "packages/native-test-seam/Sources/NativeTestSeam/NativeVadStream.swift": "b0b204948bf9bd009c2a33ca913cdc04a9dd5c463059923f33cdeb9838c2e5ba",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadWindowDelivery.swift": "58883506c3de621707af7274deb71efbcdea03ce98d5922f4c7d4284d29fc12c",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/EndpointDetector.kt": "f197a7dfd9643b2f175db491b00548c70028d35f4c1c657f24fd0991cf0357d3",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeVadStream.kt": "572f474ebf4649b164bd339ea56da8dfafa3e5c2c4508be018acacbbb2e166b0",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadWindowDelivery.kt": "fa41b75c0cb9c17607ef68218db12137b927b521c31406a52003ecc13ae6b3ea",
+    "packages/vad-runtime/eilo_vad_jni.cc": "6d2b6b94d3a18878211bf9a6783f7efe9ae7a72d9d3b4d2aa7cae626160232ad",
+    "packages/vad-runtime/tests/swift_worker_probe.swift": "ab37bdc466eab2b0d761f9502e2237ab0855df26779801a206fe82b9e39cf801",
+    "packages/vad-runtime/tests/jvm/NativeVadRuntimeTest.kt": "495dcdc1689fd5e9c3e11b392fbbe47b9950f891cbfe49e940d40af4823d562c"
+  },
+  "android_device_execution": "NOT_RUN",
+  "production_readiness": "NOT_ENABLED",
+  "physical_gates": "NOT_RUN"
+}

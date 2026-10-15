@@ -18,14 +18,14 @@ unverified. Calls and destruction must be serialized by one inference-worker own
 This is an evaluation core, not an app-ready VAD attachment. The C ABI caller must provide a
 verified native model capability and preserve controller/model leases before/after inference.
 No trust key, manifest, model-readiness, capture permission, confidence or echo gate is added or
-weakened. The normal app does not import/link/activate this package. No microphone, network,
+weakened. Normal apps compile the interfaces but do not link or activate the native evaluation runtime by default. No microphone, network,
 downloader, runtime installation or application launch occurs in these checks.
 
-**Timing boundary:** native probabilities cover 512 samples (32 ms). Existing EndpointDetector
+**Timing boundary:** native probabilities cover 512 samples (32 ms). The legacy EndpointDetector API
 expects 320-sample (20 ms) probabilities. Do not duplicate a probability into multiple 20 ms
-frames or use segment detection as a probability. A duration-aware, separately reviewed bridge
-and Swift/Kotlin lifetime/lease bindings are still needed before capture integration. This task
-does not change endpoint thresholds, silence/no-speech limits or interruption policy.
+frames or use segment detection as a probability. The duration-aware receiver and explicit lifetime/worker bindings are described below. Production
+capture attachment still requires its own verified native caller. Endpoint thresholds and
+interruption policy are not bypassed.
 
 ## Reproduce
 
@@ -94,4 +94,60 @@ python3 Eilo/packages/vad-runtime/check_ios_endpoint.py --cache /local/existing/
 This links the actual C ABI into a synthetic-silence Swift probe, using verified temporary copies
 for execution. It verifies 157 windows/80,000 valid samples/NO_SPEECH and separately scripts lease
 revocation; it is not microphone, classifier accuracy, interruption latency or Android JNI evidence.
-Swift/Kotlin native-handle owners and capture-worker attachment remain the next integration work.
+Swift/Kotlin native owners and window delivery are now implemented below; normal capture
+attachment remains gated on the outstanding trust/readiness/physical prerequisites.
+
+
+## Owned native worker sprint
+
+NativeVadStream.swift/kt own exactly one verified native stream on an inference worker. They
+validate paths, lease checks before/after open and inference, native probabilities/timestamps,
+input bounds and final flags. Failure, revocation and finalization terminally close the handle;
+close is idempotent. Swift links the C module only under explicit DEBUG/EILO_VAD_EVALUATION.
+Kotlin's ordinary default is UnavailableVadApi. NativeVadJni loads only explicitly verified,
+role-matched libraries and uses monotonic opaque IDs rather than exposing C++ pointers.
+Native JNI copies/clears borrowed PCM and rejects stale IDs/invalid counts. Native library
+loading does not grant a trusted pack, controller generation, confidence or capture permission.
+
+VadWindowDelivery.swift/kt lazily own that stream and one at-most-512-sample pending PCM window.
+They accept sequence-addressed chunks of 1..1600 samples on the worker, preserving sample order
+without retaining caller pointers. Full windows are 512; only true EOF or the hard input budget
+can create a partial final window. Quiet input stops at exactly 80,000 valid samples; continuous
+speech is bounded to 480,000. On a normal endpoint the last callback may be consumed only partly;
+consumedSamples reports that prefix. Downstream ASR must respect this count and its own leases,
+confidence and finalization policy. An invalid event consumes no further downstream data.
+
+Capture callbacks must enqueue/copy through the existing bounded native transport; they must not
+call model inference directly. The capture/turn owner must schedule close on the worker on Stop,
+revocation or capture loss even if no more PCM arrives. Stop revokes the capability immediately;
+cleanup must not wait under controller/capture locks. The worker checks revocation on every input,
+open, native return and terminal delivery. There is no automatic capture subscription or model
+readiness promotion in this sprint. Vendor internal allocator erasure remains unverified.
+
+### Joined reproduction without downloads
+
+First build and pin host/four-ABI JNI wrappers with existing artifacts:
+
+```sh
+python3 Eilo/packages/vad-runtime/check_jni.py --cache /local/existing/kws \
+  --model /local/approved/silero_vad_v5.onnx --output /local/new-jni-build \
+  --java-home /local/existing/jdk17 --ndk /local/existing/ndk/27.1.12297006
+python3 Eilo/packages/vad-runtime/check_worker.py --cache /local/existing/kws \
+  --model /local/approved/silero_vad_v5.onnx --output /local/new-worker-evidence \
+  --java-home /local/existing/jdk17 --android-sdk /local/existing/android-sdk \
+  --jni-build /local/new-jni-build --udid E01AE333-A393-48F6-AAD7-579F0A5DB1F8
+```
+
+The second command executes the whole real-model Swift worker on the existing iOS simulator
+and the Kotlin worker through real macOS JVM/JNI. Its Gradle init file adds an opt-in JVM test
+source only; it packages/installs no Android evaluation app. It verifies model/runtime/wrapper
+hashes and source freshness before use, uses temporary local artifact copies, and refuses to
+overwrite evidence. Five worker-owned streams per platform exercise 317 model calls: quiet and
+irregular chunks, seven-sample EOF, revocation after actual inference and during final cleanup.
+The host additionally checks raw stale JNI IDs and invalid-count revocation; those direct guard
+calls are additional to the worker-scoped counters. All PCM is generated silence. No corpus
+labels or quality/physical metrics are inferred.
+
+Normal builds remain free of this evaluation native runtime/model. Host JNI execution and
+four-ABI linking do not establish Android ART/phone execution. Report fields preserve those
+boundaries explicitly. Existing scripted unit tests run in ordinary CI without model downloads.
