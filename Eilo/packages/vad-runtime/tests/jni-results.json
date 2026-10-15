@@ -1,0 +1,29 @@
+{
+  "scope": "JNI_LINK_ONLY",
+  "host_jni_sha256": "4b37693400610da3e5ad21fe498f1d48090c2977a2882fe84970f1d5d06bfe7e",
+  "android": {
+    "arm64-v8a": {
+      "status": "LINKED_NOT_EXECUTED",
+      "sha256": "fa7ffcc778a932a6829a744fcab40da4abf0d3cb40993b2060bf1f72698ebc23"
+    },
+    "armeabi-v7a": {
+      "status": "LINKED_NOT_EXECUTED",
+      "sha256": "66cb051e9e6d44da337c792d886fd226de8c42aa790b3729f7ae1f6240e7fbf0"
+    },
+    "x86_64": {
+      "status": "LINKED_NOT_EXECUTED",
+      "sha256": "b5841e8a49358b539214585232605cf9b76fed237aa4bd201c9748eefb22c534"
+    },
+    "x86": {
+      "status": "LINKED_NOT_EXECUTED",
+      "sha256": "0d9b00f511a662d12d637d89f901423d8fd75351f990eff665d9e967bf9a6fbe"
+    }
+  },
+  "source_sha256": {
+    "eilo_vad.cc": "18402a67ee703d446c5bd44c59e018981b181afd3288afccf2c4a1dc10f9f118",
+    "eilo_vad_onnx.cc": "c0962a35f9a5ca28da00fcafc050c201971dc7a82ef3bcd1556d1ace55a40051",
+    "eilo_vad_jni.cc": "6d2b6b94d3a18878211bf9a6783f7efe9ae7a72d9d3b4d2aa7cae626160232ad",
+    "include/eilo_vad.h": "0d08a66e8c8ee39f82fc1344832de2b2afe80f09a6508e78433829a102acf517",
+    "vad_backend.h": "5d0e66824c12538a16b083a5049e5f2e18edfff8145def02229c97d6bc481658"
+  }
+}

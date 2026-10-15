@@ -23,7 +23,8 @@ if __name__=='__main__':
     host=output/'libeilo_vad_jni.dylib'
     run(['xcrun','clang++',*common,'-I',args.java_home/'include','-I',args.java_home/'include/darwin',
          *sources,'-L',hostlib,'-lonnxruntime','-Wl,-rpath,'+str(hostlib),'-o',host])
-    result={'scope':'JNI_LINK_ONLY','host_jni_sha256':sha256(host),'android':{}}
+    result={'scope':'JNI_LINK_ONLY','host_jni_sha256':sha256(host),'android':{},
+            'source_sha256':{str(p.relative_to(HERE)):sha256(p) for p in [*sources,HERE/'include/eilo_vad.h',HERE/'vad_backend.h']}}
     tools=args.ndk/'toolchains/llvm/prebuilt/darwin-x86_64/bin'
     for abi,triple in [('arm64-v8a','aarch64-linux-android'),('armeabi-v7a','armv7a-linux-androideabi'),
                        ('x86_64','x86_64-linux-android'),('x86','i686-linux-android')]:
