@@ -72,3 +72,15 @@ All model files, local configs, dependency links and raw build logs remain uncom
 Physical voice, Android ART/device capture, route changes, latency, battery, screen-lock/background
 and endurance remain NOT_RUN. Production remains NOT_ENABLED; S08 remains HOLD. Human-labelled
 VAD accuracy remains blocked on annotations. The original three personal edits are preserved.
+
+## CI evidence revision correction
+
+PR66's push and pull-request JavaScript jobs both rejected stale policy-source pins in
+S08_FEASIBILITY_DECISION.json after this sprint changed NativeController.swift and
+IOSCaptureEffects.swift. Reviewed both current sources: missing-model/default trust, privacy
+invalidation and background consent/physical capability restrictions remain intact. Refreshed
+only those two SHA-256 references; all observations, platform gates, HOLD recommendation,
+empty supported configurations and denied persistent memory remain unchanged. The original
+failure reproduces locally; all 47 voice-latency tests now pass in normal and optimized Python,
+and all six measurement/reporting entry points pass without establishing physical acceptance.
+This is an evidence-only correction; no application/runtime behavior changed.
