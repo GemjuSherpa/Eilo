@@ -25,14 +25,19 @@ final class VadCaptureTransport: @unchecked Sendable {
   private let failure: (@escaping () -> Bool) -> Void
   private var lastClock: UInt64?
   // Worker-only fields. Stop never touches these or waits for inference.
+  private let audioFactory:(()->VadAsrHandoff)?
+  private let joinedOutput:((VadCaptureOutcome,AsrText?,@escaping ()->Bool)->Void)?
+  private var audio:VadAsrHandoff?
   private var delivery: VadWindowDelivery?
   private var scratch = [Float](repeating: 0, count: 1600)
   init(schedule: @escaping (@escaping () -> Void) -> Void, verified: @escaping () -> Bool = { false },
        open: @escaping () throws -> VadStream = { throw VadFailure.unavailable },
        now: @escaping () -> UInt64 = { DispatchTime.now().uptimeNanoseconds },
        output: @escaping (VadCaptureOutcome, @escaping () -> Bool) -> Void = { _,_ in },
-       failure: @escaping (@escaping () -> Bool) -> Void = { _ in }) {
-    self.failure=failure; self.schedule=schedule; self.verified=verified; self.open=open; self.now=now; self.output=output
+       failure: @escaping (@escaping () -> Bool) -> Void = { _ in },
+       audioFactory:(()->VadAsrHandoff)?=nil,
+       joinedOutput:((VadCaptureOutcome,AsrText?,@escaping ()->Bool)->Void)?=nil) {
+    self.audioFactory=audioFactory;self.joinedOutput=joinedOutput;self.failure=failure; self.schedule=schedule; self.verified=verified; self.open=open; self.now=now; self.output=output
   }
   var retainedSamples: Int { lock.lock(); defer { lock.unlock() }; return queuedSamples }
   func current() -> Bool { lock.lock(); defer { lock.unlock() }; return active }
@@ -95,24 +100,42 @@ final class VadCaptureTransport: @unchecked Sendable {
       counts[head]=0; times[head]=0; head=(head+1)%4; size-=1; queuedSamples-=count
       lock.unlock()
       if delivery == nil { delivery=VadWindowDelivery(allowed:{ [weak self] in self?.allowed() ?? false },open:open) }
-      let event=scratch.withUnsafeBufferPointer { delivery!.accept(UnsafeBufferPointer(rebasing:$0[0..<count]), startSample:delivery!.acceptedSamples) }
+      var event=scratch.withUnsafeBufferPointer { delivery!.accept(UnsafeBufferPointer(rebasing:$0[0..<count]), startSample:delivery!.acceptedSamples) }
+      if event.result != .invalid,allowed(),let factory=audioFactory {
+        if audio == nil {audio=factory()}
+        let start=(delivery?.acceptedSamples ?? 0)-event.consumedSamples
+        let accepted=scratch.withUnsafeBufferPointer{audio!.append(UnsafeBufferPointer(rebasing:$0[0..<count]),consumed:event.consumedSamples,startSample:start)}
+        if !accepted {event=VadDeliveryEvent(result:.invalid,consumedSamples:0)}
+      }
       scratch.withUnsafeMutableBufferPointer { $0.initialize(repeating:0) }
       if event.result != .continued { complete(event); return }
     }
   }
   private func complete(_ event: VadDeliveryEvent) {
     let outcome=VadCaptureOutcome(result:event.result,totalSamples:delivery?.acceptedSamples ?? 0,lastChunkConsumed:event.consumedSamples)
+    var text:AsrText?,invalid=event.result == .invalid
+    if !invalid,let factory=audioFactory {
+      if audio == nil {audio=factory()}
+      switch audio!.finish(outcome) {
+      case .metadata:break
+      case .recognized(let final):text=final
+      case .invalid:invalid=true
+      }
+    }
     cleanup()
     lock.lock(); accepting=false; clearLocked(); scheduled=false
-    if event.result == .invalid { if active { failed=true }; active=false }
+    if invalid { if active { failed=true }; active=false }
     lock.unlock()
-    if event.result == .invalid { reportFailure() }
-    else if allowed() { output(outcome,{ [weak self] in self?.allowed() ?? false }) }
+    if invalid { reportFailure() }
+    else if allowed() {
+      let current={ [weak self] in self?.allowed() ?? false }
+      if let joinedOutput {joinedOutput(outcome,text,current)}else{output(outcome,current)}
+    }
   }
   private func failureCurrent() -> Bool { lock.lock(); defer { lock.unlock() }; return failed }
   private func reportFailure() { if failureCurrent() { failure { [weak self] in self?.failureCurrent() ?? false } } }
   private func cleanup() {
     scratch.withUnsafeMutableBufferPointer { $0.initialize(repeating:0) }
-    delivery?.close(); delivery=nil
+    delivery?.close(); delivery=nil;audio?.close();audio=nil
   }
 }

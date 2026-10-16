@@ -20,17 +20,27 @@ final class VadCaptureSlot: @unchecked Sendable {
   func install(capture:any ControllerEffects,controller:NativeController,token:GenerationToken,
                schedule:@escaping (@escaping ()->Void)->Void,verified:@escaping ()->Bool={false},
                open:@escaping (@escaping ()->Bool)throws->VadStream={_ in throw VadFailure.unavailable},
-               accepted:@escaping (VadCaptureOutcome)->Void={_ in}) -> Bool {
-    guard sampleRate==16000,verified(),!token.cancelled else { return false }
+               accepted:@escaping (VadCaptureOutcome)->Void={_ in},
+               openAsr:((@escaping ()->Bool)throws->AsrStream)?=nil,
+               recognized:@escaping (AsrText)->Void={_ in},asrVerified:@escaping ()->Bool={false}) -> Bool {
+    guard sampleRate==16000,verified(),(openAsr == nil || asrVerified()),!token.cancelled else { return false }
     lock.lock(); let ticket=epoch,ready=live && binding==nil; lock.unlock()
     guard ready else { return false }
     let permit=VadCapturePermit()
-    let check={permit.active && !token.cancelled && verified()}
+    let check={permit.active && !token.cancelled && verified() && (openAsr == nil || asrVerified())}
+    let audioFactory:(()->VadAsrHandoff)?=openAsr.map{factory in
+      {VadAsrHandoff(token:token,allowed:check,open:{try factory(check)})}
+    }
     let transport=VadCaptureTransport(schedule:schedule,verified:check,open:{try open(check)},output:{[weak self] outcome,current in
       _=controller.finishVadCapture(permit,token:token,outcome:outcome,active:current,accepted:accepted)
       self?.retire(permit)
     },failure:{[weak self] current in
       _=controller.failVadCapture(permit,token:token,active:current)
+      self?.retire(permit)
+    },audioFactory:audioFactory,joinedOutput:audioFactory == nil ? nil : {[weak self] outcome,text,current in
+      _=controller.finishVadCapture(permit,token:token,outcome:outcome,active:current,accepted:{value in
+        if let text{recognized(text)};if current(){accepted(value)}
+      })
       self?.retire(permit)
     })
     permit.cancel={ [weak transport] in transport?.close() }

@@ -18,17 +18,22 @@ internal class VadCaptureSlot(val sampleRate:Int) {
     /** Explicit native-worker setup; normal app never calls it or loads a default VAD runtime. */
     fun install(capture:ControllerEffects,controller:NativeController,token:GenerationToken,worker:Executor,
         verified:()->Boolean={false},open:((()->Boolean))->VadStream={error("VAD unavailable")},
-        accepted:(VadCaptureOutcome)->Unit={}):Boolean {
-        val verifiedNow={try { verified() } catch (_:Exception){false}}
+        accepted:(VadCaptureOutcome)->Unit={},openAsr:((()->Boolean)->AsrStream)?=null,
+        recognized:(AsrText)->Unit={},asrVerified:()->Boolean={false}):Boolean {
+        val verifiedNow={try { verified() && (openAsr==null || asrVerified()) } catch (_:Exception){false}}
         if(sampleRate!=16000 || !verifiedNow() || token.cancelled)return false
         val ticket=synchronized(monitor){if(!live || binding!=null)return false;epoch}
         val permit=VadCapturePermit()
         val check={permit.active() && !token.cancelled && verifiedNow()}
+        val audioFactory:(()->VadAsrHandoff)?=openAsr?.let{factory->{VadAsrHandoff(token,check,{factory(check)})}}
+        val joined:((VadCaptureOutcome,AsrText?,()->Boolean)->Unit)?=if(audioFactory==null)null else {outcome,text,current->
+            try {controller.finishVadCapture(permit,token,outcome,current){value->if(text!=null)recognized(text);if(current())accepted(value)}} finally {retire(permit)}
+        }
         val transport=VadCaptureTransport(worker,check,{open(check)},failure={current->
             try { controller.failVadCapture(permit,token,current) } finally { retire(permit) }
         },output={outcome,current->
             try { controller.finishVadCapture(permit,token,outcome,current,accepted) } finally { retire(permit) }
-        })
+        },audioFactory=audioFactory,joinedOutput=joined)
         permit.cancel={transport.close()}
         if(!controller.prepareVadCapture(permit,capture,token)){transport.close();return false}
         val stillVerified=check()

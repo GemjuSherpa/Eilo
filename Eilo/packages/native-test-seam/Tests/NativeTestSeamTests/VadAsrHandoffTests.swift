@@ -16,13 +16,13 @@ final class VadAsrHandoffTests:XCTestCase {
   func recognized(_ value:VadAsrFinal)->AsrText?{if case .recognized(let text)=value{return text};return nil}
   func testExactPrefixCopiesAndOneFinalExcludesUnusedSuffix() {
     let b=Backend();var opens=0;let h=VadAsrHandoff(token:token(),allowed:{true},open:{opens+=1;return b})
-    for i in 0..<33{XCTAssertTrue(append(h,start:i*320,value:0.25))}
+    for i in 0..<33{XCTAssertTrue(append(h,start:i*320,value:0.1234567))}
     var pcm=[Float](repeating:0.75,count:320)
     XCTAssertTrue(pcm.withUnsafeBufferPointer{h.append($0,consumed:192,startSample:10560)});pcm[0] = -1
     XCTAssertEqual(opens,0);XCTAssertEqual(h.retainedSamples,10752)
     let text=recognized(h.finish(VadCaptureOutcome(result:.complete,totalSamples:10752,lastChunkConsumed:192)))
     XCTAssertEqual(text?.text,"synthetic question");XCTAssertEqual(text?.final,true)
-    XCTAssertEqual(b.pcm,Array(repeating:0.25,count:10560)+Array(repeating:0.75,count:192))
+    XCTAssertEqual(b.pcm,Array(repeating:0.1234567,count:10560)+Array(repeating:0.75,count:192))
     XCTAssertEqual(opens,1);XCTAssertEqual(b.finals,1);XCTAssertEqual(b.closes,1);XCTAssertEqual(h.retainedSamples,0)
     XCTAssertNil(recognized(h.finish(VadCaptureOutcome(result:.complete,totalSamples:10752,lastChunkConsumed:192))))
   }

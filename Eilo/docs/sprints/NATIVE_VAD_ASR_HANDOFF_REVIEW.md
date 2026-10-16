@@ -23,6 +23,21 @@ compilation PASS; same iPhone18 Pro simulator normal build/install/three fresh t
 PASS. Tests cover exact last-callback prefix, borrowed-buffer mutation, silence/EOF suppression,
 30-second cap/overflow, invalid sequence/metadata and revocation during accept/final/cleanup.
 
+## Joined capture delivery
+
+The existing native capture APIs accept an optional ASR factory and independent disk-free ASR
+capability, denied by default. The worker copies VAD-consumed prefixes before erasing callback
+scratch, finalizes ASR before entering the controller lock, then rechecks the exact capturing
+permit and both model capabilities before releasing native text. Metadata-only VAD callers stay
+available without allocating an utterance owner. Recognition callbacks must only enqueue native
+work; text must never be bridged or logged. Existing unknown-confidence policy still clarifies.
+
+Joined validation: 271 Swift and 323 Android tests PASS; Android compiler/lint PASS; normal same
+simulator build/install/three ten-second launches PASS. Scripted joined tests prove 10752 exact
+samples and 192 samples from the last 320 callback, one final, no ASR for no-speech/EOF, denied
+ASR capability, model revocation during cleanup, Stop at accept/final/close and a genuinely blocked
+ASR worker without blocking controller Stop. These are scripted ASR tests, not acoustic accuracy.
+
 ## Acceptance boundary
 
 PCM remains exactly 16 kHz; unsupported routes fail closed. No streaming route converter,

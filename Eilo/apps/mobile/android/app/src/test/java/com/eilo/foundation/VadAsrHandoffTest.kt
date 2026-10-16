@@ -15,11 +15,11 @@ class VadAsrHandoffTest {
     private fun append(h:VadAsrHandoff,count:Int=320,consumed:Int=count,start:Int,value:Float=0f)=h.append(FloatArray(count){value},count,consumed,start)
     @Test fun exactPrefixCopiesAndFinalExcludesSuffix() {
         val b=Backend();var opens=0;val h=VadAsrHandoff(token(),{true},{opens++;b})
-        repeat(33){assertTrue(append(h,start=it*320,value=0.25f))}
+        repeat(33){assertTrue(append(h,start=it*320,value=0.1234567f))}
         val pcm=FloatArray(320){0.75f};assertTrue(h.append(pcm,320,192,10560));pcm.fill(-1f)
         assertEquals(0,opens);assertEquals(10752,h.retainedSamples())
         assertEquals(VadAsrFinal.Recognized(AsrText("synthetic question",true)),h.finish(VadCaptureOutcome(EndpointResult.COMPLETE,10752,192)))
-        assertEquals(List(10560){0.25f}+List(192){0.75f},b.pcm);assertEquals(1,opens);assertEquals(1,b.finals);assertEquals(1,b.closes);assertEquals(0,h.retainedSamples())
+        assertEquals(List(10560){0.1234567f}+List(192){0.75f},b.pcm);assertEquals(1,opens);assertEquals(1,b.finals);assertEquals(1,b.closes);assertEquals(0,h.retainedSamples())
         assertEquals(VadAsrFinal.Invalid,h.finish(VadCaptureOutcome(EndpointResult.COMPLETE,10752,192)))
     }
     @Test fun silenceAndIncompleteNeverOpenAsr() {
