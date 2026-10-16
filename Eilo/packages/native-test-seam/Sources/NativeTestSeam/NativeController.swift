@@ -230,7 +230,32 @@ public final class NativeController: @unchecked Sendable {
     guard interruptedCapture===token,let verify=independentCapture,verify(),interruptedCapture===token,accepts(token) else{return false};return true
   }
   public var token: GenerationToken? { lock.lock(); defer { lock.unlock() }; return activeToken }
+  private var vadCapture: VadCapturePermit?
+  func prepareVadCapture(_ permit:VadCapturePermit,capture:any ControllerEffects,token:GenerationToken)->Bool {
+    lock.lock();defer{lock.unlock()}
+    guard effects === capture,recognitionAllowed(token),vadCapture == nil || !vadCapture!.active,permit.active else{return false}
+    vadCapture=permit;return true
+  }
+  func abandonVadCapture(_ permit:VadCapturePermit) {
+    lock.lock();defer{lock.unlock()};if vadCapture === permit {vadCapture=nil};permit.revoke()
+  }
+  /// Metadata only; accepted must enqueue native follow-up, never perform inference inline.
+  func finishVadCapture(_ permit:VadCapturePermit,token:GenerationToken,outcome:VadCaptureOutcome,
+                        active:()->Bool,accepted:(VadCaptureOutcome)->Void)->Bool {
+    lock.lock();defer{lock.unlock()};defer{abandonVadCapture(permit)}
+    guard vadCapture === permit,permit.active,recognitionAllowed(token),active(),
+      [.complete,.limit,.noSpeech,.incomplete].contains(outcome.result),
+      (0...480000).contains(outcome.totalSamples),(0...min(1600,outcome.totalSamples)).contains(outcome.lastChunkConsumed) else{return false}
+    vadCapture=nil;accepted(outcome);return true
+  }
+  func failVadCapture(_ permit:VadCapturePermit,token:GenerationToken,active:()->Bool)->Bool {
+    lock.lock();defer{lock.unlock()};defer{abandonVadCapture(permit)}
+    guard vadCapture === permit,permit.active,recognitionAllowed(token),active() else{return false}
+    return dispatch(.failure,failure:.unavailable,token:token)
+  }
+  private func revokeVadCapture() { let previous=vadCapture;vadCapture=nil;previous?.revoke() }
   func invalidateGeneration() {
+    revokeVadCapture()
     interruptedCapture=nil;independentCapture=nil
     activeToken?.cancel(); activeToken = nil; stoppedOperationID=UUID()
     let continuation=continuationCancel;continuationCancel=nil;continuationToken=nil;continuation?()
@@ -289,6 +314,7 @@ public final class NativeController: @unchecked Sendable {
     if event == .playbackFinished,let token{playback.finish(token)}
     if event == .start || event == .speechDetected || event == .playbackFinished || event == .resume { issueGeneration() }
     if (event == .pause || event == .failure) && !stop() { return false }
+    if next != .capturing { revokeVadCapture() }
     currentState = next
     if event == .speechDetected { hasConversation=true }
     updateIdle()

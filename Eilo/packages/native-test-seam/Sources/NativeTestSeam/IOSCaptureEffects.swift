@@ -6,6 +6,8 @@ import UIKit
 public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
   private let lock=NSRecursiveLock()
   private let worker=DispatchQueue(label:"eilo.native.capture")
+  private let vadWorker=DispatchQueue(label:"eilo.native.vad.inference")
+  private var vadSlot:VadCaptureSlot?
   private var run: UInt64=0
   private var standby:StandbyAudioBuffer?
   private var wakeSlot:WakeCaptureSlot?
@@ -32,7 +34,8 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
         guard format.sampleRate.isFinite,format.sampleRate>=8000,format.sampleRate<=192000,format.sampleRate.rounded()==format.sampleRate,format.channelCount > 0,format.commonFormat == .pcmFormatFloat32 else { throw CaptureFailure.unavailable }
         let retained=StandbyAudioBuffer(sampleRate:Int(format.sampleRate));let ticket=retained.begin()
         let slot=WakeCaptureSlot(sampleRate:Int(format.sampleRate))
-        lock.lock();guard run==expected else { lock.unlock();retained.close();try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return };standby=retained;wakeSlot=slot;lock.unlock()
+        let vad=VadCaptureSlot(sampleRate:Int(format.sampleRate))
+        lock.lock();guard run==expected else { lock.unlock();retained.close();try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return };standby=retained;wakeSlot=slot;vadSlot=vad;lock.unlock()
         input.installTap(onBus:0,bufferSize:512,format:format) { buffer,_ in
           // Retain at most two seconds in the native ring; erase callback samples.
           // Ring tickets reject callbacks after Stop or a new capture.
@@ -42,7 +45,8 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
             if buffer.format.sampleRate.isFinite,buffer.format.sampleRate.rounded()==buffer.format.sampleRate,
               (8000...192000).contains(buffer.format.sampleRate) {
               slot.submit(samples,sampleRate:Int(buffer.format.sampleRate))
-            } else { slot.submit(samples,sampleRate:0) }
+              vad.submit(samples,sampleRate:Int(buffer.format.sampleRate))
+            } else { slot.submit(samples,sampleRate:0);vad.submit(samples,sampleRate:0) }
             for channel in 0..<Int(buffer.format.channelCount) {
               channels[channel].update(repeating:0,count:Int(buffer.frameLength))
             }
@@ -50,7 +54,7 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
         }
         lock.lock()
         do {
-          guard run == expected,eligible() else { retained.close();slot.close();if run==expected {standby=nil;wakeSlot=nil};lock.unlock();audio.inputNode.removeTap(onBus:0);try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return }
+          guard run == expected,eligible() else { retained.close();slot.close();vad.close();if run==expected {standby=nil;wakeSlot=nil;vadSlot=nil};lock.unlock();audio.inputNode.removeTap(onBus:0);try session.setActive(false,options:.notifyOthersOnDeactivation);deliver { completion(false) };return }
           try audio.start();engine=audio
           let timer=DispatchSource.makeTimerSource(queue:worker);timer.schedule(deadline:.now(),repeating:.milliseconds(50));timer.setEventHandler { [weak self,weak retained,weak slot] in
             retained?.expire()
@@ -68,7 +72,7 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
           deliver { completion(true) }
         } catch { lock.unlock();throw error }
       } catch {
-        lock.lock();if run==expected { expiry?.cancel();expiry=nil;standby?.close();standby=nil;wakeSlot?.close();wakeSlot=nil;wakeController=nil };lock.unlock()
+        lock.lock();if run==expected { expiry?.cancel();expiry=nil;standby?.close();standby=nil;wakeSlot?.close();wakeSlot=nil;vadSlot?.close();vadSlot=nil;wakeController=nil };lock.unlock()
         candidate?.stop();candidate?.inputNode.removeTap(onBus:0)
         try? AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation)
         if current(expected) { deliver(failure) }
@@ -97,13 +101,28 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
       } catch { detector.close();completion(false) }
     }
   }
+  /// Explicit native inference-worker setup. Default app never calls while model readiness is absent.
+  /// accepted only queues native follow-up metadata; it does not imply ASR or user-speech confidence.
+  func connectVad(model:String,verified:@escaping ()->Bool,token:GenerationToken,controller:NativeController,
+                  api:NativeVadAPI = .linked,accepted:@escaping (VadCaptureOutcome)->Void,
+                  completion:@escaping (Bool)->Void) {
+    lock.lock();let expected=run,slot=vadSlot;lock.unlock()
+    vadWorker.async { [weak self] in
+      guard let self,let slot,self.current(expected),self.eligible(),!token.cancelled else {completion(false);return}
+      let inference=self.vadWorker
+      let attached=slot.install(capture:self,controller:controller,token:token,
+        schedule:{ task in inference.async(execute:task) },verified:verified,
+        open:{check in try NativeVadStream(model:model,verified:check,api:api)},accepted:accepted)
+      completion(attached)
+    }
+  }
   public func releaseCapture() throws {
     lock.lock();defer { lock.unlock() };run &+= 1
-    expiry?.cancel();expiry=nil;standby?.close();standby=nil;wakeSlot?.close();wakeSlot=nil;wakeController=nil
+    expiry?.cancel();expiry=nil;standby?.close();standby=nil;wakeSlot?.close();wakeSlot=nil;vadSlot?.close();vadSlot=nil;wakeController=nil
     if let audio=engine { engine=nil;audio.stop();audio.inputNode.removeTap(onBus:0);try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation) }
   }
-  public func cancelWork() throws { lock.lock();defer { lock.unlock() };wakeSlot?.detach();wakeController=nil }
-  public func clearVolatileContext() throws { lock.lock();defer { lock.unlock() };standby?.clear();wakeSlot?.detach();wakeController=nil }
+  public func cancelWork() throws { lock.lock();defer { lock.unlock() };wakeSlot?.detach();vadSlot?.detach();wakeController=nil }
+  public func clearVolatileContext() throws { lock.lock();defer { lock.unlock() };standby?.clear();wakeSlot?.detach();vadSlot?.detach();wakeController=nil }
   public func playClause(_ clause:String) throws { throw CaptureFailure.unavailable }
   private enum CaptureFailure: Error { case unavailable }
 }

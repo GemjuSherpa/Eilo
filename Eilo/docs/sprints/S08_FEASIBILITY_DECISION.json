@@ -171,12 +171,12 @@
     },
     {
       "artifact": "packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift",
-      "sha256": "81855a1c82ab8901b84683a1736c8f3b52f300f6ce6e45bfa6ddc02510731180",
+      "sha256": "cff0bee598d91c19b1f74b62c3492f1460f9e6d1e15d602f1894eadb24de690c",
       "observation": "Start requires model readiness; default ModelReadiness is MissingModelReadiness. Lock invalidates generation and privacy work."
     },
     {
       "artifact": "packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift",
-      "sha256": "077fba9d06ce4f406fec7c1d0e499c79bd954ae9e3482a4a872d66abb5c7715f",
+      "sha256": "667ba7b622c4e49d76f333f4413f3ba07111933a43aeb0a9062573a727636807",
       "observation": "IOSCaptureEligibility uses false consent and a separately gated physical capability; no background pipeline attached."
     },
     {

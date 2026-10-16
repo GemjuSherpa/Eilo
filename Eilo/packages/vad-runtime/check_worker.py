@@ -11,7 +11,11 @@ from manifests import require, sha256
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('cache','model','output','java-home','android-sdk','jni-build'):p.add_argument('--'+name,type=Path,required=True)
-    p.add_argument('--udid',required=True);args=p.parse_args()
+    p.add_argument('--udid',required=True)
+    p.add_argument('--capture',action='store_true',help='Evaluate the bounded callback-to-worker transport')
+    args=p.parse_args()
+    probe_name='swift_capture_probe.swift' if args.capture else 'swift_worker_probe.swift'
+    jvm_name='NativeVadCaptureRuntimeTest' if args.capture else 'NativeVadRuntimeTest'
     cache=args.cache.resolve();model=args.model.resolve();output=args.output.resolve();jni=args.jni_build.resolve()
     verify(cache,model)
     record=json.loads((jni/'results.json').read_text())
@@ -31,10 +35,11 @@ if __name__=='__main__':
              '-isysroot',sdk,'-I',HERE/'include','-I',headers,'-c',source,'-o',obj])
     swift=[HERE.parent/'native-test-seam/Sources/NativeTestSeam'/name for name in
            ('EndpointDetector.swift','NativeVadStream.swift','VadWindowDelivery.swift')]
+    if args.capture:swift.append(HERE.parent/'native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift')
     probe=output/'worker-probe'
     run(['xcrun','swiftc','-parse-as-library','-D','DEBUG','-D','EILO_VAD_EVALUATION',
          '-target','arm64-apple-ios18.0-simulator','-sdk',sdk,'-I',HERE/'include',*swift,
-         HERE/'tests/swift_worker_probe.swift',*objects,'-F',framework,'-framework','onnxruntime',
+         HERE/'tests'/probe_name,*objects,'-F',framework,'-framework','onnxruntime',
          '-framework','CoreML','-framework','Foundation','-lc++','-o',probe])
     runtime=cache/'sherpa-onnx-v1.13.8-osx-arm64-shared-no-tts/lib/libonnxruntime.dylib'
     with tempfile.TemporaryDirectory(prefix='eilo-vad-worker-') as folder:
@@ -57,17 +62,18 @@ if __name__=='__main__':
         import subprocess
         env=dict(os.environ,JAVA_HOME=str(args.java_home),ANDROID_HOME=str(args.android_sdk))
         executed=subprocess.run([str(project/'gradlew'),'-p',str(project),'-I',str(init),':app:testDebugUnitTest',
-                                '--tests','com.eilo.foundation.NativeVadRuntimeTest','--offline','--max-workers=2'],
+                                '--tests','com.eilo.foundation.'+jvm_name,'--offline','--max-workers=2'],
                                env=env,capture_output=True,text=True,timeout=300)
         (output/'jvm-build.log').write_text(executed.stdout+executed.stderr)
         require(executed.returncode==0,'host JNI probe failed; inspect local build log')
         jvm=json.loads((output/'jvm-results.json').read_text())
     android=project/'app/src/main/java/com/eilo/foundation'
     sources=[*swift,android/'EndpointDetector.kt',android/'NativeVadStream.kt',android/'VadWindowDelivery.kt',
-             HERE/'eilo_vad_jni.cc',HERE/'tests/swift_worker_probe.swift',HERE/'tests/jvm/NativeVadRuntimeTest.kt']
-    result={'schema_version':1,'scope':'JOINED_NATIVE_VAD_WORKER_SYNTHETIC','ios_simulator':ios,'host_jvm_jni':jvm,
+             HERE/'eilo_vad_jni.cc',HERE/'tests'/probe_name,HERE/'tests/jvm'/(jvm_name+'.kt')]
+    if args.capture:sources.append(android/'VadCaptureTransport.kt')
+    result={'schema_version':1,'scope':'JOINED_NATIVE_VAD_CAPTURE_TRANSPORT_SYNTHETIC' if args.capture else 'JOINED_NATIVE_VAD_WORKER_SYNTHETIC','ios_simulator':ios,'host_jvm_jni':jvm,
             'model_sha256':sha256(model),'jni_sha256':record['host_jni_sha256'],
             'source_sha256':{str(p.relative_to(HERE.parents[1])):sha256(p) for p in sources},
             'android_device_execution':'NOT_RUN','production_readiness':'NOT_ENABLED','physical_gates':'NOT_RUN'}
     (output/'results.json').write_text(json.dumps(result,indent=2)+'\n')
-    print('Joined iOS simulator and host-JVM/JNI workers PASS; physical/Android-device NOT_RUN.')
+    print('Joined iOS simulator and host-JVM/JNI '+('capture transports' if args.capture else 'workers')+' PASS; physical/Android-device NOT_RUN.')

@@ -22,6 +22,7 @@ internal class ForegroundCapture(
     private var run = 0L
     @Volatile private var speechGain=1f
     override fun setOutputGain(gain:Float) { require(gain.isFinite() && gain in 0f..1f);speechGain=gain }
+    private var vadSlot:VadCaptureSlot?=null
     private var device: CaptureDevice? = null
     private class WakeBinding(val controller: NativeController, val token: GenerationToken, val delivery: WakeFrameDelivery) {
         @Volatile var active = true
@@ -88,7 +89,7 @@ internal class ForegroundCapture(
                 opened = candidate
                 val started = synchronized(monitor) {
                     if (run != expected || !eligible()) false
-                    else { candidate.start(); device = candidate; true }
+                    else { candidate.start(); device = candidate; vadSlot=VadCaptureSlot(16000); true }
                 }
                 if (!started) { completion(false); return@execute }
                 val bufferTicket=synchronized(monitor) { if(run==expected) standby.begin() else null }
@@ -104,6 +105,7 @@ internal class ForegroundCapture(
                                 if(read>0 && run==expected && eligible()) {
                                     if(bufferTicket!=null) standby.append(bufferTicket,samples,read)
                                     wake?.delivery?.submit(samples,read,16000)
+                                    vadSlot?.submit(samples,read,16000)
                                 }
                                 read
                             } finally { samples.fill(0) }
@@ -118,29 +120,40 @@ internal class ForegroundCapture(
             } finally {
                 samples.fill(0)
                 var abandonedWake: WakeBinding? = null
+                var abandonedVad:VadCaptureSlot?=null
                 val closeHere = synchronized(monitor) {
                     if (device === opened && run == expected) {
-                        standby.close();device=null; ++run; abandonedWake=wake;abandonedWake?.active=false;wake=null;wakeEpoch++;true
+                        standby.close();device=null;abandonedVad=vadSlot;vadSlot=null; ++run; abandonedWake=wake;abandonedWake?.active=false;wake=null;wakeEpoch++;true
                     } else device !== opened
                 }
-                abandonedWake?.close()
+                abandonedWake?.close();abandonedVad?.close()
                 // Device close is idempotent, including races with Stop.
                 if (closeHere) try { opened?.close() } catch (_: Exception) { if (current(expected)) failure() }
             }
         }
     }
 
+    /** Call on a dedicated serial native inference worker, never on the recorder executor/UI.
+     * Explicit verified native-only capability/API; no default app caller or runtime loading. */
+    fun connectVad(controller:NativeController,token:GenerationToken,inferenceWorker:Executor,
+        model:String,verified:()->Boolean,api:NativeVadApi=UnavailableVadApi,
+        accepted:(VadCaptureOutcome)->Unit={}):Boolean {
+        val slot=synchronized(monitor){if(!eligible())null else vadSlot} ?: return false
+        return slot.install(this,controller,token,inferenceWorker,verified,
+            open={check->NativeVadStream(model,check,api)},accepted=accepted)
+    }
+
     private fun current(expected: Long) = synchronized(monitor) { run == expected }
     override fun releaseCapture() {
-        val (previous, binding) = synchronized(monitor) {
-            ++run; standby.close(); val value=device; device=null; val attached=wake;attached?.active=false;wake=null;wakeEpoch++;value to attached
+        val (previous, binding, vad) = synchronized(monitor) {
+            ++run; standby.close(); val value=device; device=null; val attached=wake;attached?.active=false;wake=null;wakeEpoch++;val v=vadSlot;vadSlot=null;Triple(value,attached,v)
         }
-        try { binding?.close() } finally { try { previous?.close() } finally { deactivate() } }
+        try { vad?.close();binding?.close() } finally { try { previous?.close() } finally { deactivate() } }
     }
-    override fun cancelWork() { detachWake()?.close() }
+    override fun cancelWork() { val v=synchronized(monitor){vadSlot};v?.detach();detachWake()?.close() }
     override fun clearVolatileContext() {
         val binding = synchronized(monitor) { standby.clear(); val previous=wake;previous?.active=false;wake=null;wakeEpoch++;previous }
-        binding?.close()
+        val v=synchronized(monitor){vadSlot};v?.detach();binding?.close()
     }
     override fun playClause(clause: String) { throw IllegalStateException() } // TTS belongs to S06.
 }

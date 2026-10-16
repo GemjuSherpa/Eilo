@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "scope": "NORMAL_APP_CAPTURE_PACKAGING",
+  "android_unit_tests": {
+    "tests": 311,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "swift_unit_tests": 259,
+  "android_debug_release": "PASS",
+  "ios_simulator_debug_build": "PASS",
+  "evaluation_model_excluded": true,
+  "ios_native_vad_c_imports_excluded": true,
+  "android_vad_jni_excluded": true,
+  "sha256": {
+    "apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk": "c1ed54a6968296c6c9caa48f406f0b8150324a03f62d9f1d4cceb2cdefb3e42c",
+    "apps/mobile/android/app/build/outputs/apk/release/app-release.apk": "ea14c94a9ec687ad6a92f3e712221afff3d121efbd368803a0537fab890897e7"
+  },
+  "ios_debug_binary_sha256": "7e0b37ba4c09c0436731bbd6dd13a3cb6a4a959a664adfbdf95e5623adfc43e5",
+  "source_sha256": {
+    "packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift": "cff0bee598d91c19b1f74b62c3492f1460f9e6d1e15d602f1894eadb24de690c",
+    "packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift": "667ba7b622c4e49d76f333f4413f3ba07111933a43aeb0a9062573a727636807",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureSlot.swift": "aea9299055e8f42c66dc8976f57bfbbe6c986ab5a864262bbbf8aeca60607e57",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift": "cd0675ae353852852741134a8b2e524ef0306cc9b42787e62e913751ba352311",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeController.kt": "8a2400871ebff6dd23d093da96182c70b4dccbea48afe7fe39fd24e3beee265d",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/ForegroundCapture.kt": "13c92d5ed7857014a86ac26702a7ce1f594621a58647fae12fd73b42eea62ec1",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureSlot.kt": "8b2de2fda2148f10d1adbb06f3bd44079d9f104f7758393780988e6c232a5664",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureTransport.kt": "e6483a94ce17eb93bf38934991c7136edf4078cd49461fb833be13e4705569ac"
+  },
+  "physical_gates": "NOT_RUN",
+  "android_art_execution": "NOT_RUN",
+  "production_readiness": "NOT_ENABLED",
+  "ios_simulator_launches": {
+    "cycles": 3,
+    "dwell_seconds": 10,
+    "result": "PASS"
+  }
+}
