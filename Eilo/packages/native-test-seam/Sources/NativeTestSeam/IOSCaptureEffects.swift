@@ -105,14 +105,15 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
   /// accepted only queues native follow-up metadata; it does not imply ASR or user-speech confidence.
   func connectVad(model:String,verified:@escaping ()->Bool,token:GenerationToken,controller:NativeController,
                   api:NativeVadAPI = .linked,accepted:@escaping (VadCaptureOutcome)->Void,
-                  completion:@escaping (Bool)->Void) {
+                  completion:@escaping (Bool)->Void,openAsr:((@escaping ()->Bool)throws->AsrStream)?=nil,
+                  recognized:@escaping (AsrText)->Void={_ in},asrVerified:@escaping ()->Bool={false}) {
     lock.lock();let expected=run,slot=vadSlot;lock.unlock()
     vadWorker.async { [weak self] in
       guard let self,let slot,self.current(expected),self.eligible(),!token.cancelled else {completion(false);return}
       let inference=self.vadWorker
       let attached=slot.install(capture:self,controller:controller,token:token,
         schedule:{ task in inference.async(execute:task) },verified:verified,
-        open:{check in try NativeVadStream(model:model,verified:check,api:api)},accepted:accepted)
+        open:{check in try NativeVadStream(model:model,verified:check,api:api)},accepted:accepted,openAsr:openAsr,recognized:recognized,asrVerified:asrVerified)
       completion(attached)
     }
   }
