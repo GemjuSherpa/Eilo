@@ -96,5 +96,6 @@ final class MemoryKeySession:PrivateEffectGate {
     try key.borrow{bytes=Array($0)};let copy=try ProtectedKey(bytes);copies.append(copy);return copy
   }
   func revoke(){lock.lock();defer{lock.unlock()};epoch=UUID();pending=false;expiry?.cancel();expiry=nil;copies.forEach{$0.close()};copies.removeAll();key?.close();key=nil}
+  func invalidate(){revoke()}
   deinit{revoke()}
 }

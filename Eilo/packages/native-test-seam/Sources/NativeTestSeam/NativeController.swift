@@ -40,7 +40,8 @@ public final class GenerationToken: @unchecked Sendable {
 }
 public enum PrivacyChange { case lock, unlock, privateSession, historySession, identityReset, deleteAll }
 public enum PrivateEffect { case readMemory, commitHistory, displayPrivate }
-public protocol PrivateEffectGate { func allows(_ effect: PrivateEffect) -> Bool }
+public protocol PrivateEffectGate { func allows(_ effect: PrivateEffect) -> Bool;func invalidate() }
+public extension PrivateEffectGate {func invalidate(){}}
 public struct DeniedPrivateEffectGate: PrivateEffectGate {
   public init() {}
   public func allows(_ effect: PrivateEffect) -> Bool { false }
@@ -339,6 +340,7 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult public func privacyTransition(_ change: PrivacyChange) -> Bool {
     lock.lock(); defer { lock.unlock() }
+    privateGate.invalidate()
     if privacyEpoch == 9_007_199_254_740_991 { sessionID = UUID(); privacyEpoch = 0 } else { privacyEpoch += 1 }
     switch change {
     case .lock: locked = true
