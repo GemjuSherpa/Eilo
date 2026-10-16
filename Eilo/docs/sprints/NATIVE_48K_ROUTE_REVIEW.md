@@ -39,6 +39,25 @@ Capture integration checks: 280 Swift/333 Android tests PASS, compiler/lint and 
 simulator build/install/three ten-second launches PASS. Quiet/EOF/tail/count, raw queue overflow,
 rate mismatch and 48 kHz slot-to-ASR exact-prefix/confidence tests pass.
 
+## Joined native regression and final validation
+
+The three tasks are complete for one sprint PR. Actual approved-model iOS simulator and macOS
+host JVM/JNI regression opens/closes six streams and makes 318 calls per platform. The new fixed
+48 kHz case consumes 240000 raw samples, produces exactly 80000 normalized samples, ends NO_SPEECH,
+opens ASR zero times and clears queued/owned audio. Existing 16 kHz/short EOF/Stop/cleanup cases
+still pass. Positive ASR integration remains scripted; no acoustic accuracy is inferred.
+
+Final local checks PASS: 280 Swift and 333 Android tests (zero failures/errors/skips), Android
+lint/Debug/Release packaging, normal same iPhone18 Pro simulator build/install/three ten-second
+launches, workspace lint/typecheck and nine mobile/33 contract tests, 56 dataset and 47 feasibility
+tests normal/optimized, coefficient checks normal/optimized, native sanitizer contracts and CI
+simulator/wake/model-source fixtures. Existing Jest act warnings remain; no suppression added.
+Source/model/binary/filter hashes and clock semantics are recorded in vad-runtime/tests. Native
+regression updates the existing asr-handoff-native-regression.json as the current shared pipeline
+proof; prior runs remain in Git history. Normal artifacts include no evaluation model/runtime
+activation. No downloads, package installs, microphone requests or production overrides occurred.
+Feasibility source pins remain valid and all existing HOLD/physical/privacy gates are unchanged.
+
 ## Gates
 
 This supports only 16/48 kHz mono. 44.1 kHz, other rates, route changes, channel/downmix policy,
