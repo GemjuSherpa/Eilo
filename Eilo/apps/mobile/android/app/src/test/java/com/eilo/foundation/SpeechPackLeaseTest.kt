@@ -146,4 +146,46 @@ class SpeechPackLeaseTest {
         assertTrue(h.install(f));h.slot.close();h.run()
     }}
 
+    @Test fun foregroundCaptureTicketRejectsContextClearAndOwnsWorkerCleanup(){Fixture().use{f->
+        f.activate()
+        val captureWorker=java.util.concurrent.Executors.newSingleThreadExecutor()
+        val inference=java.util.concurrent.Executors.newSingleThreadExecutor{Thread(it,"speech-installer-worker")}
+        val feed=java.util.concurrent.atomic.AtomicBoolean(false)
+        val processed=java.util.concurrent.CountDownLatch(1)
+        val closed=java.util.concurrent.atomic.AtomicInteger()
+        val capture=ForegroundCapture(captureWorker,{true},{object:CaptureDevice {
+            override fun start(){}
+            override fun read(samples:ShortArray):Int{if(!feed.get())return 0;samples.fill(0);return samples.size}
+            override fun close(){}
+        }})
+        val c=testController(effects=capture)
+        var observedSamples=0
+        val api=object:NativeVadApi {
+            override fun create(model:String):Long{assertEquals("speech-installer-worker",Thread.currentThread().name);return 1}
+            override fun process(handle:Long,pcm:FloatArray,count:Int,final:Boolean):NativeVadObservation {
+                val start=observedSamples;observedSamples+=count
+                processed.countDown();return NativeVadObservation(0.1f,start,count,final)
+            }
+            override fun destroy(handle:Long){assertEquals("speech-installer-worker",Thread.currentThread().name);closed.incrementAndGet()}
+        }
+        try {
+            assertTrue(c.dispatch(ControllerEvent.START))
+            val deadline=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(5)
+            while(c.state()!=ControllerState.STANDBY && System.nanoTime()<deadline)Thread.sleep(1)
+            assertEquals(ControllerState.STANDBY,c.state());assertNull(capture.prepareSpeechSetup(c,c.token()!!))
+            assertTrue(c.dispatch(ControllerEvent.SPEECH_DETECTED,token=c.token()))
+            val stale=capture.prepareSpeechSetup(c,c.token()!!)!!;capture.clearVolatileContext()
+            assertFalse(inference.submit<Boolean>{SpeechCaptureInstaller.install(stale,f.store,f.selection(SpeechPackKind.VAD),f.store,f.selection(SpeechPackKind.ASR),inference,api)}.get(5,java.util.concurrent.TimeUnit.SECONDS))
+            val fresh=capture.prepareSpeechSetup(c,c.token()!!)!!
+            assertTrue(inference.submit<Boolean>{SpeechCaptureInstaller.install(fresh,f.store,f.selection(SpeechPackKind.VAD),f.store,f.selection(SpeechPackKind.ASR),inference,api)}.get(5,java.util.concurrent.TimeUnit.SECONDS))
+            feed.set(true);assertTrue(processed.await(5,java.util.concurrent.TimeUnit.SECONDS));c.stop()
+            inference.submit{}.get(5,java.util.concurrent.TimeUnit.SECONDS);assertEquals(1,closed.get())
+            assertFalse(fresh.current())
+        }finally {
+            c.stop();captureWorker.shutdownNow();inference.shutdown()
+            assertTrue(captureWorker.awaitTermination(5,java.util.concurrent.TimeUnit.SECONDS))
+            assertTrue(inference.awaitTermination(5,java.util.concurrent.TimeUnit.SECONDS))
+        }
+    }}
+
 }
