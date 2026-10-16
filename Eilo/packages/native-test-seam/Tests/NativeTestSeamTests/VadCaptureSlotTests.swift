@@ -73,7 +73,7 @@ final class VadCaptureSlotTests:XCTestCase {
   }
   func testUnsupportedRouteAndSetupRevocationNeverAttach() {
     let w=Worker(),e=EffectsSpy(),c=capturing(e)
-    XCTAssertFalse(VadCaptureSlot(sampleRate:48000).install(capture:e,controller:c,token:c.token!,schedule:w.schedule,verified:{true}))
+    XCTAssertFalse(VadCaptureSlot(sampleRate:44100).install(capture:e,controller:c,token:c.token!,schedule:w.schedule,verified:{true}))
     let slot=VadCaptureSlot(sampleRate:16000);var checks=0
     XCTAssertFalse(slot.install(capture:e,controller:c,token:c.token!,schedule:w.schedule,verified:{checks+=1;if checks==2{slot.close()};return true}))
     w.run();XCTAssertEqual(c.state,.capturing)

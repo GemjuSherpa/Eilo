@@ -2,6 +2,7 @@ package com.eilo.foundation
 
 import java.util.concurrent.Executor
 
+/** Normalized 16 kHz counts, never source-frame indices. */
 internal data class VadCaptureOutcome(val result: EndpointResult, val totalSamples: Int, val lastChunkConsumed: Int)
 
 /** Four copied <=100 ms frames, <250 ms queue age, one coalesced job. Worker MUST be a
@@ -16,9 +17,12 @@ internal class VadCaptureTransport(
     private val output: (VadCaptureOutcome, () -> Boolean) -> Unit = { _, _ -> },
     private val audioFactory:(()->VadAsrHandoff)?=null,
     private val joinedOutput:((VadCaptureOutcome,AsrText?,()->Boolean)->Unit)?=null,
+    private val sourceRate:Int=16000,
 ) {
     private val monitor=Any()
-    private val storage=FloatArray(6400)
+    private val frameCapacity=if(sourceRate==48000)4800 else 1600
+    private val storage=FloatArray(frameCapacity*4)
+    private var converter:StreamingRateConverter?=null
     private val counts=IntArray(4)
     private val times=LongArray(4)
     private var head=0; private var size=0; private var queuedSamples=0
@@ -28,7 +32,8 @@ internal class VadCaptureTransport(
     // Worker-confined fields.
     private var audio:VadAsrHandoff?=null
     private var delivery: VadWindowDelivery?=null
-    private val scratch=FloatArray(1600)
+    private val scratch=FloatArray(frameCapacity)
+    /** Queued raw source samples; worker-owned state is separate. */
     fun retainedSamples()=synchronized(monitor) { queuedSamples }
     fun current()=synchronized(monitor) { active }
     private fun allowed()=try { current() && verified() && current() } catch (_: Exception) { false }
@@ -41,12 +46,12 @@ internal class VadCaptureTransport(
         synchronized(monitor) {
             if(!accepting)return false
             val time=now()
-            valid=sampleRate==16000 && count in 1..1600 && count<=pcm.size && size<4 &&
+            valid=(sourceRate==16000 || sourceRate==48000) && sampleRate==sourceRate && count in 1..frameCapacity && count<=pcm.size && size<4 &&
                 (0 until count).all { pcm[it].isFinite() && pcm[it] in -1f..1f } &&
                 (lastClock==null || time>=lastClock!!) &&
                 (size==0 || (time>=times[head] && time-times[head]<250_000_000))
             if(valid) {
-                val slot=(head+size)%4;pcm.copyInto(storage,slot*1600,0,count)
+                val slot=(head+size)%4;pcm.copyInto(storage,slot*frameCapacity,0,count)
                 counts[slot]=count;times[slot]=time;size++;queuedSamples+=count;lastClock=time
             } else revokeLocked()
             start=claimLocked()
@@ -59,12 +64,12 @@ internal class VadCaptureTransport(
         synchronized(monitor) {
             if(!accepting)return false
             val time=now()
-            valid=sampleRate==16000 && count in 1..1600 && count<=pcm.size && size<4 &&
+            valid=(sourceRate==16000 || sourceRate==48000) && sampleRate==sourceRate && count in 1..frameCapacity && count<=pcm.size && size<4 &&
                 (lastClock==null || time>=lastClock!!) &&
                 (size==0 || (time>=times[head] && time-times[head]<250_000_000))
             if(valid) {
                 val slot=(head+size)%4
-                for(i in 0 until count)storage[slot*1600+i]=pcm[i]/32768f
+                for(i in 0 until count)storage[slot*frameCapacity+i]=pcm[i]/32768f
                 counts[slot]=count;times[slot]=time;size++;queuedSamples+=count;lastClock=time
             } else revokeLocked()
             start=claimLocked()
@@ -90,7 +95,7 @@ internal class VadCaptureTransport(
                     if(time<times[head] || time-times[head]>=250_000_000 || (lastClock!=null && time<lastClock!!)) {
                         revokeLocked();revoked=true
                     } else {
-                        lastClock=time;count=counts[head];val offset=head*1600
+                        lastClock=time;count=counts[head];val offset=head*frameCapacity
                         storage.copyInto(scratch,0,offset,offset+count);storage.fill(0f,offset,offset+count)
                         counts[head]=0;times[head]=0;head=(head+1)%4;size--;queuedSamples-=count
                     }
@@ -98,11 +103,19 @@ internal class VadCaptureTransport(
             }
             if(revoked) { cleanup();synchronized(monitor) { scheduled=false };reportFailure();return }
             val current=delivery ?: VadWindowDelivery(::allowed,open).also { delivery=it }
-            var event=if(final)current.finish() else current.accept(scratch,count,current.acceptedSamples())
-            if(!final && event.result!=EndpointResult.INVALID && allowed() && audioFactory!=null) {
-                val owned=audio ?: audioFactory.invoke().also{audio=it}
-                if(!owned.append(scratch,count,event.consumedSamples,current.acceptedSamples()-event.consumedSamples))event=VadDeliveryEvent(EndpointResult.INVALID,0)
-            }
+            var event=VadDeliveryEvent(EndpointResult.CONTINUE,0)
+            if(final)event=current.finish() else try {
+                check(allowed())
+                val rate=converter ?: StreamingRateConverter(sourceRate).also{converter=it}
+                rate.convert(scratch,count){normalized,n->
+                    check(allowed());event=current.accept(normalized,n,current.acceptedSamples())
+                    if(event.result!=EndpointResult.INVALID && allowed() && audioFactory!=null) {
+                        val owned=audio ?: audioFactory.invoke().also{audio=it}
+                        check(owned.append(normalized,n,event.consumedSamples,current.acceptedSamples()-event.consumedSamples))
+                    }
+                }
+                check(allowed())
+            } catch(_:Exception){event=VadDeliveryEvent(EndpointResult.INVALID,0)}
             scratch.fill(0f)
             if(event.result!=EndpointResult.CONTINUE) { complete(event);return }
         }
@@ -126,5 +139,5 @@ internal class VadCaptureTransport(
     }
     private fun failureCurrent()=synchronized(monitor) { failed }
     private fun reportFailure() { if(failureCurrent())failure(::failureCurrent) }
-    private fun cleanup() { scratch.fill(0f);delivery?.close();delivery=null;audio?.close();audio=null }
+    private fun cleanup() { scratch.fill(0f);delivery?.close();delivery=null;audio?.close();audio=null;converter?.close();converter=null }
 }

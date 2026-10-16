@@ -23,7 +23,7 @@ final class VadCaptureSlot: @unchecked Sendable {
                accepted:@escaping (VadCaptureOutcome)->Void={_ in},
                openAsr:((@escaping ()->Bool)throws->AsrStream)?=nil,
                recognized:@escaping (AsrText)->Void={_ in},asrVerified:@escaping ()->Bool={false}) -> Bool {
-    guard sampleRate==16000,verified(),(openAsr == nil || asrVerified()),!token.cancelled else { return false }
+    guard (sampleRate==16000 || sampleRate==48000),verified(),(openAsr == nil || asrVerified()),!token.cancelled else { return false }
     lock.lock(); let ticket=epoch,ready=live && binding==nil; lock.unlock()
     guard ready else { return false }
     let permit=VadCapturePermit()
@@ -42,7 +42,7 @@ final class VadCaptureSlot: @unchecked Sendable {
         if let text{recognized(text)};if current(){accepted(value)}
       })
       self?.retire(permit)
-    })
+    },sourceRate:sampleRate)
     permit.cancel={ [weak transport] in transport?.close() }
     guard controller.prepareVadCapture(permit,capture:capture,token:token) else { transport.close();return false }
     let stillVerified=check()

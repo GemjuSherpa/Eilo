@@ -1,6 +1,7 @@
 import Foundation
 
-/// Metadata only. The final callback's suffix is excluded from totalSamples and erased.
+/// Metadata in the normalized 16 kHz clock, never original source-frame indices.
+/// The final normalized callback suffix is excluded from totalSamples and erased.
 struct VadCaptureOutcome {
   let result: EndpointResult
   let totalSamples: Int
@@ -17,7 +18,9 @@ final class VadCaptureTransport: @unchecked Sendable {
   private let open: () throws -> VadStream
   private let output: (VadCaptureOutcome, @escaping () -> Bool) -> Void
   private let now: () -> UInt64
-  private var storage = [Float](repeating: 0, count: 6400)
+  private let sourceRate:Int,frameCapacity:Int
+  private var converter:StreamingRateConverter?
+  private var storage:[Float]
   private var counts = [Int](repeating: 0, count: 4), times = [UInt64](repeating: 0, count: 4)
   private var head = 0, size = 0, queuedSamples = 0
   private var accepting = true, active = true, scheduled = false, eof = false
@@ -29,16 +32,19 @@ final class VadCaptureTransport: @unchecked Sendable {
   private let joinedOutput:((VadCaptureOutcome,AsrText?,@escaping ()->Bool)->Void)?
   private var audio:VadAsrHandoff?
   private var delivery: VadWindowDelivery?
-  private var scratch = [Float](repeating: 0, count: 1600)
+  private var scratch:[Float]
   init(schedule: @escaping (@escaping () -> Void) -> Void, verified: @escaping () -> Bool = { false },
        open: @escaping () throws -> VadStream = { throw VadFailure.unavailable },
        now: @escaping () -> UInt64 = { DispatchTime.now().uptimeNanoseconds },
        output: @escaping (VadCaptureOutcome, @escaping () -> Bool) -> Void = { _,_ in },
        failure: @escaping (@escaping () -> Bool) -> Void = { _ in },
        audioFactory:(()->VadAsrHandoff)?=nil,
-       joinedOutput:((VadCaptureOutcome,AsrText?,@escaping ()->Bool)->Void)?=nil) {
+       joinedOutput:((VadCaptureOutcome,AsrText?,@escaping ()->Bool)->Void)?=nil,sourceRate:Int=16000) {
+    self.sourceRate=sourceRate;frameCapacity=sourceRate==48000 ? 4800:1600
+    storage=[Float](repeating:0,count:frameCapacity*4);scratch=[Float](repeating:0,count:frameCapacity)
     self.audioFactory=audioFactory;self.joinedOutput=joinedOutput;self.failure=failure; self.schedule=schedule; self.verified=verified; self.open=open; self.now=now; self.output=output
   }
+  /// Queued raw source samples; excludes worker FIR/VAD/ASR state.
   var retainedSamples: Int { lock.lock(); defer { lock.unlock() }; return queuedSamples }
   func current() -> Bool { lock.lock(); defer { lock.unlock() }; return active }
   private func clearLocked() {
@@ -52,13 +58,13 @@ final class VadCaptureTransport: @unchecked Sendable {
     lock.lock()
     guard accepting else { lock.unlock(); return false }
     let time=now()
-    let valid=sampleRate==16000 && (1...1600).contains(pcm.count) && size<4 &&
+    let valid=(sourceRate==16000 || sourceRate==48000) && sampleRate==sourceRate && (1...frameCapacity).contains(pcm.count) && size<4 &&
       pcm.allSatisfy({ $0.isFinite && (-1...1).contains($0) }) &&
       (lastClock == nil || time >= lastClock!) &&
       (size==0 || (time>=times[head] && time-times[head]<250_000_000))
     if valid {
       let slot=(head+size)%4
-      for i in pcm.indices { storage[slot*1600+i]=pcm[i] }
+      for i in pcm.indices { storage[slot*frameCapacity+i]=pcm[i] }
       counts[slot]=pcm.count; times[slot]=time; size+=1; queuedSamples+=pcm.count; lastClock=time
     } else { revokeLocked() }
     let start=claimLocked(); lock.unlock()
@@ -95,18 +101,28 @@ final class VadCaptureTransport: @unchecked Sendable {
         revokeLocked(); lock.unlock(); continue
       }
       lastClock=time
-      let count=counts[head],offset=head*1600
+      let count=counts[head],offset=head*frameCapacity
       for i in 0..<count { scratch[i]=storage[offset+i]; storage[offset+i]=0 }
       counts[head]=0; times[head]=0; head=(head+1)%4; size-=1; queuedSamples-=count
       lock.unlock()
       if delivery == nil { delivery=VadWindowDelivery(allowed:{ [weak self] in self?.allowed() ?? false },open:open) }
-      var event=scratch.withUnsafeBufferPointer { delivery!.accept(UnsafeBufferPointer(rebasing:$0[0..<count]), startSample:delivery!.acceptedSamples) }
-      if event.result != .invalid,allowed(),let factory=audioFactory {
-        if audio == nil {audio=factory()}
-        let start=(delivery?.acceptedSamples ?? 0)-event.consumedSamples
-        let accepted=scratch.withUnsafeBufferPointer{audio!.append(UnsafeBufferPointer(rebasing:$0[0..<count]),consumed:event.consumedSamples,startSample:start)}
-        if !accepted {event=VadDeliveryEvent(result:.invalid,consumedSamples:0)}
-      }
+      var event=VadDeliveryEvent(result:.continued,consumedSamples:0)
+      do {
+        guard allowed() else{throw VadFailure.unavailable}
+        if converter == nil {converter=try StreamingRateConverter(sourceRate:sourceRate)}
+        try scratch.withUnsafeBufferPointer {raw in
+          try converter!.convert(UnsafeBufferPointer(rebasing:raw[0..<count])){normalized in
+            guard allowed() else{throw VadFailure.unavailable}
+            event=delivery!.accept(normalized,startSample:delivery!.acceptedSamples)
+            if event.result != .invalid,allowed(),let factory=audioFactory {
+              if audio == nil {audio=factory()}
+              let start=(delivery?.acceptedSamples ?? 0)-event.consumedSamples
+              if !audio!.append(normalized,consumed:event.consumedSamples,startSample:start){throw VadFailure.unavailable}
+            }
+          }
+        }
+        if !allowed(){throw VadFailure.unavailable}
+      } catch {event=VadDeliveryEvent(result:.invalid,consumedSamples:0)}
       scratch.withUnsafeMutableBufferPointer { $0.initialize(repeating:0) }
       if event.result != .continued { complete(event); return }
     }
@@ -136,6 +152,6 @@ final class VadCaptureTransport: @unchecked Sendable {
   private func reportFailure() { if failureCurrent() { failure { [weak self] in self?.failureCurrent() ?? false } } }
   private func cleanup() {
     scratch.withUnsafeMutableBufferPointer { $0.initialize(repeating:0) }
-    delivery?.close(); delivery=nil;audio?.close();audio=nil
+    delivery?.close(); delivery=nil;audio?.close();audio=nil;converter?.close();converter=nil
   }
 }

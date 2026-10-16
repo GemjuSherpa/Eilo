@@ -21,7 +21,7 @@ internal class VadCaptureSlot(val sampleRate:Int) {
         accepted:(VadCaptureOutcome)->Unit={},openAsr:((()->Boolean)->AsrStream)?=null,
         recognized:(AsrText)->Unit={},asrVerified:()->Boolean={false}):Boolean {
         val verifiedNow={try { verified() && (openAsr==null || asrVerified()) } catch (_:Exception){false}}
-        if(sampleRate!=16000 || !verifiedNow() || token.cancelled)return false
+        if(sampleRate !in listOf(16000,48000) || !verifiedNow() || token.cancelled)return false
         val ticket=synchronized(monitor){if(!live || binding!=null)return false;epoch}
         val permit=VadCapturePermit()
         val check={permit.active() && !token.cancelled && verifiedNow()}
@@ -35,7 +35,7 @@ internal class VadCaptureSlot(val sampleRate:Int) {
             try { controller.failVadCapture(permit,token,current) } finally { retire(permit) }
         },output={outcome,current->
             try { controller.finishVadCapture(permit,token,outcome,current,accepted) } finally { retire(permit) }
-        },audioFactory=audioFactory,joinedOutput=joined)
+        },audioFactory=audioFactory,joinedOutput=joined,sourceRate=sampleRate)
         permit.cancel={transport.close()}
         if(!controller.prepareVadCapture(permit,capture,token)){transport.close();return false}
         val stillVerified=check()

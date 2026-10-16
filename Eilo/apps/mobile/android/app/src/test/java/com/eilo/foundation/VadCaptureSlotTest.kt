@@ -73,7 +73,7 @@ class VadCaptureSlotTest {
     }
     @Test fun unsupportedRouteAndRevokedSetupCannotAttach() {
         val w=Worker();val e=EffectsSpy();val c=capturing(e)
-        assertFalse(VadCaptureSlot(48000).install(e,c,c.token()!!,w,{true}))
+        assertFalse(VadCaptureSlot(44100).install(e,c,c.token()!!,w,{true}))
         val slot=VadCaptureSlot(16000);var checks=0
         assertFalse(slot.install(e,c,c.token()!!,w,{checks++;if(checks==2)slot.close();true}));w.run()
         assertEquals(ControllerState.CAPTURING,c.state())
