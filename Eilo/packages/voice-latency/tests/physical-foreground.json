@@ -6,14 +6,14 @@
       "id": "ios-built-in",
       "platform": "iOS",
       "status": "NOT_RUN",
-      "reason": "Native voice pipeline/acoustic corpus not ready.",
+      "reason": "PR70 installer exists; physical matrix, follow-up session and 60-minute trace pending.",
       "observed_seconds": null
     },
     {
       "id": "android-built-in",
       "platform": "Android",
       "status": "NOT_RUN",
-      "reason": "Physical Android unavailable.",
+      "reason": "Android readiness unverified; PR70 installer exists; physical matrix, follow-up session and 60-minute trace pending.",
       "observed_seconds": null
     }
   ]

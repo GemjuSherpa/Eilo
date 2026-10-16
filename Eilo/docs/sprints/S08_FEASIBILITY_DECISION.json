@@ -15,40 +15,40 @@
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-foreground.json",
-          "sha256": "9339c9212f728f8ab985c3200f5a073e237491516e7b0a8292412b584bf45ebc",
-          "blocker": "Real pipeline, frozen acoustic corpus and hour-long resource trace not collected."
+          "sha256": "c322e276c1ca69a004837a1fcd0a5782c4e9bb3375bc8910867635d95df381c6",
+          "blocker": "PR70 installer exists; physical matrix, follow-up session and 60-minute trace pending."
         },
         {
           "task": "VC-GATE-02",
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-screen-off.json",
-          "sha256": "e1b2ff0e46891d5e1f9b3d1ea6c6b6e1e9b0c6ca1340a19b531c1d253f0a7590",
-          "blocker": "Current lock/background policy denies the required audio; physical hour trial not run."
+          "sha256": "ec4fd8e05061b5fdf75244fb728401985b946e9194c3d62d93f39ad7a96e6540",
+          "blocker": "VC-AUDIO-09/10 and follow-up acceptance pending; current lock/background capture denied."
         },
         {
           "task": "VC-GATE-03",
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-standby.json",
-          "sha256": "7141d0b930054c127fd6e7e6b9502c77a94e855eba9111bcc09108a13737777e",
-          "blocker": "Locked standby denied; frozen8h ambient corpus and physical trace missing."
+          "sha256": "b9b08f1e87c4b8ee33df0d4d4a6c7740a5cb26fe5c758eca4479e0459a609213",
+          "blocker": "Physical wake/locked-audio acceptance, reviewed 8-hour workload and trace pending."
         },
         {
           "task": "VC-VERIFY-02",
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-turn-latency.json",
-          "sha256": "423260becc3eb2f3c753a4f89188183a0a21a98a2f37523a37d9096f88e69a42",
-          "blocker": "Real microphone/VAD/joined model/offline voice and acoustic timing missing."
+          "sha256": "14ccf972428ca38c860b68a7c297e94f012782f5a0fa8d58c157e16574cfac28",
+          "blocker": "PR70 installer exists; physical matrix, joined voice caller and acoustic timings remain pending."
         },
         {
           "task": "VC-VERIFY-03",
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-interruption.json",
-          "sha256": "a391f30672a7526ea74ec0226449417b055c18835686e57c614f7ff76b8676c7",
-          "blocker": "Native separation/capture pipeline and acoustic interruption timings missing."
+          "sha256": "657a27dcd879a681f8a74bf7f4b61b81b34c9129a69064a4bc51ef4b5f688f7e",
+          "blocker": "PR70 installer exists; physical matrix, interruption/separation and acoustic recordings pending."
         },
         {
           "task": "VC-TURN-09",
@@ -93,40 +93,40 @@
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-foreground.json",
-          "sha256": "9339c9212f728f8ab985c3200f5a073e237491516e7b0a8292412b584bf45ebc",
-          "blocker": "Physical Android unavailable. Real pipeline, frozen acoustic corpus and hour-long resource trace not collected."
+          "sha256": "c322e276c1ca69a004837a1fcd0a5782c4e9bb3375bc8910867635d95df381c6",
+          "blocker": "Android readiness unverified; PR70 installer exists; physical matrix, follow-up session and 60-minute trace pending."
         },
         {
           "task": "VC-GATE-02",
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-screen-off.json",
-          "sha256": "e1b2ff0e46891d5e1f9b3d1ea6c6b6e1e9b0c6ca1340a19b531c1d253f0a7590",
-          "blocker": "Physical Android unavailable. Current lock/background policy denies the required audio; physical hour trial not run."
+          "sha256": "ec4fd8e05061b5fdf75244fb728401985b946e9194c3d62d93f39ad7a96e6540",
+          "blocker": "Android readiness unverified; VC-AUDIO-09/10 and follow-up acceptance pending; current lock/background capture denied."
         },
         {
           "task": "VC-GATE-03",
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-standby.json",
-          "sha256": "7141d0b930054c127fd6e7e6b9502c77a94e855eba9111bcc09108a13737777e",
-          "blocker": "Physical Android unavailable. Locked standby denied; frozen8h ambient corpus and physical trace missing."
+          "sha256": "b9b08f1e87c4b8ee33df0d4d4a6c7740a5cb26fe5c758eca4479e0459a609213",
+          "blocker": "Android readiness unverified; Physical wake/locked-audio acceptance, reviewed 8-hour workload and trace pending."
         },
         {
           "task": "VC-VERIFY-02",
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-turn-latency.json",
-          "sha256": "423260becc3eb2f3c753a4f89188183a0a21a98a2f37523a37d9096f88e69a42",
-          "blocker": "Physical Android unavailable. Real microphone/VAD/joined model/offline voice and acoustic timing missing."
+          "sha256": "14ccf972428ca38c860b68a7c297e94f012782f5a0fa8d58c157e16574cfac28",
+          "blocker": "Android readiness unverified; PR70 installer exists; physical matrix, joined voice caller and acoustic timings remain pending."
         },
         {
           "task": "VC-VERIFY-03",
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/voice-latency/tests/physical-interruption.json",
-          "sha256": "a391f30672a7526ea74ec0226449417b055c18835686e57c614f7ff76b8676c7",
-          "blocker": "Physical Android unavailable. Native separation/capture pipeline and acoustic interruption timings missing."
+          "sha256": "657a27dcd879a681f8a74bf7f4b61b81b34c9129a69064a4bc51ef4b5f688f7e",
+          "blocker": "Android readiness unverified; PR70 installer exists; physical matrix, interruption/separation and acoustic recordings pending."
         },
         {
           "task": "VC-TURN-09",

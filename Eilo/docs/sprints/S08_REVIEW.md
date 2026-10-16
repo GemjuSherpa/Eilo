@@ -1,3 +1,67 @@
+# S08 continuation after PR70 — dependency-ready work complete
+
+PR70 is reviewed/merged at `4459d123cd655b189798e82f7f6f25266d6f0521`; all eight hosted
+checks passed. The current authorization covers every dependency-ready S08 subtask, separate
+task branches merged into `sprint/s08-completion`, followed by one review PR. Main is unchanged.
+
+**S08 physical acceptance remains incomplete. All six acceptance tasks are dependency-blocked;
+no remaining physical task can proceed within S08 alone.** The earlier evidence-tool preparation
+was implemented in PR50/51. This continuation refreshes its dependency/evidence records against
+merged native work, without treating preparation approval as physical acceptance.
+
+| Task | Ready work delivered | Remaining dependency |
+| --- | --- | --- |
+| VC-VERIFY-02 | Cold/warm acoustic scoring and pinned pending evidence | VC-VERIFY-01 exact reviewed matrix; VC-JOIN-01 integrated physical spoken turn |
+| VC-VERIFY-03 | Interruption/noise controls and pinned pending evidence | VC-VERIFY-01 matrix; VC-JOIN-03 physical interruption/separation |
+| VC-GATE-01 | 60-minute foreground scoring and incomplete-run accounting | VC-VERIFY-01 matrix; VC-JOIN-02 integrated follow-up session |
+| VC-GATE-02 | Screen-off protocol, conservative scoring and policy evidence | VC-VERIFY-01/VC-JOIN-02 plus VC-AUDIO-09/10 physical locked-audio acceptance |
+| VC-GATE-03 | 8-hour schedule, wake/false-trigger/battery accounting | VC-VERIFY-01, VC-TURN-02 physical wake and VC-AUDIO-09/10 |
+| VC-GATE-04 | Both-platform, nine-dependency pending decision report | All five S08 trials plus VC-TURN-09/10, VC-LLM-06, VC-VOICE-06; explicit human decision |
+
+`S08_DEPENDENCY_AUDIT.json` records exact baseline IDs/dependencies, current actions and SHA-256
+links. No stable task IDs or dependency ordering changed. A merged implementation does not
+satisfy its still-unrun physical acceptance. The audit does not modify the personal tracker.
+
+## What changed since the initial S08 preparation
+
+Selected Speech Commands/MUSAN/Common Voice inputs and offline public-corpus evaluation tools
+are available under their reviewed permissions. Native VAD/ASR workers, bounded transport,
+VAD→ASR handoff, 16/48 kHz conversion, signed selections/leases and the capture-ticket installer
+are implemented. See the linked current PR70 review/evidence in the audit. Their scripted and
+simulator/JVM evidence does not supply a phone microphone workload or full acoustic acceptance.
+The public clips are not automatically the approved S08 dialogue/interruption/8-hour workload.
+
+Normal production trust/runtime/voice-caller integration remains gated. The app still denies
+the required lock/background workload; VC-AUDIO-09/10 must establish permitted physical behavior.
+Prior physical wake/ASR/voice/model-comparison acceptance is open. Current hardware availability
+was not rechecked because these software/workload dependencies already block collection;
+the historical 14 October iPhone connection is not a claim of current readiness.
+
+## Validation and branch record
+
+Two independently committed task branches consolidate into this S08 sprint:
+`task/s08-dependency-audit` and `task/s08-review-validation`. Changes are documentation and pending
+evidence records only. No app source, inference runtime, permission, model, scoring threshold
+or CI workflow changed; app rebuild/launch checks are not needed for this docs-only continuation.
+
+PASS: 47 existing evidence tests in ordinary and optimized Python; all six default CLI reports;
+exact task/dependency coverage against the 175-task baseline and sprint plan; every audit and
+pending-decision artifact/source hash; prior sample/measurement fields preserved; unchanged
+personal diff and staged/full-new-history secret scanning. No physical trial was run, new dataset
+was downloaded, dependency installed or microphone activated. S08 issue remains open.
+
+Production remains NOT_ENABLED; physical targets remain NOT_RUN; supported configurations stay
+empty; recommendation remains HOLD_PENDING_PHYSICAL_EVIDENCE and persistent memory remains denied.
+Reviewing this continuation cannot approve a supported configuration or advance persistent memory.
+Complete the named earlier-sprint dependencies before returning to physical S08 collection.
+
+---
+
+## Historical preparation record (14 October 2026)
+
+The following records the original PR51 checkpoint and its then-current environment; current
+status and implementation progress are described above.
+
 # S08 — physical voice feasibility evidence preparation
 
 Awaiting Gemju Sherpa review. **Available measurement/reporting prerequisites are prepared; S08 physical acceptance and feasibility decision are incomplete.** Neither platform is declared supported. Do not advance persistent memory through this gate.

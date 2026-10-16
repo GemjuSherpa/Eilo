@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "sprint": "S08",
+  "scope": "DEPENDENCY_AUDIT_AND_PENDING_EVIDENCE_ONLY",
+  "reviewed_base": "4459d123cd655b189798e82f7f6f25266d6f0521",
+  "prior_pr70_ci": "8_SUCCESS",
+  "evidence_regressions": {
+    "normal": 47,
+    "optimized": 47,
+    "failures": 0
+  },
+  "default_reports": {
+    "measure": "PASS_PENDING_EVIDENCE",
+    "interruption": "PASS_PENDING_EVIDENCE",
+    "endurance": "PASS_PENDING_EVIDENCE",
+    "screen_off": "PASS_PENDING_EVIDENCE",
+    "standby": "PASS_PENDING_EVIDENCE",
+    "decision": "PASS_PENDING_EVIDENCE"
+  },
+  "exact_sprint_task_dependency_audit": "PASS_6_TASKS",
+  "audit_and_decision_artifact_source_hashes": "PASS",
+  "physical_measurement_fields": "UNCHANGED_EMPTY_OR_NULL",
+  "native_app_build": "NOT_RUN_DOCUMENTATION_AND_PENDING_RECORDS_ONLY",
+  "physical_trials": "NOT_RUN_DEPENDENCY_BLOCKED",
+  "hardware_inventory": "NOT_RECHECKED",
+  "production_readiness": "NOT_ENABLED",
+  "supported_configurations": [],
+  "persistent_memory_allowed": false,
+  "original_personal_diff_sha256": "17a30c022e0c178ea5cf44feddebc80a241bd5fa89fab17d0e23ea70cad75f1e",
+  "secret_scan_staged": "PASS",
+  "main_merge": "NOT_PERFORMED"
+}
