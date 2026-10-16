@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "scope": "FIXED_48K_ROUTE_SYNTHETIC_AND_PACKAGING",
+  "source_rates": [
+    16000,
+    48000
+  ],
+  "normalized_rate": 16000,
+  "swift_tests": 280,
+  "android_tests": {
+    "tests": 333,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "raw_48k_samples": 240000,
+  "normalized_samples": 80000,
+  "filter": {
+    "recipe": "hamming-fir193-fc7000-decimate3-v1",
+    "coefficient_float32_le_sha256": "34219032d202d4bc31bb61fc543d6adf50819e8738ff8747623b7badd2b3dc6e",
+    "source_rate": 48000,
+    "target_rate": 16000,
+    "taps": 193,
+    "delay_source_samples": 96,
+    "output_count": "floor(source_samples/3); causal zero startup; no EOF flush",
+    "passband_hz": [
+      0,
+      6000
+    ],
+    "max_passband_error_db": 0.1,
+    "stopband_hz": [
+      8000,
+      24000
+    ],
+    "min_stopband_rejection_db": 50
+  },
+  "raw_queue_max_samples_48k": 19200,
+  "rate_change": "REVOKED",
+  "asr_normalized_prefix_samples": 10752,
+  "last_normalized_chunk_consumed": 192,
+  "ios_simulator_build_install": "PASS",
+  "ios_simulator_launches": {
+    "cycles": 3,
+    "dwell_seconds": 10,
+    "result": "PASS"
+  },
+  "android_debug_release": "PASS",
+  "normal_artifacts_exclude_evaluation_runtime_model": true,
+  "apk_sha256": {
+    "apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk": "0574b18671327c4695d3c578a3506d190981006285cae594cd5e07862d8a527b",
+    "apps/mobile/android/app/build/outputs/apk/release/app-release.apk": "230aeab378c7c8bec6ca35f313fb2b36b8245193e034c363489dcd9383d815c2"
+  },
+  "ios_debug_binary_sha256": "45cb3df0404b61f7f6c3e20884b9db094dd245422cb5a4ccf1e44be0f0215e74",
+  "source_sha256": {
+    "packages/native-test-seam/Sources/NativeTestSeam/StreamingRateConverter.swift": "324703b136a6335f14878f62112271977fbd5a8b29e04696229fce2e022b790c",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift": "15cd2ecdc9987eabbf3d3465e37c98c86753dc2283fdbbc2d748076ac49c0433",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureSlot.swift": "578ad3dfe1ea3e4b5d651031fe03e69bb1c917a34b9d6e2ae89d050d5f687e11",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/StreamingRateConverter.kt": "5af05e012bd05d931fc02db3a89764f90b18857fa25f04a60edf2ddbefa409cb",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureTransport.kt": "deed47ad30b8403b1ffc353168cde1c58b7182961e8f1034fc1b7c6386cd6098",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureSlot.kt": "7639210528857a5e73632d0e6673d710711877943007222bf76ea25ffc34786c"
+  },
+  "physical_route_quality": "NOT_RUN",
+  "physical_gates": "NOT_RUN",
+  "production_readiness": "NOT_ENABLED",
+  "android_art_capture": "NOT_RUN"
+}

@@ -158,8 +158,7 @@ boundaries explicitly. Existing scripted unit tests run in ordinary CI without m
 queue age/overflow, and coalesces scheduling onto one serial native inference worker. Stop
 revokes queued results immediately and schedules worker cleanup without waiting for another
 capture frame. `VadCaptureSlot` and controller-owned permits bind this to the exact capturing
-turn on iOS/Android; normal app entry points do not activate it. Capture PCM must be 16 kHz;
-other routes are rejected. Optional ASR audio ownership is described below; wake/question suffix alignment, route resampling and confidence remain separately gated.
+turn on iOS/Android; normal app entry points do not activate it. Capture PCM may be fixed 16 or 48 kHz mono; 48 kHz is normalized on the worker as described below. Other rates and mid-stream rate changes are rejected. Optional ASR audio ownership is described below; wake/question suffix alignment, route resampling and confidence remain separately gated.
 
 Use the same approved local cache/model/JNI build as the worker example, adding `--capture`
 and a **new** output directory:
@@ -197,3 +196,27 @@ Swift/JVM scripted tests cover positive exact-prefix recognition and revocation.
 with optional audio ownership: quiet input opens ASR zero times and clears the retained buffer.
 This native regression does not test positive ASR acoustic accuracy. Current aggregate evidence:
 `tests/asr-handoff-results.json` and `tests/asr-handoff-native-regression.json`.
+
+
+## Fixed 48 kHz capture conversion
+
+The explicit capture slot now supports a fixed 48000 Hz source in addition to bit-preserving
+16000 Hz. The raw queue remains four <=100 ms frames; conversion and all inference stay on the
+worker. StreamingRateConverter uses a pinned 193-tap Hamming FIR (7 kHz cutoff), decimates by
+three, and saturates filter overshoot to [-1,1]. Its linear-phase delay is 96 source samples
+(2 ms); zero startup and no EOF flush preserve exactly floor(source sample count/3) outputs.
+One/two remaining raw samples are discarded at EOF. All endpoint and lastChunkConsumed metadata
+uses the normalized 16 kHz clock, not raw capture indices or a latency-corrected wake boundary.
+
+`generate_rate_filter.py --check` verifies both source coefficient tables, Float32 digest and
+25-Hz-grid passband/stopband bounds; normal/optimized Python run in synthetic CI. Converter tests
+also cover chunk-independent phase, streamed tones, tails, bypass identity and terminal failure.
+`check_worker.py --capture` now includes 240000 raw 48 kHz zero samples through the actual approved
+VAD on the simulator and host JVM/JNI: exactly 80000 normalized samples, no-speech, zero ASR opens
+and cleared ownership. Latest native regression is in tests/asr-handoff-native-regression.json;
+normal packaging/integration evidence is tests/route-48k-results.json.
+
+This does not support 44.1 kHz, arbitrary rate migration or stereo downmix. iOS continues to use
+its existing first input channel; Android's recorder remains configured at 16 kHz. Physical route
+quality, device CPU/memory/battery, acoustic latency and clock calibration remain NOT_RUN. Normal
+application model/runtime activation and production/background gates remain unchanged.

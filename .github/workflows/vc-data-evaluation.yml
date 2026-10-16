@@ -34,6 +34,8 @@ jobs:
         run: |
           python3 -m compileall -q ../vad-runtime
           python3 ../vad-runtime/check_contract.py
+          python3 ../vad-runtime/generate_rate_filter.py --check
+          python3 -O ../vad-runtime/generate_rate_filter.py --check
       - name: Generate privacy-reduced synthetic JSON and HTML
         run: python3 smoke.py --output "$RUNNER_TEMP/vc-data-reports"
       - name: Upload only synthetic aggregate summaries

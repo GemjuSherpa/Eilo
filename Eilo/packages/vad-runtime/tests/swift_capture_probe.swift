@@ -38,7 +38,7 @@ final class ProbeEffects:ControllerEffects {
       require(DispatchQueue.getSpecific(key:key)==true);closes+=1;base.destroy(h)
       if revokeOnClose{valid=false}
     })
-    func transport(withAudio:Bool=false)->VadCaptureTransport {
+    func transport(withAudio:Bool=false,rate:Int=16000)->VadCaptureTransport {
       let factory:(()->VadAsrHandoff)?=withAudio ? {
         let owner=VadAsrHandoff(token:token,allowed:{valid},open:{asrOpens+=1;throw AsrFailure.unavailable})
         ownedAudio=owner;return owner
@@ -46,10 +46,10 @@ final class ProbeEffects:ControllerEffects {
       return
       VadCaptureTransport(schedule:{worker.async(execute:$0)},verified:{valid},
         open:{try NativeVadStream(model:model,verified:{valid},api:api)},
-        output:{value,current in require(current());events.append(value)},failure:{current in require(current());failures+=1},audioFactory:factory)
+        output:{value,current in require(current());events.append(value)},failure:{current in require(current());failures+=1},audioFactory:factory,sourceRate:rate)
     }
-    func feed(_ d:VadCaptureTransport,count:Int=320) {
-      require([Float](repeating:0,count:count).withUnsafeBufferPointer{d.submit($0,sampleRate:16000)})
+    func feed(_ d:VadCaptureTransport,count:Int=320,rate:Int=16000) {
+      require([Float](repeating:0,count:count).withUnsafeBufferPointer{d.submit($0,sampleRate:rate)})
       worker.sync{}
     }
     let quiet=transport(withAudio:true)
@@ -66,6 +66,11 @@ final class ProbeEffects:ControllerEffects {
     let cleanup=transport();feed(cleanup,count:7);revokeOnClose=true;cleanup.finish();worker.sync{}
     require(events.count==2 && failures==1 && !cleanup.current());revokeOnClose=false;valid=true
     require(opens==5 && closes==5 && calls==161)
-    print("{\"scope\":\"IOS_SIMULATOR_CAPTURE_TRANSPORT\",\"synthetic\":true,\"quiet_valid_samples\":80000,\"eof_valid_samples\":7,\"native_calls\":161,\"opens\":5,\"closes\":5,\"separate_worker_verified\":true,\"quiet_asr_opens\":0,\"quiet_owned_audio_cleared\":true,\"stop_during_inference_rejected\":true,\"stop_without_new_frames_closed\":true,\"cleanup_revocation_rejected\":true,\"physical\":\"NOT_RUN\"}")
+    let wide=transport(withAudio:true,rate:48000)
+    for _ in 0..<500{feed(wide,count:480,rate:48000)}
+    require(events.count==3 && events[2].result == .noSpeech && events[2].totalSamples==80000)
+    require(asrOpens==0 && ownedAudio?.retainedSamples==0 && wide.retainedSamples==0)
+    wide.close();worker.sync{};require(opens==6 && closes==6 && calls==318)
+    print("{\"scope\":\"IOS_SIMULATOR_CAPTURE_TRANSPORT\",\"synthetic\":true,\"quiet_valid_samples\":80000,\"eof_valid_samples\":7,\"native_calls\":318,\"opens\":6,\"closes\":6,\"wide_source_samples\":240000,\"wide_normalized_samples\":80000,\"separate_worker_verified\":true,\"quiet_asr_opens\":0,\"quiet_owned_audio_cleared\":true,\"stop_during_inference_rejected\":true,\"stop_without_new_frames_closed\":true,\"cleanup_revocation_rejected\":true,\"physical\":\"NOT_RUN\"}")
   }
 }
