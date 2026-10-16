@@ -68,3 +68,8 @@ ASR is opened after endpoint completion, so this bounds ownership without claimi
 recognition latency or meeting physical latency/memory targets. Physical voice/route/latency/
 battery/background/endurance and Android ART capture remain NOT_RUN. Production NOT_ENABLED;
 S08 HOLD and persistent memory denied. Original personal edits remain excluded.
+
+Secret scanning identified the IOSConsentAuthentication.swift source SHA-256 in the native
+regression report as a generic API-key pattern. Verified it equals the source-file digest, then
+added an allowlist restricted to this report, exact source path and 64-hex checksum line. No
+credential rule is disabled or broadly excluded; history scanning passes with this narrow match.
