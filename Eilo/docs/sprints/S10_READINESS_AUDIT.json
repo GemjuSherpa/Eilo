@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "sprint": "S10",
+  "base_main": "aac9d5a1bc67ea34a416b7ffa92222522c89c9ad",
+  "pr72": "MERGED_AFTER_8_SUCCESS_CHECKS",
+  "scope": "DEPENDENCY_AUDIT_AND_FUTURE_VALIDATION_PLAN_ONLY",
+  "implementation_ready_tasks": [],
+  "persistent_memory_allowed": false,
+  "tasks": [
+    {
+      "task": "VC-STORE-01",
+      "title": "SQLCipher store configuration",
+      "depends_on": [
+        "VC-KEY-03",
+        "VC-GATE-04"
+      ],
+      "gate_path": [
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "DB/WAL/journals are encrypted; temp storage is memory-only; keyless access fails.",
+      "focused_test": "Synthetic marker and keyless/correct-key inspection of actual DB/journal/temp paths."
+    },
+    {
+      "task": "VC-STORE-02",
+      "title": "Final message write",
+      "depends_on": [
+        "VC-STORE-01",
+        "VC-SET-07"
+      ],
+      "gate_path": [
+        "VC-STORE-02",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "Finalized authorized user/reply text persists transactionally with session/source IDs and expiry.",
+      "focused_test": "Restart store; committed turn survives; aborted/private turn creates no row."
+    },
+    {
+      "task": "VC-STORE-07",
+      "title": "Storage quota accounting",
+      "depends_on": [
+        "VC-STORE-01"
+      ],
+      "gate_path": [
+        "VC-STORE-07",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "250MB accounting includes database/indexes/journals/inbox and reserved maintenance; excludes generic models.",
+      "focused_test": "Synthetic bounded files show exact account membership and warning at proposed80%."
+    },
+    {
+      "task": "VC-STORE-03",
+      "title": "Interrupted reply write",
+      "depends_on": [
+        "VC-STORE-02",
+        "VC-VOICE-05"
+      ],
+      "gate_path": [
+        "VC-STORE-03",
+        "VC-STORE-02",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "Interrupted reply stores truthful interruption/progress status, not assumed complete hearing.",
+      "focused_test": "Mid-output fixture commits appropriate final/interrupted fields."
+    },
+    {
+      "task": "VC-STORE-04",
+      "title": "History read pagination",
+      "depends_on": [
+        "VC-STORE-02"
+      ],
+      "gate_path": [
+        "VC-STORE-04",
+        "VC-STORE-02",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "Authorized bounded pages exclude expired/deleted/private data.",
+      "focused_test": "Seed >page-size; validate bounds, ordering and locked denial."
+    },
+    {
+      "task": "VC-STORE-05",
+      "title": "Retention filter",
+      "depends_on": [
+        "VC-STORE-02"
+      ],
+      "gate_path": [
+        "VC-STORE-05",
+        "VC-STORE-02",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "90day default and selected retention exclude expired records before any read/retrieval.",
+      "focused_test": "Controlled clock including backwards/forwards changes; expired sources never returned."
+    },
+    {
+      "task": "VC-STORE-08",
+      "title": "History write reservation",
+      "depends_on": [
+        "VC-STORE-07",
+        "VC-STORE-02"
+      ],
+      "gate_path": [
+        "VC-STORE-08",
+        "VC-STORE-07",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "No history-enabled turn starts without safe write reservation; full storage never silently switches privacy mode.",
+      "focused_test": "Near-cap/disk-full/write-failure fixtures preserve prior history and return actionable error."
+    },
+    {
+      "task": "VC-STORE-09",
+      "title": "Delete source transaction",
+      "depends_on": [
+        "VC-STORE-02"
+      ],
+      "gate_path": [
+        "VC-STORE-09",
+        "VC-STORE-02",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "Source deletion immediately removes app-visible message and invalidates dependent facts/index/cache.",
+      "focused_test": "Linked-source fixture and forced rollback verify atomic cascade and no stale recall."
+    },
+    {
+      "task": "VC-STORE-06",
+      "title": "Retention physical cleanup",
+      "depends_on": [
+        "VC-STORE-05"
+      ],
+      "gate_path": [
+        "VC-STORE-06",
+        "VC-STORE-05",
+        "VC-STORE-02",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "Eligible cleanup removes expired rows/dependencies within bounded maintenance transactions.",
+      "focused_test": "Restart/failure mid-cleanup preserves consistency; do not promise exact deletion time while OS stopped."
+    },
+    {
+      "task": "VC-STORE-10",
+      "title": "Delete-all key reset",
+      "depends_on": [
+        "VC-STORE-09",
+        "VC-CTRL-04"
+      ],
+      "gate_path": [
+        "VC-STORE-10",
+        "VC-STORE-09",
+        "VC-STORE-02",
+        "VC-STORE-01",
+        "VC-GATE-04"
+      ],
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN",
+      "acceptance_criterion": "Authenticated delete-all cancels work, removes personal stores/inbox/keys and rejects stale reads/writes.",
+      "focused_test": "Reset race fixture; old ciphertext inaccessible; new storage requires fresh approved consent."
+    }
+  ],
+  "sqlcipher_selection": "NOT_SELECTED_OR_INSTALLED",
+  "direct_manifest_inventory": "No SQLCipher declaration in the five inspected direct mobile dependency manifests; no global cache claim.",
+  "evidence": [
+    {
+      "artifact": "docs/sprints/S08_FEASIBILITY_DECISION.json",
+      "sha256": "4f4800f3f8534ade99db6966a4c1e2050826ab7b549f152720f275e129b35d19"
+    },
+    {
+      "artifact": "docs/sprints/S09_REVIEW.md",
+      "sha256": "2f0837696543eb1c70de62e23bd21150dc589f341d5215fbd685afe6c07c911a"
+    },
+    {
+      "artifact": "docs/sprints/S09_VALIDATION.json",
+      "sha256": "0f0230c98dcfea19f527e53cbe2ff2a11e396c9a890fe0e3ed384771dbe7a64d"
+    },
+    {
+      "artifact": "apps/mobile/android/app/build.gradle",
+      "sha256": "82d163f79e6b09572b74f10c967dd4b78d1ca1adac9072a0ca939d25647f9f57"
+    },
+    {
+      "artifact": "apps/mobile/ios/Podfile",
+      "sha256": "191d481c64553834ae51be184a34d6aead768240b78575d86f53a62e89953cdb"
+    },
+    {
+      "artifact": "apps/mobile/ios/Podfile.lock",
+      "sha256": "bc3c04cd4615d9f537931e33109fd9dc489789fa4e610f5d52bd0c21d62facbb"
+    },
+    {
+      "artifact": "package.json",
+      "sha256": "415546ce17395fb38fc14b42a4556e43d147f5afc2fa0c33466ccbc7c083d85c"
+    },
+    {
+      "artifact": "apps/mobile/package.json",
+      "sha256": "30c2a554d2405222259662ec58a11897f3f7edc3a61b4bb96c0a54ffe2e2a8de"
+    }
+  ],
+  "blocking_entry_gate": "VC-GATE-04",
+  "gate_review_state": "PENDING_GEMJU_SHERPA",
+  "gate_recommendation": "HOLD_PENDING_PHYSICAL_EVIDENCE",
+  "physical_results": "NOT_RUN",
+  "supported_configurations": [],
+  "sprint_acceptance": "INCOMPLETE_DEPENDENCY_BLOCKED"
+}
