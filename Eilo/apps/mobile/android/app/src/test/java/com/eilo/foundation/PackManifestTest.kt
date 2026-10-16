@@ -15,4 +15,13 @@ class PackManifestTest {
   for (p in listOf(PackFixtures.payload,ByteArray(65537))) { try { PackManifest.parse(p,"d".repeat(40));fail() } catch (_: Exception) {} }
   try { PackManifest.parse(PackFixtures.payload,PackFixtures.runtime,34);fail() } catch (_: Exception) {}
  }
+ @Test fun onlyReviewedSpeechFilenamesAndRolesAreAdded() {
+  fun payload(name:String,role:String):ByteArray {val root=org.json.JSONObject(String(PackFixtures.payload));root.getJSONArray("artifacts").getJSONObject(0).put("filename",name).put("role",role);return root.toString().toByteArray()}
+  for(name in listOf("adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort")) {
+   assertEquals(name,PackManifest.parse(payload(name,"asr"),PackFixtures.runtime).artifacts[0].filename)
+   assertThrows(IllegalArgumentException::class.java){PackManifest.parse(payload(name,"vad"),PackFixtures.runtime)}
+  }
+  PackManifest.parse(payload("tokenizer.bin","tokenizer"),PackFixtures.runtime)
+  for((name,role) in listOf("other.ort" to "asr","other.bin" to "tokenizer","tokenizer.bin" to "asr","../encoder.ort" to "asr","frontend.other.ort" to "asr","encoder.ort/child" to "asr"))assertThrows(IllegalArgumentException::class.java){PackManifest.parse(payload(name,role),PackFixtures.runtime)}
+ }
 }
