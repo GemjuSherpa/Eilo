@@ -19,7 +19,8 @@ class NativeVadCaptureRuntimeTest {
         val worker=Executors.newSingleThreadExecutor { r->Thread(r,"actual-vad-capture") }
         var valid=true;var revokeOnClose=false;var stopDuring=false;var stop:()->Unit={}
         var opens=0;var closes=0;var calls=0;var failures=0
-        val events=mutableListOf<VadCaptureOutcome>()
+        val events=mutableListOf<VadCaptureOutcome>();var asrOpens=0;var ownedAudio:VadAsrHandoff?=null
+        val controller=testController();assertTrue(controller.dispatch(ControllerEvent.START));val token=controller.token()!!
         val api=object:NativeVadApi {
             override fun create(model:String):Long {
                 assertEquals("actual-vad-capture",Thread.currentThread().name)
@@ -34,13 +35,16 @@ class NativeVadCaptureRuntimeTest {
             }
         }
         fun barrier(){worker.submit{}.get(20,TimeUnit.SECONDS)}
-        fun transport()=VadCaptureTransport(worker,{valid},{NativeVadStream(model,{valid},api)},failure={active->assertTrue(active());failures++},output={e,active->assertTrue(active());events.add(e)})
+        fun transport(withAudio:Boolean=false):VadCaptureTransport {
+            val factory:(()->VadAsrHandoff)?=if(!withAudio)null else { {VadAsrHandoff(token,{valid},{asrOpens++;error("quiet ASR must not open")}).also{ownedAudio=it}} }
+            return VadCaptureTransport(worker,{valid},{NativeVadStream(model,{valid},api)},failure={active->assertTrue(active());failures++},output={e,active->assertTrue(active());events.add(e)},audioFactory=factory)
+        }
         fun feed(d:VadCaptureTransport,count:Int=320){assertTrue(d.submit(ShortArray(count),count,16000));barrier()}
         val owned=mutableListOf<VadCaptureTransport>()
-        fun owned()=transport().also{owned.add(it)}
+        fun owned(withAudio:Boolean=false)=transport(withAudio).also{owned.add(it)}
         try {
-            val quiet=owned();repeat(250){feed(quiet)}
-            assertEquals(VadCaptureOutcome(EndpointResult.NO_SPEECH,80000,320),events.single());assertEquals(0,quiet.retainedSamples());quiet.close();barrier()
+            val quiet=owned(true);repeat(250){feed(quiet)}
+            assertEquals(VadCaptureOutcome(EndpointResult.NO_SPEECH,80000,320),events.single());assertEquals(0,quiet.retainedSamples());assertEquals(0,asrOpens);assertEquals(0,ownedAudio?.retainedSamples());quiet.close();barrier()
             val eof=owned();feed(eof,7);eof.finish();barrier()
             assertEquals(2,events.size);assertEquals(VadCaptureOutcome(EndpointResult.INCOMPLETE,7,0),events[1]);eof.close();barrier()
             val revoked=owned();stop={revoked.close()};stopDuring=true;feed(revoked,512)
@@ -50,7 +54,7 @@ class NativeVadCaptureRuntimeTest {
             val cleanup=owned();feed(cleanup,7);revokeOnClose=true;cleanup.finish();barrier()
             assertEquals(2,events.size);assertEquals(1,failures);assertFalse(cleanup.current());revokeOnClose=false;valid=true
             assertEquals(5,opens);assertEquals(5,closes);assertEquals(161,calls)
-            File(System.getProperty("eilo.vad.result")).writeText("""{"scope":"MACOS_JVM_JNI_CAPTURE_TRANSPORT","synthetic":true,"quiet_valid_samples":80000,"eof_valid_samples":7,"native_calls":161,"opens":5,"closes":5,"separate_worker_verified":true,"stop_during_inference_rejected":true,"stop_without_new_frames_closed":true,"cleanup_revocation_rejected":true,"physical":"NOT_RUN"}"""+"\n")
+            File(System.getProperty("eilo.vad.result")).writeText("""{"scope":"MACOS_JVM_JNI_CAPTURE_TRANSPORT","synthetic":true,"quiet_valid_samples":80000,"eof_valid_samples":7,"native_calls":161,"opens":5,"closes":5,"separate_worker_verified":true,"quiet_asr_opens":0,"quiet_owned_audio_cleared":true,"stop_during_inference_rejected":true,"stop_without_new_frames_closed":true,"cleanup_revocation_rejected":true,"physical":"NOT_RUN"}"""+"\n")
         } finally {owned.forEach{it.close()};barrier();worker.shutdown();assertTrue(worker.awaitTermination(20,TimeUnit.SECONDS))}
     }
 }

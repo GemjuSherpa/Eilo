@@ -56,4 +56,10 @@ class VadAsrCaptureTest {
             worker.submit{}.get(5,java.util.concurrent.TimeUnit.SECONDS);assertEquals(0,finals);assertEquals(1,a.closes)
         } finally {release.countDown();s.close();worker.shutdown();assertTrue(worker.awaitTermination(5,java.util.concurrent.TimeUnit.SECONDS))}
     }
+    @Test fun nativeRecognitionConsumerExceptionBecomesOnlySafeFailure() {
+        val w=Worker();val e=EffectsSpy();val c=controller(e);val v=Vad();val a=Asr();val s=VadCaptureSlot(16000)
+        assertTrue(s.install(e,c,c.token()!!,w,{true},{v},openAsr={a},recognized={throw IllegalStateException("synthetic private payload")},asrVerified={true}))
+        repeat(34){i->v.probability=if(i<8)0.95f else 0.05f;feed(s);w.run()}
+        assertEquals(ControllerState.ERROR,c.state());assertEquals(SafeError.UNAVAILABLE,c.error());assertEquals(1,a.closes);s.close();w.run()
+    }
 }
