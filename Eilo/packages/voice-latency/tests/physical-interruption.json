@@ -6,7 +6,7 @@
       "id": "ios-built-in",
       "platform": "iOS",
       "status": "NOT_RUN",
-      "reason": "Native capture/separation pipeline and frozen acoustic corpus unavailable.",
+      "reason": "PR70 installer exists; physical matrix, interruption/separation and acoustic recordings pending.",
       "samples": [],
       "noise_controls": []
     },
@@ -14,7 +14,7 @@
       "id": "android-built-in",
       "platform": "Android",
       "status": "NOT_RUN",
-      "reason": "Physical Android unavailable.",
+      "reason": "Android readiness unverified; PR70 installer exists; physical matrix, interruption/separation and acoustic recordings pending.",
       "samples": [],
       "noise_controls": []
     }

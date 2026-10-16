@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "sprint": "S08",
+  "reviewed_base": "4459d123cd655b189798e82f7f6f25266d6f0521",
+  "merged_pr": 70,
+  "merged_pr_checks": "8_SUCCESS",
+  "scope": "Complete dependency-ready S08 work; do not implement other-sprint prerequisites.",
+  "preparation_complete": true,
+  "sprint_acceptance": "INCOMPLETE_DEPENDENCY_BLOCKED",
+  "ready_physical_tasks": [],
+  "tasks": [
+    {
+      "task": "VC-VERIFY-02",
+      "title": "Meaningful-audio latency trial",
+      "depends_on": [
+        "VC-VERIFY-01",
+        "VC-JOIN-01"
+      ],
+      "preparation": "IMPLEMENTED",
+      "physical_acceptance": "NOT_RUN",
+      "execution": "DEPENDENCY_BLOCKED",
+      "blocking_dependencies": [
+        "VC-VERIFY-01",
+        "VC-JOIN-01"
+      ],
+      "next_action": "Accept physical matrix and joined spoken turn, then collect independent cold/warm recordings."
+    },
+    {
+      "task": "VC-VERIFY-03",
+      "title": "Interruption latency trial",
+      "depends_on": [
+        "VC-VERIFY-01",
+        "VC-JOIN-03"
+      ],
+      "preparation": "IMPLEMENTED",
+      "physical_acceptance": "NOT_RUN",
+      "execution": "DEPENDENCY_BLOCKED",
+      "blocking_dependencies": [
+        "VC-VERIFY-01",
+        "VC-JOIN-03"
+      ],
+      "next_action": "Accept matrix and interrupt/separation prerequisites, then collect 100 interruptions and 20 noise controls."
+    },
+    {
+      "task": "VC-GATE-01",
+      "title": "Generic foreground60min feasibility",
+      "depends_on": [
+        "VC-VERIFY-01",
+        "VC-JOIN-02"
+      ],
+      "preparation": "IMPLEMENTED",
+      "physical_acceptance": "NOT_RUN",
+      "execution": "DEPENDENCY_BLOCKED",
+      "blocking_dependencies": [
+        "VC-VERIFY-01",
+        "VC-JOIN-02"
+      ],
+      "next_action": "Accept matrix and follow-up session, then collect full 60-minute foreground workload."
+    },
+    {
+      "task": "VC-GATE-02",
+      "title": "Generic screen-off60min feasibility",
+      "depends_on": [
+        "VC-VERIFY-01",
+        "VC-JOIN-02",
+        "VC-AUDIO-09",
+        "VC-AUDIO-10"
+      ],
+      "preparation": "IMPLEMENTED",
+      "physical_acceptance": "NOT_RUN",
+      "execution": "DEPENDENCY_BLOCKED",
+      "blocking_dependencies": [
+        "VC-VERIFY-01",
+        "VC-JOIN-02",
+        "VC-AUDIO-09",
+        "VC-AUDIO-10"
+      ],
+      "next_action": "Accept matrix, locked-audio and follow-up prerequisites, then collect full 60-minute screen-off workload."
+    },
+    {
+      "task": "VC-GATE-03",
+      "title": "Generic standby8h feasibility",
+      "depends_on": [
+        "VC-VERIFY-01",
+        "VC-TURN-02",
+        "VC-AUDIO-09",
+        "VC-AUDIO-10"
+      ],
+      "preparation": "IMPLEMENTED",
+      "physical_acceptance": "NOT_RUN",
+      "execution": "DEPENDENCY_BLOCKED",
+      "blocking_dependencies": [
+        "VC-VERIFY-01",
+        "VC-TURN-02",
+        "VC-AUDIO-09",
+        "VC-AUDIO-10"
+      ],
+      "next_action": "Accept matrix, wake and locked-audio prerequisites, then collect full 8-hour standby workload."
+    },
+    {
+      "task": "VC-GATE-04",
+      "title": "Generic companion feasibility decision",
+      "depends_on": [
+        "VC-GATE-01",
+        "VC-GATE-02",
+        "VC-GATE-03",
+        "VC-VERIFY-02",
+        "VC-VERIFY-03",
+        "VC-TURN-09",
+        "VC-TURN-10",
+        "VC-LLM-06",
+        "VC-VOICE-06"
+      ],
+      "preparation": "IMPLEMENTED",
+      "physical_acceptance": "PENDING_HUMAN_DECISION",
+      "execution": "DEPENDENCY_BLOCKED",
+      "blocking_dependencies": [
+        "VC-GATE-01",
+        "VC-GATE-02",
+        "VC-GATE-03",
+        "VC-VERIFY-02",
+        "VC-VERIFY-03",
+        "VC-TURN-09",
+        "VC-TURN-10",
+        "VC-LLM-06",
+        "VC-VOICE-06"
+      ],
+      "next_action": "Review all nine prerequisite results, then obtain explicit human feasible-scope decision."
+    }
+  ],
+  "recently_delivered": [
+    "VC-DATA-01\u201305 public-corpus tooling and approved local assets",
+    "Native VAD/ASR workers, bounded capture/handoff and 16/48 kHz conversion",
+    "Signed speech selections/leases and capture-ticket installer (PR69/70)"
+  ],
+  "remaining_shared_prerequisites": [
+    "VC-VERIFY-01 reviewed physical device/route/workload matrix",
+    "Production joined microphone/wake/ASR/LLM/offline-voice caller and exact trust/runtime configuration",
+    "Physical wake/ASR/voice/model-comparison trials VC-TURN-09/10, VC-VOICE-06, VC-LLM-06",
+    "VC-AUDIO-09/10 permitted physical locked-audio trials"
+  ],
+  "evidence": [
+    {
+      "artifact": "docs/sprints/NATIVE_SPEECH_CAPTURE_INSTALLER_REVIEW.md",
+      "sha256": "836952a34c0ed86a8d99a5f4af3c3df41127140b95ac1cc116aca4e4b3552e4c"
+    },
+    {
+      "artifact": "packages/vad-runtime/tests/speech-capture-installer-results.json",
+      "sha256": "d4bf07f0d80293940e1f5fda4b9f5b1f153e495f414599ffa3b6a1e8f00a4d07"
+    },
+    {
+      "artifact": "docs/dataset-evaluation/tasks.json",
+      "sha256": "3f499b5668a34cc10c5b483f879668f55a2e48ce5437231d0affa6ab3d656fa9"
+    },
+    {
+      "artifact": "docs/sprints/S08_FEASIBILITY_DECISION.json",
+      "sha256": "a01404f3449df97985aa22d16484c070156d88777a6a7cd042be00cb5424e7bc"
+    },
+    {
+      "artifact": "packages/voice-latency/tests/physical-turn-latency.json",
+      "sha256": "14ccf972428ca38c860b68a7c297e94f012782f5a0fa8d58c157e16574cfac28"
+    },
+    {
+      "artifact": "packages/voice-latency/tests/physical-interruption.json",
+      "sha256": "657a27dcd879a681f8a74bf7f4b61b81b34c9129a69064a4bc51ef4b5f688f7e"
+    },
+    {
+      "artifact": "packages/voice-latency/tests/physical-foreground.json",
+      "sha256": "c322e276c1ca69a004837a1fcd0a5782c4e9bb3375bc8910867635d95df381c6"
+    },
+    {
+      "artifact": "packages/voice-latency/tests/physical-screen-off.json",
+      "sha256": "ec4fd8e05061b5fdf75244fb728401985b946e9194c3d62d93f39ad7a96e6540"
+    },
+    {
+      "artifact": "packages/voice-latency/tests/physical-standby.json",
+      "sha256": "b9b08f1e87c4b8ee33df0d4d4a6c7740a5cb26fe5c758eca4479e0459a609213"
+    }
+  ],
+  "physical_device_inventory": "NOT_RECHECKED; historical connection does not establish current trial readiness",
+  "supported_configurations": [],
+  "persistent_memory_allowed": false
+}

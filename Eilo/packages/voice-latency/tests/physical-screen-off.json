@@ -6,14 +6,14 @@
       "id": "ios-built-in",
       "platform": "iOS",
       "status": "NOT_RUN",
-      "reason": "Current app stops capture at lock/background; production pipeline unavailable.",
+      "reason": "VC-AUDIO-09/10 and follow-up acceptance pending; current lock/background capture denied.",
       "observed_seconds": null
     },
     {
       "id": "android-built-in",
       "platform": "Android",
       "status": "NOT_RUN",
-      "reason": "Locked capture denied; physical Android unavailable.",
+      "reason": "Android readiness unverified; VC-AUDIO-09/10 and follow-up acceptance pending; current lock/background capture denied.",
       "observed_seconds": null
     }
   ]
