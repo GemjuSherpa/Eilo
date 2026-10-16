@@ -16,7 +16,7 @@ class SpeechPackLeaseTest {
         val root=Files.createTempDirectory("speech-pack-test").toFile()
         val key=KeyPairGenerator.getInstance("EC").apply{initialize(ECGenParameterSpec("secp256r1"))}.generateKeyPair()
         val runtime="a".repeat(40);val evidence="c".repeat(64)
-        val names=SpeechPackSelection.asrNames.sorted()+"silero.onnx"
+        val names=listOf("adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort","streaming_config.json","tokenizer.bin").sorted()+"silero.onnx"
         val sources=names.mapIndexed{i,name->File(root,name).apply{writeBytes(byteArrayOf(i.toByte(),2,3,4))}}
         val pins=names.mapIndexed{i,name->SpeechArtifactPin("asset-$i",name,sha(sources[i]),4,evidence)}
         val store=PackStore(File(root,"store"),mapOf("test-key" to key.public.encoded),runtime,setOf(evidence))

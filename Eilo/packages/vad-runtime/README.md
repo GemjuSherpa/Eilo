@@ -220,3 +220,28 @@ This does not support 44.1 kHz, arbitrary rate migration or stereo downmix. iOS 
 its existing first input channel; Android's recorder remains configured at 16 kHz. Physical route
 quality, device CPU/memory/battery, acoustic latency and clock calibration remain NOT_RUN. Normal
 application model/runtime activation and production/background gates remain unchanged.
+
+
+## Signed native speech model selections
+
+`SpeechPackSelection` is reviewed native configuration: pack/runtime IDs and exact artifact IDs,
+basenames, byte sizes, SHA-256 and license-evidence hashes. VAD requires one ONNX/MIT artifact;
+ASR requires all eight pinned Moonshine basenames (six ORT, streaming_config.json, tokenizer.bin),
+with exact ASR/tokenizer roles and MIT license. The manifest admits only the six reviewed ORT
+names for ASR and tokenizer.bin for tokenizer; it does not admit arbitrary ORT/bin assets.
+
+`SpeechPackLease.resolve` uses the existing PackStore signature/license/hash snapshot and binds
+paths to its epoch. Selection is by ID, not manifest order; ASR files share one private immutable
+slot. `verified` is disk-free, and close/replacement (even same files) permanently revokes use.
+Explicit `openVad`/`openAsr` factories combine the lease with the caller's controller predicate;
+worker owners still destroy their streams. Keep slots immutable and revoke before maintenance.
+Path-based runtimes do not establish arbitrary external mutation detection during native calls.
+
+Standard native tests activate real ES256 synthetic packs and exercise exact inventory, wrong
+pins/roles/license/trust, corrupt files, epoch replacement and create/process/final revocation.
+`check_worker.py --capture` now stages the approved VAD into an ephemeral ES256 lab pack, runs
+six real streams/318 model calls on simulator and host JNI through the lease, then rejects the old
+lease after a same-file replacement. Ephemeral lab keys/evidence are not production trust or
+license approval. Positive ASR pack decoding remains scripted. Shared latest native proof remains
+`tests/asr-handoff-native-regression.json`; packaging/selection evidence is `tests/speech-pack-results.json`.
+No normal app installer/production selection/trust key/runtime loader is attached by this change.
