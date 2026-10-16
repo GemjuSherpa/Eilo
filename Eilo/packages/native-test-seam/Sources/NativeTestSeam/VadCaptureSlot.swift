@@ -16,15 +16,31 @@ final class VadCaptureSlot: @unchecked Sendable {
   private var live=true,epoch:UInt64=0
   private var binding:(VadCapturePermit,VadCaptureTransport)?
   init(sampleRate:Int) { self.sampleRate=sampleRate }
+  /// Mint before scheduling or hashing. A detach invalidates every outstanding ticket.
+  struct SetupTicket {
+    fileprivate let slot:VadCaptureSlot,epoch:UInt64
+    let capture:any ControllerEffects,controller:NativeController,token:GenerationToken
+    func current()->Bool { slot.current(self) && controller.recognitionAllowed(token) }
+  }
+  func prepare(capture:any ControllerEffects,controller:NativeController,token:GenerationToken)->SetupTicket? {
+    guard controller.recognitionAllowed(token) else{return nil}
+    lock.lock();defer{lock.unlock()}
+    guard live,binding==nil else{return nil}
+    return SetupTicket(slot:self,epoch:epoch,capture:capture,controller:controller,token:token)
+  }
+  private func current(_ ticket:SetupTicket)->Bool {
+    lock.lock();defer{lock.unlock()}
+    return ticket.slot === self && live && binding==nil && epoch==ticket.epoch && !ticket.token.cancelled
+  }
   /// Explicit native-only setup on an inference worker. No normal app caller/readiness override.
   func install(capture:any ControllerEffects,controller:NativeController,token:GenerationToken,
                schedule:@escaping (@escaping ()->Void)->Void,verified:@escaping ()->Bool={false},
                open:@escaping (@escaping ()->Bool)throws->VadStream={_ in throw VadFailure.unavailable},
                accepted:@escaping (VadCaptureOutcome)->Void={_ in},
                openAsr:((@escaping ()->Bool)throws->AsrStream)?=nil,
-               recognized:@escaping (AsrText)->Void={_ in},asrVerified:@escaping ()->Bool={false}) -> Bool {
+               recognized:@escaping (AsrText)->Void={_ in},asrVerified:@escaping ()->Bool={false},setup:SetupTicket?=nil,revoked:@escaping ()->Void={}) -> Bool {
     guard (sampleRate==16000 || sampleRate==48000),verified(),(openAsr == nil || asrVerified()),!token.cancelled else { return false }
-    lock.lock(); let ticket=epoch,ready=live && binding==nil; lock.unlock()
+    lock.lock(); let ticket=setup?.epoch ?? epoch,ready=live && binding==nil && (setup == nil || (setup!.slot === self && setup!.capture === capture && setup!.controller === controller && setup!.token === token && setup!.epoch==epoch)); lock.unlock()
     guard ready else { return false }
     let permit=VadCapturePermit()
     let check={permit.active && !token.cancelled && verified() && (openAsr == nil || asrVerified())}
@@ -43,7 +59,7 @@ final class VadCaptureSlot: @unchecked Sendable {
       })
       self?.retire(permit)
     },sourceRate:sampleRate)
-    permit.cancel={ [weak transport] in transport?.close() }
+    permit.cancel={ [weak transport] in revoked();transport?.close() }
     guard controller.prepareVadCapture(permit,capture:capture,token:token) else { transport.close();return false }
     let stillVerified=check()
     lock.lock()

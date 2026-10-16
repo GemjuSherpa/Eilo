@@ -15,14 +15,25 @@ internal class VadCaptureSlot(val sampleRate:Int) {
     private val monitor=Any()
     private var live=true;private var epoch=0L
     private var binding:Pair<VadCapturePermit,VadCaptureTransport>?=null
+    class SetupTicket internal constructor(internal val slot:VadCaptureSlot,internal val epoch:Long,
+        val capture:ControllerEffects,val controller:NativeController,val token:GenerationToken) {
+        fun current()=slot.current(this) && controller.recognitionAllowed(token)
+    }
+    fun prepare(capture:ControllerEffects,controller:NativeController,token:GenerationToken):SetupTicket? {
+        if(!controller.recognitionAllowed(token))return null
+        return synchronized(monitor){if(!live || binding!=null)null else SetupTicket(this,epoch,capture,controller,token)}
+    }
+    private fun current(ticket:SetupTicket)=synchronized(monitor){
+        ticket.slot===this && live && binding==null && epoch==ticket.epoch && !ticket.token.cancelled
+    }
     /** Explicit native-worker setup; normal app never calls it or loads a default VAD runtime. */
     fun install(capture:ControllerEffects,controller:NativeController,token:GenerationToken,worker:Executor,
         verified:()->Boolean={false},open:((()->Boolean))->VadStream={error("VAD unavailable")},
         accepted:(VadCaptureOutcome)->Unit={},openAsr:((()->Boolean)->AsrStream)?=null,
-        recognized:(AsrText)->Unit={},asrVerified:()->Boolean={false}):Boolean {
+        recognized:(AsrText)->Unit={},asrVerified:()->Boolean={false},setup:SetupTicket?=null,revoked:()->Unit={}):Boolean {
         val verifiedNow={try { verified() && (openAsr==null || asrVerified()) } catch (_:Exception){false}}
         if(sampleRate !in listOf(16000,48000) || !verifiedNow() || token.cancelled)return false
-        val ticket=synchronized(monitor){if(!live || binding!=null)return false;epoch}
+        val ticket=synchronized(monitor){if(!live || binding!=null || (setup!=null && (setup.slot!==this || setup.capture!==capture || setup.controller!==controller || setup.token!==token || setup.epoch!=epoch)))return false;epoch}
         val permit=VadCapturePermit()
         val check={permit.active() && !token.cancelled && verifiedNow()}
         val audioFactory:(()->VadAsrHandoff)?=openAsr?.let{factory->{VadAsrHandoff(token,check,{factory(check)})}}
@@ -36,7 +47,7 @@ internal class VadCaptureSlot(val sampleRate:Int) {
         },output={outcome,current->
             try { controller.finishVadCapture(permit,token,outcome,current,accepted) } finally { retire(permit) }
         },audioFactory=audioFactory,joinedOutput=joined,sourceRate=sampleRate)
-        permit.cancel={transport.close()}
+        permit.cancel={revoked();transport.close()}
         if(!controller.prepareVadCapture(permit,capture,token)){transport.close();return false}
         val stillVerified=check()
         val attached=synchronized(monitor){
