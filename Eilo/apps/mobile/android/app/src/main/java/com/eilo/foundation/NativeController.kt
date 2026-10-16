@@ -373,7 +373,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     /** Native-only capability seam. Protected store/auth integration remains separately gated. */
     @Synchronized fun guardedPrivateEffect(token: GenerationToken, effect: PrivateEffect, action: () -> Unit): Boolean {
         if (!accepts(token) || locked || privateSession || currentState in setOf(ControllerState.STOPPED,ControllerState.SETUP,ControllerState.ERROR)) return false
-        return try { if (!privateGate.allows(effect) || !accepts(token)) return false; action(); accepts(token) } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.MEMORY,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
+        return try { if (!privateGate.allows(effect) || !accepts(token)) return false; action(); accepts(token) && privateGate.allows(effect) && accepts(token) } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.MEMORY,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
     }
     @Synchronized fun releaseSpeech(token: GenerationToken, clause: String): Boolean {
         if (speakerRequired || !accepts(token) || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING)) return false
@@ -406,6 +406,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         }catch(_:Exception){stop();null}
     }
     @Synchronized fun stop(): Boolean {
+        privateGate.invalidate()
         if (stopping) return true
         stopping=true
         startIntent=null; capturePending=false; captureIntent=null

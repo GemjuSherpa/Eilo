@@ -354,7 +354,7 @@ public final class NativeController: @unchecked Sendable {
   @discardableResult public func guardedPrivateEffect(_ token: GenerationToken, effect: PrivateEffect, action: () throws -> Void) -> Bool {
     lock.lock(); defer { lock.unlock() }
     guard accepts(token), !locked, !privateSession, ![.stopped,.setup,.error].contains(currentState), privateGate.allows(effect), accepts(token) else { return false }
-    do { try action(); return accepts(token) }
+    do { try action(); return accepts(token) && privateGate.allows(effect) && accepts(token) }
     catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.memory,.unexpected,.error); return false }
   }
   @discardableResult public func releaseSpeech(_ token: GenerationToken, clause: String) -> Bool {
@@ -388,6 +388,7 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult public func stop() -> Bool {
     lock.lock(); defer { lock.unlock() }
+    privateGate.invalidate()
     if stopping { return true }
     stopping=true; defer { stopping=false }
     startIntent=nil; capturePending=false; captureIntent=nil

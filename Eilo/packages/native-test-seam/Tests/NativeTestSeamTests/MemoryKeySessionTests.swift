@@ -57,4 +57,32 @@ final class MemoryKeySessionTests:XCTestCase {
     unlocked=true;XCTAssertFalse(s.allowsPrivilegedRequest(origin:.authenticatedScreen,operation:.deleteHistory))
   }
 
+  func testUnlockNeedsFreshAuthenticationAndOldResultCannotReviveSession()throws {
+    let session=MemoryKeySession(unlocked:{true}),c=testController(privateGate:session)
+    _ = c.privacyTransition(.historySession);_ = c.dispatch(.start)
+    let old=session.beginAuthentication()!;_ = c.privacyTransition(.lock);_ = c.privacyTransition(.unlock)
+    XCTAssertTrue(c.dispatch(.start));let token=c.token!
+    XCTAssertFalse(c.guardedPrivateEffect(token,effect:.readMemory){XCTFail("unlock granted memory")})
+    let late=try key();XCTAssertFalse(session.complete(old,key:late));XCTAssertFalse(late.active)
+    XCTAssertTrue(session.complete(session.beginAuthentication()!,key:try key()))
+    var reads=0;XCTAssertTrue(c.guardedPrivateEffect(token,effect:.readMemory){reads+=1});XCTAssertEqual(reads,1)
+    _ = c.stop();XCTAssertFalse(session.allows(.readMemory))
+  }
+  func testStopAndClockRollbackInvalidateCopiesAndPendingAuthentication()throws {
+    let clock=Clock(),session=MemoryKeySession(clock:clock,unlocked:{true}),c=testController(privateGate:session)
+    _ = c.dispatch(.start);let k=try key();XCTAssertTrue(session.complete(session.beginAuthentication()!,key:k))
+    let copy=try session.copyForNativeUse();_ = c.stop();XCTAssertFalse(k.active);XCTAssertFalse(copy.active)
+    let t=session.beginAuthentication()!;_ = c.stop();XCTAssertFalse(session.complete(t,key:try key()))
+    XCTAssertTrue(session.complete(session.beginAuthentication()!,key:try key()));clock.now=99
+    XCTAssertFalse(session.allows(.readMemory));clock.now=100;XCTAssertFalse(session.allows(.readMemory))
+  }
+
+  func testPrivateEffectCannotReportCurrentAuthorizationAfterExpiry()throws {
+    let clock=Clock(),session=MemoryKeySession(clock:clock,unlocked:{true}),c=testController(privateGate:session)
+    _ = c.privacyTransition(.historySession);_ = c.dispatch(.start)
+    XCTAssertTrue(session.complete(session.beginAuthentication()!,key:try key()))
+    XCTAssertFalse(c.guardedPrivateEffect(c.token!,effect:.displayPrivate){clock.now+=60_000})
+    XCTAssertFalse(session.allows(.readMemory))
+  }
+
 }
