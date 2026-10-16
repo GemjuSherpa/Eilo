@@ -13,6 +13,7 @@
 		A0D04A060000000000000001 /* VadAsrHandoff.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A060000000000000002 /* VadAsrHandoff.swift */; };
 		A0D04A070000000000000001 /* StreamingRateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A070000000000000002 /* StreamingRateConverter.swift */; };
 		A0D04A080000000000000001 /* SpeechPackLease.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A080000000000000002 /* SpeechPackLease.swift */; };
+		A0D04B010000000000000001 /* ProtectedKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04B010000000000000002 /* ProtectedKey.swift */; };
 		A0D04A040000000000000001 /* NativeVadStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A040000000000000002 /* NativeVadStream.swift */; };
 		01FE29C99545AD6A1DC65053 /* IOSCaptureEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */; };
 		03FE7B1EF9C9065B5C75545F /* PackManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BD97AC57B222560095251D /* PackManifest.swift */; };
@@ -73,6 +74,7 @@
 		A0D04A060000000000000002 /* VadAsrHandoff.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VadAsrHandoff.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/VadAsrHandoff.swift"; sourceTree = "<group>"; };
 		A0D04A070000000000000002 /* StreamingRateConverter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StreamingRateConverter.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/StreamingRateConverter.swift"; sourceTree = "<group>"; };
 		A0D04A080000000000000002 /* SpeechPackLease.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SpeechPackLease.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/SpeechPackLease.swift"; sourceTree = "<group>"; };
+		A0D04B010000000000000002 /* ProtectedKey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProtectedKey.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/ProtectedKey.swift"; sourceTree = "<group>"; };
 		A0D04A040000000000000002 /* NativeVadStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeVadStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeVadStream.swift"; sourceTree = "<group>"; };
 		02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackIntegrity.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Eilo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eilo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,6 +186,7 @@
 				A0D04A060000000000000002 /* VadAsrHandoff.swift */,
 				A0D04A070000000000000002 /* StreamingRateConverter.swift */,
 				A0D04A080000000000000002 /* SpeechPackLease.swift */,
+		A0D04B010000000000000002 /* ProtectedKey.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
 				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
 				EAF11B8C6614D2FDE8277A5B /* GenericSpokenTurn.swift */,
@@ -425,6 +428,7 @@
 				A0D04A060000000000000001 /* VadAsrHandoff.swift in Sources */,
 				A0D04A070000000000000001 /* StreamingRateConverter.swift in Sources */,
 				A0D04A080000000000000001 /* SpeechPackLease.swift in Sources */,
+		A0D04B010000000000000001 /* ProtectedKey.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
 				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
 				0A08561603A8F75864EFA54D /* GenericSpokenTurn.swift in Sources */,
