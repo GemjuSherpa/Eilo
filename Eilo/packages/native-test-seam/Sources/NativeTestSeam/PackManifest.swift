@@ -11,7 +11,7 @@ public struct PackManifest: Equatable, Sendable {
   public let artifacts: [PackArtifact]
   /// Narrow additions for the pinned Moonshine model; no arbitrary ORT/bin paths.
   static func validFilename(_ name:String,role:String)->Bool {
-    let ordinary=name.range(of:"^[a-z0-9][a-z0-9_-]{0,95}\\.(gguf|onnx|json|txt)$",options:.regularExpression) != nil
+    let ordinary=name.range(of:"^[a-z0-9][a-z0-9_-]{0,95}\\.(gguf|onnx|json|txt)$",options:.regularExpression) == name.startIndex..<name.endIndex
     let moonshine=role=="asr" && ["adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort"].contains(name)
     return ordinary || moonshine || (role=="tokenizer" && name=="tokenizer.bin")
   }

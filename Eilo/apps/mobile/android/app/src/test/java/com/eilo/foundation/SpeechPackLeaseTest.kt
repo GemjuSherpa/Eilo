@@ -1,0 +1,95 @@
+package com.eilo.foundation
+
+import java.io.File
+import java.nio.file.Files
+import java.security.KeyPairGenerator
+import java.security.MessageDigest
+import java.security.Signature
+import java.security.spec.ECGenParameterSpec
+import org.json.JSONArray
+import org.json.JSONObject
+import org.junit.Assert.*
+import org.junit.Test
+
+class SpeechPackLeaseTest {
+    private class Fixture:AutoCloseable {
+        val root=Files.createTempDirectory("speech-pack-test").toFile()
+        val key=KeyPairGenerator.getInstance("EC").apply{initialize(ECGenParameterSpec("secp256r1"))}.generateKeyPair()
+        val runtime="a".repeat(40);val evidence="c".repeat(64)
+        val names=SpeechPackSelection.asrNames.sorted()+"silero.onnx"
+        val sources=names.mapIndexed{i,name->File(root,name).apply{writeBytes(byteArrayOf(i.toByte(),2,3,4))}}
+        val pins=names.mapIndexed{i,name->SpeechArtifactPin("asset-$i",name,sha(sources[i]),4,evidence)}
+        val store=PackStore(File(root,"store"),mapOf("test-key" to key.public.encoded),runtime,setOf(evidence))
+        fun selection(kind:SpeechPackKind,pins:List<SpeechArtifactPin> = if(kind==SpeechPackKind.VAD)listOf(this.pins.last())else this.pins.dropLast(1),pack:String="test-pack",rr:String=runtime)=SpeechPackSelection(pack,rr,kind,pins)
+        fun activate(revision:Int=1,wrongRole:Boolean=false,wrongLicense:Boolean=false,wrongAsrRole:Boolean=false) {
+            val artifacts=JSONArray()
+            for(pin in pins.reversed()) {
+                val role=if(pin.filename=="silero.onnx"){if(wrongRole)"asr" else "vad"}else if(pin.filename=="tokenizer.bin")"tokenizer" else if(wrongAsrRole && pin.filename=="streaming_config.json")"wake" else "asr"
+                artifacts.put(JSONObject().put("id",pin.id).put("filename",pin.filename).put("role",role).put("url","https://models.example.test/"+pin.filename).put("sha256",pin.sha256).put("bytes",pin.bytes).put("license",if(wrongLicense)"Apache-2.0" else "MIT").put("licenseEvidence",evidence))
+            }
+            val data=JSONObject().put("schema",1).put("packId","test-pack").put("revision",revision).put("runtimeRevision",runtime).put("minAndroid",35).put("minIos",18).put("artifacts",artifacts).toString().toByteArray()
+            val signer=Signature.getInstance("SHA256withECDSA");signer.initSign(key.private);signer.update(data)
+            val pack=VerifiedPack.verify(data,signer.sign(),"test-key","ES256",mapOf("test-key" to key.public.encoded),runtime)
+            store.activate(pack,pack.manifest.artifacts.mapIndexed{i,a->VerifiedArtifact.verify(pack,i,sources[names.indexOf(a.filename)])},PackCancellation())
+        }
+        fun lease(kind:SpeechPackKind)=SpeechPackLease.resolve(store,selection(kind))
+        override fun close(){root.deleteRecursively()}
+        companion object{fun sha(file:File)=MessageDigest.getInstance("SHA-256").digest(file.readBytes()).joinToString(""){"%02x".format(it)}}
+    }
+    private fun rejects(action:()->Unit){assertThrows(IllegalStateException::class.java,action)}
+    @Test fun shuffledSignedVadAndCompleteAsrResolve() {Fixture().use{f->
+        f.activate();val vad=f.lease(SpeechPackKind.VAD);val asr=f.lease(SpeechPackKind.ASR);var vc=0;var ac=0
+        val api=object:NativeVadApi {
+            override fun create(model:String):Long{assertTrue(model.endsWith("/silero.onnx"));return 1}
+            override fun process(handle:Long,pcm:FloatArray,count:Int,final:Boolean)=NativeVadObservation(0.1f,0,count,final)
+            override fun destroy(handle:Long){vc++}
+        }
+        vad.openVad({true},api).process(FloatArray(512),512,true)
+        val aa=object:NativeAsrApi {
+            override fun create(directory:String):Long{SpeechPackSelection.asrNames.forEach{assertTrue(File(directory,it).isFile)};return 2}
+            override fun accept(handle:Long,pcm:FloatArray,count:Int)=0
+            override fun text(handle:Long,finish:Boolean)=byteArrayOf(65)
+            override fun destroy(handle:Long){ac++}
+        }
+        val a=asr.openAsr({true},aa);assertEquals("A",a.text(true));a.close();assertEquals(1,vc);assertEquals(1,ac)
+        rejects{vad.openAsr({true})};rejects{asr.openVad({true})};vad.close();asr.close();assertFalse(vad.verified());assertFalse(asr.verified())
+    }}
+    @Test fun exactPinsPackRuntimeBytesHashAndEvidenceRequired(){Fixture().use{f->
+        f.activate();val p=f.pins.last()
+        for(bad in listOf(p.copy(id="missing"),p.copy(sha256="d".repeat(64)),p.copy(bytes=5),p.copy(licenseEvidence="d".repeat(64))))rejects{SpeechPackLease.resolve(f.store,f.selection(SpeechPackKind.VAD,listOf(bad)))}
+        rejects{SpeechPackLease.resolve(f.store,f.selection(SpeechPackKind.ASR,pack="other"))};rejects{SpeechPackLease.resolve(f.store,f.selection(SpeechPackKind.ASR,rr="b".repeat(40)))}
+        assertThrows(IllegalArgumentException::class.java){f.selection(SpeechPackKind.ASR,f.pins.dropLast(2))};assertThrows(IllegalArgumentException::class.java){f.selection(SpeechPackKind.VAD,listOf(p,p))}
+        assertThrows(UnsupportedOperationException::class.java){(SpeechPackSelection.asrNames as MutableSet).clear()}
+    }}
+    @Test fun untrustedUnlicensedMissingAndCorruptStoresDenied(){Fixture().use{f->
+        rejects{f.lease(SpeechPackKind.ASR)};f.activate()
+        for(store in listOf(PackStore(File(f.root,"store"),emptyMap(),f.runtime,setOf(f.evidence)),PackStore(File(f.root,"store"),mapOf("test-key" to f.key.public.encoded),f.runtime)))rejects{SpeechPackLease.resolve(store,f.selection(SpeechPackKind.ASR))}
+        f.store.verifiedFiles()!!.second[0].writeBytes(byteArrayOf(9));rejects{f.lease(SpeechPackKind.ASR)}
+    }}
+    @Test fun signedWrongRoleOrLicenseIsDenied(){for(wrongRole in listOf(false,true))Fixture().use{f->f.activate(wrongRole=wrongRole,wrongLicense=!wrongRole);rejects{f.lease(SpeechPackKind.VAD)};if(!wrongRole)rejects{f.lease(SpeechPackKind.ASR)}};Fixture().use{f->f.activate(wrongAsrRole=true);rejects{f.lease(SpeechPackKind.ASR)}}}
+    @Test fun identicalFilesNewEpochAndCloseCannotReviveLease(){Fixture().use{f->
+        f.activate();val old=f.lease(SpeechPackKind.ASR);f.activate(2);assertFalse(old.verified());rejects{old.openAsr({true})}
+        val fresh=f.lease(SpeechPackKind.ASR);assertTrue(fresh.verified());fresh.close();assertFalse(fresh.verified())
+    }}
+    @Test fun revocationDuringCreateAndProcessClosesNativeOwner(){for(duringCreate in listOf(false,true))Fixture().use{f->
+        f.activate();val lease=f.lease(SpeechPackKind.VAD);var closes=0
+        val api=object:NativeVadApi {
+            override fun create(model:String):Long{if(duringCreate)lease.close();return 1}
+            override fun process(handle:Long,pcm:FloatArray,count:Int,final:Boolean):NativeVadObservation{lease.close();return NativeVadObservation(0.1f,0,count,final)}
+            override fun destroy(handle:Long){closes++}
+        }
+        if(duringCreate)rejects{lease.openVad({true},api)}else{val v=lease.openVad({true},api);rejects{v.process(FloatArray(512),512,false)}}
+        assertEquals(1,closes)
+    }}
+    @Test fun asrFinalRevocationAndDeniedCapabilityCannotReleaseText(){Fixture().use{f->
+        f.activate();val lease=f.lease(SpeechPackKind.ASR);var creates=0;var closes=0
+        val api=object:NativeAsrApi {
+            override fun create(directory:String):Long{creates++;return 1}
+            override fun accept(handle:Long,pcm:FloatArray,count:Int)=0
+            override fun text(handle:Long,finish:Boolean):ByteArray{lease.close();return byteArrayOf(65)}
+            override fun destroy(handle:Long){closes++}
+        }
+        rejects{lease.openAsr({false},api)};assertEquals(0,creates)
+        val a=lease.openAsr({true},api);rejects{a.text(true)};assertEquals(1,closes);a.close();assertEquals(1,closes)
+    }}
+}

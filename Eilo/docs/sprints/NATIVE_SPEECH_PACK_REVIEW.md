@@ -16,6 +16,27 @@ No schema revision, origin/signature/license/readiness relaxation or model downl
 Manifest checks: 281 Swift/334 Android tests PASS; Android lint/Debug/Release compilation PASS;
 normal same iPhone18 Pro simulator build/install/three ten-second launches PASS before commit.
 
+## Signed speech leases
+
+SpeechPackSelection requires reviewed native pack/runtime IDs and distinct immutable pins for
+exact ID, basename, SHA-256, byte size and license-evidence hash. VAD selects one ONNX; ASR selects
+all eight pinned Moonshine basenames. Resolution uses PackStore's verified signature/license/file
+snapshot, resolves by IDs rather than array order, requires exact per-file roles and MIT license,
+then binds to the store epoch. ASR files must share the same app-private immutable slot directory.
+Subsequent verified checks are disk-free; replacement (even same artifacts) or close revokes use.
+
+Explicit openVad/openAsr factories pass the resolved path/directory and joint lease/controller
+predicate into existing native owners. Denied/missing/revoked leases cannot open a model; checks
+after creation/process/final reject stale results. Worker owners still close their streams; lease
+close signals invalidity without joining or destroying a borrowed native handle. Native factories
+have unavailable defaults; no normal app installer or production selection/trust key is added.
+
+Lease validation: 288 Swift/341 Android tests PASS, compiler/lint and normal same-simulator
+build/install/three ten-second launches PASS. Real ES256 synthetic packs cover shuffled files,
+complete ASR inventory, ID/hash/size/evidence/runtime/pack mismatches, untrusted/unlicensed stores,
+corruption, signed wrong role/license, denied capability, same-file epoch replacement and revoke
+at creation/process/final. JVM selection inventory/list are defensively immutable.
+
 ## Acceptance boundary
 
 No production trust keys, selected production packs or runtime activation are provided. Slots must
