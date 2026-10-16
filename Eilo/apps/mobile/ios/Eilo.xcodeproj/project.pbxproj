@@ -10,6 +10,7 @@
 		A0D04A040000000000000003 /* VadWindowDelivery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A040000000000000004 /* VadWindowDelivery.swift */; };
 		A0D04A050000000000000001 /* VadCaptureTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A050000000000000002 /* VadCaptureTransport.swift */; };
 		A0D04A050000000000000003 /* VadCaptureSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A050000000000000004 /* VadCaptureSlot.swift */; };
+		A0D04A060000000000000001 /* VadAsrHandoff.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A060000000000000002 /* VadAsrHandoff.swift */; };
 		A0D04A040000000000000001 /* NativeVadStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D04A040000000000000002 /* NativeVadStream.swift */; };
 		01FE29C99545AD6A1DC65053 /* IOSCaptureEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9F9E29EEE77DFC66E3FFA4 /* IOSCaptureEffects.swift */; };
 		03FE7B1EF9C9065B5C75545F /* PackManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BD97AC57B222560095251D /* PackManifest.swift */; };
@@ -67,6 +68,7 @@
 		A0D04A040000000000000004 /* VadWindowDelivery.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VadWindowDelivery.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/VadWindowDelivery.swift"; sourceTree = "<group>"; };
 		A0D04A050000000000000002 /* VadCaptureTransport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VadCaptureTransport.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift"; sourceTree = "<group>"; };
 		A0D04A050000000000000004 /* VadCaptureSlot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VadCaptureSlot.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/VadCaptureSlot.swift"; sourceTree = "<group>"; };
+		A0D04A060000000000000002 /* VadAsrHandoff.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VadAsrHandoff.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/VadAsrHandoff.swift"; sourceTree = "<group>"; };
 		A0D04A040000000000000002 /* NativeVadStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeVadStream.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/NativeVadStream.swift"; sourceTree = "<group>"; };
 		02EC57DCFD2B5DA740F04015 /* PackIntegrity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PackIntegrity.swift; path = "../../../packages/native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Eilo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eilo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -175,6 +177,7 @@
 				A0D04A040000000000000004 /* VadWindowDelivery.swift */,
 				A0D04A050000000000000002 /* VadCaptureTransport.swift */,
 				A0D04A050000000000000004 /* VadCaptureSlot.swift */,
+				A0D04A060000000000000002 /* VadAsrHandoff.swift */,
 				D13B4856506A83AEBF7AC102 /* NativeLlmStream.swift */,
 				D14B4856506A83AEBF7AC102 /* LlmPackLease.swift */,
 				EAF11B8C6614D2FDE8277A5B /* GenericSpokenTurn.swift */,
@@ -413,6 +416,7 @@
 				A0D04A040000000000000003 /* VadWindowDelivery.swift in Sources */,
 				A0D04A050000000000000001 /* VadCaptureTransport.swift in Sources */,
 				A0D04A050000000000000003 /* VadCaptureSlot.swift in Sources */,
+				A0D04A060000000000000001 /* VadAsrHandoff.swift in Sources */,
 				D13B4856506A83AEBF7AC101 /* NativeLlmStream.swift in Sources */,
 				D14B4856506A83AEBF7AC101 /* LlmPackLease.swift in Sources */,
 				0A08561603A8F75864EFA54D /* GenericSpokenTurn.swift in Sources */,
