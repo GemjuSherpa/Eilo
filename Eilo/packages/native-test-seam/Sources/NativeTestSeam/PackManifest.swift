@@ -9,6 +9,12 @@ public struct PackManifest: Equatable, Sendable {
   public let revision: Int64
   public let minAndroid, minIOS: Int
   public let artifacts: [PackArtifact]
+  /// Narrow additions for the pinned Moonshine model; no arbitrary ORT/bin paths.
+  static func validFilename(_ name:String,role:String)->Bool {
+    let ordinary=name.range(of:"^[a-z0-9][a-z0-9_-]{0,95}\\.(gguf|onnx|json|txt)$",options:.regularExpression) == name.startIndex..<name.endIndex
+    let moonshine=role=="asr" && ["adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort"].contains(name)
+    return ordinary || moonshine || (role=="tokenizer" && name=="tokenizer.bin")
+  }
   static let header: Set<String> = ["schema","packId","revision","runtimeRevision","minAndroid","minIos","artifacts"]
   static let fields: Set<String> = ["id","filename","role","url","sha256","bytes","license","licenseEvidence"]
   public static func parse(_ payload: Data, runtime: String, ios: Int = 18) throws -> PackManifest {
@@ -32,7 +38,7 @@ public struct PackManifest: Equatable, Sendable {
     let artifacts=try files.map { f -> PackArtifact in
       try check(Set(f.keys)==fields)
       let id=try text(f,"id"), name=try text(f,"filename"), role=try text(f,"role"), url=try text(f,"url")
-      try check(matches(id,"[a-z0-9][a-z0-9-]{0,63}") && matches(name,"[a-z0-9][a-z0-9_-]{0,95}\\.(gguf|onnx|json|txt)") && ["llm","asr","wake","vad","license","tokenizer"].contains(role))
+      try check(matches(id,"[a-z0-9][a-z0-9-]{0,63}") && validFilename(name,role:role) && ["llm","asr","wake","vad","license","tokenizer"].contains(role))
       guard let u=URLComponents(string:url), let path=URL(string:url) else { throw PackFailure.manifest }
       try check(url.utf8.count<=2048 && u.scheme=="https" && u.host != nil && u.user==nil && u.password==nil && u.query==nil && u.fragment==nil && (u.port==nil || u.port==443) && !u.percentEncodedPath.contains("%") && !u.path.contains("\\") && path.standardized.absoluteString==url)
       let hash=try text(f,"sha256"), evidence=try text(f,"licenseEvidence"), bytes=try number(f,"bytes"), license=try text(f,"license")

@@ -8,6 +8,27 @@ import org.junit.Assert.*
 import org.junit.Test
 
 /** Opt-in actual JNI transport execution on macOS JVM, not Android ART or microphone capture. */
+/** Lab signature fixture only, never production trust/approval. */
+private class RuntimeSignedVad(model:String):AutoCloseable {
+    val root=java.nio.file.Files.createTempDirectory("eilo-signed-vad").toFile()
+    val key=java.security.KeyPairGenerator.getInstance("EC").apply{initialize(java.security.spec.ECGenParameterSpec("secp256r1"))}.generateKeyPair()
+    val runtime="a".repeat(40);val evidence="c".repeat(64)
+    val source=File(model)
+    val pin=SpeechArtifactPin("vad","silero.onnx","6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",2313101,evidence)
+    val store=PackStore(root,mapOf("lab-key" to key.public.encoded),runtime,setOf(evidence))
+    val selection=SpeechPackSelection("lab-vad",runtime,SpeechPackKind.VAD,listOf(pin))
+    val lease:SpeechPackLease
+    init{activate(1);lease=SpeechPackLease.resolve(store,selection)}
+    fun activate(revision:Int){
+        val artifact=org.json.JSONObject().put("id",pin.id).put("filename",pin.filename).put("role","vad").put("url","https://models.example.test/silero.onnx").put("sha256",pin.sha256).put("bytes",pin.bytes).put("license","MIT").put("licenseEvidence",evidence)
+        val data=org.json.JSONObject().put("schema",1).put("packId","lab-vad").put("revision",revision).put("runtimeRevision",runtime).put("minAndroid",35).put("minIos",18).put("artifacts",org.json.JSONArray().put(artifact)).toString().toByteArray()
+        val signer=java.security.Signature.getInstance("SHA256withECDSA");signer.initSign(key.private);signer.update(data)
+        val pack=VerifiedPack.verify(data,signer.sign(),"lab-key","ES256",mapOf("lab-key" to key.public.encoded),runtime)
+        store.activate(pack,listOf(VerifiedArtifact.verify(pack,0,source)),PackCancellation())
+    }
+    override fun close(){lease.close();root.deleteRecursively()}
+}
+
 class NativeVadCaptureRuntimeTest {
     private fun sha(path:String)=MessageDigest.getInstance("SHA-256").digest(File(path).readBytes()).joinToString(""){"%02x".format(it)}
     @Test fun actualModelOnSeparateCaptureTransportWorker() {
@@ -16,6 +37,7 @@ class NativeVadCaptureRuntimeTest {
             sha(model)=="6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396" &&
                 sha(runtime)==System.getProperty("eilo.vad.runtimeSha") && sha(wrapper)==System.getProperty("eilo.vad.wrapperSha")
         }
+        val signed=RuntimeSignedVad(model)
         val worker=Executors.newSingleThreadExecutor { r->Thread(r,"actual-vad-capture") }
         var valid=true;var revokeOnClose=false;var stopDuring=false;var stop:()->Unit={}
         var opens=0;var closes=0;var calls=0;var failures=0
@@ -37,7 +59,7 @@ class NativeVadCaptureRuntimeTest {
         fun barrier(){worker.submit{}.get(20,TimeUnit.SECONDS)}
         fun transport(withAudio:Boolean=false,rate:Int=16000):VadCaptureTransport {
             val factory:(()->VadAsrHandoff)?=if(!withAudio)null else { {VadAsrHandoff(token,{valid},{asrOpens++;error("quiet ASR must not open")}).also{ownedAudio=it}} }
-            return VadCaptureTransport(worker,{valid},{NativeVadStream(model,{valid},api)},failure={active->assertTrue(active());failures++},output={e,active->assertTrue(active());events.add(e)},audioFactory=factory,sourceRate=rate)
+            return VadCaptureTransport(worker,{valid},{signed.lease.openVad({valid},api)},failure={active->assertTrue(active());failures++},output={e,active->assertTrue(active());events.add(e)},audioFactory=factory,sourceRate=rate)
         }
         fun feed(d:VadCaptureTransport,count:Int=320,rate:Int=16000){assertTrue(d.submit(ShortArray(count),count,rate));barrier()}
         val owned=mutableListOf<VadCaptureTransport>()
@@ -58,7 +80,10 @@ class NativeVadCaptureRuntimeTest {
             assertEquals(3,events.size);assertEquals(EndpointResult.NO_SPEECH,events[2].result);assertEquals(80000,events[2].totalSamples)
             assertEquals(0,asrOpens);assertEquals(0,ownedAudio?.retainedSamples());assertEquals(0,wide.retainedSamples())
             wide.close();barrier();assertEquals(6,opens);assertEquals(6,closes);assertEquals(318,calls)
-            File(System.getProperty("eilo.vad.result")).writeText("""{"scope":"MACOS_JVM_JNI_CAPTURE_TRANSPORT","synthetic":true,"quiet_valid_samples":80000,"eof_valid_samples":7,"native_calls":318,"opens":6,"closes":6,"wide_source_samples":240000,"wide_normalized_samples":80000,"separate_worker_verified":true,"quiet_asr_opens":0,"quiet_owned_audio_cleared":true,"stop_during_inference_rejected":true,"stop_without_new_frames_closed":true,"cleanup_revocation_rejected":true,"physical":"NOT_RUN"}"""+"\n")
-        } finally {owned.forEach{it.close()};barrier();worker.shutdown();assertTrue(worker.awaitTermination(20,TimeUnit.SECONDS))}
+            signed.activate(2);assertFalse(signed.lease.verified())
+            assertThrows(IllegalStateException::class.java){signed.lease.openVad({true},api)}
+            assertEquals(6,opens);assertEquals(6,closes)
+            File(System.getProperty("eilo.vad.result")).writeText("""{"scope":"MACOS_JVM_JNI_CAPTURE_TRANSPORT","synthetic":true,"quiet_valid_samples":80000,"eof_valid_samples":7,"native_calls":318,"opens":6,"closes":6,"wide_source_samples":240000,"wide_normalized_samples":80000,"separate_worker_verified":true,"signed_vad_pack_checked":true,"signed_epoch_revocation_rejected":true,"quiet_asr_opens":0,"quiet_owned_audio_cleared":true,"stop_during_inference_rejected":true,"stop_without_new_frames_closed":true,"cleanup_revocation_rejected":true,"physical":"NOT_RUN"}"""+"\n")
+        } finally {owned.forEach{it.close()};barrier();worker.shutdown();assertTrue(worker.awaitTermination(20,TimeUnit.SECONDS));signed.close()}
     }
 }

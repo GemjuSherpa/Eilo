@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 // Synthetic token fixtures only: no OS permission request or audio activation.
 struct ProbePermission:MicrophonePermissionAdapter {
@@ -13,11 +14,33 @@ final class ProbeEffects:ControllerEffects {
   func clearVolatileContext()throws{}
   func playClause(_ clause:String)throws{}
 }
+// Ephemeral lab signing only; never a production key, license approval or model installation.
+final class ProbeSignedVad {
+  let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+  let key=P256.Signing.PrivateKey(),runtime=String(repeating:"a",count:40),evidence=String(repeating:"c",count:64)
+  let store:PackStore,pin:SpeechArtifactPin,source:URL
+  var lease:SpeechPackLease!
+  init(model:String)throws {
+    source=URL(fileURLWithPath:model)
+    store=PackStore(root:root,trust:["lab-key":key.publicKey.derRepresentation],runtime:runtime,licenseEvidence:[evidence])
+    pin=try SpeechArtifactPin(id:"vad",filename:"silero.onnx",sha256:"6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",bytes:2313101,licenseEvidence:evidence)
+    try activate(1);lease=try SpeechPackLease.resolve(store:store,selection:selection())
+  }
+  func selection()throws->SpeechPackSelection{try SpeechPackSelection(packID:"lab-vad",runtimeRevision:runtime,kind:.vad,pins:[pin])}
+  func activate(_ revision:Int)throws {
+    let artifact:[String:Any]=["id":pin.id,"filename":pin.filename,"role":"vad","url":"https://models.example.test/silero.onnx","sha256":pin.sha256,"bytes":pin.bytes,"license":"MIT","licenseEvidence":evidence]
+    let data=try JSONSerialization.data(withJSONObject:["schema":1,"packId":"lab-vad","revision":revision,"runtimeRevision":runtime,"minAndroid":35,"minIos":18,"artifacts":[artifact]],options:[.sortedKeys,.withoutEscapingSlashes])
+    let pack=try VerifiedPack.verify(payload:data,signature:key.signature(for:data).derRepresentation,keyID:"lab-key",algorithm:"ES256",trust:["lab-key":key.publicKey.derRepresentation],runtime:runtime)
+    try store.activate(pack,proofs:[VerifiedArtifact.verify(pack,index:0,file:source)],cancel:PackCancellation())
+  }
+  deinit{lease?.close();try? FileManager.default.removeItem(at:root)}
+}
 @main struct NativeVadCaptureProbe {
   static func require(_ value:Bool){if !value{exit(2)}}
   static func main() throws {
     require(CommandLine.arguments.count==2)
     let model=CommandLine.arguments[1],base=NativeVadAPI.linked
+    let signed=try ProbeSignedVad(model:model)
     let worker=DispatchQueue(label:"eilo.synthetic.vad.capture"),key=DispatchSpecificKey<Bool>()
     worker.setSpecific(key:key,value:true)
     var valid=true,revokeOnClose=false,stopDuring=false
@@ -45,7 +68,7 @@ final class ProbeEffects:ControllerEffects {
       }:nil
       return
       VadCaptureTransport(schedule:{worker.async(execute:$0)},verified:{valid},
-        open:{try NativeVadStream(model:model,verified:{valid},api:api)},
+        open:{try signed.lease.openVad(allowed:{valid},api:api)},
         output:{value,current in require(current());events.append(value)},failure:{current in require(current());failures+=1},audioFactory:factory,sourceRate:rate)
     }
     func feed(_ d:VadCaptureTransport,count:Int=320,rate:Int=16000) {
@@ -71,6 +94,9 @@ final class ProbeEffects:ControllerEffects {
     require(events.count==3 && events[2].result == .noSpeech && events[2].totalSamples==80000)
     require(asrOpens==0 && ownedAudio?.retainedSamples==0 && wide.retainedSamples==0)
     wide.close();worker.sync{};require(opens==6 && closes==6 && calls==318)
-    print("{\"scope\":\"IOS_SIMULATOR_CAPTURE_TRANSPORT\",\"synthetic\":true,\"quiet_valid_samples\":80000,\"eof_valid_samples\":7,\"native_calls\":318,\"opens\":6,\"closes\":6,\"wide_source_samples\":240000,\"wide_normalized_samples\":80000,\"separate_worker_verified\":true,\"quiet_asr_opens\":0,\"quiet_owned_audio_cleared\":true,\"stop_during_inference_rejected\":true,\"stop_without_new_frames_closed\":true,\"cleanup_revocation_rejected\":true,\"physical\":\"NOT_RUN\"}")
+    try signed.activate(2);require(!signed.lease.verified())
+    do{_=try signed.lease.openVad(allowed:{true},api:api);exit(2)}catch{}
+    require(opens==6 && closes==6)
+    print("{\"scope\":\"IOS_SIMULATOR_CAPTURE_TRANSPORT\",\"synthetic\":true,\"quiet_valid_samples\":80000,\"eof_valid_samples\":7,\"native_calls\":318,\"opens\":6,\"closes\":6,\"wide_source_samples\":240000,\"wide_normalized_samples\":80000,\"separate_worker_verified\":true,\"signed_vad_pack_checked\":true,\"signed_epoch_revocation_rejected\":true,\"quiet_asr_opens\":0,\"quiet_owned_audio_cleared\":true,\"stop_during_inference_rejected\":true,\"stop_without_new_frames_closed\":true,\"cleanup_revocation_rejected\":true,\"physical\":\"NOT_RUN\"}")
   }
 }
