@@ -37,6 +37,30 @@ complete ASR inventory, ID/hash/size/evidence/runtime/pack mismatches, untrusted
 corruption, signed wrong role/license, denied capability, same-file epoch replacement and revoke
 at creation/process/final. JVM selection inventory/list are defensively immutable.
 
+## Final native and packaging validation
+
+All three subtasks are complete for one sprint review: artifact contract, exact signed speech
+leases and integrated validation. Actual approved VAD executes through an ephemeral ES256 lab
+pack/lease on iOS simulator and macOS host JVM/JNI: six streams/318 model calls per platform,
+including 16/48 kHz quiet timing, EOF/Stop/cleanup regression. Same-file signed pack replacement
+revokes the lease and rejects another model open before native creation. The lab signing key and
+license-evidence fixture confer no production approval. ASR pack selection/open/final behavior is
+scripted; a real signed ASR-weight load and acoustic accuracy remain NOT_RUN.
+
+Final checks PASS: 288 Swift, 341 Android tests (zero failures/errors/skips), Android lint/normal
+Debug/Release packaging, normal same-simulator build/install/three ten-second launches, workspace
+lint/typecheck and nine mobile/33 contract tests, 56 dataset and 47 feasibility tests normal/
+optimized, all six reports, coefficient checks normal/optimized, native sanitizer contracts and
+CI simulator/wake/model-source fixtures. Existing Jest act warnings remain without suppression.
+Normal APKs/iOS contain no evaluated ORT/ONNX models or ASR/VAD activation. Current source/model/
+binary hashes and scope are in vad-runtime/tests/speech-pack-results.json and the updated shared
+asr-handoff-native-regression.json; previous proofs remain in Git history. Feasibility source pins
+and all HOLD/physical/privacy gates remain valid. No downloads, package installs or microphone
+activation. Temporary existing dependency links are removed; original personal diff is identical.
+
+Next integration is a capture installer that owns both leases and binds factories to a capture/
+controller ticket. This sprint supplies verified primitives without attaching production callers.
+
 ## Acceptance boundary
 
 No production trust keys, selected production packs or runtime activation are provided. Slots must

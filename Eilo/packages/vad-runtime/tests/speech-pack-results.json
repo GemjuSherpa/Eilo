@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "scope": "SIGNED_SPEECH_PACK_SELECTION_AND_PACKAGING",
+  "swift_tests": 288,
+  "android_tests": {
+    "tests": 341,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "signature_fixture": "EPHEMERAL_ES256_LAB_KEYS",
+  "vad_real_model_lease": "IOS_SIMULATOR_AND_MACOS_JVM_JNI_PASS",
+  "asr_pack_factory_backend": "SCRIPTED",
+  "asr_required_files": 8,
+  "exact_pin_fields": [
+    "id",
+    "filename",
+    "sha256",
+    "bytes",
+    "MIT_license",
+    "license_evidence",
+    "pack_id",
+    "runtime_revision",
+    "role"
+  ],
+  "replacement_epoch_rejected": true,
+  "normal_model_runtime_activation": "NOT_ENABLED",
+  "android_debug_release": "PASS",
+  "ios_simulator_build_install": "PASS",
+  "ios_simulator_launches": {
+    "cycles": 3,
+    "dwell_seconds": 10,
+    "result": "PASS"
+  },
+  "apk_sha256": {
+    "apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk": "d26d027fb44b488495e5a32d51188a7ea93d9171f8abb6f9d09d916fbff004cd",
+    "apps/mobile/android/app/build/outputs/apk/release/app-release.apk": "9034c59101362ce30938b84dc2a7055ef27a614b6990de1016fc8ec386f15e27"
+  },
+  "ios_debug_binary_sha256": "00b9eae60cd3ad63ab7c25bf078ff893307838e7915add284d404285ce5f776d",
+  "source_sha256": {
+    "packages/native-test-seam/Sources/NativeTestSeam/PackManifest.swift": "07faae5af37dd6cd70907764d7d0af8cd67fa48a287087bac92023daa4770bda",
+    "packages/native-test-seam/Sources/NativeTestSeam/SpeechPackLease.swift": "f8d9b5f8ce17c6870fcc9ff38fb410a98e97235df0152e7aec2cc97da5abf612",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/PackManifest.kt": "221686529e334f73584376309227876ae65b594980ef5e620390f661d46b44cb",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/SpeechPackLease.kt": "6ab2ec687215a9c51bb6450095cb5ca4ec843d6c4dca6934b26d289f3d6395f8"
+  },
+  "physical_gates": "NOT_RUN",
+  "android_art_capture": "NOT_RUN",
+  "production_trust": "NOT_CONFIGURED"
+}

@@ -7,7 +7,7 @@ final class SpeechPackLeaseTests:XCTestCase {
   final class Fixture {
     let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString),key=P256.Signing.PrivateKey()
     let runtime=String(repeating:"a",count:40),evidence=String(repeating:"c",count:64)
-    let names=Array(SpeechPackSelection.asrNames).sorted()+["silero.onnx"]
+    let names=["adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort","streaming_config.json","tokenizer.bin"].sorted()+["silero.onnx"]
     var sources=[URL](),pins=[SpeechArtifactPin]()
     var store:PackStore!
     init()throws {
