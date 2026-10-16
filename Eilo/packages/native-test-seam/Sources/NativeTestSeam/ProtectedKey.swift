@@ -24,6 +24,9 @@ import LocalAuthentication
 /// during reads, so invalidation cannot silently replace a key protecting existing ciphertext.
 final class IOSProtectedKeyProvider {
   private let available:()->Bool
+  private let requestLock=NSLock()
+  private var current:LAContext?
+  func cancel(){requestLock.lock();let old=current;current=nil;requestLock.unlock();old?.invalidate()}
   init(available:@escaping ()->Bool={false}){self.available=available}
   private var query:[String:Any]{[kSecClass as String:kSecClassGenericPassword,
     kSecAttrService as String:"com.eilo.protected-memory.v1",kSecAttrAccount as String:"database-key",
@@ -39,14 +42,16 @@ final class IOSProtectedKeyProvider {
   func load()throws->ProtectedKey {
     guard available() else{throw ProtectedKeyFailure.unavailable}
     let context=LAContext();context.touchIDAuthenticationAllowableReuseDuration=0
-    defer{context.invalidate()}
+    requestLock.lock();guard current==nil else{requestLock.unlock();throw ProtectedKeyFailure.unavailable};current=context;requestLock.unlock()
+    defer{requestLock.lock();if current === context{current=nil};requestLock.unlock();context.invalidate()}
     var q=query;q[kSecReturnData as String]=true;q[kSecMatchLimit as String]=kSecMatchLimitOne
     q[kSecUseAuthenticationContext as String]=context
     q[kSecUseOperationPrompt as String]="Authenticate to access local Eilo memory"
     var result:CFTypeRef?
     guard SecItemCopyMatching(q as CFDictionary,&result)==errSecSuccess,var data=result as? Data else{throw ProtectedKeyFailure.unavailable}
     defer{data.resetBytes(in:0..<data.count)}
-    guard available(),data.count==32 else{throw ProtectedKeyFailure.unavailable}
+    requestLock.lock();let valid=current === context;requestLock.unlock()
+    guard valid,available(),data.count==32 else{throw ProtectedKeyFailure.unavailable}
     return try ProtectedKey(Array(data))
   }
 }
@@ -58,6 +63,7 @@ final class MemoryKeySession:PrivateEffectGate {
   struct Ticket {fileprivate let epoch:UUID,started:UInt64}
   private let lock=NSRecursiveLock(),clock:any NativeClock,scheduler:any IdleScheduler,unlocked:()->Bool
   private var epoch=UUID(),pending=false,key:ProtectedKey?,opened:UInt64=0
+  private var copies=[ProtectedKey]()
   private var expiry:(any IdleCancellation)?
   init(clock:any NativeClock=MonotonicClock(),scheduler:any IdleScheduler=NativeIdleScheduler(),unlocked:@escaping ()->Bool={false}) {
     self.clock=clock;self.scheduler=scheduler;self.unlocked=unlocked
@@ -71,7 +77,7 @@ final class MemoryKeySession:PrivateEffectGate {
   @discardableResult func complete(_ ticket:Ticket,key candidate:ProtectedKey)->Bool {
     lock.lock();defer{lock.unlock()}
     let now=clock.milliseconds()
-    guard pending,ticket.epoch==epoch,unlocked(),candidate.active,now>=ticket.started,now-ticket.started<30_000 else{candidate.close();return false}
+    guard pending,ticket.epoch==epoch,unlocked(),candidate.active,now>=ticket.started,now-ticket.started<30_000 else{candidate.close();if ticket.epoch==epoch && pending{revoke()};return false}
     pending=false;key=candidate;opened=now;let accepted=epoch
     expiry=scheduler.schedule(60_000){[weak self] in self?.expire(accepted)}
     return true
@@ -82,6 +88,13 @@ final class MemoryKeySession:PrivateEffectGate {
     guard unlocked(),let key,key.active,now>=opened,now-opened<60_000 else{revoke();return false}
     return true
   }
-  func revoke(){lock.lock();defer{lock.unlock()};epoch=UUID();pending=false;expiry?.cancel();expiry=nil;key?.close();key=nil}
+  /// Every owned native copy remains registered until session revocation.
+  func copyForNativeUse()throws->ProtectedKey {
+    lock.lock();defer{lock.unlock()}
+    guard allows(.readMemory),copies.count<8,let key else{throw ProtectedKeyFailure.unavailable}
+    var bytes=[UInt8]();defer{bytes.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)}}
+    try key.borrow{bytes=Array($0)};let copy=try ProtectedKey(bytes);copies.append(copy);return copy
+  }
+  func revoke(){lock.lock();defer{lock.unlock()};epoch=UUID();pending=false;expiry?.cancel();expiry=nil;copies.forEach{$0.close()};copies.removeAll();key?.close();key=nil}
   deinit{revoke()}
 }
