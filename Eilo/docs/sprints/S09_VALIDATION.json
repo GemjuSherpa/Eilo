@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "sprint": "S09",
+  "reviewed_base": "77574d9900387767a48b7fb4bf7cd6b6c9819759",
+  "tasks": [
+    {
+      "task": "VC-KEY-01",
+      "branch": "task/s09-vc-key-01-ios",
+      "commit": "a7e2b360a4a004ec18fe715c3fe05ec5bc36421e",
+      "local_status": "NATIVE_IMPLEMENTATION_PREPARED_FOR_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-KEY-02",
+      "branch": "task/s09-vc-key-02-android",
+      "commit": "41fbac640d1c12557fa4d028bb3a24e3386bdd0e",
+      "local_status": "NATIVE_IMPLEMENTATION_PREPARED_FOR_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-INBOX-01",
+      "branch": "task/s09-vc-inbox-01-review",
+      "commit": "e08c39ca3c42ce297798570d2c5521bcc7c6203f",
+      "local_status": "REVIEWED_CANDIDATE_COMPOSITION_BLOCKED",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-KEY-03",
+      "branch": "task/s09-vc-key-03-session",
+      "commit": "810b58d674f7933e42173a494f8b9ccff6c91cc7",
+      "local_status": "NATIVE_IMPLEMENTATION_PREPARED_FOR_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-KEY-04",
+      "branch": "task/s09-vc-key-04-release",
+      "commit": "2a810803ee9c0b8f1fbabdca5f10746f1d21a151",
+      "local_status": "NATIVE_IMPLEMENTATION_PREPARED_FOR_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-LOCK-01",
+      "branch": "task/s09-vc-lock-01-transition",
+      "commit": "068dc97d7791df2423cf56d4e05c922608ac3a38",
+      "local_status": "NATIVE_IMPLEMENTATION_PREPARED_FOR_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-LOCK-02",
+      "branch": "task/s09-vc-lock-02-privileges",
+      "commit": "6142c34ccf27e346d75c8539bdadd0c14125ed7d",
+      "local_status": "NATIVE_IMPLEMENTATION_PREPARED_FOR_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-LOCK-03",
+      "branch": "task/s09-vc-lock-03-reentry",
+      "commit": "641e5962b02b091e43c6ab4069310f1f77448c14",
+      "local_status": "NATIVE_IMPLEMENTATION_PREPARED_FOR_REVIEW",
+      "physical_acceptance": "NOT_RUN"
+    }
+  ],
+  "swift_tests": 305,
+  "android_tests": {
+    "tests": 361,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "android_lint_debug_release_builds": "PASS",
+  "workspace_lint_typecheck": "PASS",
+  "mobile_tests": 9,
+  "contract_tests": 33,
+  "feasibility_tests_normal_and_optimized": 47,
+  "six_pending_reports": "PASS",
+  "simulator_profiles": [
+    {
+      "profile": "key01",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "key02",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "key03",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "key04",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "lock01",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "lock02",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "lock03",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "lock03-final",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "final-review",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    },
+    {
+      "profile": "secure-clear",
+      "build_install": "PASS",
+      "fresh_launches": 3,
+      "dwell_seconds": 10
+    }
+  ],
+  "total_simulator_launches": 30,
+  "physical_keychain_keystore_authentication": "NOT_RUN",
+  "hardware_security_level": "NOT_RUN",
+  "inbox_composition": "NOT_APPROVED_FOR_IMPLEMENTATION",
+  "persistent_history": "NOT_ENABLED_S08_GATE",
+  "normal_production_key_provider_caller": "NOT_INSTALLED",
+  "physical_voice": "NOT_RUN",
+  "original_personal_diff_sha256": "17a30c022e0c178ea5cf44feddebc80a241bd5fa89fab17d0e23ea70cad75f1e",
+  "apk_sha256": {
+    "apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk": "f5128d8e6f7e465cfc854077111d9e0652c8aa4ebe62ae7697f652b82cd2983e",
+    "apps/mobile/android/app/build/outputs/apk/release/app-release.apk": "9a91a3ebe79a22accdffd7324889ae5ee85054ea738187a48869c2466e4c93f0"
+  },
+  "ios_debug_binary_sha256": "0056f9d4e3fdf0a6c4775a2c17e721c62b5546cab16c8f6e9b90806a8536f888",
+  "sources": [
+    {
+      "artifact": "packages/native-test-seam/Sources/NativeTestSeam/ProtectedKey.swift",
+      "sha256": "ea3c0d14e68decbe00e50cd19177beed91478cc48e9ae7ab06b825137cadc5a4"
+    },
+    {
+      "artifact": "packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift",
+      "sha256": "ee5a488b6bcad48031bc9ab56904fdfa2659ba118d9ea8f289679357a23fe590"
+    },
+    {
+      "artifact": "apps/mobile/android/app/src/main/java/com/eilo/foundation/ProtectedKey.kt",
+      "sha256": "46efa902ff7336434eb68649b32739aabafc418f468bc1a1bb0d3a4dcf9cebf3"
+    },
+    {
+      "artifact": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeController.kt",
+      "sha256": "d41aff621a695da1aaeb2eebe0e4e36b590da08017fb217f84cdc813a088294c"
+    }
+  ],
+  "owned_key_erasure": "SWIFT_DARWIN_MEMSET_S_AND_JVM_ARRAY_ZERO_INSPECTION_PASS"
+}

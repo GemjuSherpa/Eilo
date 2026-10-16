@@ -40,7 +40,8 @@ public final class GenerationToken: @unchecked Sendable {
 }
 public enum PrivacyChange { case lock, unlock, privateSession, historySession, identityReset, deleteAll }
 public enum PrivateEffect { case readMemory, commitHistory, displayPrivate }
-public protocol PrivateEffectGate { func allows(_ effect: PrivateEffect) -> Bool }
+public protocol PrivateEffectGate { func allows(_ effect: PrivateEffect) -> Bool;func invalidate() }
+public extension PrivateEffectGate {func invalidate(){}}
 public struct DeniedPrivateEffectGate: PrivateEffectGate {
   public init() {}
   public func allows(_ effect: PrivateEffect) -> Bool { false }
@@ -339,6 +340,7 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult public func privacyTransition(_ change: PrivacyChange) -> Bool {
     lock.lock(); defer { lock.unlock() }
+    privateGate.invalidate()
     if privacyEpoch == 9_007_199_254_740_991 { sessionID = UUID(); privacyEpoch = 0 } else { privacyEpoch += 1 }
     switch change {
     case .lock: locked = true
@@ -352,7 +354,7 @@ public final class NativeController: @unchecked Sendable {
   @discardableResult public func guardedPrivateEffect(_ token: GenerationToken, effect: PrivateEffect, action: () throws -> Void) -> Bool {
     lock.lock(); defer { lock.unlock() }
     guard accepts(token), !locked, !privateSession, ![.stopped,.setup,.error].contains(currentState), privateGate.allows(effect), accepts(token) else { return false }
-    do { try action(); return accepts(token) }
+    do { try action(); return accepts(token) && privateGate.allows(effect) && accepts(token) }
     catch { stop(); currentState = .error; currentError = .unexpected; diagnostics.record(.memory,.unexpected,.error); return false }
   }
   @discardableResult public func releaseSpeech(_ token: GenerationToken, clause: String) -> Bool {
@@ -386,6 +388,7 @@ public final class NativeController: @unchecked Sendable {
   }
   @discardableResult public func stop() -> Bool {
     lock.lock(); defer { lock.unlock() }
+    privateGate.invalidate()
     if stopping { return true }
     stopping=true; defer { stopping=false }
     startIntent=nil; capturePending=false; captureIntent=nil

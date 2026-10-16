@@ -34,7 +34,7 @@ class GenerationToken internal constructor(val sessionId: UUID, val operationId:
 
 enum class PrivacyChange { LOCK, UNLOCK, PRIVATE_SESSION, HISTORY_SESSION, IDENTITY_RESET, DELETE_ALL }
 enum class PrivateEffect { READ_MEMORY, COMMIT_HISTORY, DISPLAY_PRIVATE }
-fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean }
+fun interface PrivateEffectGate { fun allows(effect: PrivateEffect): Boolean;fun invalidate() {} }
 
 /** Sole native state authority. Every mutation/observation is serialized on this monitor. */
 class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostics(), private val effects: ControllerEffects = NoopControllerEffects(), private val privateGate: PrivateEffectGate = PrivateEffectGate { false }, private val clock: NativeClock = MonotonicClock(), private val scheduler: IdleScheduler = NativeIdleScheduler(), private var permission: MicrophonePermissionAdapter = UnavailablePermissionAdapter(), private val models: ModelReadinessAdapter = MissingModelReadiness()) {
@@ -360,6 +360,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         return endSessionPreservingCapture()
     }
     @Synchronized fun privacyTransition(change: PrivacyChange): Boolean {
+        privateGate.invalidate()
         if (privacyEpoch == 9007199254740991L) { sessionId=UUID.randomUUID(); privacyEpoch=0 } else privacyEpoch++
         when (change) {
             PrivacyChange.LOCK -> locked=true
@@ -372,7 +373,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     /** Native-only capability seam. Protected store/auth integration remains separately gated. */
     @Synchronized fun guardedPrivateEffect(token: GenerationToken, effect: PrivateEffect, action: () -> Unit): Boolean {
         if (!accepts(token) || locked || privateSession || currentState in setOf(ControllerState.STOPPED,ControllerState.SETUP,ControllerState.ERROR)) return false
-        return try { if (!privateGate.allows(effect) || !accepts(token)) return false; action(); accepts(token) } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.MEMORY,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
+        return try { if (!privateGate.allows(effect) || !accepts(token)) return false; action(); accepts(token) && privateGate.allows(effect) && accepts(token) } catch (_: Exception) { stop(); currentState=ControllerState.ERROR; currentError=SafeError.UNEXPECTED; diagnostics.record(SafeComponent.MEMORY,SafeError.UNEXPECTED,SafeSeverity.ERROR); false }
     }
     @Synchronized fun releaseSpeech(token: GenerationToken, clause: String): Boolean {
         if (speakerRequired || !accepts(token) || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING)) return false
@@ -405,6 +406,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         }catch(_:Exception){stop();null}
     }
     @Synchronized fun stop(): Boolean {
+        privateGate.invalidate()
         if (stopping) return true
         stopping=true
         startIntent=null; capturePending=false; captureIntent=null
