@@ -64,3 +64,27 @@ internal class AndroidProtectedKeyProvider(private val available:()->Boolean={fa
         try {eligible();return ProtectedKey(clear)}finally{clear.fill(0)}
     }
 }
+
+/** Native OS-authenticated key result consumes one pre-auth ticket. No store or app caller. */
+internal class MemoryKeySession(private val clock:NativeClock=MonotonicClock(),
+    private val scheduler:IdleScheduler=NativeIdleScheduler(),private val unlocked:()->Boolean={false}):PrivateEffectGate {
+    class Ticket internal constructor(internal val epoch:java.util.UUID,internal val started:Long)
+    private var epoch=java.util.UUID.randomUUID();private var pending=false
+    private var key:ProtectedKey?=null;private var opened=0L;private var expiry:IdleCancellation?=null
+    @Synchronized fun beginAuthentication():Ticket? {
+        revoke();if(!unlocked())return null;pending=true;return Ticket(epoch,clock.milliseconds())
+    }
+    /** Call only with the result of an explicit native OS authentication/provider request. */
+    @Synchronized fun complete(ticket:Ticket,candidate:ProtectedKey):Boolean {
+        val now=clock.milliseconds()
+        if(!pending || ticket.epoch!=epoch || !unlocked() || !candidate.active() || now<ticket.started || now-ticket.started>=30_000){candidate.close();return false}
+        pending=false;key=candidate;opened=now;val accepted=epoch
+        expiry=scheduler.schedule(60_000){synchronized(this){if(epoch==accepted)revoke()}}
+        return true
+    }
+    @Synchronized override fun allows(effect:PrivateEffect):Boolean {
+        val now=clock.milliseconds()
+        if(!unlocked() || key?.active()!=true || now<opened || now-opened>=60_000){revoke();return false};return true
+    }
+    @Synchronized fun revoke(){epoch=java.util.UUID.randomUUID();pending=false;expiry?.cancel();expiry=null;key?.close();key=null}
+}

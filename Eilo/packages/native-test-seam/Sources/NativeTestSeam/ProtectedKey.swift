@@ -51,3 +51,37 @@ final class IOSProtectedKeyProvider {
   }
 }
 #endif
+
+/// Native authentication result consumes one pre-auth ticket. Unlock alone cannot authorize.
+/// No production caller or protected store is installed; S08 still gates persistent memory.
+final class MemoryKeySession:PrivateEffectGate {
+  struct Ticket {fileprivate let epoch:UUID,started:UInt64}
+  private let lock=NSRecursiveLock(),clock:any NativeClock,scheduler:any IdleScheduler,unlocked:()->Bool
+  private var epoch=UUID(),pending=false,key:ProtectedKey?,opened:UInt64=0
+  private var expiry:(any IdleCancellation)?
+  init(clock:any NativeClock=MonotonicClock(),scheduler:any IdleScheduler=NativeIdleScheduler(),unlocked:@escaping ()->Bool={false}) {
+    self.clock=clock;self.scheduler=scheduler;self.unlocked=unlocked
+  }
+  func beginAuthentication()->Ticket? {
+    lock.lock();defer{lock.unlock()};revoke()
+    guard unlocked() else{return nil};pending=true
+    return Ticket(epoch:epoch,started:clock.milliseconds())
+  }
+  /// Called only after the native provider obtained the key under OS authentication.
+  @discardableResult func complete(_ ticket:Ticket,key candidate:ProtectedKey)->Bool {
+    lock.lock();defer{lock.unlock()}
+    let now=clock.milliseconds()
+    guard pending,ticket.epoch==epoch,unlocked(),candidate.active,now>=ticket.started,now-ticket.started<30_000 else{candidate.close();return false}
+    pending=false;key=candidate;opened=now;let accepted=epoch
+    expiry=scheduler.schedule(60_000){[weak self] in self?.expire(accepted)}
+    return true
+  }
+  private func expire(_ expected:UUID){lock.lock();defer{lock.unlock()};if epoch==expected{revoke()}}
+  func allows(_ effect:PrivateEffect)->Bool {
+    lock.lock();defer{lock.unlock()};let now=clock.milliseconds()
+    guard unlocked(),let key,key.active,now>=opened,now-opened<60_000 else{revoke();return false}
+    return true
+  }
+  func revoke(){lock.lock();defer{lock.unlock()};epoch=UUID();pending=false;expiry?.cancel();expiry=nil;key?.close();key=nil}
+  deinit{revoke()}
+}
