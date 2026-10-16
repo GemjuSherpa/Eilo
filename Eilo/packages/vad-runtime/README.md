@@ -159,7 +159,7 @@ queue age/overflow, and coalesces scheduling onto one serial native inference wo
 revokes queued results immediately and schedules worker cleanup without waiting for another
 capture frame. `VadCaptureSlot` and controller-owned permits bind this to the exact capturing
 turn on iOS/Android; normal app entry points do not activate it. Capture PCM must be 16 kHz;
-other routes are rejected. No ASR suffix/audio owner, resampler or confidence is inferred.
+other routes are rejected. Optional ASR audio ownership is described below; wake/question suffix alignment, route resampling and confidence remain separately gated.
 
 Use the same approved local cache/model/JNI build as the worker example, adding `--capture`
 and a **new** output directory:
@@ -177,3 +177,23 @@ sample counts, and rejects Stop/cleanup revocation. `tests/capture-results.json`
 streams/161 model calls per platform. These are transport/model checks, not physical capture,
 Android ART or production readiness. Normal model-free controller/capture lifecycle tests run
 in standard CI; `tests/capture-packaging-results.json` records the normal artifact exclusions.
+
+
+## Optional bounded VAD-to-ASR handoff
+
+Explicit native capture setup can provide `openAsr`, an independently verified `asrVerified`
+capability (default denied), and a native-only `recognized` receiver. The worker copies only
+VAD-consumed PCM prefixes into `VadAsrHandoff` (<=480000 Float32 samples / 1.92 MB), before
+callback scratch is erased. Complete/capped utterances alone open ASR; no-speech and early EOF
+erase the buffer without transcription. Final native text is rechecked against the capturing
+permit and both capabilities after decoding/cleanup, then delivered under controller serialization.
+The receiver must enqueue native work, never bridge/log text or run inference under that lock.
+Unknown confidence still requires clarification through the existing recognition policy.
+
+This version opens ASR after endpoint completion. It does not claim physical recognition latency,
+route conversion, wake/question alignment, model trust readiness or production activation. Standard
+Swift/JVM scripted tests cover positive exact-prefix recognition and revocation. `check_worker.py
+--capture` additionally compiles the full native Swift module and executes actual approved VAD
+with optional audio ownership: quiet input opens ASR zero times and clears the retained buffer.
+This native regression does not test positive ASR acoustic accuracy. Current aggregate evidence:
+`tests/asr-handoff-results.json` and `tests/asr-handoff-native-regression.json`.

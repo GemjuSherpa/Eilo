@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "scope": "NATIVE_VAD_ASR_HANDOFF_SCRIPTED_AND_PACKAGING",
+  "swift_tests": 271,
+  "android_tests": {
+    "tests": 324,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exact_joined_prefix_samples": 10752,
+  "last_chunk_consumed": 192,
+  "asr_positive_backend": "SCRIPTED",
+  "unknown_confidence": "CLARIFICATION_REQUIRED",
+  "blocked_asr_stop": "PASS",
+  "native_consumer_exception_redaction": "PASS",
+  "max_owned_pcm_bytes": 1920000,
+  "android_debug_release": "PASS",
+  "ios_simulator_build_install": "PASS",
+  "ios_simulator_launches": {
+    "cycles": 3,
+    "dwell_seconds": 10,
+    "result": "PASS"
+  },
+  "normal_artifacts_exclude_vad_asr_activation": true,
+  "apk_sha256": {
+    "apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk": "960ce164d9fa406dc5def1b2b99bb8669dd1fd38542b6b59effcebab5aee0e25",
+    "apps/mobile/android/app/build/outputs/apk/release/app-release.apk": "4d09a482904905507fa40459b135828bbd7545269bd78d21b0283dc89c7b73e8"
+  },
+  "ios_debug_binary_sha256": "d85fb63efde7623e7f2d2aedc19dd7746ae9328e027317279383e144eed63b61",
+  "source_sha256": {
+    "packages/native-test-seam/Sources/NativeTestSeam/VadAsrHandoff.swift": "a13a6421c9fed06806524c6786b45e630534da80275f6977e3157c98ad69a196",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift": "dd310a27cd142dea6881d092dbb54b189dbed67a6ad951aac53a48dd3dbed832",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureSlot.swift": "dec0ef688941799d98589e3935de1f271a5993bb256be51577edc10a86a3ded1",
+    "packages/native-test-seam/Sources/NativeTestSeam/StreamingAsr.swift": "3c928fc338dbce24079e26ae8c156daa18c57498d8041b3db652bbc2bfe07560",
+    "packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift": "e9b75b7ae573de8db3c2e9432289704bec950f3084f79d3ca92edb4967fb9c80",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadAsrHandoff.kt": "923e601b069d63f32a7c680bb764deba585c68144eee527ed2927ab21f664678",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureTransport.kt": "ba9c4c17481d186fd350ba06b88b509590a4cef2b84985d1dca1275ad1c03a28",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureSlot.kt": "1334d630f602df8fd2906d0c97d3403b92d6741dd613699c81b42d966813c73e",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/StreamingAsr.kt": "f3f7a4d6f6d84f97fed90d085fa2ccf7de854100155552a85d739019079bebb3",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/ForegroundCapture.kt": "e0e726c45ee14cc8f566788e39f85626f69080c47a7da39bd54111aa2d0e997f"
+  },
+  "production_readiness": "NOT_ENABLED",
+  "physical_gates": "NOT_RUN",
+  "android_art_capture": "NOT_RUN"
+}

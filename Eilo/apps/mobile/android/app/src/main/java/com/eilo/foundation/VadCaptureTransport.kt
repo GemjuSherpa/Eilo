@@ -14,6 +14,8 @@ internal class VadCaptureTransport(
     private val now: () -> Long = System::nanoTime,
     private val failure: (() -> Boolean) -> Unit = {},
     private val output: (VadCaptureOutcome, () -> Boolean) -> Unit = { _, _ -> },
+    private val audioFactory:(()->VadAsrHandoff)?=null,
+    private val joinedOutput:((VadCaptureOutcome,AsrText?,()->Boolean)->Unit)?=null,
 ) {
     private val monitor=Any()
     private val storage=FloatArray(6400)
@@ -24,6 +26,7 @@ internal class VadCaptureTransport(
     private var failed=false
     private var lastClock: Long?=null
     // Worker-confined fields.
+    private var audio:VadAsrHandoff?=null
     private var delivery: VadWindowDelivery?=null
     private val scratch=FloatArray(1600)
     fun retainedSamples()=synchronized(monitor) { queuedSamples }
@@ -95,18 +98,33 @@ internal class VadCaptureTransport(
             }
             if(revoked) { cleanup();synchronized(monitor) { scheduled=false };reportFailure();return }
             val current=delivery ?: VadWindowDelivery(::allowed,open).also { delivery=it }
-            val event=if(final)current.finish() else current.accept(scratch,count,current.acceptedSamples())
+            var event=if(final)current.finish() else current.accept(scratch,count,current.acceptedSamples())
+            if(!final && event.result!=EndpointResult.INVALID && allowed() && audioFactory!=null) {
+                val owned=audio ?: audioFactory.invoke().also{audio=it}
+                if(!owned.append(scratch,count,event.consumedSamples,current.acceptedSamples()-event.consumedSamples))event=VadDeliveryEvent(EndpointResult.INVALID,0)
+            }
             scratch.fill(0f)
             if(event.result!=EndpointResult.CONTINUE) { complete(event);return }
         }
     }
     private fun complete(event:VadDeliveryEvent) {
         val outcome=VadCaptureOutcome(event.result,delivery?.acceptedSamples() ?: 0,event.consumedSamples)
+        var text:AsrText?=null;var invalid=event.result==EndpointResult.INVALID
+        if(!invalid && audioFactory!=null) {
+            val owned=audio ?: audioFactory.invoke().also{audio=it}
+            when(val final=owned.finish(outcome)) {
+                VadAsrFinal.Metadata->Unit
+                VadAsrFinal.Invalid->invalid=true
+                is VadAsrFinal.Recognized->text=final.text
+            }
+        }
         cleanup()
-        synchronized(monitor) { accepting=false;clearLocked();scheduled=false;if(event.result==EndpointResult.INVALID){if(active)failed=true;active=false} }
-        if(event.result==EndpointResult.INVALID)reportFailure() else if(allowed())output(outcome,::allowed)
+        synchronized(monitor) { accepting=false;clearLocked();scheduled=false;if(invalid){if(active)failed=true;active=false} }
+        if(invalid)reportFailure() else if(allowed()) {
+            if(joinedOutput!=null)joinedOutput.invoke(outcome,text,::allowed) else output(outcome,::allowed)
+        }
     }
     private fun failureCurrent()=synchronized(monitor) { failed }
     private fun reportFailure() { if(failureCurrent())failure(::failureCurrent) }
-    private fun cleanup() { scratch.fill(0f);delivery?.close();delivery=null }
+    private fun cleanup() { scratch.fill(0f);delivery?.close();delivery=null;audio?.close();audio=null }
 }

@@ -36,6 +36,18 @@ internal class StreamingAsr(
         finally { scratch.fill(0f) }
     }
 
+    /** Already-normalized native PCM; never requantize VAD's float prefix back to PCM16. */
+    fun accept(pcm:FloatArray,count:Int):Boolean {
+        if(count !in 1..1600 || count>pcm.size || samples>480000-count || !valid() ||
+            (0 until count).any{!pcm[it].isFinite() || pcm[it] !in -1f..1f}) {close();return false}
+        return try {
+            if(stream==null)stream=open()
+            if(!valid()){close();return false}
+            pcm.copyInto(scratch,0,0,count);stream!!.accept(scratch,count);samples+=count
+            if(!valid()){close();false}else true
+        } catch(_:Exception){close();false} finally{scratch.fill(0f)}
+    }
+
     fun poll(finish: Boolean = false): AsrText? {
         if (!valid() || stream == null) { close(); return null }
         return try {

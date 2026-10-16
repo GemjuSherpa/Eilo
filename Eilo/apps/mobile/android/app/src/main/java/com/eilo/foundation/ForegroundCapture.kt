@@ -137,10 +137,11 @@ internal class ForegroundCapture(
      * Explicit verified native-only capability/API; no default app caller or runtime loading. */
     fun connectVad(controller:NativeController,token:GenerationToken,inferenceWorker:Executor,
         model:String,verified:()->Boolean,api:NativeVadApi=UnavailableVadApi,
-        accepted:(VadCaptureOutcome)->Unit={}):Boolean {
+        accepted:(VadCaptureOutcome)->Unit={},openAsr:((()->Boolean)->AsrStream)?=null,
+        recognized:(AsrText)->Unit={},asrVerified:()->Boolean={false}):Boolean {
         val slot=synchronized(monitor){if(!eligible())null else vadSlot} ?: return false
         return slot.install(this,controller,token,inferenceWorker,verified,
-            open={check->NativeVadStream(model,check,api)},accepted=accepted)
+            open={check->NativeVadStream(model,check,api)},accepted=accepted,openAsr=openAsr,recognized=recognized,asrVerified=asrVerified)
     }
 
     private fun current(expected: Long) = synchronized(monitor) { run == expected }
