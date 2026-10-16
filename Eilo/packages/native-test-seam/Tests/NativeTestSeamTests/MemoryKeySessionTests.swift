@@ -21,4 +21,15 @@ final class MemoryKeySessionTests:XCTestCase {
     let duplicate=try key();XCTAssertFalse(s.complete(b,key:duplicate));XCTAssertFalse(duplicate.active);XCTAssertTrue(kb.active)
     timer.tasks[1]();XCTAssertFalse(kb.active)
   }
+  func testRevokeDestroysAllOwnedCopiesAndRejectsDeniedAuthenticationReuse()throws {
+    let s=MemoryKeySession(unlocked:{true}),k=try key(),t=s.beginAuthentication()!
+    XCTAssertTrue(s.complete(t,key:k));let copies=try (0..<8).map{_ in try s.copyForNativeUse()}
+    XCTAssertThrowsError(try s.copyForNativeUse());s.revoke()
+    XCTAssertFalse(k.active);for copy in copies{XCTAssertFalse(copy.active);XCTAssertThrowsError(try copy.borrow{_ in XCTFail("revoked copy")})}
+    XCTAssertThrowsError(try s.copyForNativeUse())
+    let clock=Clock(),a=MemoryKeySession(clock:clock,unlocked:{true}),ticket=a.beginAuthentication()!
+    clock.now+=30_000;XCTAssertFalse(a.complete(ticket,key:try key()));clock.now=100
+    XCTAssertFalse(a.complete(ticket,key:try key()))
+  }
+
 }

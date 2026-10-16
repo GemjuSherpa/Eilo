@@ -21,4 +21,13 @@ class MemoryKeySessionTest {
         val duplicate=key();assertFalse(s.complete(b,duplicate));assertFalse(duplicate.active());assertTrue(kb.active())
         timer.tasks[1]();assertFalse(kb.active())
     }
+    @Test fun revokeDestroysOwnedCopiesAndRejectsDeniedAuthenticationReuse() {
+        val s=MemoryKeySession(unlocked={true});val k=key();val t=s.beginAuthentication()!!
+        assertTrue(s.complete(t,k));val copies=(0 until 8).map{s.copyForNativeUse()}
+        assertThrows(IllegalStateException::class.java){s.copyForNativeUse()};s.revoke()
+        assertFalse(k.active());copies.forEach{copy->assertFalse(copy.active());assertThrows(IllegalStateException::class.java){copy.borrow{fail("revoked copy")}}}
+        val clock=Clock();val a=MemoryKeySession(clock=clock,unlocked={true});val ticket=a.beginAuthentication()!!
+        clock.now+=30_000;assertFalse(a.complete(ticket,key()));clock.now=100;assertFalse(a.complete(ticket,key()))
+    }
+
 }
