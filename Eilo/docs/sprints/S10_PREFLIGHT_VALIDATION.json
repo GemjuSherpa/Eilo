@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "sprint": "S10",
+  "scope": "READINESS_AND_FUTURE_TEST_PLAN_ONLY",
+  "base_main": "aac9d5a1bc67ea34a416b7ffa92222522c89c9ad",
+  "pr72_merge": "aac9d5a1bc67ea34a416b7ffa92222522c89c9ad",
+  "pr72_checks": "8_SUCCESS",
+  "stable_tasks": [
+    "VC-STORE-01",
+    "VC-STORE-02",
+    "VC-STORE-07",
+    "VC-STORE-03",
+    "VC-STORE-04",
+    "VC-STORE-05",
+    "VC-STORE-08",
+    "VC-STORE-09",
+    "VC-STORE-06",
+    "VC-STORE-10"
+  ],
+  "exact_dependency_paths_and_evidence_pins": "PASS",
+  "future_test_plan_coverage_order": "PASS",
+  "feasibility_regressions": {
+    "normal": 47,
+    "optimized": 47,
+    "failures": 0
+  },
+  "six_pending_reports": "PASS",
+  "native_app_build": "NOT_RUN_DOCUMENTATION_ONLY",
+  "actual_sqlcipher_tests": "NOT_RUN_DEPENDENCY_BLOCKED",
+  "persistent_memory_allowed": false,
+  "supported_configurations": [],
+  "original_personal_diff_sha256": "17a30c022e0c178ea5cf44feddebc80a241bd5fa89fab17d0e23ea70cad75f1e",
+  "documents": [
+    {
+      "artifact": "docs/sprints/S10_READINESS_AUDIT.json",
+      "sha256": "5e94ebeb37c1c8a9e6d65266091d89883e33cddadab40774d87b388345901c3b"
+    },
+    {
+      "artifact": "docs/sprints/S10_VALIDATION_PLAN.md",
+      "sha256": "1f1fc840d3d7c58d66b18693503561b0e3556f9444a166cd14b546b697987e8d"
+    }
+  ]
+}
