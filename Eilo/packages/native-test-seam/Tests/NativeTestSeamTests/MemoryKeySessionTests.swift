@@ -85,4 +85,10 @@ final class MemoryKeySessionTests:XCTestCase {
     XCTAssertFalse(session.allows(.readMemory))
   }
 
+  func testDeniedReadWhileAuthenticationPendingDoesNotConsumeItsTicket()throws {
+    let session=MemoryKeySession(unlocked:{true}),t=session.beginAuthentication()!
+    XCTAssertFalse(session.allows(.readMemory));XCTAssertFalse(session.allows(.displayPrivate))
+    XCTAssertTrue(session.complete(t,key:try key()));XCTAssertTrue(session.allows(.readMemory));session.revoke()
+  }
+
 }

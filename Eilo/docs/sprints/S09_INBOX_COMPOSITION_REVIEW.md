@@ -17,9 +17,9 @@ APIs in VC-KEY-01/02 are not a sealed-inbox construction: their secret-key use i
 
 Use a vetted RFC9180 HPKE implementation, with explicit ciphersuite/version/KEM/KDF/AEAD and
 recipient identity. Apple's CryptoKit exposes HPKE sender/recipient and authenticated associated
-data; Google Tink documents an RFC9180 hybrid primitive. Exact Android platform API availability
-and/or a pinned, licensed Tink dependency, interoperable envelope encoding and vendor compatibility
-must be established before selection. No new dependency or handwritten KEM/key schedule is added.
+data; Google Tink documents an RFC9180 hybrid primitive. Android platform HPKE is documented as API37, above the current API35 baseline. A pinned,
+licensed compatible library (for example Tink), interoperable envelope encoding and vendor
+compatibility must therefore be reviewed before selection. No new dependency or handwritten KEM/key schedule is added.
 
 Define a versioned envelope with bounded payload and AAD covering schema, recipient/store/key
 version, record UUID and consent epoch. Use the implementation's nonce/key schedule; never reuse
@@ -42,6 +42,7 @@ Neither permitted screen-off audio nor the S08 feasibility/memory gate is change
 - [Apple HPKE](https://developer.apple.com/documentation/cryptokit/hpke)
 - [Apple authenticated sealing](https://developer.apple.com/documentation/cryptokit/hpke/sender/seal(_:authenticating:))
 - [Google Tink hybrid encryption](https://developers.google.com/tink/hybrid)
+- [Android platform HPKE, API37](https://developer.android.com/reference/android/crypto/hpke/Hpke)
 - [Tink wire format](https://developers.google.com/tink/wire-format)
 - [RFC9180](https://www.rfc-editor.org/rfc/rfc9180)
 

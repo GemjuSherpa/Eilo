@@ -1,4 +1,12 @@
 import Foundation
+import Darwin
+
+/// Darwin explicit erasure is not removable as a dead store. This only covers owned storage.
+private func eraseKeyBytes(_ bytes:inout [UInt8]) {
+  bytes.withUnsafeMutableBytes{buffer in
+    if let base=buffer.baseAddress {_ = memset_s(base,buffer.count,0,buffer.count)}
+  }
+}
 
 /// Native owned key storage. Borrow synchronously; no JS, logging or persistence sink.
 /// Erasure covers this allocation, not OS/vendor copies or a hostile native borrower.
@@ -11,7 +19,7 @@ final class ProtectedKey {
     lock.lock();defer{lock.unlock()};guard live else{throw ProtectedKeyFailure.unavailable}
     try bytes.withUnsafeBufferPointer(body)
   }
-  func close(){lock.lock();defer{lock.unlock()};bytes.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)};live=false}
+  func close(){lock.lock();defer{lock.unlock()};eraseKeyBytes(&bytes);live=false}
   var active:Bool{lock.lock();defer{lock.unlock()};return live}
   deinit{close()}
 }
@@ -33,9 +41,9 @@ final class IOSProtectedKeyProvider {
     kSecAttrSynchronizable as String:false]}
   func create()throws {
     guard available(),let access=SecAccessControlCreateWithFlags(nil,kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,.userPresence,nil) else{throw ProtectedKeyFailure.unavailable}
-    var bytes=[UInt8](repeating:0,count:32);defer{bytes.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)}}
+    var bytes=[UInt8](repeating:0,count:32);defer{eraseKeyBytes(&bytes)}
     guard SecRandomCopyBytes(kSecRandomDefault,bytes.count,&bytes)==errSecSuccess else{throw ProtectedKeyFailure.unavailable}
-    var data=Data(bytes);defer{data.resetBytes(in:0..<data.count)}
+    var data=Data(bytes);defer{data.withUnsafeMutableBytes{buffer in if let base=buffer.baseAddress{_ = memset_s(base,buffer.count,0,buffer.count)}}}
     var q=query;q[kSecAttrAccessControl as String]=access;q[kSecValueData as String]=data
     guard available(),SecItemAdd(q as CFDictionary,nil)==errSecSuccess else{throw ProtectedKeyFailure.unavailable}
   }
@@ -49,7 +57,7 @@ final class IOSProtectedKeyProvider {
     q[kSecUseOperationPrompt as String]="Authenticate to access local Eilo memory"
     var result:CFTypeRef?
     guard SecItemCopyMatching(q as CFDictionary,&result)==errSecSuccess,var data=result as? Data else{throw ProtectedKeyFailure.unavailable}
-    defer{data.resetBytes(in:0..<data.count)}
+    defer{data.withUnsafeMutableBytes{buffer in if let base=buffer.baseAddress{_ = memset_s(base,buffer.count,0,buffer.count)}}}
     requestLock.lock();let valid=current === context;requestLock.unlock()
     guard valid,available(),data.count==32 else{throw ProtectedKeyFailure.unavailable}
     return try ProtectedKey(Array(data))
@@ -79,7 +87,7 @@ final class MemoryKeySession:PrivateEffectGate {
   @discardableResult func complete(_ ticket:Ticket,key candidate:ProtectedKey)->Bool {
     lock.lock();defer{lock.unlock()}
     let now=clock.milliseconds()
-    guard pending,ticket.epoch==epoch,unlocked(),candidate.active,now>=ticket.started,now-ticket.started<30_000 else{candidate.close();if ticket.epoch==epoch && pending{revoke()};return false}
+    guard pending,ticket.epoch==epoch,unlocked(),candidate.active,now>=ticket.started,now-ticket.started<30_000,pending,ticket.epoch==epoch else{candidate.close();if ticket.epoch==epoch && pending{revoke()};return false}
     pending=false;key=candidate;opened=now;let accepted=epoch
     expiry=scheduler.schedule(60_000){[weak self] in self?.expire(accepted)}
     return true
@@ -87,14 +95,16 @@ final class MemoryKeySession:PrivateEffectGate {
   private func expire(_ expected:UUID){lock.lock();defer{lock.unlock()};if epoch==expected{revoke()}}
   func allows(_ effect:PrivateEffect)->Bool {
     lock.lock();defer{lock.unlock()};let now=clock.milliseconds()
-    guard unlocked(),let key,key.active,now>=opened,now-opened<60_000 else{revoke();return false}
+    guard unlocked() else{revoke();return false}
+    guard let key else{return false} // A denied read must not cancel an in-flight authentication.
+    guard key.active,now>=opened,now-opened<60_000 else{revoke();return false}
     return true
   }
   /// Every owned native copy remains registered until session revocation.
   func copyForNativeUse()throws->ProtectedKey {
     lock.lock();defer{lock.unlock()}
     guard allows(.readMemory),copies.count<8,let key else{throw ProtectedKeyFailure.unavailable}
-    var bytes=[UInt8]();defer{bytes.withUnsafeMutableBufferPointer{$0.initialize(repeating:0)}}
+    var bytes=[UInt8]();defer{eraseKeyBytes(&bytes)}
     try key.borrow{bytes=Array($0)};let copy=try ProtectedKey(bytes);copies.append(copy);return copy
   }
   func revoke(){lock.lock();defer{lock.unlock()};epoch=UUID();pending=false;expiry?.cancel();expiry=nil;copies.forEach{$0.close()};copies.removeAll();key?.close();key=nil}
