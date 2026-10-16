@@ -20,3 +20,11 @@ condition = "AND"
 paths = ['''^Eilo/packages/wake-runtime/tests/android-package-results\.json$''']
 regexTarget = "line"
 regexes = ['''^\s*"lib/(arm64-v8a|armeabi-v7a|x86|x86_64)/lib(onnxruntime|sherpa-onnx-c-api|eilo_wake_jni)\.so": "[0-9a-f]{64}",?$''']
+
+[[allowlists]]
+description = "Native ASR regression source-file SHA256, not an authentication credential"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^Eilo/packages/vad-runtime/tests/asr-handoff-native-regression\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"packages/native-test-seam/Sources/NativeTestSeam/IOSConsentAuthentication\.swift": "[0-9a-f]{64}",?$''']

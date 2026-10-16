@@ -27,7 +27,9 @@ internal class VadCaptureSlot(val sampleRate:Int) {
         val check={permit.active() && !token.cancelled && verifiedNow()}
         val audioFactory:(()->VadAsrHandoff)?=openAsr?.let{factory->{VadAsrHandoff(token,check,{factory(check)})}}
         val joined:((VadCaptureOutcome,AsrText?,()->Boolean)->Unit)?=if(audioFactory==null)null else {outcome,text,current->
-            try {controller.finishVadCapture(permit,token,outcome,current){value->if(text!=null)recognized(text);if(current())accepted(value)}} finally {retire(permit)}
+            try {controller.finishVadCapture(permit,token,outcome,current){value->if(text!=null)recognized(text);if(current())accepted(value)}}
+            catch(_:Exception){controller.dispatch(ControllerEvent.FAILURE,SafeError.UNAVAILABLE,token)}
+            finally {retire(permit)}
         }
         val transport=VadCaptureTransport(worker,check,{open(check)},failure={current->
             try { controller.failVadCapture(permit,token,current) } finally { retire(permit) }

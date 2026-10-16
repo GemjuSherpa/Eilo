@@ -35,7 +35,7 @@ if __name__=='__main__':
              '-isysroot',sdk,'-I',HERE/'include','-I',headers,'-c',source,'-o',obj])
     swift=[HERE.parent/'native-test-seam/Sources/NativeTestSeam'/name for name in
            ('EndpointDetector.swift','NativeVadStream.swift','VadWindowDelivery.swift')]
-    if args.capture:swift.append(HERE.parent/'native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift')
+    if args.capture:swift=sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift'))
     probe=output/'worker-probe'
     run(['xcrun','swiftc','-parse-as-library','-D','DEBUG','-D','EILO_VAD_EVALUATION',
          '-target','arm64-apple-ios18.0-simulator','-sdk',sdk,'-I',HERE/'include',*swift,
@@ -70,7 +70,7 @@ if __name__=='__main__':
     android=project/'app/src/main/java/com/eilo/foundation'
     sources=[*swift,android/'EndpointDetector.kt',android/'NativeVadStream.kt',android/'VadWindowDelivery.kt',
              HERE/'eilo_vad_jni.cc',HERE/'tests'/probe_name,HERE/'tests/jvm'/(jvm_name+'.kt')]
-    if args.capture:sources.append(android/'VadCaptureTransport.kt')
+    if args.capture:sources.extend(android/name for name in ('VadCaptureTransport.kt','VadAsrHandoff.kt','StreamingAsr.kt'))
     result={'schema_version':1,'scope':'JOINED_NATIVE_VAD_CAPTURE_TRANSPORT_SYNTHETIC' if args.capture else 'JOINED_NATIVE_VAD_WORKER_SYNTHETIC','ios_simulator':ios,'host_jvm_jni':jvm,
             'model_sha256':sha256(model),'jni_sha256':record['host_jni_sha256'],
             'source_sha256':{str(p.relative_to(HERE.parents[1])):sha256(p) for p in sources},
