@@ -32,4 +32,17 @@ final class MemoryKeySessionTests:XCTestCase {
     XCTAssertFalse(a.complete(ticket,key:try key()))
   }
 
+  func testLockRevokesBeforeCancellationAndWithholdsPrivateEffectsInEveryVoicePhase()throws {
+    for phase in 0..<3 {
+      let session=MemoryKeySession(unlocked:{true}),e=EffectsSpy(),c=testController(effects:e,privateGate:session)
+      _ = c.privacyTransition(.historySession);XCTAssertTrue(c.dispatch(.start));XCTAssertTrue(c.dispatch(.speechDetected,token:c.token))
+      if phase>0{XCTAssertTrue(c.dispatch(.endpoint,token:c.token))};if phase>1{XCTAssertTrue(c.dispatch(.speechReady,token:c.token))}
+      let token=c.token!,ticket=session.beginAuthentication()!,k=try key()
+      XCTAssertTrue(session.complete(ticket,key:k));let copy=try session.copyForNativeUse()
+      e.onCancel={XCTAssertFalse(k.active);XCTAssertFalse(copy.active)}
+      _ = c.privacyTransition(.lock);XCTAssertEqual(c.state,.stopped);XCTAssertTrue(e.context.isEmpty)
+      XCTAssertFalse(c.guardedPrivateEffect(token,effect:.displayPrivate){XCTFail("stale private sink")})
+    }
+  }
+
 }

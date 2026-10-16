@@ -30,4 +30,17 @@ class MemoryKeySessionTest {
         clock.now+=30_000;assertFalse(a.complete(ticket,key()));clock.now=100;assertFalse(a.complete(ticket,key()))
     }
 
+    @Test fun lockRevokesBeforeCancellationAndWithholdsPrivateEffectsInEveryVoicePhase() {
+        repeat(3){phase->
+            val session=MemoryKeySession(unlocked={true});val e=EffectsSpy();val c=testController(effects=e,privateGate=session)
+            c.privacyTransition(PrivacyChange.HISTORY_SESSION);assertTrue(c.dispatch(ControllerEvent.START));assertTrue(c.dispatch(ControllerEvent.SPEECH_DETECTED,token=c.token()))
+            if(phase>0)assertTrue(c.dispatch(ControllerEvent.ENDPOINT,token=c.token()))
+            if(phase>1)assertTrue(c.dispatch(ControllerEvent.SPEECH_READY,token=c.token()))
+            val token=c.token()!!;val k=key();assertTrue(session.complete(session.beginAuthentication()!!,k));val copy=session.copyForNativeUse()
+            e.onCancel={assertFalse(k.active());assertFalse(copy.active())}
+            c.privacyTransition(PrivacyChange.LOCK);assertEquals(ControllerState.STOPPED,c.state());assertTrue(e.context.all{it==0.toByte()})
+            assertFalse(c.guardedPrivateEffect(token,PrivateEffect.DISPLAY_PRIVATE){fail("stale private sink")})
+        }
+    }
+
 }

@@ -92,5 +92,6 @@ internal class MemoryKeySession(private val clock:NativeClock=MonotonicClock(),
         var result:ProtectedKey?=null;key!!.borrow{result=ProtectedKey(it)}
         return result!!.also{copies.add(it)}
     }
+    override fun invalidate(){revoke()}
     @Synchronized fun revoke(){epoch=java.util.UUID.randomUUID();pending=false;expiry?.cancel();expiry=null;copies.forEach{it.close()};copies.clear();key?.close();key=null}
 }

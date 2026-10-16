@@ -171,7 +171,7 @@
     },
     {
       "artifact": "packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift",
-      "sha256": "cff0bee598d91c19b1f74b62c3492f1460f9e6d1e15d602f1894eadb24de690c",
+      "sha256": "99dc0b7f298f3f7859f12206baab3b104f2255d830e8a457bd05623097de3f7b",
       "observation": "Start requires model readiness; default ModelReadiness is MissingModelReadiness. Lock invalidates generation and privacy work."
     },
     {

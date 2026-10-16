@@ -154,7 +154,7 @@
     },
     {
       "artifact": "docs/sprints/S08_FEASIBILITY_DECISION.json",
-      "sha256": "a01404f3449df97985aa22d16484c070156d88777a6a7cd042be00cb5424e7bc"
+      "sha256": "68905903bcfcc8337a3d6ae59942323ec4489b8f0968cd7db49f92d178d27587"
     },
     {
       "artifact": "packages/voice-latency/tests/physical-turn-latency.json",
