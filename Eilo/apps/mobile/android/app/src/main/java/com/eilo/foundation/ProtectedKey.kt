@@ -11,9 +11,8 @@ import javax.crypto.spec.GCMParameterSpec
 
 /** Synchronous native borrower only. This allocation is erased; OS/JCA/hostile copies are not. */
 internal class ProtectedKey(input:ByteArray):AutoCloseable {
-    private val bytes=input.copyOf()
+    private val bytes=input.also{require(it.size==32)}.copyOf()
     private var live=true
-    init{require(bytes.size==32)}
     @Synchronized fun borrow(body:(ByteArray)->Unit){check(live);body(bytes)}
     @Synchronized fun active()=live
     @Synchronized override fun close(){bytes.fill(0);live=false}
@@ -33,7 +32,11 @@ internal class AndroidProtectedKeyProvider(private val available:()->Boolean={fa
     private val alias="com.eilo.protected-memory.v1"
     private val aad="eilo:database-key:v1".toByteArray(Charsets.UTF_8)
     private fun eligible(){check(available() && Build.VERSION.SDK_INT>=35)}
-    fun createWrappingKey() {
+    private fun <T> operation(body:()->T):T = try{body()}catch(_:Exception){throw IllegalStateException("Protected key unavailable")}
+    fun createWrappingKey()=operation{createWrappingKeyImpl()}
+    fun wrap(raw:ProtectedKey):WrappedDatabaseKey=operation{wrapImpl(raw)}
+    fun load(wrapped:WrappedDatabaseKey):ProtectedKey=operation{loadImpl(wrapped)}
+    private fun createWrappingKeyImpl() {
         if(Build.VERSION.SDK_INT<35)error("Protected key unavailable")
         eligible();val store=KeyStore.getInstance("AndroidKeyStore").apply{load(null)}
         check(!store.containsAlias(alias)) // Never replace a key protecting existing ciphertext.
@@ -49,7 +52,7 @@ internal class AndroidProtectedKeyProvider(private val available:()->Boolean={fa
         eligible();val store=KeyStore.getInstance("AndroidKeyStore").apply{load(null)}
         return store.getKey(alias,null) as? SecretKey ?: error("Protected key unavailable")
     }
-    fun wrap(raw:ProtectedKey):WrappedDatabaseKey {
+    private fun wrapImpl(raw:ProtectedKey):WrappedDatabaseKey {
         val cipher=Cipher.getInstance("AES/GCM/NoPadding");cipher.init(Cipher.ENCRYPT_MODE,key());cipher.updateAAD(aad)
         var sealed:ByteArray?=null
         try {
@@ -57,7 +60,7 @@ internal class AndroidProtectedKeyProvider(private val available:()->Boolean={fa
             eligible();return WrappedDatabaseKey(cipher.iv,sealed ?: error("Protected key unavailable"))
         }finally{sealed?.fill(0)}
     }
-    fun load(wrapped:WrappedDatabaseKey):ProtectedKey {
+    private fun loadImpl(wrapped:WrappedDatabaseKey):ProtectedKey {
         val cipher=Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.DECRYPT_MODE,key(),GCMParameterSpec(128,wrapped.iv()));cipher.updateAAD(aad)
         val clear=cipher.doFinal(wrapped.ciphertext())
@@ -69,7 +72,7 @@ internal class AndroidProtectedKeyProvider(private val available:()->Boolean={fa
 internal enum class PrivilegedOrigin {AUTHENTICATED_SCREEN,WAKE,VOICE,MODEL}
 internal enum class PrivilegedOperation {READ_MEMORY,DELETE_HISTORY,CHANGE_PRIVACY}
 internal class MemoryKeySession(private val clock:NativeClock=MonotonicClock(),
-    private val scheduler:IdleScheduler=NativeIdleScheduler(),private val unlocked:()->Boolean={false}):PrivateEffectGate {
+    private val scheduler:IdleScheduler=NativeIdleScheduler(),private val unlocked:()->Boolean={false}):PrivateEffectGate,AutoCloseable {
     class Ticket internal constructor(internal val epoch:java.util.UUID,internal val started:Long)
     private var epoch=java.util.UUID.randomUUID();private var pending=false
     private val copies=mutableListOf<ProtectedKey>()
@@ -101,5 +104,6 @@ internal class MemoryKeySession(private val clock:NativeClock=MonotonicClock(),
                 origin==PrivilegedOrigin.AUTHENTICATED_SCREEN && allows(PrivateEffect.READ_MEMORY)
         }
     override fun invalidate(){revoke()}
+    override fun close(){revoke()}
     @Synchronized fun revoke(){epoch=java.util.UUID.randomUUID();pending=false;expiry?.cancel();expiry=null;copies.forEach{it.close()};copies.clear();key?.close();key=null}
 }

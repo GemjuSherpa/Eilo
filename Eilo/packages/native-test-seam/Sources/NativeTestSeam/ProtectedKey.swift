@@ -101,7 +101,7 @@ final class MemoryKeySession:PrivateEffectGate {
   /// Native origin is chosen by the trusted dispatcher, never parsed from model/text payloads.
   func allowsPrivilegedRequest(origin:PrivilegedOrigin,operation:PrivilegedOperation)->Bool {
     lock.lock();defer{lock.unlock()}
-    return origin == .authenticatedScreen && allows(.readMemory)
+    switch operation {case .readMemory,.deleteHistory,.changePrivacy:return origin == .authenticatedScreen && allows(.readMemory)}
   }
   func invalidate(){revoke()}
   deinit{revoke()}

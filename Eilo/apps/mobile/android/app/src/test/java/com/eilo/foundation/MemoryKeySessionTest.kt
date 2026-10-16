@@ -54,4 +54,33 @@ class MemoryKeySessionTest {
         unlocked=true;assertFalse(s.allowsPrivilegedRequest(PrivilegedOrigin.AUTHENTICATED_SCREEN,PrivilegedOperation.DELETE_HISTORY))
     }
 
+    @Test fun unlockNeedsFreshAuthenticationAndOldResultCannotReviveSession() {
+        val session=MemoryKeySession(unlocked={true});val c=testController(privateGate=session)
+        c.privacyTransition(PrivacyChange.HISTORY_SESSION);c.dispatch(ControllerEvent.START)
+        val old=session.beginAuthentication()!!;c.privacyTransition(PrivacyChange.LOCK);c.privacyTransition(PrivacyChange.UNLOCK)
+        assertTrue(c.dispatch(ControllerEvent.START));val token=c.token()!!
+        assertFalse(c.guardedPrivateEffect(token,PrivateEffect.READ_MEMORY){fail("unlock granted memory")})
+        val late=key();assertFalse(session.complete(old,late));assertFalse(late.active())
+        assertTrue(session.complete(session.beginAuthentication()!!,key()))
+        var reads=0;assertTrue(c.guardedPrivateEffect(token,PrivateEffect.READ_MEMORY){reads++});assertEquals(1,reads)
+        c.stop();assertFalse(session.allows(PrivateEffect.READ_MEMORY))
+    }
+    @Test fun stopAndClockRollbackInvalidateCopiesAndPendingAuthentication() {
+        val clock=Clock();val session=MemoryKeySession(clock=clock,unlocked={true});val c=testController(privateGate=session)
+        c.dispatch(ControllerEvent.START);val k=key();assertTrue(session.complete(session.beginAuthentication()!!,k))
+        val copy=session.copyForNativeUse();c.stop();assertFalse(k.active());assertFalse(copy.active())
+        val t=session.beginAuthentication()!!;c.stop();assertFalse(session.complete(t,key()))
+        assertTrue(session.complete(session.beginAuthentication()!!,key()));clock.now=99
+        assertFalse(session.allows(PrivateEffect.READ_MEMORY));clock.now=100;assertFalse(session.allows(PrivateEffect.READ_MEMORY))
+        session.close()
+    }
+
+    @Test fun privateEffectCannotReportCurrentAuthorizationAfterExpiry() {
+        val clock=Clock();val session=MemoryKeySession(clock=clock,unlocked={true});val c=testController(privateGate=session)
+        c.privacyTransition(PrivacyChange.HISTORY_SESSION);c.dispatch(ControllerEvent.START)
+        assertTrue(session.complete(session.beginAuthentication()!!,key()))
+        assertFalse(c.guardedPrivateEffect(c.token()!!,PrivateEffect.DISPLAY_PRIVATE){clock.now+=60_000})
+        assertFalse(session.allows(PrivateEffect.READ_MEMORY))
+    }
+
 }
