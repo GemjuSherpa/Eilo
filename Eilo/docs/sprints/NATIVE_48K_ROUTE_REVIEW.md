@@ -22,6 +22,23 @@ streamed 1 kHz/10 kHz tones, chunk invariance, phase/count, bit-preserving bypas
 Converter checks: 276 Swift/329 Android tests PASS; Android lint/Debug/Release compile PASS;
 normal same iPhone18 Pro simulator build/install/three ten-second launches PASS before commit.
 
+## Capture integration
+
+VAD capture slots accept fixed 16/48 kHz sources and configure their transport accordingly.
+The raw queue remains four <=100 ms frames (at most 19200 raw samples at 48 kHz), with the
+existing <250 ms age limit. Conversion runs only on the inference worker, before normalized
+VAD windows and optional ASR audio ownership. Raw ring history and conversion scratch close on
+worker cleanup. Default normal application entry points still attach no model/runtime.
+
+All endpoint counts and lastChunkConsumed remain in the normalized 16 kHz clock. A caller must
+not interpret these as original capture indices; the filter has an explicit delay and a completed
+endpoint discards the remaining normalized/raw callback suffix. Stream rate changes fail closed;
+this task does not migrate a running turn between routes. Android's recorder still requests 16 kHz;
+iOS uses the observed mono channel at its supported actual rate without forcing session format.
+Capture integration checks: 280 Swift/333 Android tests PASS, compiler/lint and same normal
+simulator build/install/three ten-second launches PASS. Quiet/EOF/tail/count, raw queue overflow,
+rate mismatch and 48 kHz slot-to-ASR exact-prefix/confidence tests pass.
+
 ## Gates
 
 This supports only 16/48 kHz mono. 44.1 kHz, other rates, route changes, channel/downmix policy,
