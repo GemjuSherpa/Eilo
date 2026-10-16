@@ -6,14 +6,14 @@
       "id": "ios-built-in",
       "platform": "iOS",
       "status": "NOT_RUN",
-      "reason": "Connected iPhone17 Pro Max/iOS26.6.1. App microphone/VAD/joined model/verified voice attachment and frozen acoustic corpus remain open.",
+      "reason": "PR70 installer exists; physical matrix, joined voice caller and acoustic timings remain pending.",
       "samples": []
     },
     {
       "id": "android-built-in",
       "platform": "Android",
       "status": "NOT_RUN",
-      "reason": "No physical Android available.",
+      "reason": "Android readiness unverified; PR70 installer exists; physical matrix, joined voice caller and acoustic timings remain pending.",
       "samples": []
     }
   ]
