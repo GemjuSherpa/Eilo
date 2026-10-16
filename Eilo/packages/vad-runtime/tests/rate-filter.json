@@ -1,0 +1,19 @@
+{
+  "recipe": "hamming-fir193-fc7000-decimate3-v1",
+  "coefficient_float32_le_sha256": "34219032d202d4bc31bb61fc543d6adf50819e8738ff8747623b7badd2b3dc6e",
+  "source_rate": 48000,
+  "target_rate": 16000,
+  "taps": 193,
+  "delay_source_samples": 96,
+  "output_count": "floor(source_samples/3); causal zero startup; no EOF flush",
+  "passband_hz": [
+    0,
+    6000
+  ],
+  "max_passband_error_db": 0.1,
+  "stopband_hz": [
+    8000,
+    24000
+  ],
+  "min_stopband_rejection_db": 50
+}
