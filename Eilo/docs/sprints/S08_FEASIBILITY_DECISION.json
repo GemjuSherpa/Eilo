@@ -176,7 +176,7 @@
     },
     {
       "artifact": "packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift",
-      "sha256": "e9b75b7ae573de8db3c2e9432289704bec950f3084f79d3ca92edb4967fb9c80",
+      "sha256": "3636ed41e0b889457689212cbd29214071033edc82ff28e87fd8a0bf61241624",
       "observation": "IOSCaptureEligibility uses false consent and a separately gated physical capability; no background pipeline attached."
     },
     {

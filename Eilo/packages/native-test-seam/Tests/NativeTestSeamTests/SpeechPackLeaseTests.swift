@@ -83,4 +83,57 @@ final class SpeechPackLeaseTests:XCTestCase {
     let stream=try lease.openAsr(allowed:{true},api:api);XCTAssertThrowsError(try stream.text(finish:true));XCTAssertEqual(closes,1)
     stream.close();XCTAssertEqual(closes,1)
   }
+  final class CaptureHarness {
+    let e=EffectsSpy(),w=VadCaptureTransportTests.Worker(),slot=VadCaptureSlot(sampleRate:16000)
+    let c:NativeController
+    var samples=0,vc=0,ac=0,vd=0,ad=0,texts=0,outcomes=0
+    var duringVad:()->Void={},duringAsrClose:()->Void={}
+    init(){c=testController(effects:e);_ = c.dispatch(.start);_ = c.dispatch(.speechDetected,token:c.token)}
+    var vad:NativeVadAPI {NativeVadAPI(create:{_ in self.vc+=1;return OpaquePointer(bitPattern:1)},process:{_,p,final in
+      let start=self.samples;self.samples+=p.count;self.duringVad()
+      return NativeVadObservation(probability:start<5120 ? 0.95:0.01,startSample:start,samples:p.count,final:final)
+    },destroy:{_ in self.vd+=1})}
+    var asr:NativeAsrAPI {NativeAsrAPI(create:{_ in self.ac+=1;return OpaquePointer(bitPattern:2)},accept:{_,_ in 0},text:{_,_,out in out[0]=65;out[1]=0;return 0},destroy:{_ in self.ad+=1;self.duringAsrClose()})}
+    func install(_ f:Fixture,ticket:VadCaptureSlot.SetupTicket?=nil,asrSelection:SpeechPackSelection?=nil)throws->Bool {
+      let prepared=ticket ?? slot.prepare(capture:e,controller:c,token:c.token!)!
+      return try SpeechCaptureInstaller.install(ticket:prepared,vadStore:f.store,vadSelection:f.selection(.vad),asrStore:f.store,
+        asrSelection:asrSelection ?? f.selection(.asr),schedule:w.schedule,vadAPI:vad,asrAPI:asr,
+        accepted:{_ in self.outcomes+=1},recognized:{_ in self.texts+=1})
+    }
+    func feed(_ count:Int=1600){[Float](repeating:0,count:count).withUnsafeBufferPointer{slot.submit($0,sampleRate:16000)};w.run()}
+  }
+  func testSignedInstallerRunsOneJoinedTurnAndCannotReuseTicket()throws {
+    let f=try Fixture();try f.activate();let h=CaptureHarness(),ticket=h.slot.prepare(capture:h.e,controller:h.c,token:h.c.token!)!
+    XCTAssertTrue(try h.install(f,ticket:ticket));XCTAssertEqual(h.vc,0)
+    for _ in 0..<20{h.feed()}
+    XCTAssertEqual(h.texts,1);XCTAssertEqual(h.outcomes,1);XCTAssertEqual(h.vc,1);XCTAssertEqual(h.ac,1)
+    XCTAssertEqual(h.vd,1);XCTAssertEqual(h.ad,1);XCTAssertFalse(try h.install(f,ticket:ticket));h.w.run()
+  }
+  func testSignedInstallerRejectsStaleWrongKindAndMissingSecondPack()throws {
+    let f=try Fixture();try f.activate();let h=CaptureHarness(),old=h.slot.prepare(capture:h.e,controller:h.c,token:h.c.token!)!
+    h.slot.detach();XCTAssertFalse(try h.install(f,ticket:old))
+    XCTAssertFalse(try h.install(f,asrSelection:f.selection(.vad)))
+    XCTAssertFalse(try h.install(f,asrSelection:f.selection(.asr,pack:"missing")))
+    XCTAssertEqual(h.vc,0);XCTAssertEqual(h.ac,0)
+    XCTAssertTrue(try h.install(f));_ = h.c.stop();h.w.run();XCTAssertEqual(h.vc,0)
+  }
+  func testSignedInstallerRevocationAtVadAndAsrCleanupSuppressesText()throws {
+    for phase in 0..<3 {
+      let f=try Fixture();try f.activate();let h=CaptureHarness();XCTAssertTrue(try h.install(f))
+      if phase==0{try f.activate(2)}
+      if phase==1{h.duringVad={_ = h.c.stop()}}
+      if phase==2{h.duringAsrClose={_ = h.c.stop()}}
+      for _ in 0..<20{h.feed()}
+      XCTAssertEqual(h.texts,0);XCTAssertEqual(h.outcomes,0)
+      XCTAssertEqual(h.vd,h.vc);XCTAssertEqual(h.ad,h.ac);h.slot.close();h.w.run()
+    }
+  }
+
+  func testDetachDuringSignedResolutionCannotAttachCandidate()throws {
+    let f=try Fixture();try f.activate();let h=CaptureHarness();var checks=0
+    let ticket=h.slot.prepare(capture:h.e,controller:h.c,token:h.c.token!,available:{checks+=1;if checks==3{h.slot.detach()};return true})!
+    XCTAssertFalse(try h.install(f,ticket:ticket));XCTAssertEqual(h.vc,0);XCTAssertEqual(h.ac,0)
+    XCTAssertTrue(try h.install(f));h.slot.close();h.w.run()
+  }
+
 }

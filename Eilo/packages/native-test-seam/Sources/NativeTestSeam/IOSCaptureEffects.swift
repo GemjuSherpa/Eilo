@@ -117,6 +117,22 @@ public final class IOSCaptureEffects: ControllerEffects, @unchecked Sendable {
       completion(attached)
     }
   }
+  /// Explicit signed native setup; no normal-app activation or trust configuration.
+  func connectSpeech(vadStore:PackStore,vadSelection:SpeechPackSelection,asrStore:PackStore,
+                     asrSelection:SpeechPackSelection,token:GenerationToken,controller:NativeController,
+                     vadAPI:NativeVadAPI = .linked,asrAPI:NativeAsrAPI = .linked,
+                     accepted:@escaping (VadCaptureOutcome)->Void={_ in},recognized:@escaping (AsrText)->Void={_ in},
+                     completion:@escaping (Bool)->Void) {
+    lock.lock();let expected=run,slot=vadSlot;lock.unlock()
+    guard let slot,let ticket=slot.prepare(capture:self,controller:controller,token:token,
+      available:{[weak self] in guard let self else{return false};return self.current(expected) && self.eligible()}) else{completion(false);return}
+    let inference=vadWorker
+    inference.async {
+      completion(SpeechCaptureInstaller.install(ticket:ticket,vadStore:vadStore,vadSelection:vadSelection,
+        asrStore:asrStore,asrSelection:asrSelection,schedule:{inference.async(execute:$0)},
+        vadAPI:vadAPI,asrAPI:asrAPI,accepted:accepted,recognized:recognized))
+    }
+  }
   public func releaseCapture() throws {
     lock.lock();defer { lock.unlock() };run &+= 1
     expiry?.cancel();expiry=nil;standby?.close();standby=nil;wakeSlot?.close();wakeSlot=nil;vadSlot?.close();vadSlot=nil;wakeController=nil

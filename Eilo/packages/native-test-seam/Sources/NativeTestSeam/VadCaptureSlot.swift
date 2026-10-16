@@ -16,15 +16,32 @@ final class VadCaptureSlot: @unchecked Sendable {
   private var live=true,epoch:UInt64=0
   private var binding:(VadCapturePermit,VadCaptureTransport)?
   init(sampleRate:Int) { self.sampleRate=sampleRate }
+  /// Mint before scheduling or hashing. A detach invalidates every outstanding ticket.
+  struct SetupTicket {
+    fileprivate let slot:VadCaptureSlot,epoch:UInt64
+    let capture:any ControllerEffects,controller:NativeController,token:GenerationToken
+    let available:()->Bool
+    func current()->Bool { slot.current(self) && available() && controller.recognitionAllowed(token) }
+  }
+  func prepare(capture:any ControllerEffects,controller:NativeController,token:GenerationToken,available:@escaping ()->Bool={true})->SetupTicket? {
+    guard available(),controller.recognitionAllowed(token) else{return nil}
+    lock.lock();defer{lock.unlock()}
+    guard live,binding==nil else{return nil}
+    return SetupTicket(slot:self,epoch:epoch,capture:capture,controller:controller,token:token,available:available)
+  }
+  private func current(_ ticket:SetupTicket)->Bool {
+    lock.lock();defer{lock.unlock()}
+    return ticket.slot === self && live && binding==nil && epoch==ticket.epoch && !ticket.token.cancelled
+  }
   /// Explicit native-only setup on an inference worker. No normal app caller/readiness override.
   func install(capture:any ControllerEffects,controller:NativeController,token:GenerationToken,
                schedule:@escaping (@escaping ()->Void)->Void,verified:@escaping ()->Bool={false},
                open:@escaping (@escaping ()->Bool)throws->VadStream={_ in throw VadFailure.unavailable},
                accepted:@escaping (VadCaptureOutcome)->Void={_ in},
                openAsr:((@escaping ()->Bool)throws->AsrStream)?=nil,
-               recognized:@escaping (AsrText)->Void={_ in},asrVerified:@escaping ()->Bool={false}) -> Bool {
+               recognized:@escaping (AsrText)->Void={_ in},asrVerified:@escaping ()->Bool={false},setup:SetupTicket?=nil,revoked:@escaping ()->Void={}) -> Bool {
     guard (sampleRate==16000 || sampleRate==48000),verified(),(openAsr == nil || asrVerified()),!token.cancelled else { return false }
-    lock.lock(); let ticket=epoch,ready=live && binding==nil; lock.unlock()
+    lock.lock(); let ticket=setup?.epoch ?? epoch,ready=live && binding==nil && (setup == nil || (setup!.slot === self && setup!.capture === capture && setup!.controller === controller && setup!.token === token && setup!.epoch==epoch)); lock.unlock()
     guard ready else { return false }
     let permit=VadCapturePermit()
     let check={permit.active && !token.cancelled && verified() && (openAsr == nil || asrVerified())}
@@ -42,8 +59,8 @@ final class VadCaptureSlot: @unchecked Sendable {
         if let text{recognized(text)};if current(){accepted(value)}
       })
       self?.retire(permit)
-    },sourceRate:sampleRate)
-    permit.cancel={ [weak transport] in transport?.close() }
+    },sourceRate:sampleRate,finished:{[weak self] in permit.revoke();self?.retire(permit)})
+    permit.cancel={ [weak transport] in revoked();transport?.close() }
     guard controller.prepareVadCapture(permit,capture:capture,token:token) else { transport.close();return false }
     let stillVerified=check()
     lock.lock()
@@ -67,4 +84,29 @@ final class VadCaptureSlot: @unchecked Sendable {
     previous?.0.revoke();previous?.1.close()
   }
   func close() { lock.lock();live=false;lock.unlock();detach() }
+}
+
+/// Runs synchronously on the serial inference worker. The ticket must predate scheduling.
+/// Signed files are hashed here; controller/capture locks only see disk-free lease checks.
+enum SpeechCaptureInstaller {
+  static func install(ticket:VadCaptureSlot.SetupTicket,vadStore:PackStore,vadSelection:SpeechPackSelection,
+                      asrStore:PackStore,asrSelection:SpeechPackSelection,
+                      schedule:@escaping (@escaping ()->Void)->Void,
+                      vadAPI:NativeVadAPI = .linked,asrAPI:NativeAsrAPI = .linked,
+                      accepted:@escaping (VadCaptureOutcome)->Void={_ in},recognized:@escaping (AsrText)->Void={_ in})->Bool {
+    var vad:SpeechPackLease?,asr:SpeechPackLease?,attached=false
+    defer{if !attached{vad?.close();asr?.close()}}
+    do {
+      guard vadSelection.kind == .vad,asrSelection.kind == .asr,ticket.current() else{return false}
+      let v=try SpeechPackLease.resolve(store:vadStore,selection:vadSelection);vad=v
+      guard ticket.current(),v.verified() else{return false}
+      let a=try SpeechPackLease.resolve(store:asrStore,selection:asrSelection);asr=a
+      guard ticket.current(),v.verified(),a.verified() else{return false}
+      attached=ticket.slot.install(capture:ticket.capture,controller:ticket.controller,token:ticket.token,
+        schedule:schedule,verified:v.verified,open:{try v.openVad(allowed:$0,api:vadAPI)},accepted:accepted,
+        openAsr:{try a.openAsr(allowed:$0,api:asrAPI)},recognized:recognized,asrVerified:a.verified,
+        setup:ticket,revoked:{v.close();a.close()})
+      return attached
+    }catch{return false} // No content, file paths or raw errors escape the native boundary.
+  }
 }
