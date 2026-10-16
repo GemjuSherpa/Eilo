@@ -43,4 +43,15 @@ class MemoryKeySessionTest {
         }
     }
 
+    @Test fun wakeVoiceModelCannotAcquirePrivilegesEvenDuringAuthenticatedSession() {
+        var unlocked=true;val s=MemoryKeySession(unlocked={unlocked});assertTrue(s.complete(s.beginAuthentication()!!,key()))
+        for(op in PrivilegedOperation.entries) {
+            for(origin in listOf(PrivilegedOrigin.WAKE,PrivilegedOrigin.VOICE,PrivilegedOrigin.MODEL))assertFalse(s.allowsPrivilegedRequest(origin,op))
+            assertTrue(s.allowsPrivilegedRequest(PrivilegedOrigin.AUTHENTICATED_SCREEN,op))
+        }
+        unlocked=false
+        for(origin in PrivilegedOrigin.entries)for(op in PrivilegedOperation.entries)assertFalse(s.allowsPrivilegedRequest(origin,op))
+        unlocked=true;assertFalse(s.allowsPrivilegedRequest(PrivilegedOrigin.AUTHENTICATED_SCREEN,PrivilegedOperation.DELETE_HISTORY))
+    }
+
 }

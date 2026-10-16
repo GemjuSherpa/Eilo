@@ -45,4 +45,16 @@ final class MemoryKeySessionTests:XCTestCase {
     }
   }
 
+  func testWakeVoiceModelCannotAcquirePrivilegesEvenDuringAuthenticatedSession()throws {
+    var unlocked=true;let s=MemoryKeySession(unlocked:{unlocked})
+    XCTAssertTrue(s.complete(s.beginAuthentication()!,key:try key()))
+    for op in PrivilegedOperation.allCases {
+      for origin in [PrivilegedOrigin.wake,.voice,.model]{XCTAssertFalse(s.allowsPrivilegedRequest(origin:origin,operation:op))}
+      XCTAssertTrue(s.allowsPrivilegedRequest(origin:.authenticatedScreen,operation:op))
+    }
+    unlocked=false
+    for origin in PrivilegedOrigin.allCases{for op in PrivilegedOperation.allCases{XCTAssertFalse(s.allowsPrivilegedRequest(origin:origin,operation:op))}}
+    unlocked=true;XCTAssertFalse(s.allowsPrivilegedRequest(origin:.authenticatedScreen,operation:.deleteHistory))
+  }
+
 }

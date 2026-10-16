@@ -59,6 +59,8 @@ final class IOSProtectedKeyProvider {
 
 /// Native authentication result consumes one pre-auth ticket. Unlock alone cannot authorize.
 /// No production caller or protected store is installed; S08 still gates persistent memory.
+enum PrivilegedOrigin:CaseIterable {case authenticatedScreen,wake,voice,model}
+enum PrivilegedOperation:CaseIterable {case readMemory,deleteHistory,changePrivacy}
 final class MemoryKeySession:PrivateEffectGate {
   struct Ticket {fileprivate let epoch:UUID,started:UInt64}
   private let lock=NSRecursiveLock(),clock:any NativeClock,scheduler:any IdleScheduler,unlocked:()->Bool
@@ -96,6 +98,11 @@ final class MemoryKeySession:PrivateEffectGate {
     try key.borrow{bytes=Array($0)};let copy=try ProtectedKey(bytes);copies.append(copy);return copy
   }
   func revoke(){lock.lock();defer{lock.unlock()};epoch=UUID();pending=false;expiry?.cancel();expiry=nil;copies.forEach{$0.close()};copies.removeAll();key?.close();key=nil}
+  /// Native origin is chosen by the trusted dispatcher, never parsed from model/text payloads.
+  func allowsPrivilegedRequest(origin:PrivilegedOrigin,operation:PrivilegedOperation)->Bool {
+    lock.lock();defer{lock.unlock()}
+    return origin == .authenticatedScreen && allows(.readMemory)
+  }
   func invalidate(){revoke()}
   deinit{revoke()}
 }
