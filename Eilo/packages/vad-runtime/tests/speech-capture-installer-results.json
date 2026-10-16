@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scope": "SIGNED_SPEECH_CAPTURE_INSTALLER_SYNTHETIC",
+  "base_main": "81400a1035b370948b94c1e93efab14e8eee2b8b",
+  "swift_tests": 295,
+  "android_tests": {
+    "tests": 349,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "signature_fixture": "EPHEMERAL_ES256_LAB_KEYS",
+  "installer_vad_asr_backends": "SCRIPTED",
+  "foreground_capture_device": "SYNTHETIC",
+  "native_vad_transport_regression": "IOS_SIMULATOR_AND_MACOS_JVM_JNI_PASS",
+  "native_vad_installer_execution": "NOT_RUN",
+  "real_signed_asr_weight_load": "NOT_RUN",
+  "physical_gates": "NOT_RUN",
+  "production_readiness": "NOT_ENABLED",
+  "production_trust": "NOT_CONFIGURED",
+  "feasibility": "HOLD_PENDING_PHYSICAL_EVIDENCE",
+  "persistent_memory": "DENIED",
+  "android_debug_release": "PASS",
+  "normal_packaging_models_and_activation_absent": true,
+  "ios_simulator_build_install": "PASS",
+  "task_build_launch_checks": [
+    {
+      "task": "setup-tickets",
+      "cycles": 3,
+      "dwell_seconds": 10,
+      "result": "PASS"
+    },
+    {
+      "task": "signed-installation",
+      "cycles": 3,
+      "dwell_seconds": 10,
+      "result": "PASS"
+    },
+    {
+      "task": "validation",
+      "cycles": 3,
+      "dwell_seconds": 10,
+      "result": "PASS"
+    }
+  ],
+  "workspace_lint_typecheck": "PASS",
+  "mobile_tests": 9,
+  "contract_tests": 33,
+  "dataset_tests_normal_and_optimized": 56,
+  "feasibility_tests_normal_and_optimized": 47,
+  "six_reports": "PASS",
+  "native_sanitizer_contract": "PASS",
+  "fir_normal_and_optimized": "PASS",
+  "ci_fixture_tests_normal_and_optimized": "PASS",
+  "apk_sha256": {
+    "apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk": "db45168bdd347990f446fdb1bf7b827be9b1da6a6c784974ccbf7ca5fe50f53e",
+    "apps/mobile/android/app/build/outputs/apk/release/app-release.apk": "2793ff3aac832eac67e8b28b1b9acc281c5c84d382379c3341e271a6a08f5690"
+  },
+  "ios_debug_binary_sha256": "57f511e79860f4f9d545c608e0ecfecd9a7857f3d373e13b998d44f4dc2dc390",
+  "source_sha256": {
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/ForegroundCapture.kt": "a96e468ff3e52632a6ea5c2277e17c857c051be29fb37bde5ff5e812122003e2",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureSlot.kt": "f685ae4be122ea0b577c4103a5b701015a0f1ad7e3f14254747e3e28b1ab1dea",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureTransport.kt": "6a1f491e58e34db8d3d00d7a2d76f448152d7705bc2a25586dd8bcd0f1e2dd14",
+    "packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift": "3636ed41e0b889457689212cbd29214071033edc82ff28e87fd8a0bf61241624",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureSlot.swift": "64e8961eafe227d4cba31221fc9160da5b754b8a1710af91835359658c7fa4dc",
+    "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift": "f1e093f36959052aa0f9e8a3127be6b75b8720c7e6b93b64099f63b4c4c9a025"
+  }
+}
