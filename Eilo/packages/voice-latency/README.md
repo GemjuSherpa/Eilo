@@ -134,3 +134,16 @@ Minute resource records include exact index, actual elapsed seconds (±5s cadenc
 For physical battery trials, disconnect charging after installing assets; a connected USB phone is not a valid battery test. Keep route, brightness, volume, room temperature, battery health and network state fixed/reviewed and include them in the locally retained protocol/trace. Thermal states are observed metadata, not temperature or heat-safety certification. Use only synthetic questions/ambient sound; no personal audio, conversation, serial, location or raw exception logs in reports.
 
 Current source policy stops iOS capture on scene inactivity/protected-data loss, and Android capture requires unlocked state. Empty production pack trust configuration and missing attached native wake/VAD/ASR/model/offline-voice pipeline block physical spoken turns. No capability flag is changed by these tools. Physical device availability is established separately from app capability. Android hardware remains unavailable. Review these gaps and legitimate platform behavior before any affected physical workload or persistent memory work.
+
+
+## S08 dependency audit after PR70
+
+Current acceptance/readiness is in `../../docs/sprints/S08_REVIEW.md` and
+`S08_DEPENDENCY_AUDIT.json`. All six S08 physical/decision tasks remain blocked by their exact
+baseline prerequisites. Public-corpus tooling and signed native capture installation are now
+implemented; the historical preparation notes above do not mean those components are absent.
+They still do not establish the reviewed S08 physical workload, production joined caller,
+permitted locked capture or prior phone quality/model/voice acceptance. Device connection was
+not rechecked for this audit. All pending samples/metrics remain empty/null, support remains
+undeclared and the memory gate remains closed. Run the six commands above to validate pending
+reports; a VALID report is not a physical PASS.
