@@ -29,11 +29,12 @@ internal class WrappedDatabaseKey(iv:ByteArray,ciphertext:ByteArray) {
  * The wrapped ciphertext must later live in excluded app-private storage, never backup/JS.
  */
 internal class AndroidProtectedKeyProvider(private val available:()->Boolean={false}) {
+    companion object {private val provisioning=Any()}
     private val alias="com.eilo.protected-memory.v1"
     private val aad="eilo:database-key:v1".toByteArray(Charsets.UTF_8)
     private fun eligible(){check(available() && Build.VERSION.SDK_INT>=35)}
     private fun <T> operation(body:()->T):T = try{body()}catch(_:Exception){throw IllegalStateException("Protected key unavailable")}
-    fun createWrappingKey()=operation{createWrappingKeyImpl()}
+    fun createWrappingKey()=operation{synchronized(provisioning){createWrappingKeyImpl()}}
     fun wrap(raw:ProtectedKey):WrappedDatabaseKey=operation{wrapImpl(raw)}
     fun load(wrapped:WrappedDatabaseKey):ProtectedKey=operation{loadImpl(wrapped)}
     private fun createWrappingKeyImpl() {
@@ -78,19 +79,21 @@ internal class MemoryKeySession(private val clock:NativeClock=MonotonicClock(),
     private val copies=mutableListOf<ProtectedKey>()
     private var key:ProtectedKey?=null;private var opened=0L;private var expiry:IdleCancellation?=null
     @Synchronized fun beginAuthentication():Ticket? {
-        revoke();if(!unlocked())return null;pending=true;return Ticket(epoch,clock.milliseconds())
+        revoke();val now=clock.milliseconds();if(!unlocked() || now<0)return null;pending=true;return Ticket(epoch,now)
     }
     /** Call only with the result of an explicit native OS authentication/provider request. */
     @Synchronized fun complete(ticket:Ticket,candidate:ProtectedKey):Boolean {
         val now=clock.milliseconds()
-        if(!pending || ticket.epoch!=epoch || !unlocked() || !candidate.active() || now<ticket.started || now-ticket.started>=30_000){candidate.close();if(ticket.epoch==epoch && pending)revoke();return false}
+        if(!pending || ticket.epoch!=epoch || !unlocked() || !candidate.active() || ticket.started<0 || now<ticket.started || now-ticket.started>=30_000 || !pending || ticket.epoch!=epoch){candidate.close();if(ticket.epoch==epoch && pending)revoke();return false}
         pending=false;key=candidate;opened=now;val accepted=epoch
         expiry=scheduler.schedule(60_000){synchronized(this){if(epoch==accepted)revoke()}}
         return true
     }
     @Synchronized override fun allows(effect:PrivateEffect):Boolean {
         val now=clock.milliseconds()
-        if(!unlocked() || key?.active()!=true || now<opened || now-opened>=60_000){revoke();return false};return true
+        if(!unlocked()){revoke();return false}
+        if(key==null)return false // Denied reads do not cancel an in-flight authentication.
+        if(key?.active()!=true || now<opened || now-opened>=60_000){revoke();return false};return true
     }
     @Synchronized fun copyForNativeUse():ProtectedKey {
         check(allows(PrivateEffect.READ_MEMORY) && copies.size<8)

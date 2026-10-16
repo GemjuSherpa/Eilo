@@ -83,4 +83,11 @@ class MemoryKeySessionTest {
         assertFalse(session.allows(PrivateEffect.READ_MEMORY))
     }
 
+    @Test fun deniedReadWhileAuthenticationPendingDoesNotConsumeItsTicket() {
+        val session=MemoryKeySession(unlocked={true});val t=session.beginAuthentication()!!
+        assertFalse(session.allows(PrivateEffect.READ_MEMORY));assertFalse(session.allows(PrivateEffect.DISPLAY_PRIVATE))
+        assertTrue(session.complete(t,key()));assertTrue(session.allows(PrivateEffect.READ_MEMORY));session.close()
+        val clock=Clock();clock.now=-1;assertNull(MemoryKeySession(clock=clock,unlocked={true}).beginAuthentication())
+    }
+
 }
