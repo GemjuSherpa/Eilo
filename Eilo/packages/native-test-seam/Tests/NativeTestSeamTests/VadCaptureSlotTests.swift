@@ -78,4 +78,15 @@ final class VadCaptureSlotTests:XCTestCase {
     XCTAssertFalse(slot.install(capture:e,controller:c,token:c.token!,schedule:w.schedule,verified:{checks+=1;if checks==2{slot.close()};return true}))
     w.run();XCTAssertEqual(c.state,.capturing)
   }
+  func testPreparedTicketCannotSurviveDetachOrBeReusedAndRevokesOnce() {
+    let w=Worker(),e=EffectsSpy(),c=capturing(e),slot=VadCaptureSlot(sampleRate:16000)
+    let stale=slot.prepare(capture:e,controller:c,token:c.token!)!
+    slot.detach();XCTAssertFalse(stale.current())
+    XCTAssertFalse(slot.install(capture:e,controller:c,token:c.token!,schedule:w.schedule,verified:{true},setup:stale))
+    let fresh=slot.prepare(capture:e,controller:c,token:c.token!)!;var revocations=0
+    XCTAssertTrue(slot.install(capture:e,controller:c,token:c.token!,schedule:w.schedule,verified:{true},setup:fresh,revoked:{revocations+=1}))
+    XCTAssertFalse(fresh.current());XCTAssertTrue(c.stop());XCTAssertEqual(revocations,1)
+    slot.detach();w.run();XCTAssertEqual(revocations,1)
+  }
+
 }

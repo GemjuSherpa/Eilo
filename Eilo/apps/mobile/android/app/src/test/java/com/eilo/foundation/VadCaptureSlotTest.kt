@@ -78,4 +78,14 @@ class VadCaptureSlotTest {
         assertFalse(slot.install(e,c,c.token()!!,w,{checks++;if(checks==2)slot.close();true}));w.run()
         assertEquals(ControllerState.CAPTURING,c.state())
     }
+    @Test fun preparedTicketCannotSurviveDetachOrBeReusedAndRevokesOnce() {
+        val w=Worker();val e=EffectsSpy();val c=capturing(e);val slot=VadCaptureSlot(16000)
+        val stale=slot.prepare(e,c,c.token()!!)!!;slot.detach();assertFalse(stale.current())
+        assertFalse(slot.install(e,c,c.token()!!,w,{true},setup=stale))
+        val fresh=slot.prepare(e,c,c.token()!!)!!;var revocations=0
+        assertTrue(slot.install(e,c,c.token()!!,w,{true},setup=fresh,revoked={revocations++}))
+        assertFalse(fresh.current());assertTrue(c.stop());assertEquals(1,revocations)
+        slot.detach();w.run();assertEquals(1,revocations)
+    }
+
 }
