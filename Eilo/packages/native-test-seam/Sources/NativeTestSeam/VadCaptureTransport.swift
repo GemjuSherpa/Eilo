@@ -32,6 +32,9 @@ final class VadCaptureTransport: @unchecked Sendable {
   private let joinedOutput:((VadCaptureOutcome,AsrText?,@escaping ()->Bool)->Void)?
   private var audio:VadAsrHandoff?
   private var delivery: VadWindowDelivery?
+  private let finished:()->Void
+  private var disposed=false
+  private func finishOwnership(){if !disposed{disposed=true;finished()}}
   private var scratch:[Float]
   init(schedule: @escaping (@escaping () -> Void) -> Void, verified: @escaping () -> Bool = { false },
        open: @escaping () throws -> VadStream = { throw VadFailure.unavailable },
@@ -39,7 +42,8 @@ final class VadCaptureTransport: @unchecked Sendable {
        output: @escaping (VadCaptureOutcome, @escaping () -> Bool) -> Void = { _,_ in },
        failure: @escaping (@escaping () -> Bool) -> Void = { _ in },
        audioFactory:(()->VadAsrHandoff)?=nil,
-       joinedOutput:((VadCaptureOutcome,AsrText?,@escaping ()->Bool)->Void)?=nil,sourceRate:Int=16000) {
+       joinedOutput:((VadCaptureOutcome,AsrText?,@escaping ()->Bool)->Void)?=nil,sourceRate:Int=16000,finished:@escaping ()->Void={}) {
+    self.finished=finished
     self.sourceRate=sourceRate;frameCapacity=sourceRate==48000 ? 4800:1600
     storage=[Float](repeating:0,count:frameCapacity*4);scratch=[Float](repeating:0,count:frameCapacity)
     self.audioFactory=audioFactory;self.joinedOutput=joinedOutput;self.failure=failure; self.schedule=schedule; self.verified=verified; self.open=open; self.now=now; self.output=output
@@ -87,7 +91,7 @@ final class VadCaptureTransport: @unchecked Sendable {
     while true {
       lock.lock()
       if !active {
-        clearLocked(); lock.unlock(); cleanup(); lock.lock(); scheduled=false; lock.unlock(); reportFailure(); return
+        clearLocked(); lock.unlock(); cleanup(); lock.lock(); scheduled=false; lock.unlock(); reportFailure(); finishOwnership(); return
       }
       if size==0 {
         let final=eof
@@ -128,6 +132,7 @@ final class VadCaptureTransport: @unchecked Sendable {
     }
   }
   private func complete(_ event: VadDeliveryEvent) {
+    defer{finishOwnership()}
     let outcome=VadCaptureOutcome(result:event.result,totalSamples:delivery?.acceptedSamples ?? 0,lastChunkConsumed:event.consumedSamples)
     var text:AsrText?,invalid=event.result == .invalid
     if !invalid,let factory=audioFactory {

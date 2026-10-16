@@ -84,4 +84,13 @@ final class VadCaptureTransportTests: XCTestCase {
     XCTAssertTrue(current?() ?? false);d.close();XCTAssertFalse(current?() ?? true);w.run()
     XCTAssertEqual(b.pcm.count,10752);XCTAssertEqual(b.closes,1)
   }
+  func testOwnershipFinishesOnceOnIdleCancellationAndNormalEof() {
+    for eof in [false,true] {
+      let w=Worker();var disposals=0
+      let d=VadCaptureTransport(schedule:w.schedule,verified:{true},finished:{disposals+=1})
+      if eof{d.finish()}else{d.close()};XCTAssertEqual(disposals,0)
+      w.run();XCTAssertEqual(disposals,1);d.close();w.run();XCTAssertEqual(disposals,1)
+    }
+  }
+
 }

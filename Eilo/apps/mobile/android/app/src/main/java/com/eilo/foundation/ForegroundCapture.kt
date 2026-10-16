@@ -144,6 +144,12 @@ internal class ForegroundCapture(
             open={check->NativeVadStream(model,check,api)},accepted=accepted,openAsr=openAsr,recognized=recognized,asrVerified=asrVerified)
     }
 
+    /** Mint on the caller before scheduling SpeechCaptureInstaller on the serial inference worker. */
+    fun prepareSpeechSetup(controller:NativeController,token:GenerationToken):VadCaptureSlot.SetupTicket? {
+        val snapshot=synchronized(monitor){if(!eligible())null else vadSlot?.let{it to run}} ?: return null
+        return snapshot.first.prepare(this,controller,token,{current(snapshot.second) && eligible()})
+    }
+
     private fun current(expected: Long) = synchronized(monitor) { run == expected }
     override fun releaseCapture() {
         val (previous, binding, vad) = synchronized(monitor) {

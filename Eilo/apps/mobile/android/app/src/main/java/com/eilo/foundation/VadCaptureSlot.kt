@@ -16,12 +16,12 @@ internal class VadCaptureSlot(val sampleRate:Int) {
     private var live=true;private var epoch=0L
     private var binding:Pair<VadCapturePermit,VadCaptureTransport>?=null
     class SetupTicket internal constructor(internal val slot:VadCaptureSlot,internal val epoch:Long,
-        val capture:ControllerEffects,val controller:NativeController,val token:GenerationToken) {
-        fun current()=slot.current(this) && controller.recognitionAllowed(token)
+        val capture:ControllerEffects,val controller:NativeController,val token:GenerationToken,internal val available:()->Boolean) {
+        fun current()=slot.current(this) && available() && controller.recognitionAllowed(token)
     }
-    fun prepare(capture:ControllerEffects,controller:NativeController,token:GenerationToken):SetupTicket? {
-        if(!controller.recognitionAllowed(token))return null
-        return synchronized(monitor){if(!live || binding!=null)null else SetupTicket(this,epoch,capture,controller,token)}
+    fun prepare(capture:ControllerEffects,controller:NativeController,token:GenerationToken,available:()->Boolean={true}):SetupTicket? {
+        if(!available() || !controller.recognitionAllowed(token))return null
+        return synchronized(monitor){if(!live || binding!=null)null else SetupTicket(this,epoch,capture,controller,token,available)}
     }
     private fun current(ticket:SetupTicket)=synchronized(monitor){
         ticket.slot===this && live && binding==null && epoch==ticket.epoch && !ticket.token.cancelled
@@ -46,7 +46,7 @@ internal class VadCaptureSlot(val sampleRate:Int) {
             try { controller.failVadCapture(permit,token,current) } finally { retire(permit) }
         },output={outcome,current->
             try { controller.finishVadCapture(permit,token,outcome,current,accepted) } finally { retire(permit) }
-        },audioFactory=audioFactory,joinedOutput=joined,sourceRate=sampleRate)
+        },audioFactory=audioFactory,joinedOutput=joined,sourceRate=sampleRate,finished={permit.revoke();retire(permit)})
         permit.cancel={revoked();transport.close()}
         if(!controller.prepareVadCapture(permit,capture,token)){transport.close();return false}
         val stillVerified=check()
@@ -68,4 +68,27 @@ internal class VadCaptureSlot(val sampleRate:Int) {
     }
     fun detach(){val previous=synchronized(monitor){binding.also{binding=null;epoch++}};previous?.first?.revoke();previous?.second?.close()}
     fun close(){synchronized(monitor){live=false};detach()}
+}
+
+/** Serial inference-worker operation. Mint ticket before scheduling. Successful capture owns
+ * both leases; cancellation only revokes capabilities and signals worker-owned destruction. */
+internal object SpeechCaptureInstaller {
+    fun install(ticket:VadCaptureSlot.SetupTicket,vadStore:PackStore,vadSelection:SpeechPackSelection,
+        asrStore:PackStore,asrSelection:SpeechPackSelection,worker:Executor,
+        vadApi:NativeVadApi=UnavailableVadApi,asrApi:NativeAsrApi=UnavailableAsrApi,
+        accepted:(VadCaptureOutcome)->Unit={},recognized:(AsrText)->Unit={}):Boolean {
+        var vad:SpeechPackLease?=null;var asr:SpeechPackLease?=null;var attached=false
+        try {
+            if(vadSelection.kind!=SpeechPackKind.VAD || asrSelection.kind!=SpeechPackKind.ASR || !ticket.current())return false
+            val v=SpeechPackLease.resolve(vadStore,vadSelection);vad=v
+            if(!ticket.current() || !v.verified())return false
+            val a=SpeechPackLease.resolve(asrStore,asrSelection);asr=a
+            if(!ticket.current() || !v.verified() || !a.verified())return false
+            attached=ticket.slot.install(ticket.capture,ticket.controller,ticket.token,worker,v::verified,
+                open={v.openVad(it,vadApi)},accepted=accepted,openAsr={a.openAsr(it,asrApi)},
+                recognized=recognized,asrVerified=a::verified,setup=ticket,revoked={v.close();a.close()})
+            return attached
+        }catch(_:Exception){return false}
+        finally {if(!attached){vad?.close();asr?.close()}}
+    }
 }

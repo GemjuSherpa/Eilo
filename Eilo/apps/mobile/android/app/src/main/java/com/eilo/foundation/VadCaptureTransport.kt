@@ -18,6 +18,7 @@ internal class VadCaptureTransport(
     private val audioFactory:(()->VadAsrHandoff)?=null,
     private val joinedOutput:((VadCaptureOutcome,AsrText?,()->Boolean)->Unit)?=null,
     private val sourceRate:Int=16000,
+    private val finished:()->Unit={},
 ) {
     private val monitor=Any()
     private val frameCapacity=if(sourceRate==48000)4800 else 1600
@@ -30,6 +31,8 @@ internal class VadCaptureTransport(
     private var failed=false
     private var lastClock: Long?=null
     // Worker-confined fields.
+    private var disposed=false
+    private fun finishOwnership(){if(!disposed){disposed=true;finished()}}
     private var audio:VadAsrHandoff?=null
     private var delivery: VadWindowDelivery?=null
     private val scratch=FloatArray(frameCapacity)
@@ -101,7 +104,7 @@ internal class VadCaptureTransport(
                     }
                 }
             }
-            if(revoked) { cleanup();synchronized(monitor) { scheduled=false };reportFailure();return }
+            if(revoked) { cleanup();synchronized(monitor) { scheduled=false };try {reportFailure()} finally {finishOwnership()};return }
             val current=delivery ?: VadWindowDelivery(::allowed,open).also { delivery=it }
             var event=VadDeliveryEvent(EndpointResult.CONTINUE,0)
             if(final)event=current.finish() else try {
@@ -121,21 +124,23 @@ internal class VadCaptureTransport(
         }
     }
     private fun complete(event:VadDeliveryEvent) {
-        val outcome=VadCaptureOutcome(event.result,delivery?.acceptedSamples() ?: 0,event.consumedSamples)
-        var text:AsrText?=null;var invalid=event.result==EndpointResult.INVALID
-        if(!invalid && audioFactory!=null) {
-            val owned=audio ?: audioFactory.invoke().also{audio=it}
-            when(val final=owned.finish(outcome)) {
-                VadAsrFinal.Metadata->Unit
-                VadAsrFinal.Invalid->invalid=true
-                is VadAsrFinal.Recognized->text=final.text
+        try {
+            val outcome=VadCaptureOutcome(event.result,delivery?.acceptedSamples() ?: 0,event.consumedSamples)
+            var text:AsrText?=null;var invalid=event.result==EndpointResult.INVALID
+            if(!invalid && audioFactory!=null) {
+                val owned=audio ?: audioFactory.invoke().also{audio=it}
+                when(val final=owned.finish(outcome)) {
+                    VadAsrFinal.Metadata->Unit
+                    VadAsrFinal.Invalid->invalid=true
+                    is VadAsrFinal.Recognized->text=final.text
+                }
             }
-        }
-        cleanup()
-        synchronized(monitor) { accepting=false;clearLocked();scheduled=false;if(invalid){if(active)failed=true;active=false} }
-        if(invalid)reportFailure() else if(allowed()) {
-            if(joinedOutput!=null)joinedOutput.invoke(outcome,text,::allowed) else output(outcome,::allowed)
-        }
+            cleanup()
+            synchronized(monitor) { accepting=false;clearLocked();scheduled=false;if(invalid){if(active)failed=true;active=false} }
+            if(invalid)reportFailure() else if(allowed()) {
+                if(joinedOutput!=null)joinedOutput.invoke(outcome,text,::allowed) else output(outcome,::allowed)
+            }
+        }finally {finishOwnership()}
     }
     private fun failureCurrent()=synchronized(monitor) { failed }
     private fun reportFailure() { if(failureCurrent())failure(::failureCurrent) }

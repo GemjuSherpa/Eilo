@@ -88,4 +88,13 @@ class VadCaptureSlotTest {
         slot.detach();w.run();assertEquals(1,revocations)
     }
 
+    @Test fun failedTerminalStillReleasesOwnership() {
+        val w=Worker();val e=EffectsSpy();val c=capturing(e);val slot=VadCaptureSlot(16000);val b=Backend()
+        var valid=true;var revocations=0;b.processing={valid=false}
+        assertTrue(slot.install(e,c,c.token()!!,w,{valid},{b},revoked={revocations++}))
+        submit(slot,512);w.run();assertEquals(1,revocations);assertEquals(1,b.closes)
+        valid=true;val fresh=capturing(e);assertNotNull(slot.prepare(e,fresh,fresh.token()!!))
+        slot.close();w.run();assertEquals(1,revocations)
+    }
+
 }
