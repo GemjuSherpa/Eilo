@@ -17,4 +17,19 @@ final class PackManifestTests: XCTestCase {
   XCTAssertThrowsError(try PackManifest.parse(PackFixtures.payload,runtime:PackFixtures.runtime,ios:17))
   XCTAssertThrowsError(try PackManifest.parse(Data(repeating:32,count:65537),runtime:PackFixtures.runtime))
  }
+ func testOnlyReviewedSpeechFilenamesAndRolesAreAdded()throws {
+  func payload(_ name:String,_ role:String)throws->Data {
+   var root=try JSONSerialization.jsonObject(with:PackFixtures.payload)as! [String:Any]
+   var files=root["artifacts"]as! [[String:Any]];files[0]["filename"]=name;files[0]["role"]=role;root["artifacts"]=files
+   return try JSONSerialization.data(withJSONObject:root,options:[.sortedKeys,.withoutEscapingSlashes])
+  }
+  for name in ["adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort"] {
+   XCTAssertEqual(try PackManifest.parse(payload(name,"asr"),runtime:PackFixtures.runtime).artifacts[0].filename,name)
+   XCTAssertThrowsError(try PackManifest.parse(payload(name,"vad"),runtime:PackFixtures.runtime))
+  }
+  _=try PackManifest.parse(payload("tokenizer.bin","tokenizer"),runtime:PackFixtures.runtime)
+  for (name,role) in [("other.ort","asr"),("other.bin","tokenizer"),("tokenizer.bin","asr"),("../encoder.ort","asr"),("frontend.other.ort","asr"),("encoder.ort/child","asr")] {
+   XCTAssertThrowsError(try PackManifest.parse(payload(name,role),runtime:PackFixtures.runtime))
+  }
+ }
 }

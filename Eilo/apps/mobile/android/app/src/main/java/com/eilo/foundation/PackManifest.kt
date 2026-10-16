@@ -8,6 +8,11 @@ import java.net.URI
 data class PackArtifact(val id: String, val filename: String, val role: String, val url: String, val sha256: String, val bytes: Long, val license: String, val licenseEvidence: String)
 data class PackManifest(val packId: String, val revision: Long, val runtimeRevision: String, val minAndroid: Int, val minIos: Int, val artifacts: List<PackArtifact>) {
     companion object {
+        /** Exact pinned Moonshine additions, never arbitrary ORT/bin paths. */
+        internal fun validFilename(name:String,role:String):Boolean =
+            name.matches(Regex("[a-z0-9][a-z0-9_-]{0,95}\\.(gguf|onnx|json|txt)")) ||
+            (role=="asr" && name in listOf("adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort")) ||
+            (role=="tokenizer" && name=="tokenizer.bin")
         private val header = setOf("schema", "packId", "revision", "runtimeRevision", "minAndroid", "minIos", "artifacts")
         private val fields = setOf("id", "filename", "role", "url", "sha256", "bytes", "license", "licenseEvidence")
         private fun keys(o: JSONObject) = o.keys().asSequence().toSet()
@@ -28,7 +33,7 @@ data class PackManifest(val packId: String, val revision: Long, val runtimeRevis
             val artifacts=(0 until list.length()).map { n ->
                 val f=list.getJSONObject(n); require(keys(f)==fields)
                 val id=text(f,"id");val name=text(f,"filename");val role=text(f,"role")
-                require(matches(id,"[a-z0-9][a-z0-9-]{0,63}") && matches(name,"[a-z0-9][a-z0-9_-]{0,95}\\.(gguf|onnx|json|txt)"))
+                require(matches(id,"[a-z0-9][a-z0-9-]{0,63}") && validFilename(name,role))
                 require(role in setOf("llm","asr","wake","vad","license","tokenizer"))
                 val url=text(f,"url");val u=URI(url)
                 require(url.length<=2048 && u.scheme=="https" && u.host!=null && u.rawUserInfo==null && u.rawQuery==null && u.rawFragment==null && u.port in setOf(-1,443) && u.normalize()==u && !u.rawPath.contains('%') && !u.rawPath.contains('\\'))
