@@ -89,4 +89,14 @@ final class VadCaptureSlotTests:XCTestCase {
     slot.detach();w.run();XCTAssertEqual(revocations,1)
   }
 
+  func testSuppressedTerminalOutputStillReleasesOwnership() {
+    let w=Worker(),e=EffectsSpy(),c=capturing(e),slot=VadCaptureSlot(sampleRate:16000)
+    var valid=true,revocations=0
+    let b=Backend();b.processing={valid=false}
+    XCTAssertTrue(slot.install(capture:e,controller:c,token:c.token!,schedule:w.schedule,verified:{valid},open:{_ in b},revoked:{revocations+=1}))
+    submit(slot,count:512);w.run();XCTAssertEqual(revocations,1);XCTAssertEqual(b.closes,1)
+    valid=true;let fresh=capturing(e);XCTAssertNotNil(slot.prepare(capture:e,controller:fresh,token:fresh.token!))
+    slot.close();w.run();XCTAssertEqual(revocations,1)
+  }
+
 }

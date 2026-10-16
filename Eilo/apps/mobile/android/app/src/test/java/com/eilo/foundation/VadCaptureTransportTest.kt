@@ -76,4 +76,12 @@ class VadCaptureTransportTest {
         val pcm=shortArrayOf(Short.MIN_VALUE,0,Short.MAX_VALUE);assertTrue(d.submit(pcm,3,16000));pcm.fill(1)
         d.finish();w.run();assertEquals(listOf(-1f,0f,32767f/32768),b.pcm)
     }
+    @Test fun ownershipFinishesOnceOnIdleCancelAndNormalEof() {
+        for(eof in listOf(false,true)) {
+            val w=Worker();var disposals=0;val d=VadCaptureTransport(w,{true},finished={disposals++})
+            if(eof)d.finish() else d.close();assertEquals(0,disposals)
+            w.run();assertEquals(1,disposals);d.close();w.run();assertEquals(1,disposals)
+        }
+    }
+
 }
