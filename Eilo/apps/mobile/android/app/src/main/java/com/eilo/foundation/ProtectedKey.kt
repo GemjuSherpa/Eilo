@@ -66,6 +66,8 @@ internal class AndroidProtectedKeyProvider(private val available:()->Boolean={fa
 }
 
 /** Native OS-authenticated key result consumes one pre-auth ticket. No store or app caller. */
+internal enum class PrivilegedOrigin {AUTHENTICATED_SCREEN,WAKE,VOICE,MODEL}
+internal enum class PrivilegedOperation {READ_MEMORY,DELETE_HISTORY,CHANGE_PRIVACY}
 internal class MemoryKeySession(private val clock:NativeClock=MonotonicClock(),
     private val scheduler:IdleScheduler=NativeIdleScheduler(),private val unlocked:()->Boolean={false}):PrivateEffectGate {
     class Ticket internal constructor(internal val epoch:java.util.UUID,internal val started:Long)
@@ -92,6 +94,12 @@ internal class MemoryKeySession(private val clock:NativeClock=MonotonicClock(),
         var result:ProtectedKey?=null;key!!.borrow{result=ProtectedKey(it)}
         return result!!.also{copies.add(it)}
     }
+    /** Origin is selected by trusted native dispatch, never derived from voice/model text. */
+    @Synchronized fun allowsPrivilegedRequest(origin:PrivilegedOrigin,operation:PrivilegedOperation):Boolean =
+        when(operation) {
+            PrivilegedOperation.READ_MEMORY,PrivilegedOperation.DELETE_HISTORY,PrivilegedOperation.CHANGE_PRIVACY ->
+                origin==PrivilegedOrigin.AUTHENTICATED_SCREEN && allows(PrivateEffect.READ_MEMORY)
+        }
     override fun invalidate(){revoke()}
     @Synchronized fun revoke(){epoch=java.util.UUID.randomUUID();pending=false;expiry?.cancel();expiry=null;copies.forEach{it.close()};copies.clear();key?.close();key=null}
 }
