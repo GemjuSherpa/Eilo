@@ -1,0 +1,183 @@
+{
+  "cases": [
+    {
+      "asr_accept_calls": 19,
+      "asr_closes": 1,
+      "asr_finals": 1,
+      "asr_opens": 1,
+      "case": "speech16",
+      "installed": true,
+      "metadata": 1,
+      "normalized_samples": 29184,
+      "recognized": 1,
+      "source_rate": 16000,
+      "transcript_sha256": "cd61bf0cc67fc2233111c91167e2abb3c652200bfe22059a166475d37366b7a8",
+      "vad_calls": 57,
+      "vad_closes": 1,
+      "vad_opens": 1
+    },
+    {
+      "asr_accept_calls": 19,
+      "asr_closes": 1,
+      "asr_finals": 1,
+      "asr_opens": 1,
+      "case": "speech48",
+      "installed": true,
+      "metadata": 1,
+      "normalized_samples": 29184,
+      "recognized": 1,
+      "source_rate": 48000,
+      "transcript_sha256": "cd61bf0cc67fc2233111c91167e2abb3c652200bfe22059a166475d37366b7a8",
+      "vad_calls": 57,
+      "vad_closes": 1,
+      "vad_opens": 1
+    },
+    {
+      "asr_accept_calls": 0,
+      "asr_closes": 0,
+      "asr_finals": 0,
+      "asr_opens": 0,
+      "case": "quiet",
+      "installed": true,
+      "metadata": 1,
+      "normalized_samples": 80000,
+      "recognized": 0,
+      "source_rate": 16000,
+      "transcript_sha256": "",
+      "vad_calls": 157,
+      "vad_closes": 1,
+      "vad_opens": 1
+    },
+    {
+      "asr_accept_calls": 19,
+      "asr_closes": 1,
+      "asr_finals": 1,
+      "asr_opens": 1,
+      "case": "stop-final",
+      "installed": true,
+      "metadata": 0,
+      "normalized_samples": 0,
+      "recognized": 0,
+      "source_rate": 16000,
+      "transcript_sha256": "",
+      "vad_calls": 57,
+      "vad_closes": 1,
+      "vad_opens": 1
+    },
+    {
+      "asr_accept_calls": 19,
+      "asr_closes": 1,
+      "asr_finals": 1,
+      "asr_opens": 1,
+      "case": "replace-final",
+      "installed": true,
+      "metadata": 0,
+      "normalized_samples": 0,
+      "recognized": 0,
+      "source_rate": 16000,
+      "transcript_sha256": "",
+      "vad_calls": 57,
+      "vad_closes": 1,
+      "vad_opens": 1
+    },
+    {
+      "asr_accept_calls": 0,
+      "asr_closes": 0,
+      "asr_finals": 0,
+      "asr_opens": 0,
+      "case": "idle-stop",
+      "installed": true,
+      "metadata": 0,
+      "normalized_samples": 0,
+      "recognized": 0,
+      "source_rate": 16000,
+      "transcript_sha256": "",
+      "vad_calls": 1,
+      "vad_closes": 1,
+      "vad_opens": 1
+    },
+    {
+      "asr_accept_calls": 0,
+      "asr_closes": 0,
+      "asr_finals": 0,
+      "asr_opens": 0,
+      "case": "stale-ticket",
+      "installed": false,
+      "metadata": 0,
+      "normalized_samples": 0,
+      "recognized": 0,
+      "source_rate": 16000,
+      "transcript_sha256": "",
+      "vad_calls": 0,
+      "vad_closes": 0,
+      "vad_opens": 0
+    },
+    {
+      "asr_accept_calls": 0,
+      "asr_closes": 0,
+      "asr_finals": 0,
+      "asr_opens": 0,
+      "case": "corrupt-pack",
+      "installed": false,
+      "metadata": 0,
+      "normalized_samples": 0,
+      "recognized": 0,
+      "source_rate": 16000,
+      "transcript_sha256": "",
+      "vad_calls": 0,
+      "vad_closes": 0,
+      "vad_opens": 0
+    }
+  ],
+  "lab_signing": "EPHEMERAL_ES256",
+  "physical": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "scope": "IOS_SIMULATOR_SIGNED_SPEECH_INSTALLER",
+  "synthetic": true,
+  "worker_verified": true,
+  "schema_version": 1,
+  "fixture_sha256": "763fa4368b002d09fc0a52b17cc091568ef32346ba30f0cff1cdac226ac962d5",
+  "vad_model_sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
+  "asr_model_files": [
+    {
+      "file": "adapter.ort",
+      "sha256": "c665f742364febad597cc9ac1e0b341ffbee0e24a1466e2f3bde95e6e4771762"
+    },
+    {
+      "file": "cross_kv.ort",
+      "sha256": "e2d3417144e9514055ebfefe8dcc4c0a55a55adcb8530435844c75c53e352bf6"
+    },
+    {
+      "file": "decoder_kv.ort",
+      "sha256": "1a05465b1dd955858dfcbee039c0020fb5dd982b0f5094c34e61735d518d771b"
+    },
+    {
+      "file": "encoder.ort",
+      "sha256": "2d4d973e91e8aca08c51e7e7efa28a46ab265b63d809d5294d18b86bcd85b993"
+    },
+    {
+      "file": "frontend.model.ort",
+      "sha256": "09b1210ae30dc5f0f3e45f0ebab914c254741323114f53fbbe5ae62cca35058f"
+    },
+    {
+      "file": "frontend.weights.ort",
+      "sha256": "7ef97521bd4bad3928f5bb6808586f4fcc6e92bd5990394112eed7d4052ec338"
+    },
+    {
+      "file": "streaming_config.json",
+      "sha256": "26f02b6afb22d60871a5efd85c3d38e569cc0ddb6c5eb6e93d3260152ae8a47a"
+    },
+    {
+      "file": "tokenizer.bin",
+      "sha256": "6884b35fd6377d4c4d32336a0bc152f36b64d1e45b6503683cdc238250a8472d"
+    }
+  ],
+  "probe_sha256": "a0cc3358fad76a28a49eaa8a8c9fd38fa5831a50ebf4a58814eeb2c0e51f8852",
+  "asr_wrapper_sha256": "0385dc287834239e99c79ce76cfffea88868be037d68a5e1a1ac6722a75eb317",
+  "android_execution": "NOT_RUN",
+  "physical_gates": "NOT_RUN",
+  "source_sha256": {
+    "packages/vad-runtime/check_installer.py": "13f14c8353df008e1cf394a9c25ff31946af88554d16a42c6da98ccbd49811f7",
+    "packages/vad-runtime/tests/swift_installer_probe.swift": "e7065c650cc745d927f6f1670017308a89e20a79332a35ee91e815a6c210e15e"
+  }
+}
