@@ -245,3 +245,44 @@ lease after a same-file replacement. Ephemeral lab keys/evidence are not product
 license approval. Positive ASR pack decoding remains scripted. Shared latest native proof remains
 `tests/asr-handoff-native-regression.json`; packaging/selection evidence is `tests/speech-pack-results.json`.
 No normal app installer/production selection/trust key/runtime loader is attached by this change.
+
+## Real signed speech installer evaluation
+
+`check_installer.py` (iOS simulator) and `check_installer_jvm.py` (macOS JVM/JNI) are opt-in,
+offline runners. They verify the existing publisher archive hashes, extracted runtime files,
+all eight Moonshine model hashes/sizes, Silero model, and frozen synthetic WAV before execution.
+They refuse to overwrite evidence. Supply existing approved caches; neither runner downloads,
+installs dependencies, requests microphone permission or enables the normal application.
+
+Each uses an ephemeral ES256 nine-artifact pack and the production SpeechCaptureInstaller,
+lease, worker, converter and native stream code. Eight cases cover positive 16/48 kHz speech,
+quiet input, Stop and same-file pack replacement during ASR finalization, idle Stop without
+another frame, stale setup ticket and corrupt signed file. Each native operation checks its
+worker thread; handle opens/closes balance. The host uses the real JNI interfaces and loader
+contracts. A four-export, two-level ASR dynamic wrapper isolates Moonshine's bundled ONNX
+symbols from the VAD ONNX runtime. It does not patch vendor code or suppress duplicate symbols.
+The simulator pack uses its own native temporary directory, matching the existing pack probes.
+
+Example invocations (paths are user-selected, existing caches):
+
+```sh
+python3 check_installer.py --asr-cache "$ASR_CACHE" --vad-cache "$VAD_CACHE" \
+  --vad-model "$VAD_MODEL" --output "$NEW_IOS_OUTPUT" --udid "$SIMULATOR_UDID"
+python3 check_installer_jvm.py --asr-cache "$ASR_CACHE" --vad-cache "$VAD_CACHE" \
+  --vad-model "$VAD_MODEL" --output "$NEW_JVM_OUTPUT" --jni-build "$VAD_JNI_BUILD" \
+  --java-home "$JAVA_RUNTIME" --android-sdk "$ANDROID_SDK"
+```
+
+Only aggregate counters and transcript SHA-256 are emitted. They are synthetic fixtures, not
+personal speech. Temporary staged audio/pack files are removed after evaluation; runtimes may
+retain internal inference buffers until process exit. This does not establish production
+secure erasure. The 48 kHz fixture repeats each input sample three times and tests conversion
+plumbing; it is not a recorded hardware route. Endpointing retained 29184 normalized samples
+for both speech cases; this is not an ASR accuracy benchmark or a physical latency measurement.
+
+Committed `tests/signed-installer-{ios,jvm}-results.json` contain matching eight-case results.
+`tests/signed-installer-evidence.json` pins their hashes and the evaluated native source tree.
+`check_installer_evidence.py` validates scope, exact report fields, pins, complete case coverage,
+model inventory and cross-platform counters without models or native SDKs. CI runs it plus
+normal/optimized Python tampering tests. CI does not re-execute native inference.
+Android ART/device execution, physical gates and production activation remain NOT_RUN/NOT_ENABLED.

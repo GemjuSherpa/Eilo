@@ -1,4 +1,7 @@
 """No models/downloads: reject tampered cache pins and false native acceptance reports."""
+import contextlib
+import io
+import shutil
 import copy
 import hashlib
 import json
@@ -8,6 +11,7 @@ import unittest
 from unittest.mock import patch
 
 import check_installer as installer
+import check_installer_evidence as evidence
 
 
 def result():
@@ -73,6 +77,29 @@ class InstallerValidation(unittest.TestCase):
                 (model / files[0]['file']).write_bytes(b'model'); record['model']['files'].pop()
                 manifest.write_text(json.dumps(record))
                 with self.assertRaises(ValueError): installer.verified_asr(cache)
+
+
+class CommittedEvidenceValidation(unittest.TestCase):
+    def test_complete_evidence_and_source_report_tampering(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            original = evidence.ROOT
+            audit_path = Path('packages/vad-runtime/tests/signed-installer-evidence.json')
+            audit = json.loads((original / audit_path).read_text())
+            paths = [r['path'] for r in audit['sources'] + audit['reports']] + [str(audit_path)]
+            for relative in paths:
+                target = root / relative; target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(original / relative, target)
+            with contextlib.redirect_stdout(io.StringIO()): evidence.validate_evidence(root)
+            source = root / audit['sources'][0]['path']; saved = source.read_bytes()
+            source.write_bytes(saved + b'changed')
+            with self.assertRaises(ValueError): evidence.validate_evidence(root)
+            source.write_bytes(saved)
+            report = root / audit['reports'][0]['path']; value = json.loads(report.read_text())
+            value['raw_audio'] = 'unexpected payload'; report.write_text(json.dumps(value))
+            audit['reports'][0]['sha256'] = hashlib.sha256(report.read_bytes()).hexdigest()
+            (root / audit_path).write_text(json.dumps(audit))
+            with self.assertRaises(ValueError): evidence.validate_evidence(root)
 
 
 if __name__ == '__main__':
