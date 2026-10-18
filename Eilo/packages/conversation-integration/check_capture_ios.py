@@ -59,9 +59,7 @@ def main():
          '-isysroot', sdk, '-I', llm_here / 'include', '-I', source / 'include', '-I', source / 'ggml/include',
          '-c', llm_here / 'eilo_llm.cc', '-o', obj])
     binary = output / 'joined-capture'
-    # Protected-key provisioning is outside this speech-only executable.
-    sources = sorted(x for x in (HERE.parent / 'native-test-seam/Sources/NativeTestSeam').glob('*.swift')
-                     if x.name != 'ProtectedKey.swift')
+    sources = sorted((HERE.parent / 'native-test-seam/Sources/NativeTestSeam').glob('*.swift'))
     run(['xcrun', 'swiftc', '-swift-version', '5', '-warnings-as-errors', '-parse-as-library', '-target',
          'arm64-apple-ios18.0-simulator', '-sdk', sdk, '-D', 'DEBUG', '-D', 'EILO_VAD_EVALUATION',
          '-D', 'EILO_ASR_EVALUATION', '-D', 'EILO_LLM_EVALUATION', '-I', HERE.parent / 'vad-runtime/include',

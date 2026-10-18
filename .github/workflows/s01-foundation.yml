@@ -98,6 +98,8 @@ jobs:
           brew install ruby gitleaks
           echo "$(brew --prefix ruby)/bin" >> "$GITHUB_PATH"
           gitleaks git .. --redact=100 --no-banner --log-level error --config ../.gitleaks.toml
+      - name: Strict native Swift device and simulator types
+        run: python3 scripts/check-native-ios-types.py
       - name: Ruby dependencies
         run: |
           gem install bundler -v 4.0.16 --no-document

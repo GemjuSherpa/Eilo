@@ -50,11 +50,11 @@ final class IOSProtectedKeyProvider {
   func load()throws->ProtectedKey {
     guard available() else{throw ProtectedKeyFailure.unavailable}
     let context=LAContext();context.touchIDAuthenticationAllowableReuseDuration=0
+    context.localizedReason="Authenticate to access local Eilo memory"
     requestLock.lock();guard current==nil else{requestLock.unlock();throw ProtectedKeyFailure.unavailable};current=context;requestLock.unlock()
     defer{requestLock.lock();if current === context{current=nil};requestLock.unlock();context.invalidate()}
     var q=query;q[kSecReturnData as String]=true;q[kSecMatchLimit as String]=kSecMatchLimitOne
     q[kSecUseAuthenticationContext as String]=context
-    q[kSecUseOperationPrompt as String]="Authenticate to access local Eilo memory"
     var result:CFTypeRef?
     guard SecItemCopyMatching(q as CFDictionary,&result)==errSecSuccess,var data=result as? Data else{throw ProtectedKeyFailure.unavailable}
     defer{data.withUnsafeMutableBytes{buffer in if let base=buffer.baseAddress{_ = memset_s(base,buffer.count,0,buffer.count)}}}
