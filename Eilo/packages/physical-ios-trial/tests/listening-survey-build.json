@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "scope": "INTERNAL_LISTENING_SURVEY_SIGNED_BUILD",
+  "runtime_source_commit": "930bed0",
+  "signing": "CODESIGN_DEEP_STRICT_PASS",
+  "installation": "PASS",
+  "physical_ratings": "NOT_RUN_AWAITING_OPERATOR",
+  "physical_gate_acceptance": "NOT_RUN",
+  "radio_configuration": "ORIGINAL_OPERATOR_DECLARATION_REUSED_NOT_NEW_OS_MEASUREMENT",
+  "app_binary_sha256": "d9f9ebc433e263b2ac2dbbb0405758990d21b4483447a4b82bfad75ac6c2ad7d",
+  "fixture_sha256": "35eecc8aa70638999474fa9f29e94aed062ae943774fc1ed7d4188bd72dfa2b6",
+  "operator_configuration_sha256": "53b4b5ccb5871da72b3ec8fa09dbe7d416386ba8c2a188d362f69400c321694e",
+  "trial_sources": [
+    {
+      "path": "packages/physical-ios-trial/TrialApp.swift",
+      "sha256": "692aa02a1d25454e85c549bda7c2549270c377e1a65a75b73dcae73cb7d0a7cd"
+    },
+    {
+      "path": "packages/physical-ios-trial/TrialEpoch.swift",
+      "sha256": "464e64aca4e62f9481d9d47bdf75c1e41661f2b36dd9e239ee6b6df3cf3a5267"
+    },
+    {
+      "path": "packages/physical-ios-trial/TrialVoiceSurvey.swift",
+      "sha256": "d0d77c4f7aaca276f82c2616f259a884e2052239eb95d23eb387887a37d0607f"
+    }
+  ],
+  "tests": {
+    "swift": 309,
+    "python_report_and_survey_normal": 7,
+    "python_report_and_survey_optimized": 7,
+    "normal_simulator_launches": 3,
+    "strict_device_and_simulator_types": "PASS",
+    "portable_survey_state_probe": "PASS"
+  },
+  "note": "SDK completion permits operator rating; acoustic timing and traffic verification remain NOT_RUN. No audio or microphone runs on launch."
+}
