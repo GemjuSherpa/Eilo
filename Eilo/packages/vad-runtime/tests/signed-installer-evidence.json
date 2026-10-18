@@ -404,7 +404,7 @@
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/ProtectedKey.swift",
-      "sha256": "ea3c0d14e68decbe00e50cd19177beed91478cc48e9ae7ab06b825137cadc5a4"
+      "sha256": "3a6e837bdb75fbf843653eaa7759444ce900d1ad2f66238fa7b259db290e3027"
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/QwenTemplate.swift",
@@ -514,7 +514,7 @@
   "reports": [
     {
       "path": "packages/vad-runtime/tests/signed-installer-ios-results.json",
-      "sha256": "765812d320c9e03f1bd2b65890e45189158a34da10e155ef56ac9a1b95e28105"
+      "sha256": "9cbf64affea0fe0aa975afb318dcdd3e18628c37588bcbb2e43d09cb6920026e"
     },
     {
       "path": "packages/vad-runtime/tests/signed-installer-jvm-results.json",
