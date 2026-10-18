@@ -10,9 +10,11 @@ def main():
     sources = sorted((ROOT / 'packages/native-test-seam/Sources/NativeTestSeam').glob('*.swift'))
     if not sources:
         raise ValueError('native Swift sources missing')
+    trial = ROOT / 'packages/physical-ios-trial'
+    sources.extend([trial / 'TrialApp.swift', trial / 'TrialEpoch.swift'])
     for sdk, target in [('iphonesimulator', 'arm64-apple-ios18.0-simulator'), ('iphoneos', 'arm64-apple-ios18.0')]:
         sysroot = subprocess.check_output(['xcrun', '--sdk', sdk, '--show-sdk-path'], text=True, timeout=30).strip()
-        subprocess.run(['xcrun', 'swiftc', '-swift-version', '5', '-warnings-as-errors', '-typecheck',
+        subprocess.run(['xcrun', 'swiftc', '-swift-version', '5', '-warnings-as-errors', '-parse-as-library', '-typecheck',
             '-target', target, '-sdk', sysroot, *map(str, sources)], check=True, timeout=120)
         print(sdk + ': all native Swift source typechecks PASS with warnings as errors.', flush=True)
 

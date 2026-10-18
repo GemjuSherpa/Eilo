@@ -11,7 +11,7 @@ internal enum PackFiles {
     let f=root.appendingPathComponent(name)
     if (try? FileManager.default.destinationOfSymbolicLink(atPath:f.path)) != nil { throw PackFailure.activation }
     if FileManager.default.fileExists(atPath:f.path) { guard try f.resourceValues(forKeys:[.isSymbolicLinkKey]).isSymbolicLink != true else { throw PackFailure.activation } }
-    guard f.resolvingSymlinksInPath().deletingLastPathComponent()==root.resolvingSymlinksInPath() else { throw PackFailure.activation };return f
+    guard f.resolvingSymlinksInPath().deletingLastPathComponent().path==root.resolvingSymlinksInPath().path else { throw PackFailure.activation };return f
   }
   static func atomic(_ file: URL,_ bytes: Data) throws { try bytes.write(to:file,options:.atomic);let h=try FileHandle(forWritingTo:file);defer { try? h.close() };try h.synchronize() }
   static func remove(_ file: URL) throws { if FileManager.default.fileExists(atPath:file.path) { try FileManager.default.removeItem(at:file) } }
