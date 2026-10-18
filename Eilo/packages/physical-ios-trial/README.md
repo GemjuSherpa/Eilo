@@ -100,3 +100,8 @@ Export timestamps remain device UTC; the review date uses Melbourne time. Signed
 source hashes are in `tests/signed-physical-build.json`; unsigned-build-results.json remains
 the earlier unsigned snapshot. S08 remains HOLD and physical acceptance NOT_RUN; screen-off,
 interruption, timing, endurance, battery, privacy and Android protocols remain outstanding.
+
+After the native installer fixes, both source-bound native evaluations were rerun from cached
+approved models: the eight-case signed VAD/ASR installer and file-fed capture → local model →
+SDK speech evaluator passed. Their current reports and source audits were refreshed together.
+The existing host-JNI report is retained; no new Android device execution is claimed.
