@@ -82,4 +82,21 @@ Draining a pool per64KiB read reduced maximum resident memory from2,113,404,928 
 in one local run per version, with all verification/activation still passing. See
 `tests/preparation-memory-diagnostic.json`. This is a Mac diagnostic, not an iPhone measurement
 or a physical gate result. A multi-chunk regression checks repeated proofs and corruption in
-the final partial chunk. The phone must retry preparation on the updated binary.
+the final partial chunk. The subsequent phone retry completed preparation and foreground checks; see below.
+
+## Completed foreground checks — 19 October 2026 (Melbourne)
+
+`tests/physical-foreground-results.json` is the validated owned-app export after the operator
+completed the retry: heard probe, three microphone finals with three completed clarifications,
+and two completed synthetic model turns out of three starts. The earlier incomplete model
+start remains counted; no success is inferred for it. Final phase is SINGLE_TURN_SDK_COMPLETED,
+with audio session deactivated. The operator reported successful tests. SDK completion does
+not separately score audibility or answer correctness.
+
+The microphone path is uncalibrated ASR → clarification; the model path uses a fixed synthetic
+prompt with no microphone. This does not establish an automatic microphone → generated-answer
+conversation. Radio state is an operator declaration, not OS measurement or an egress audit.
+Export timestamps remain device UTC; the review date uses Melbourne time. Signed binary and
+source hashes are in `tests/signed-physical-build.json`; unsigned-build-results.json remains
+the earlier unsigned snapshot. S08 remains HOLD and physical acceptance NOT_RUN; screen-off,
+interruption, timing, endurance, battery, privacy and Android protocols remain outstanding.

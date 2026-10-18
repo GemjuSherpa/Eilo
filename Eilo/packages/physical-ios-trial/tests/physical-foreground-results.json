@@ -1,0 +1,39 @@
+{
+  "airplane_mode": "OPERATOR_DECLARED_AT_BUILD",
+  "audio_session_deactivated": true,
+  "clarification_completed": 3,
+  "confidence": "UNAVAILABLE",
+  "foreground": true,
+  "input_kind": "FIXED_SYNTHETIC_PROMPT",
+  "microphone_finals": 3,
+  "microphone_permission_granted": true,
+  "normalized_samples": 43008,
+  "operator_heard_probe": true,
+  "os_build": "Version 26.6.1 (Build 23G83)",
+  "phase": "SINGLE_TURN_SDK_COMPLETED",
+  "physical_gate_acceptance": "NOT_RUN",
+  "physical_memory_bytes": 12262113280,
+  "probe_route": [
+    "Speaker"
+  ],
+  "production": "NOT_ENABLED",
+  "radio_attestation_recorded_utc": "2026-10-18T13:37:36.924391+00:00",
+  "raw_audio_saved": false,
+  "raw_text_exported": false,
+  "route_input": [],
+  "route_output": [
+    "Speaker"
+  ],
+  "schema_version": 1,
+  "scope": "INTERNAL_IOS_FOREGROUND_TRIAL",
+  "sdk_probe_completed": true,
+  "source_rate": 48000,
+  "speech_route": [
+    "Speaker"
+  ],
+  "synthetic_model_completed": 2,
+  "synthetic_model_starts": 3,
+  "updated_utc": "2026-10-18T14:38:56Z",
+  "voice_id": "com.apple.voice.super-compact.en-AU.Karen",
+  "wifi_bluetooth": "OPERATOR_DECLARED_OFF_AT_BUILD"
+}
