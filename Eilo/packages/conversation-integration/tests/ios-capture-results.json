@@ -53,19 +53,19 @@
   "llm_libraries": [
     {
       "file": "llm-build/src/libllama.a",
-      "sha256": "167b5dd1697cbafa8949499e1ac7be6a583aab9b2ac7425804be4a937cf36ed9"
+      "sha256": "0513c6e16f6d9ead9cfb7b5b13f377f84893aaeab367d2b0cfc701cc2e0d8da5"
     },
     {
       "file": "llm-build/ggml/src/libggml.a",
-      "sha256": "2e5acc9b9144a7094a19977e5667da0da93300dbb32b3bf6c57427398e682005"
+      "sha256": "09c9e5402cc6b032bc605932f2ea4d4bd3293a3c4996eec8b14690d024c217fb"
     },
     {
       "file": "llm-build/ggml/src/libggml-cpu.a",
-      "sha256": "55f32a69c837f5e9d8d242e914a3f7ea7088376db5fd1207cdb7b965dc4ffa6e"
+      "sha256": "c17efd7c2160fa1ca9581c2178cece7494eb8addaef2e4e25769bd96a1bb95b2"
     },
     {
       "file": "llm-build/ggml/src/libggml-base.a",
-      "sha256": "f18f6ac7f01c9a5061502ac8af8fdc88ffd19c3d372ce0a245f620ffd885eda4"
+      "sha256": "5d3228500056199801c478032343c3e6ce029be864b77210462249713adbc8c0"
     }
   ]
 }
