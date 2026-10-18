@@ -360,7 +360,7 @@
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift",
-      "sha256": "5d2dbe1598dedb6a88defef9fa60b81f187dd6f85a542ab3ab24a55cfbc42228"
+      "sha256": "175fbf031ea11ed40b842662c4dd9e6416b66469d1cf68b55a0285f7b598167e"
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/PackManifest.swift",
@@ -372,7 +372,7 @@
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/PackRecovery.swift",
-      "sha256": "8926d33f26bcaf17ba8c811f21939f649aac1d29f3231161f33a733cd9f65963"
+      "sha256": "437c402112c4f26c05c4145b5f4116113817a32e55bbd8820e76d57e13e349be"
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/PackSignature.swift",
@@ -514,7 +514,7 @@
   "reports": [
     {
       "path": "packages/vad-runtime/tests/signed-installer-ios-results.json",
-      "sha256": "9cbf64affea0fe0aa975afb318dcdd3e18628c37588bcbb2e43d09cb6920026e"
+      "sha256": "9cff1389d0fde61cba790e53d139485a9e886a717bbaf47a7330f7b044782e4a"
     },
     {
       "path": "packages/vad-runtime/tests/signed-installer-jvm-results.json",
