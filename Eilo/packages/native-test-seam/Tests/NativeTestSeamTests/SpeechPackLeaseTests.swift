@@ -136,4 +136,33 @@ final class SpeechPackLeaseTests:XCTestCase {
     XCTAssertTrue(try h.install(f));h.slot.close();h.w.run()
   }
 
+  func testCapturedFinalToReplyAndCancellationBeforeSubmit()throws {
+    for mode in ["complete","stop","privacy","unknown"] {
+      let f=try Fixture();try f.activate();let h=CaptureHarness(),token=h.c.token!,sink=NativeClauseQueueTests.Sink()
+      var final:AsrText?,metadata=0,starts=0
+      let asr=NativeAsrAPI(create:{_ in OpaquePointer(bitPattern:2)},accept:{_,_ in 0},text:{_,_,out in
+        let bytes=Array("Name one colour.".utf8);for i in bytes.indices{out[i]=CChar(bitPattern:bytes[i])};out[bytes.count]=0;return 0
+      },destroy:{_ in})
+      let ticket=h.slot.prepare(capture:h.e,controller:h.c,token:token)!
+      XCTAssertTrue(try SpeechCaptureInstaller.install(ticket:ticket,vadStore:f.store,vadSelection:f.selection(.vad),
+        asrStore:f.store,asrSelection:f.selection(.asr),schedule:h.w.schedule,vadAPI:h.vad,asrAPI:asr,
+        accepted:{_ in metadata+=1},recognized:{final=$0}))
+      for _ in 0..<20{h.feed()};XCTAssertEqual(metadata,1);XCTAssertNotNil(final)
+      let turn=GenericSpokenTurn(controller:h.c,token:token,sink:sink,configured:true,starter:{_,request,consume,done in
+        starts+=1;XCTAssertEqual(request.latest,"Name one colour.")
+        try! Array("Blue is one colour.".utf8).withUnsafeBufferPointer{try consume($0)};done(.completed);return true
+      })
+      if mode=="stop"{_ = h.c.stop()};if mode=="privacy"{_ = h.c.privacyTransition(.lock)}
+      let accepted=turn.submit(try XCTUnwrap(final),confidence:mode=="unknown" ? nil:0.95);final=nil
+      if mode=="stop" || mode=="privacy" {XCTAssertFalse(accepted);XCTAssertTrue(sink.texts.isEmpty);XCTAssertEqual(starts,0)}
+      else {
+        XCTAssertTrue(accepted);XCTAssertFalse(turn.submit(AsrText(text:"Duplicate",final:true),confidence:1))
+        XCTAssertEqual(starts,mode=="unknown" ? 0:1)
+        XCTAssertEqual(sink.texts,[mode=="unknown" ? RecognitionPolicy.clarification:"Blue is one colour."])
+        sink.callbacks[0](.started);sink.callbacks[0](.finished);XCTAssertEqual(h.c.state,.standby)
+      }
+      h.slot.close();h.w.run()
+    }
+  }
+
 }
