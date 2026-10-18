@@ -99,7 +99,10 @@ jobs:
           echo "$(brew --prefix ruby)/bin" >> "$GITHUB_PATH"
           gitleaks git .. --redact=100 --no-banner --log-level error --config ../.gitleaks.toml
       - name: Strict native Swift device and simulator types
-        run: python3 scripts/check-native-ios-types.py
+        run: |
+          python3 scripts/check-native-ios-types.py
+          xcrun swiftc packages/physical-ios-trial/TrialEpoch.swift packages/physical-ios-trial/tests/epoch_probe.swift -o "$RUNNER_TEMP/eilo-trial-epoch"
+          "$RUNNER_TEMP/eilo-trial-epoch"
       - name: Ruby dependencies
         run: |
           gem install bundler -v 4.0.16 --no-document
