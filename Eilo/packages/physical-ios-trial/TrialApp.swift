@@ -79,6 +79,7 @@ import CryptoKit
     prepare.isEnabled=false;status.text="Verifying and preparing the local lab pack…";report["phase"]="PREPARING_MODELS";save()
     installer.async{[weak self] in
       guard let self else{return}
+      var preparationStage="READ_BUNDLED_PINS"
       do {
         let assets=Bundle.main.bundleURL.appendingPathComponent("TrialAssets",isDirectory:true)
         let rows=try JSONSerialization.jsonObject(with:Data(contentsOf:assets.appendingPathComponent("pins.json"))) as! [[String:Any]]
@@ -90,16 +91,22 @@ import CryptoKit
           return ["id":id,"filename":name,"role":id=="llm" ? "llm":id=="vad" ? "vad":name=="tokenizer.bin" ? "tokenizer":"asr",
             "url":"https://models.example.test/"+name,"sha256":r["sha256"]!,"bytes":r["bytes"]!,"license":id=="llm" ? "Apache-2.0":"MIT","licenseEvidence":evidence]}
         let data=try JSONSerialization.data(withJSONObject:["schema":1,"packId":"physical-lab","revision":1,"runtimeRevision":runtime,"minAndroid":35,"minIos":18,"artifacts":artifacts],options:[.sortedKeys,.withoutEscapingSlashes])
+        preparationStage="VERIFY_LAB_MANIFEST"
         let pack=try VerifiedPack.verify(payload:data,signature:key.signature(for:data).derRepresentation,keyID:"lab-key",algorithm:"ES256",trust:["lab-key":key.publicKey.derRepresentation],runtime:runtime)
-        try store.activate(pack,proofs:rows.indices.map{try VerifiedArtifact.verify(pack,index:$0,file:assets.appendingPathComponent(rows[$0]["filename"] as! String),cancel:cancel)},cancel:cancel)
+        preparationStage="VERIFY_BUNDLED_ARTIFACTS"
+        let proofs=try rows.indices.map{try VerifiedArtifact.verify(pack,index:$0,file:assets.appendingPathComponent(rows[$0]["filename"] as! String),cancel:cancel)}
+        preparationStage="ACTIVATE_LAB_PACK"
+        try store.activate(pack,proofs:proofs,cancel:cancel)
+        preparationStage="PROTECT_LAB_PACK"
         var protected=root;var values=URLResourceValues();values.isExcludedFromBackup=true;try protected.setResourceValues(values)
         try FileManager.default.setAttributes([.protectionKey:FileProtectionType.completeUntilFirstUserAuthentication],ofItemAtPath:root.path)
+        preparationStage="SELECT_RUNTIME_PINS"
         let pins=try rows.filter{$0["id"] as? String != "llm"}.map{try SpeechArtifactPin(id:$0["id"] as! String,filename:$0["filename"] as! String,sha256:$0["sha256"] as! String,bytes:($0["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence)}
         let v=try SpeechPackSelection(packID:"physical-lab",runtimeRevision:runtime,kind:.vad,pins:pins.filter{$0.id=="vad"})
         let a=try SpeechPackSelection(packID:"physical-lab",runtimeRevision:runtime,kind:.asr,pins:pins.filter{$0.id != "vad"})
         let last=rows.last!;let l=try LlmPackSelection(packID:"physical-lab",runtimeRevision:runtime,model:LlmArtifactPin(id:"llm",sha256:last["sha256"] as! String,bytes:(last["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence))
         DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.store=store;self.vad=v;self.asr=a;self.llm=l;self.ready=true;self.status.text="Models verified. Play the voice probe next.";self.report["phase"]="MODELS_READY";self.save();self.updateButtons()}
-      }catch{DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.fail("MODEL_PREPARATION_FAILED")}}
+      }catch{let failedStage=preparationStage;DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.report["preparation_stage"]=failedStage;self.fail("MODEL_PREPARATION_FAILED");self.status.text="Trial stopped: MODEL_PREPARATION_FAILED / "+failedStage}}
     }
   }
   @objc private func playProbe(){

@@ -3,6 +3,30 @@ import CryptoKit
 import XCTest
 @testable import NativeTestSeam
 final class PackStoreTests: XCTestCase {
+ func testDirectoryHintDoesNotRejectContainedChildOrPermitSymlinkEscape() throws {
+  let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString,isDirectory:true)
+  try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true)
+  defer { try? FileManager.default.removeItem(at:root) }
+  let canonical=try PackFiles.directory(root)
+  XCTAssertEqual(try PackFiles.child(canonical,"model.gguf").deletingLastPathComponent().path,canonical.path)
+  let outside=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString,isDirectory:true)
+  try FileManager.default.createDirectory(at:outside,withIntermediateDirectories:true)
+  defer { try? FileManager.default.removeItem(at:outside) }
+  try FileManager.default.createSymbolicLink(at:root.appendingPathComponent("escape"),withDestinationURL:outside)
+  XCTAssertThrowsError(try PackFiles.child(canonical,"escape"))
+  XCTAssertThrowsError(try PackFiles.child(canonical,".."))
+ }
+ func testActivationWithExplicitDirectoryRoot() throws {
+  let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString,isDirectory:true)
+  defer { try? FileManager.default.removeItem(at:root) }
+  try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true)
+  let (pack,trust)=try PackFixtures.signed(),file=root.appendingPathComponent("source")
+  try Data([1,2,3,4]).write(to:file)
+  let store=PackStore(root:root.appendingPathComponent("store",isDirectory:true),trust:trust,runtime:PackFixtures.runtime,licenseEvidence:[String(repeating:"c",count:64)])
+  try store.activate(pack,proofs:[VerifiedArtifact.verify(pack,index:0,file:file)],cancel:PackCancellation())
+  XCTAssertEqual(try store.active()?.digest,pack.digest)
+ }
+
  func testFailuresKeepOldVersionAndCommitHasNoMixedFiles() throws {
   let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString);try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true);defer { try? FileManager.default.removeItem(at:root) }
   let key=P256.Signing.PrivateKey(),trust=["test-key":key.publicKey.derRepresentation]

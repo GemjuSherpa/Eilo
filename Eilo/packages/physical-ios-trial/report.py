@@ -9,7 +9,7 @@ import re
 REQUIRED={'schema_version','scope','physical_gate_acceptance','production','raw_audio_saved','raw_text_exported',
  'confidence','airplane_mode','wifi_bluetooth','sdk_probe_completed','operator_heard_probe','microphone_finals',
  'clarification_completed','synthetic_model_completed','synthetic_model_starts','os_build','physical_memory_bytes','phase','updated_utc'}
-OPTIONAL={'radio_attestation_recorded_utc','microphone_permission_granted','audio_session_deactivated','foreground',
+OPTIONAL={'preparation_stage','radio_attestation_recorded_utc','microphone_permission_granted','audio_session_deactivated','foreground',
  'voice_id','probe_route','route_input','route_output','source_rate','normalized_samples','speech_route','input_kind'}
 PHASES={'LAUNCHED_NO_CAPTURE','PREPARING_MODELS','MODELS_READY','MODEL_PREPARATION_FAILED','NO_INSTALLED_ENGLISH_VOICE',
  'VOICE_SESSION_FAILED','VOICE_PROBE_PLAYING','VOICE_PROBE_SDK_COMPLETED','SINGLE_PHRASE_OPERATOR_CONFIRMED',
@@ -47,6 +47,7 @@ def validate(r):
             require(isinstance(r[key],str) and len(r[key])<=64,'invalid timestamp')
             require(datetime.fromisoformat(r[key].replace('Z','+00:00')).tzinfo is not None,'timezone required')
     if declared:require('radio_attestation_recorded_utc' in r,'operator declaration provenance missing')
+    if 'preparation_stage' in r:require(r['preparation_stage'] in ['READ_BUNDLED_PINS','VERIFY_LAB_MANIFEST','VERIFY_BUNDLED_ARTIFACTS','ACTIVATE_LAB_PACK','PROTECT_LAB_PACK','SELECT_RUNTIME_PINS'],'invalid preparation stage')
     if 'voice_id' in r:require(isinstance(r['voice_id'],str) and re.fullmatch(r'[A-Za-z0-9._-]{1,256}',r['voice_id']) is not None,'invalid public voice ID')
     for key in ['probe_route','route_input','route_output','speech_route']:
         if key in r:require(isinstance(r[key],list) and len(r[key])<=8 and all(isinstance(v,str) and re.fullmatch(r'[A-Za-z0-9_]{1,64}',v) for v in r[key]),'invalid public route metadata')

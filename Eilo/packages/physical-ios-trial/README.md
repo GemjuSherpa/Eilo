@@ -8,8 +8,11 @@ native runtime binaries stay in ignored local build directories and are never co
 
 The operator has authorized a foreground microphone/speaker trial. On 19 October 2026 the
 connected iPhone reports iPhone18,2 / iOS26.6.1 build23G83, Developer Mode and developer image
-services available. The existing development profile is expired; separate Apple signing/profile
-registration approval is required before account changes and installation. No App Store release.
+services available. The operator authorized existing-account development signing/profile registration and installation.
+The separate app is signed and installed; no App Store release was performed. The first physical
+attempt stopped at model preparation, before any probe, capture or model reply. A reproduced
+directory-URL containment mismatch was fixed with activation and symlink/traversal regressions;
+physical retry remains required. Closed preparation-stage codes contain no paths or error text.
 
 ## Controls
 
@@ -68,3 +71,32 @@ Verification: both SDK strict typechecks include the trial UI; a portable Swift 
 Stop/replacement revocation without OS operations. Normal/optimized Python tests check reports.
 The normal mobile app is separately built/installed and launched three times before a code-task
 commit; those simulator launches are not physical voice results. S10/S11 remain dependency-blocked.
+
+## Physical preparation follow-up
+
+The next phone attempt closed after waiting; an attached trial-only console observed signal9.
+No matching crash or memory-termination report was available, so the OS termination cause is
+unconfirmed. Local optimized replay of the ten pinned bundled artifacts, inside one outer
+Autorelease pool, found temporary FileHandle buffers retained across repeated checksum passes.
+Draining a pool per64KiB read reduced maximum resident memory from2,113,404,928 to11,370,496bytes
+in one local run per version, with all verification/activation still passing. See
+`tests/preparation-memory-diagnostic.json`. This is a Mac diagnostic, not an iPhone measurement
+or a physical gate result. A multi-chunk regression checks repeated proofs and corruption in
+the final partial chunk. The subsequent phone retry completed preparation and foreground checks; see below.
+
+## Completed foreground checks — 19 October 2026 (Melbourne)
+
+`tests/physical-foreground-results.json` is the validated owned-app export after the operator
+completed the retry: heard probe, three microphone finals with three completed clarifications,
+and two completed synthetic model turns out of three starts. The earlier incomplete model
+start remains counted; no success is inferred for it. Final phase is SINGLE_TURN_SDK_COMPLETED,
+with audio session deactivated. The operator reported successful tests. SDK completion does
+not separately score audibility or answer correctness.
+
+The microphone path is uncalibrated ASR → clarification; the model path uses a fixed synthetic
+prompt with no microphone. This does not establish an automatic microphone → generated-answer
+conversation. Radio state is an operator declaration, not OS measurement or an egress audit.
+Export timestamps remain device UTC; the review date uses Melbourne time. Signed binary and
+source hashes are in `tests/signed-physical-build.json`; unsigned-build-results.json remains
+the earlier unsigned snapshot. S08 remains HOLD and physical acceptance NOT_RUN; screen-off,
+interruption, timing, endurance, battery, privacy and Android protocols remain outstanding.
