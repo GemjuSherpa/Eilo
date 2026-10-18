@@ -188,4 +188,35 @@ class SpeechPackLeaseTest {
         }
     }}
 
+    @Test fun capturedFinalToReplyAndCancellationBeforeSubmit(){for(mode in listOf("complete","stop","privacy","unknown")){Fixture().use{f->
+        f.activate();val h=CaptureHarness();val token=h.c.token()!!
+        val texts=mutableListOf<String>();val callbacks=mutableListOf<(OfflineSpeechEvent)->Unit>()
+        val sink=object:NativeClauseSink{
+            override fun enqueue(token:GenerationToken,text:String,event:(OfflineSpeechEvent)->Unit):Boolean{texts+=text;callbacks+=event;return true}
+            override fun cancel(){}
+        }
+        var final:AsrText?=null;var metadata=0;var starts=0
+        val asr=object:NativeAsrApi{
+            override fun create(directory:String)=2L
+            override fun accept(handle:Long,pcm:FloatArray,count:Int)=0
+            override fun text(handle:Long,finish:Boolean)="Name one colour.".toByteArray()
+            override fun destroy(handle:Long){}
+        }
+        val ticket=h.slot.prepare(h.e,h.c,token)!!
+        assertTrue(SpeechCaptureInstaller.install(ticket,f.store,f.selection(SpeechPackKind.VAD),f.store,
+            f.selection(SpeechPackKind.ASR),h.w,h.vad,asr,{metadata++},{final=it}))
+        repeat(20){h.feed()};assertEquals(1,metadata);assertNotNull(final)
+        val turn=GenericSpokenTurn(h.c,token,sink,true,GenericReplyStarter{_,request,consume,done->
+            starts++;assertEquals("Name one colour.",request.latest);val bytes="Blue is one colour.".toByteArray()
+            consume(bytes,bytes.size);done(LlmJobResult.COMPLETED);true
+        })
+        if(mode=="stop")h.c.stop();if(mode=="privacy")h.c.privacyTransition(PrivacyChange.LOCK)
+        val accepted=turn.submit(final!!,if(mode=="unknown")null else 0.95f);final=null
+        if(mode=="stop" || mode=="privacy"){assertFalse(accepted);assertTrue(texts.isEmpty());assertEquals(0,starts)}
+        else{assertTrue(accepted);assertFalse(turn.submit(AsrText("Duplicate",true),1f));assertEquals(if(mode=="unknown")0 else 1,starts)
+            assertEquals(listOf(if(mode=="unknown")RecognitionPolicy.CLARIFICATION else "Blue is one colour."),texts)
+            callbacks[0](OfflineSpeechEvent.STARTED);callbacks[0](OfflineSpeechEvent.FINISHED);assertEquals(ControllerState.STANDBY,h.c.state())}
+        h.slot.close();h.run()
+    }}}
+
 }
