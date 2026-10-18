@@ -1,0 +1,71 @@
+{
+  "cases": [
+    {
+      "case": "speech16",
+      "completed": true,
+      "context_messages": 2,
+      "inference_worker_verified": true,
+      "llm_starts": 1,
+      "metadata": 1,
+      "normalized_samples": 29184,
+      "recognized": 1,
+      "reply_submitted": true,
+      "transcript_sha256": "cd61bf0cc67fc2233111c91167e2abb3c652200bfe22059a166475d37366b7a8"
+    },
+    {
+      "case": "followup48",
+      "completed": true,
+      "context_messages": 4,
+      "inference_worker_verified": true,
+      "llm_starts": 1,
+      "metadata": 1,
+      "normalized_samples": 29184,
+      "recognized": 1,
+      "reply_submitted": true,
+      "transcript_sha256": "cd61bf0cc67fc2233111c91167e2abb3c652200bfe22059a166475d37366b7a8"
+    },
+    {
+      "case": "quiet",
+      "completed": false,
+      "context_messages": 4,
+      "inference_worker_verified": true,
+      "llm_starts": 0,
+      "metadata": 1,
+      "normalized_samples": 80000,
+      "recognized": 0,
+      "reply_submitted": false,
+      "transcript_sha256": ""
+    }
+  ],
+  "confidence": "SYNTHETIC_0_95",
+  "microphone": "NOT_USED",
+  "physical": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "scope": "IOS_SIMULATOR_SIGNED_CAPTURE_REPLY",
+  "temporary_pack_removed": true,
+  "voice_evidence": "SYNTHETIC_EXACT_VOICE_OS",
+  "schema_version": 1,
+  "fixture_sha256": "763fa4368b002d09fc0a52b17cc091568ef32346ba30f0cff1cdac226ac962d5",
+  "vad_model_sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
+  "llm_model_sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120",
+  "binary_sha256": "7f11bb8183690490835f28993a1fd05abaf8c6a6ccfde2f8096f9476f023b766",
+  "source_sha256": "91d2536256e21db441bb27c2ccb57c7986c97b6438866fc16e292aed16572a1d",
+  "llm_libraries": [
+    {
+      "file": "llm-build/src/libllama.a",
+      "sha256": "167b5dd1697cbafa8949499e1ac7be6a583aab9b2ac7425804be4a937cf36ed9"
+    },
+    {
+      "file": "llm-build/ggml/src/libggml.a",
+      "sha256": "2e5acc9b9144a7094a19977e5667da0da93300dbb32b3bf6c57427398e682005"
+    },
+    {
+      "file": "llm-build/ggml/src/libggml-cpu.a",
+      "sha256": "55f32a69c837f5e9d8d242e914a3f7ea7088376db5fd1207cdb7b965dc4ffa6e"
+    },
+    {
+      "file": "llm-build/ggml/src/libggml-base.a",
+      "sha256": "f18f6ac7f01c9a5061502ac8af8fdc88ffd19c3d372ce0a245f620ffd885eda4"
+    }
+  ]
+}
