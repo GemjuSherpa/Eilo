@@ -71,3 +71,15 @@ Verification: both SDK strict typechecks include the trial UI; a portable Swift 
 Stop/replacement revocation without OS operations. Normal/optimized Python tests check reports.
 The normal mobile app is separately built/installed and launched three times before a code-task
 commit; those simulator launches are not physical voice results. S10/S11 remain dependency-blocked.
+
+## Physical preparation follow-up
+
+The next phone attempt closed after waiting; an attached trial-only console observed signal9.
+No matching crash or memory-termination report was available, so the OS termination cause is
+unconfirmed. Local optimized replay of the ten pinned bundled artifacts, inside one outer
+Autorelease pool, found temporary FileHandle buffers retained across repeated checksum passes.
+Draining a pool per64KiB read reduced maximum resident memory from2,113,404,928 to11,370,496bytes
+in one local run per version, with all verification/activation still passing. See
+`tests/preparation-memory-diagnostic.json`. This is a Mac diagnostic, not an iPhone measurement
+or a physical gate result. A multi-chunk regression checks repeated proofs and corruption in
+the final partial chunk. The phone must retry preparation on the updated binary.

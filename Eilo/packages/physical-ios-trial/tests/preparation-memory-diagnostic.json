@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "scope": "LOCAL_MACOS_MODEL_PREPARATION_MEMORY_DIAGNOSTIC",
+  "physical_gate_acceptance": "NOT_RUN",
+  "phone_observation": "PREPARATION_WAIT_THEN_SIGNAL_9",
+  "phone_termination_cause": "NOT_CONFIRMED_NO_CRASH_REPORT_AVAILABLE",
+  "workload": "Ten cached pinned trial artifacts: signed manifest, all artifact proofs, PackStore activation including repeated verification; one outer autorelease pool. Release optimization. Fresh store per run.",
+  "artifact_count": 10,
+  "artifact_total_bytes": 1427053499,
+  "measurement": "One local run per version using /usr/bin/time -l; not a device performance or acceptance result.",
+  "before": {
+    "maximum_resident_bytes": 2113404928,
+    "peak_footprint_bytes": 4307062288
+  },
+  "after": {
+    "maximum_resident_bytes": 11370496,
+    "peak_footprint_bytes": 4473384
+  },
+  "fix": "Drain autoreleased FileHandle read buffers per 64 KiB checksum chunk.",
+  "before_pack_integrity_sha256": "5d2dbe1598dedb6a88defef9fa60b81f187dd6f85a542ab3ab24a55cfbc42228",
+  "after_pack_integrity_sha256": "175fbf031ea11ed40b842662c4dd9e6416b66469d1cf68b55a0285f7b598167e"
+}
