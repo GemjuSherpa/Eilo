@@ -8,8 +8,11 @@ native runtime binaries stay in ignored local build directories and are never co
 
 The operator has authorized a foreground microphone/speaker trial. On 19 October 2026 the
 connected iPhone reports iPhone18,2 / iOS26.6.1 build23G83, Developer Mode and developer image
-services available. The existing development profile is expired; separate Apple signing/profile
-registration approval is required before account changes and installation. No App Store release.
+services available. The operator authorized existing-account development signing/profile registration and installation.
+The separate app is signed and installed; no App Store release was performed. The first physical
+attempt stopped at model preparation, before any probe, capture or model reply. A reproduced
+directory-URL containment mismatch was fixed with activation and symlink/traversal regressions;
+physical retry remains required. Closed preparation-stage codes contain no paths or error text.
 
 ## Controls
 

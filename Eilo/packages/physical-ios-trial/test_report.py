@@ -25,6 +25,11 @@ class TrialReportValidation(unittest.TestCase):
             bad=dict(r);bad[key]=value
             with self.subTest(key=key),self.assertRaises(ValueError):validate(bad)
 
+    def test_preparation_diagnostic_is_closed_and_content_free(self):
+        r=report();r.update(phase="MODEL_PREPARATION_FAILED",preparation_stage="VERIFY_LAB_MANIFEST");validate(r)
+        r["preparation_stage"]="arbitrary error with user content"
+        with self.assertRaises(ValueError):validate(r)
+
     def test_malformed_metadata_rejected(self):
         for key,value in [('source_rate',float('nan')),('normalized_samples',True),('phase','arbitrary'),('route_input',['raw speech sentence']),('physical_memory_bytes',True),('updated_utc','no timestamp')]:
             bad=report();bad[key]=value
