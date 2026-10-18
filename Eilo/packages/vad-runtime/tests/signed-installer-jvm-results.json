@@ -1,0 +1,185 @@
+{
+  "synthetic": true,
+  "cases": [
+    {
+      "installed": true,
+      "vad_closes": 1,
+      "asr_opens": 1,
+      "metadata": 1,
+      "vad_calls": 57,
+      "asr_closes": 1,
+      "asr_accept_calls": 19,
+      "recognized": 1,
+      "normalized_samples": 29184,
+      "asr_finals": 1,
+      "source_rate": 16000,
+      "vad_opens": 1,
+      "case": "speech16",
+      "transcript_sha256": "cd61bf0cc67fc2233111c91167e2abb3c652200bfe22059a166475d37366b7a8"
+    },
+    {
+      "installed": true,
+      "vad_closes": 1,
+      "asr_opens": 1,
+      "metadata": 1,
+      "vad_calls": 57,
+      "asr_closes": 1,
+      "asr_accept_calls": 19,
+      "recognized": 1,
+      "normalized_samples": 29184,
+      "asr_finals": 1,
+      "source_rate": 48000,
+      "vad_opens": 1,
+      "case": "speech48",
+      "transcript_sha256": "cd61bf0cc67fc2233111c91167e2abb3c652200bfe22059a166475d37366b7a8"
+    },
+    {
+      "installed": true,
+      "vad_closes": 1,
+      "asr_opens": 0,
+      "metadata": 1,
+      "vad_calls": 157,
+      "asr_closes": 0,
+      "asr_accept_calls": 0,
+      "recognized": 0,
+      "normalized_samples": 80000,
+      "asr_finals": 0,
+      "source_rate": 16000,
+      "vad_opens": 1,
+      "case": "quiet",
+      "transcript_sha256": ""
+    },
+    {
+      "installed": true,
+      "vad_closes": 1,
+      "asr_opens": 1,
+      "metadata": 0,
+      "vad_calls": 57,
+      "asr_closes": 1,
+      "asr_accept_calls": 19,
+      "recognized": 0,
+      "normalized_samples": 0,
+      "asr_finals": 1,
+      "source_rate": 16000,
+      "vad_opens": 1,
+      "case": "stop-final",
+      "transcript_sha256": ""
+    },
+    {
+      "installed": true,
+      "vad_closes": 1,
+      "asr_opens": 1,
+      "metadata": 0,
+      "vad_calls": 57,
+      "asr_closes": 1,
+      "asr_accept_calls": 19,
+      "recognized": 0,
+      "normalized_samples": 0,
+      "asr_finals": 1,
+      "source_rate": 16000,
+      "vad_opens": 1,
+      "case": "replace-final",
+      "transcript_sha256": ""
+    },
+    {
+      "installed": true,
+      "vad_closes": 1,
+      "asr_opens": 0,
+      "metadata": 0,
+      "vad_calls": 1,
+      "asr_closes": 0,
+      "asr_accept_calls": 0,
+      "recognized": 0,
+      "normalized_samples": 0,
+      "asr_finals": 0,
+      "source_rate": 16000,
+      "vad_opens": 1,
+      "case": "idle-stop",
+      "transcript_sha256": ""
+    },
+    {
+      "installed": false,
+      "vad_closes": 0,
+      "asr_opens": 0,
+      "metadata": 0,
+      "vad_calls": 0,
+      "asr_closes": 0,
+      "asr_accept_calls": 0,
+      "recognized": 0,
+      "normalized_samples": 0,
+      "asr_finals": 0,
+      "source_rate": 16000,
+      "vad_opens": 0,
+      "case": "stale-ticket",
+      "transcript_sha256": ""
+    },
+    {
+      "installed": false,
+      "vad_closes": 0,
+      "asr_opens": 0,
+      "metadata": 0,
+      "vad_calls": 0,
+      "asr_closes": 0,
+      "asr_accept_calls": 0,
+      "recognized": 0,
+      "normalized_samples": 0,
+      "asr_finals": 0,
+      "source_rate": 16000,
+      "vad_opens": 0,
+      "case": "corrupt-pack",
+      "transcript_sha256": ""
+    }
+  ],
+  "production": "NOT_ENABLED",
+  "scope": "MACOS_JVM_JNI_SIGNED_SPEECH_INSTALLER",
+  "lab_signing": "EPHEMERAL_ES256",
+  "physical": "NOT_RUN",
+  "worker_verified": true,
+  "schema_version": 1,
+  "fixture_sha256": "763fa4368b002d09fc0a52b17cc091568ef32346ba30f0cff1cdac226ac962d5",
+  "vad_model_sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
+  "asr_model_files": [
+    {
+      "file": "adapter.ort",
+      "sha256": "c665f742364febad597cc9ac1e0b341ffbee0e24a1466e2f3bde95e6e4771762"
+    },
+    {
+      "file": "cross_kv.ort",
+      "sha256": "e2d3417144e9514055ebfefe8dcc4c0a55a55adcb8530435844c75c53e352bf6"
+    },
+    {
+      "file": "decoder_kv.ort",
+      "sha256": "1a05465b1dd955858dfcbee039c0020fb5dd982b0f5094c34e61735d518d771b"
+    },
+    {
+      "file": "encoder.ort",
+      "sha256": "2d4d973e91e8aca08c51e7e7efa28a46ab265b63d809d5294d18b86bcd85b993"
+    },
+    {
+      "file": "frontend.model.ort",
+      "sha256": "09b1210ae30dc5f0f3e45f0ebab914c254741323114f53fbbe5ae62cca35058f"
+    },
+    {
+      "file": "frontend.weights.ort",
+      "sha256": "7ef97521bd4bad3928f5bb6808586f4fcc6e92bd5990394112eed7d4052ec338"
+    },
+    {
+      "file": "streaming_config.json",
+      "sha256": "26f02b6afb22d60871a5efd85c3d38e569cc0ddb6c5eb6e93d3260152ae8a47a"
+    },
+    {
+      "file": "tokenizer.bin",
+      "sha256": "6884b35fd6377d4c4d32336a0bc152f36b64d1e45b6503683cdc238250a8472d"
+    }
+  ],
+  "runtime_sha256": "3567d114f7299d559993e536d605a6f46d7bc9d2542004accc80ee9bf5457f0b",
+  "vad_jni_sha256": "4b37693400610da3e5ad21fe498f1d48090c2977a2882fe84970f1d5d06bfe7e",
+  "asr_core_sha256": "531ce1bbb3db6e6b91c06edd7da312fe6bfd8c02010a5a93cad31bd0c4ef246b",
+  "asr_jni_sha256": "62e2121456c6147e60cbeb2c8c0d6fe8a43e17b3d21ed2f3c73b531d3a9d02c2",
+  "android_execution": "NOT_RUN",
+  "physical_gates": "NOT_RUN",
+  "source_sha256": {
+    "packages/vad-runtime/check_installer_jvm.py": "41888bf739730796cd273dd016c9076c4cde3428f87f544c4a1af975ae8c3706",
+    "packages/vad-runtime/tests/jvm/NativeSpeechInstallerRuntimeTest.kt": "4b02466c7061622213357d3b965db951a74685dd5aa73fe8e766737da62bfb82"
+  }
+}
