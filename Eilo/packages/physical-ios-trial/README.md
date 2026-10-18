@@ -105,3 +105,16 @@ After the native installer fixes, both source-bound native evaluations were reru
 approved models: the eight-case signed VAD/ASR installer and file-fed capture → local model →
 SDK speech evaluator passed. Their current reports and source audits were refreshed together.
 The existing host-JNI report is retained; no new Android device execution is claimed.
+
+## Listening survey contract (VC-VOICE-06 preparation)
+
+A separate partial listening survey uses the existing 12 frozen phrases. Operator scores are
+1–5 (1 unintelligible, 5 fully clear); SDK completion only unlocks rating controls. Stop,
+interruption or background invalidates pending callbacks/ratings. Retries are retained and
+bounded to three attempts per phrase. No automatic rating or acoustic timestamp is inferred.
+`TrialVoiceSurvey.swift` owns the bounded state; the portable probe covers stale/duplicate
+completion, invalid/premature ratings, cancellation and limits. `voice_survey.py` rejects content,
+out-of-order or duplicate rated phrases, unknown fields and fabricated timing/network acceptance.
+Partial scores never populate the frozen physical-voice-trials acceptance report. Survey state
+is a lab fixture, not production voice readiness. The UI collection integration follows on its
+own task branch, consolidated into one sprint PR.
