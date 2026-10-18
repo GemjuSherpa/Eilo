@@ -106,13 +106,14 @@ def main():
     pins += [dict(id='vad',filename='silero.onnx',sha256=sha256(model),bytes=model.stat().st_size),dict(id='llm',filename='model.gguf',sha256=prov['model']['sha256'],bytes=gguf.stat().st_size)]
     shutil.copy2(model,assets/'silero.onnx');shutil.copy2(gguf,assets/'model.gguf')
     for r in pins:require(sha256(assets/r['filename'])==r['sha256'],'staged model changed')
+    shutil.copy2(HERE.parent/'offline-speech/tests/voice-trial-fixtures.json',assets/'voice-trial-fixtures.json')
     (assets/'pins.json').write_text(json.dumps(pins))
     (assets/'operator.json').write_text(json.dumps(dict(schema_version=1,radio_off_attested=a.operator_radio_off_attestation,source='HUMAN_OPERATOR' if a.operator_radio_off_attestation else 'NOT_PROVIDED',recorded_utc=datetime.now(timezone.utc).isoformat())))
     info=dict(CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)',CFBundleExecutable='$(EXECUTABLE_NAME)',CFBundleName='EiloForegroundTrial',CFBundleDisplayName='Eilo Foreground Trial',CFBundlePackageType='APPL',CFBundleShortVersionString='0.1',CFBundleVersion='1',LSRequiresIPhoneOS=True,NSMicrophoneUsageDescription='Run an explicitly started local foreground voice test. No recordings are saved.',UILaunchScreen={},UIApplicationSceneManifest={'UIApplicationSupportsMultipleScenes':False})
     (output/'Info.plist').write_bytes(plistlib.dumps(info))
     framework=vad/'ios/onnxruntime.xcframework/ios-arm64'
     flags=['$(inherited)',*map(str,objects),*map(str,libs),str(dynamic),'-framework','onnxruntime','-framework','Accelerate','-framework','CoreML','-lc++']
-    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift']
+    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift']
     proj=project(output,sources,assets,flags,framework)
     command=['xcodebuild','-project',str(proj),'-scheme','EiloForegroundTrial','-configuration','Release','-sdk','iphoneos','-destination','generic/platform=iOS','-derivedDataPath',str(output/'DerivedData'),'CODE_SIGNING_ALLOWED=NO','-jobs','3','build']
     with (output/'app-build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=600)
