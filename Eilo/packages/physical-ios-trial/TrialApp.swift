@@ -10,6 +10,11 @@ import CryptoKit
   private let prepare=UIButton(type:.system),probe=UIButton(type:.system),heard=UIButton(type:.system)
   private let microphone=UIButton(type:.system),model=UIButton(type:.system),stopButton=UIButton(type:.system)
   private let synth=AVSpeechSynthesizer(),eligibility=IOSCaptureEligibility(),effects=IOSCaptureEffects()
+  private let quality=UIButton(type:.system),qualityNote=UILabel(),ratings=(1...5).map{_ in UIButton(type:.system)}
+  private let survey=TrialVoiceSurvey()
+  private var surveyUtterance:AVSpeechUtterance?,surveyTicket:UUID?,surveyVoiceID:String?
+  private var voiceFixtures:[String]=[]
+  private let fixtureDigest="35eecc8aa70638999474fa9f29e94aed062ae943774fc1ed7d4188bd72dfa2b6"
   private let installer=DispatchQueue(label:"eilo.physical.trial.prepare")
   private var store:PackStore?,vad:SpeechPackSelection?,asr:SpeechPackSelection?,llm:LlmPackSelection?
   private let audioEpoch=TrialEpoch(),modelEpoch=TrialEpoch()
@@ -47,8 +52,18 @@ import CryptoKit
     let title=UILabel();title.text="Eilo — internal foreground trial";title.font = .preferredFont(forTextStyle:.title2);title.numberOfLines=0
     let note=UILabel();note.text="Keep Airplane Mode on, Wi-Fi/Bluetooth off and this screen open. No recordings or transcripts are exported. This does not accept physical performance or security gates.";note.numberOfLines=0;note.font = .preferredFont(forTextStyle:.footnote)
     status.numberOfLines=0;transcript.numberOfLines=0;status.text="No microphone is active. Prepare the verified lab models first."
-    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
-    vc.view.addSubview(stack);NSLayoutConstraint.activate([stack.leadingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.leadingAnchor,constant:20),stack.trailingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.trailingAnchor,constant:-20),stack.topAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.topAnchor,constant:16)])
+    struct Corpus:Decodable{struct Phrase:Decodable{let id,text:String};let schema:Int,language:String,utterances:[Phrase]}
+    if let data=try? Data(contentsOf:Bundle.main.bundleURL.appendingPathComponent("TrialAssets/voice-trial-fixtures.json")),
+       SHA256.hash(data:data).map({String(format:"%02x",$0)}).joined()==fixtureDigest,
+       let corpus=try? JSONDecoder().decode(Corpus.self,from:data),corpus.schema==1,corpus.language=="en",
+       corpus.utterances.map({$0.id})==(1...12).map({String(format:"voice-%02d",$0)}){voiceFixtures=corpus.utterances.map{$0.text}}
+    qualityNote.numberOfLines=0;qualityNote.text="Listening survey: 12 fixed phrases. Rate only after playback: 1 unintelligible, 5 fully clear. Timing and traffic verification remain unrun. No microphone is used."
+    let scoreRow=UIStackView(arrangedSubviews:ratings);scoreRow.axis = .horizontal;scoreRow.distribution = .fillEqually
+    for (i,b) in ratings.enumerated(){b.tag=i+1;button(b,String(i+1),#selector(rateQuality(_:)))}
+    button(quality,"6. Play next listening-survey phrase",#selector(playQuality))
+    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
+    let scroll=UIScrollView();scroll.translatesAutoresizingMaskIntoConstraints=false;vc.view.addSubview(scroll);scroll.addSubview(stack)
+    NSLayoutConstraint.activate([scroll.leadingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.leadingAnchor),scroll.trailingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.trailingAnchor),scroll.topAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.topAnchor),scroll.bottomAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.bottomAnchor),stack.leadingAnchor.constraint(equalTo:scroll.contentLayoutGuide.leadingAnchor,constant:20),stack.trailingAnchor.constraint(equalTo:scroll.contentLayoutGuide.trailingAnchor,constant:-20),stack.topAnchor.constraint(equalTo:scroll.contentLayoutGuide.topAnchor,constant:16),stack.bottomAnchor.constraint(equalTo:scroll.contentLayoutGuide.bottomAnchor,constant:-20),stack.widthAnchor.constraint(equalTo:scroll.frameLayoutGuide.widthAnchor,constant:-40)])
     button(permissionButton,"Grant microphone permission (no capture)",#selector(grantPermission));button(prepare,"1. Prepare models",#selector(prepareModels));button(probe,"2. Play offline voice probe",#selector(playProbe));button(heard,"3. I heard the complete probe",#selector(confirmHeard));button(microphone,"4. Check microphone → clarification",#selector(startMic));button(model,"5. Speak fixed synthetic model reply",#selector(startModel));button(stopButton,"Stop and clear",#selector(stop))
     synth.delegate=self
     let readiness=Readiness(available:{[weak self] in self?.ready==true})
@@ -65,7 +80,37 @@ import CryptoKit
     }
   }
   private func button(_ b:UIButton,_ title:String,_ action:Selector){b.setTitle(title,for:.normal);b.titleLabel?.font = .preferredFont(forTextStyle:.headline);b.addTarget(self,action:action,for:.touchUpInside)}
-  private func updateButtons(){prepare.isEnabled = !ready && !active;probe.isEnabled=ready && operatorAttested && !active;heard.isEnabled=probeDone && !audible && !active;microphone.isEnabled=ready && audible && !active;model.isEnabled=ready && audible && !active;stopButton.isEnabled=true}
+  private func updateButtons(){
+    let idle = !active && !survey.awaitingRating
+    prepare.isEnabled = !ready && idle;probe.isEnabled=ready && operatorAttested && idle;heard.isEnabled=probeDone && !audible && idle
+    microphone.isEnabled=ready && audible && idle;model.isEnabled=ready && audible && idle
+    quality.isEnabled=ready && audible && operatorAttested && idle && voiceFixtures.count==12 && survey.nextFixture != nil
+    for b in ratings{b.isEnabled=survey.awaitingRating && eligibility.allowed && !active};stopButton.isEnabled=true
+  }
+  private func saveSurvey(){
+    guard !survey.attempts.isEmpty,let voice=surveyVoiceID,let declared=report["radio_attestation_recorded_utc"] as? String else{return}
+    let r:[String:Any]=["schema_version":1,"scope":"INTERNAL_IOS_LISTENING_SURVEY","physical_gate_acceptance":"NOT_RUN","acoustic_timing":"NOT_RUN","network_observation":"NOT_RUN","radio_state":"OPERATOR_DECLARED_OFF_AT_BUILD","radio_attestation_recorded_utc":declared,"fixture_sha256":fixtureDigest,"voice_id":voice,"os_build":ProcessInfo.processInfo.operatingSystemVersionString,"updated_utc":ISO8601DateFormatter().string(from:Date()),"attempts":survey.aggregate]
+    let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("voice-survey-results.json")
+    if let data=try? JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]){try? data.write(to:url,options:.atomic)}
+  }
+  @objc private func playQuality(){
+    guard ready,audible,operatorAttested,eligibility.allowed,!active,!survey.awaitingRating,voiceFixtures.count==12,
+      let id=surveyVoiceID ?? selectedVoice?.identifier,let voice=AVSpeechSynthesisVoice(identifier:id),
+      !voice.voiceTraits.contains(.isPersonalVoice),let (ticket,fixture)=survey.begin() else{return}
+    surveyVoiceID=id;surveyTicket=ticket;active=true;updateButtons()
+    do{try AVAudioSession.sharedInstance().setCategory(.playback,mode:.default);try AVAudioSession.sharedInstance().setActive(true)}catch{stop();qualityNote.text="Listening survey audio session failed. Attempt retained.";return}
+    let u=AVSpeechUtterance(string:voiceFixtures[fixture-1]);u.voice=voice;u.volume=0.4;surveyUtterance=u
+    qualityNote.text="Phrase \(fixture)/12 — listen, then rate 1–5 after playback. No acoustic timing is measured."
+    saveSurvey();synth.speak(u)
+    timer?.invalidate();timer=Timer.scheduledTimer(withTimeInterval:45,repeats:false){[weak self,weak u]_ in
+      guard let self,let u,self.surveyUtterance===u else{return};self.stop();self.qualityNote.text="Listening phrase timed out. Attempt retained; no rating assigned."
+    }
+  }
+  @objc private func rateQuality(_ sender:UIButton){
+    guard eligibility.allowed,!active,survey.rate(sender.tag) else{return};saveSurvey()
+    qualityNote.text=survey.nextFixture==nil ? "All 12 phrases rated. Listening ratings only; acoustic timing, traffic verification and physical acceptance remain NOT_RUN.":"Rating saved. Tap Play next listening-survey phrase."
+    updateButtons()
+  }
   private func save(){
     // Exact owned-app aggregate file; never raw speech, prompt, transcript or model reply.
     let dir=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
@@ -118,8 +163,14 @@ import CryptoKit
     let u=AVSpeechUtterance(string:"This is a local Eilo foreground voice test.");u.voice=voice;u.volume=0.4;probeUtterance=u;synth.speak(u)
     status.text="Listen for the complete test phrase.";report["probe_route"]=AVAudioSession.sharedInstance().currentRoute.outputs.map{$0.portType.rawValue};report["voice_id"]=voice.identifier;report["phase"]="VOICE_PROBE_PLAYING";save()
   }
-  func speechSynthesizer(_ synthesizer:AVSpeechSynthesizer,didFinish utterance:AVSpeechUtterance){guard utterance===probeUtterance,eligibility.allowed else{return};probeUtterance=nil;active=false;probeDone=true;report["sdk_probe_completed"]=true;report["phase"]="VOICE_PROBE_SDK_COMPLETED";status.text="If you heard the complete phrase, tap confirmation. SDK completion alone does not prove hearing.";save();updateButtons()}
-  func speechSynthesizer(_ synthesizer:AVSpeechSynthesizer,didCancel utterance:AVSpeechUtterance){guard utterance===probeUtterance else{return};probeUtterance=nil;active=false;updateButtons()}
+  func speechSynthesizer(_ synthesizer:AVSpeechSynthesizer,didFinish utterance:AVSpeechUtterance){
+    if utterance===surveyUtterance{
+      guard eligibility.allowed,let ticket=surveyTicket,survey.finish(ticket) else{return}
+      surveyUtterance=nil;surveyTicket=nil;timer?.invalidate();timer=nil;active=false
+      try? AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation)
+      qualityNote.text="Playback completed. Rate intelligibility 1–5 (1 unintelligible, 5 fully clear).";saveSurvey();updateButtons();return
+    };guard utterance===probeUtterance,eligibility.allowed else{return};probeUtterance=nil;active=false;probeDone=true;report["sdk_probe_completed"]=true;report["phase"]="VOICE_PROBE_SDK_COMPLETED";status.text="If you heard the complete phrase, tap confirmation. SDK completion alone does not prove hearing.";save();updateButtons()}
+  func speechSynthesizer(_ synthesizer:AVSpeechSynthesizer,didCancel utterance:AVSpeechUtterance){if utterance===surveyUtterance{stop();return};guard utterance===probeUtterance else{return};probeUtterance=nil;active=false;updateButtons()}
   @objc private func confirmHeard(){guard probeDone,!active else{return};audible=true;report["operator_heard_probe"]=true;report["phase"]="SINGLE_PHRASE_OPERATOR_CONFIRMED";status.text="Single-phrase voice check confirmed. This is not a voice-quality or egress audit.";save();updateButtons()}
   @objc private func startMic(){begin(synthetic:false)}
   @objc private func startModel(){begin(synthetic:true)}
@@ -174,7 +225,7 @@ import CryptoKit
     report["input_kind"]=synthetic ? "FIXED_SYNTHETIC_PROMPT":"PHYSICAL_MICROPHONE_UNCALIBRATED"
     guard turn.submit(final,confidence:confidence) else{fail("REPLY_SUBMIT_FAILED");return};report["phase"]="REPLY_SUBMITTED";save()
   }
-  @objc private func stop(){audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
+  @objc private func stop(){if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
   private func invalidateAudio(){stop();audible=false;probeDone=false;updateButtons()}
   func applicationWillResignActive(_ application:UIApplication){eligibility.visible=false;report["foreground"]=false;invalidateAudio()}
   func applicationDidBecomeActive(_ application:UIApplication){eligibility.visible=true;eligibility.protectedData(application.isProtectedDataAvailable);controller.permissionChanged();report["foreground"]=true;save()}
