@@ -116,5 +116,15 @@ bounded to three attempts per phrase. No automatic rating or acoustic timestamp 
 completion, invalid/premature ratings, cancellation and limits. `voice_survey.py` rejects content,
 out-of-order or duplicate rated phrases, unknown fields and fabricated timing/network acceptance.
 Partial scores never populate the frozen physical-voice-trials acceptance report. Survey state
-is a lab fixture, not production voice readiness. The UI collection integration follows on its
-own task branch, consolidated into one sprint PR.
+is a lab fixture, not production voice readiness. The scrolling UI collection integration is developed on its own task branch,
+consolidated into one sprint PR.
+
+The survey requires prepared models and the heard offline probe as session setup. Scroll to
+**6. Play next listening-survey phrase**, listen once, then select a score from1–5 after SDK
+completion. Repeat for12phrases; no microphone control is needed. Stop/background revokes the
+pending score, retaining the attempt. The exact voice ID remains fixed within one app session.
+Only fixture IDs, SDK attempt states and operator scores are exported in a separate owned file
+`Documents/voice-survey-results.json`; no audio/text, acoustic onset or traffic measurement.
+State is session-local: export the latest survey before restarting the app or starting another
+session. The display does not reveal the fixed phrase text before a score. Ratings are unblinded
+single-operator listening evidence, not an independent quality study or production readiness.
