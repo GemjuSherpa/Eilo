@@ -12,7 +12,7 @@ def source_paths(root):
         'packages/asr-runtime/eilo_asr.cc', 'packages/asr-runtime/include/*',
         'packages/llm-runtime/eilo_llm.cc', 'packages/llm-runtime/include/*')
     paths = {str(p.relative_to(root)) for pattern in patterns for p in root.glob(pattern)
-             if p.is_file() and p.name != 'ProtectedKey.swift'}
+             if p.is_file()}
     paths.update('packages/' + name for name in ('conversation-integration/check_capture_ios.py',
         'conversation-integration/tests/ios_capture.swift', 'vad-runtime/check_installer.py',
         'vad-runtime/check_native.py', 'asr-runtime/provenance.json', 'asr-runtime/tests/fixtures.json',

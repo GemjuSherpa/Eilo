@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "report_sha256": "7a3b914620302c64bbfa9149d7331b4648aafc3a72b5477a9b950097ff1d946b",
+  "report_sha256": "c87fe5000f479225130353da42c4db6ed35e4cb2317b968cc8f138e9be4b05d6",
   "inputs": [
     {
       "path": "packages/asr-runtime/eilo_asr.cc",
@@ -24,7 +24,7 @@
     },
     {
       "path": "packages/conversation-integration/check_capture_ios.py",
-      "sha256": "12e7793ab0efcecdb39baa303eb87753a040a75adbf29de6ab8ff229df2a2dbe"
+      "sha256": "3749af1b6f57c365e46feaa9600d70b13945fae0c4502b75903e999c9e40b6b9"
     },
     {
       "path": "packages/conversation-integration/tests/ios_capture.swift",
@@ -189,6 +189,10 @@
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/PromptBudget.swift",
       "sha256": "8d3cddb37a9e2a524e7647ba8cb0b5b4efd652f033624e79c7de3833f1259b48"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/ProtectedKey.swift",
+      "sha256": "3a6e837bdb75fbf843653eaa7759444ce900d1ad2f66238fa7b259db290e3027"
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/QwenTemplate.swift",

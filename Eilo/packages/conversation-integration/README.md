@@ -37,8 +37,8 @@ python3 packages/conversation-integration/check_capture_ios.py \
 The runner verifies runtime/model inputs, rebuilds the CPU LLM from the pinned source with the
 recorded CPU-only configuration, rejects network symbol dependencies, and retains build hashes.
 It uses the existing four-export ASR wrapper to isolate bundled ONNX symbols. Its strict Swift
-speech executable excludes the unrelated protected-key provider; normal application builds
-still compile that provider. One temporary ten-artifact ES256 lab pack holds speech and LLM
+speech executable now includes every native Swift source, including the protected-key provider.
+The provider uses the current authentication-context prompt API; it is not invoked by this test. One temporary ten-artifact ES256 lab pack holds speech and LLM
 weights. It is removed before the aggregate report is emitted. No model/runtime binary is committed.
 
 Confidence is synthetic 0.95; exact voice/OS offline evidence is synthetic. SDK completion does
