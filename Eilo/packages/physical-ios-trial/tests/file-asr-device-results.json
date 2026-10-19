@@ -1,0 +1,82 @@
+{
+  "acoustic_timing": "NOT_RUN",
+  "cases": [
+    {
+      "deletions": 0,
+      "errors": 0,
+      "fixture_id": "question",
+      "insertions": 0,
+      "pcm_sha256": "3f42bb8e2bb053fb686c1eafa6c7510ba3bcd28ff56d10e08a905d9e95d872b3",
+      "reference_words": 4,
+      "runtime_elapsed_ms": 301.38837499544024,
+      "samples": 37228,
+      "substitutions": 0
+    },
+    {
+      "deletions": 0,
+      "errors": 2,
+      "fixture_id": "name",
+      "insertions": 0,
+      "pcm_sha256": "ff409f54982a9e5759f799d8ed5f0d3fbf4356b6d9b165595604e4806df99c89",
+      "reference_words": 5,
+      "runtime_elapsed_ms": 363.39187499834225,
+      "samples": 47660,
+      "substitutions": 2
+    },
+    {
+      "deletions": 1,
+      "errors": 4,
+      "fixture_id": "numbers",
+      "insertions": 0,
+      "pcm_sha256": "7866bc444fadce72c298c233b227444c9a004489ecdd395b56fbc5d73bf4a543",
+      "reference_words": 11,
+      "runtime_elapsed_ms": 514.1504167113453,
+      "samples": 64875,
+      "substitutions": 3
+    },
+    {
+      "deletions": 0,
+      "errors": 0,
+      "fixture_id": "quiet",
+      "insertions": 0,
+      "pcm_sha256": "0014ba6d535b59fbec2e55b2e36478e4ab1e98ea2b9bd0f8de02e0958a4568c9",
+      "reference_words": 8,
+      "runtime_elapsed_ms": 371.92116666119546,
+      "samples": 52727,
+      "substitutions": 0
+    },
+    {
+      "deletions": 0,
+      "errors": 0,
+      "fixture_id": "pause",
+      "insertions": 0,
+      "pcm_sha256": "9580d3dc8a5d6e7abf2edac0bfed9ef21769eac890eff7032dafdba468c9ccce",
+      "reference_words": 6,
+      "runtime_elapsed_ms": 534.6543333143927,
+      "samples": 50745,
+      "substitutions": 0
+    },
+    {
+      "deletions": 0,
+      "errors": 0,
+      "fixture_id": "noise",
+      "insertions": 0,
+      "pcm_sha256": "226c47a62e58ff0567d9ad9c4fc34256b0429a476376ce2430e8aa013cd253ff",
+      "reference_words": 6,
+      "runtime_elapsed_ms": 433.2306666765362,
+      "samples": 49047,
+      "substitutions": 0
+    }
+  ],
+  "fixture_manifest_sha256": "5f310e91b7cb36d33ab09252cc44f1dd045178cb172e65827a98eebe9ca78102",
+  "input_kind": "FROZEN_SYNTHETIC_FILES",
+  "microphone": "NOT_OPENED",
+  "os_build": "Version 26.6.1 (Build 23G83)",
+  "phase": "COMPLETED",
+  "physical_memory_bytes": 12262113280,
+  "physical_quality_acceptance": "NOT_RUN",
+  "raw_text_exported": false,
+  "schema_version": 1,
+  "scope": "IOS_DEVICE_FILE_ASR_DIAGNOSTIC",
+  "updated_utc": "2026-10-19T10:45:45Z"
+}

@@ -105,6 +105,8 @@ jobs:
           "$RUNNER_TEMP/eilo-trial-epoch"
           xcrun swiftc packages/physical-ios-trial/TrialVoiceSurvey.swift packages/physical-ios-trial/tests/voice_survey_probe.swift -o "$RUNNER_TEMP/eilo-voice-survey"
           "$RUNNER_TEMP/eilo-voice-survey"
+          xcrun swiftc packages/physical-ios-trial/TrialAsrScore.swift packages/physical-ios-trial/tests/asr_score_probe.swift -o "$RUNNER_TEMP/eilo-asr-score"
+          "$RUNNER_TEMP/eilo-asr-score"
       - name: Ruby dependencies
         run: |
           gem install bundler -v 4.0.16 --no-document
