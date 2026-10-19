@@ -12,6 +12,7 @@ import CryptoKit
   private let synth=AVSpeechSynthesizer(),eligibility=IOSCaptureEligibility(),effects=IOSCaptureEffects()
   private let modelDiagnostic=UIButton(type:.system)
   private var modelDiagnosticAutoRun=false,modelDiagnosticRunning=false,modelDiagnosticUsed=false
+  private var diagnosticIdleTimer:Bool?
   private var diagnosticCancellation:TrialModelCancellation?
   private let modelDiagnosticProcess=UUID().uuidString
   private let fileAsr=UIButton(type:.system)
@@ -119,8 +120,12 @@ import CryptoKit
     let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("cpu-model-results.json")
     if let data=try? JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]){try? data.write(to:url,options:.atomic)}
   }
+  private func restoreDiagnosticIdleTimer(){
+    if let previous=diagnosticIdleTimer{UIApplication.shared.isIdleTimerDisabled=previous;diagnosticIdleTimer=nil}
+  }
   @objc private func runModelDiagnostic(){
     guard ready,!active,!survey.awaitingRating,!modelDiagnosticUsed,eligibility.allowed,let store,let llm else{return}
+    diagnosticIdleTimer=UIApplication.shared.isIdleTimerDisabled;UIApplication.shared.isIdleTimerDisabled=true
     modelDiagnosticUsed=true;modelDiagnosticRunning=true;active=true
     let cancellation=TrialModelCancellation();diagnosticCancellation=cancellation
     let operation=audioEpoch.begin(),deadline=ProcessInfo.processInfo.systemUptime+600
@@ -130,8 +135,8 @@ import CryptoKit
       guard let self else{return}
       do{
         let rows=try TrialModelDiagnostic.run(assets:assets,store:store,selection:llm,cancellation:cancellation,allowed:{self.audioEpoch.current(operation) && ProcessInfo.processInfo.systemUptime<deadline})
-        DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.audioEpoch.cancel();self.active=false;self.modelDiagnosticRunning=false;self.diagnosticCancellation=nil;self.saveModelDiagnostic("COMPLETED",rows);self.status.text="Six CPU prompts completed. Quality and independent network verification remain unrun. Restart the app before another model diagnostic.";self.updateButtons()}
-      }catch{DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.audioEpoch.cancel();self.active=false;self.modelDiagnosticRunning=false;self.diagnosticCancellation=nil;self.saveModelDiagnostic("INFERENCE_FAILED",[]);self.status.text="CPU diagnostic failed. No acceptance inferred. Restart before retrying.";self.updateButtons()}}
+        DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.audioEpoch.cancel();self.active=false;self.restoreDiagnosticIdleTimer();self.modelDiagnosticRunning=false;self.diagnosticCancellation=nil;self.saveModelDiagnostic("COMPLETED",rows);self.status.text="Six CPU prompts completed. Quality and independent network verification remain unrun. Restart the app before another model diagnostic.";self.updateButtons()}
+      }catch{DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.audioEpoch.cancel();self.active=false;self.restoreDiagnosticIdleTimer();self.modelDiagnosticRunning=false;self.diagnosticCancellation=nil;self.saveModelDiagnostic("INFERENCE_FAILED",[]);self.status.text="CPU diagnostic failed. No acceptance inferred. Restart before retrying.";self.updateButtons()}}
     }
   }
   private func saveFileAsr(_ phase:String,_ rows:[[String:Any]]){
@@ -284,7 +289,7 @@ import CryptoKit
     report["input_kind"]=synthetic ? "FIXED_SYNTHETIC_PROMPT":"PHYSICAL_MICROPHONE_UNCALIBRATED"
     guard turn.submit(final,confidence:confidence) else{fail("REPLY_SUBMIT_FAILED");return};report["phase"]="REPLY_SUBMITTED";save()
   }
-  @objc private func stop(){modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
+  @objc private func stop(){restoreDiagnosticIdleTimer();modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
   private func invalidateAudio(){stop();audible=false;probeDone=false;updateButtons()}
   func applicationWillResignActive(_ application:UIApplication){eligibility.visible=false;report["foreground"]=false;invalidateAudio()}
   func applicationDidBecomeActive(_ application:UIApplication){eligibility.visible=true;eligibility.protectedData(application.isProtectedDataAvailable);controller.permissionChanged();report["foreground"]=true;save()}

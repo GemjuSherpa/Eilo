@@ -2419,5 +2419,7 @@
     "LLAMA_BUILD_SERVER": "OFF",
     "LLAMA_CURL": "OFF"
   },
-  "scope": "LOCAL_CONVERSION_ONLY_NO_DEVICE_FEASIBILITY_CLAIM"
+  "scope": "LOCAL_CONVERSION_ONLY_NO_DEVICE_FEASIBILITY_CLAIM",
+  "converter_git_tree_sha": "5e03bdd8700948b9c41c54dd1b00f28a2aebc03f",
+  "converter_git_tree_api": "https://api.github.com/repos/ggml-org/llama.cpp/git/trees/5e03bdd8700948b9c41c54dd1b00f28a2aebc03f?recursive=1"
 }

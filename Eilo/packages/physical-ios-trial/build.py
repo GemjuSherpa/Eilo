@@ -19,6 +19,8 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE.parent / 'vad-runtime'))
 from check_installer import verify, verified_asr, require, sha256, run
 
+from model_wrapper import wrapper
+
 BUNDLE = 'com.eilo.ForegroundVoiceTrial'
 
 
@@ -101,7 +103,9 @@ def main():
     run(['xcrun','clang++',*target,'-dynamiclib',obj,moon/'libmoonshine.a','-framework','Accelerate','-framework','Foundation','-Wl,-twolevel_namespace','-Wl,-exported_symbols_list,'+str(exports),'-Wl,-install_name,@rpath/'+dynamic.name,'-o',dynamic])
     require(set(run(['xcrun','nm','-gUj',dynamic]).splitlines())==names and 'TWOLEVEL' in run(['xcrun','otool','-hv',dynamic]),'ASR isolation changed')
     headers=vad/'ios/onnxruntime.xcframework/ios-arm64/onnxruntime.framework/Headers';objects=[]
-    for src in [HERE.parent/'vad-runtime/eilo_vad.cc',HERE.parent/'vad-runtime/eilo_vad_onnx.cc',llm_here/'eilo_llm.cc']:
+    compiled_wrapper,wrapper_evidence=wrapper((llm_here/'eilo_llm.cc').read_bytes(),model_pin)
+    wrapper_source=output/'eilo_llm_trial.cc';wrapper_source.write_bytes(compiled_wrapper)
+    for src in [HERE.parent/'vad-runtime/eilo_vad.cc',HERE.parent/'vad-runtime/eilo_vad_onnx.cc',wrapper_source]:
         obj=output/(src.stem+'.o');objects.append(obj)
         run(['xcrun','clang++',*target,'-std=c++17','-Wall','-Wextra','-Werror','-I',HERE.parent/'vad-runtime/include','-I',headers,'-I',llm_here/'include','-I',source/'include','-I',source/'ggml/include','-c',src,'-o',obj])
     assets=output/'TrialAssets';assets.mkdir();pins=[]
@@ -135,7 +139,7 @@ def main():
     with (output/'app-build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=600)
     app=output/'DerivedData/Build/Products/Release-iphoneos/EiloForegroundTrial.app'
     require(app.is_dir(),'unsigned app missing')
-    result=dict(schema_version=1,scope='UNSIGNED_INTERNAL_PHYSICAL_TRIAL_BUILD',bundle_identifier=BUNDLE,app_binary_sha256=sha256(app/'EiloForegroundTrial'),asr_dynamic_sha256=sha256(dynamic),operator_configuration_sha256=sha256(assets/'operator.json'),model_files=[{k:r[k] for k in ['filename','sha256','bytes']} for r in pins],source_sha256=[dict(path=str(s.relative_to(ROOT)),sha256=sha256(s)) for s in sources],signing='NOT_RUN',installation='NOT_RUN',physical_execution='NOT_RUN',production='NOT_ENABLED')
+    result=dict(llm_wrapper=wrapper_evidence,schema_version=1,scope='UNSIGNED_INTERNAL_PHYSICAL_TRIAL_BUILD',bundle_identifier=BUNDLE,app_binary_sha256=sha256(app/'EiloForegroundTrial'),asr_dynamic_sha256=sha256(dynamic),operator_configuration_sha256=sha256(assets/'operator.json'),model_files=[{k:r[k] for k in ['filename','sha256','bytes']} for r in pins],source_sha256=[dict(path=str(s.relative_to(ROOT)),sha256=sha256(s)) for s in sources],signing='NOT_RUN',installation='NOT_RUN',physical_execution='NOT_RUN',production='NOT_ENABLED')
     (output/'build-results.json').write_text(json.dumps(result,indent=2)+'\n')
     print('Unsigned separate physical-trial app build PASS. Signing, installation and physical execution NOT_RUN.')
 

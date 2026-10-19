@@ -2,7 +2,7 @@
   "schema": 1,
   "task": "VC-LLM-06",
   "status": "NOT_RUN",
-  "reason": "iPhone17 Pro Max is connected; verified0.6B artifact/comparison adapter and physical quality/timing/memory trial remain unprepared. Physical Android unavailable. Simulator/desktop timings are not phone evidence.",
+  "reason": "Both exact pinned Q4_K_M candidates completed six fixed-prompt iPhone CPU diagnostics in separate processes; supporting wall timing and OS lifetime footprint aggregates are in physical-ios-trial/tests/cpu-model-device-results.json. Human quality ratings, independently observed traffic and physical Android comparison remain missing. Full comparison acceptance stays NOT_RUN.",
   "platforms": [
     {
       "platform": "iOS",

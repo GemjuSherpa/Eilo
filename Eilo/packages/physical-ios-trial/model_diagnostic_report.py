@@ -64,9 +64,22 @@ def validate(report):
     return report
 
 
+def validate_pair(reports):
+    require(type(reports) is list and len(reports) == 2, 'two candidate reports required')
+    for report in reports:
+        validate(report)
+        require(report['phase'] == 'COMPLETED', 'both candidates must complete')
+    pins = json.loads(Path(__file__).with_name('tests').joinpath('model-comparison-pins.json').read_text())
+    require({r['model_sha256'] for r in reports} == {p['sha256'] for p in pins}, 'distinct pinned candidates required')
+    require(reports[0]['process_id'] != reports[1]['process_id'], 'fresh process required per candidate')
+    require(reports[0]['os_build'] == reports[1]['os_build'] and reports[0]['physical_memory_bytes'] == reports[1]['physical_memory_bytes'], 'device metadata differs')
+    return reports
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('report', type=Path)
+    parser.add_argument('--pair', action='store_true')
     args = parser.parse_args()
-    validate(json.loads(args.report.read_text()))
+    (validate_pair if args.pair else validate)(json.loads(args.report.read_text()))
     print('CPU diagnostic aggregate valid; full physical acceptance remains NOT_RUN')

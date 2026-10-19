@@ -195,7 +195,9 @@ ends after `eilo_llm_next` releases its first nonempty piece, including that cal
 native decode. These are wall-clock diagnostic boundaries, not pure prefill,
 acoustic latency or externally verified token timing. Opening/loading is measured
 separately and includes descriptor verification. Stop/background revokes results
-and requests native cancellation; the 600-second deadline is cooperative.
+and requests native cancellation; the 600-second deadline is cooperative. The foreground diagnostic temporarily
+disables the idle timer and restores its previous value on completion, failure,
+Stop, or backgrounding; this does not authorize background or screen-off runs.
 
 Memory is the public Mach TASK_VM_INFO ledger's native process-lifetime footprint
 peak, read only when the returned struct includes the field. It includes model
@@ -208,3 +210,35 @@ the diagnostic instead of substituting RSS or a sampled maximum.
 Validate exports using `python3 packages/physical-ios-trial/model_diagnostic_report.py PATH`.
 Quality, independent network observation, Android and full VC-LLM-06 physical
 acceptance remain NOT_RUN even after this limited diagnostic completes.
+
+
+The audited C++ wrapper has an exact 1.7B file-size guard. `model_wrapper.py`
+generates a lab-only source copy with precisely the selected candidate's pinned
+size; the base file remains unchanged. The full base source SHA-256 and exact
+candidate size/hash must match the two reviewed pins before specialization.
+Only that numeric constant changes: descriptor checks, Qwen3/Q4_K_M validation,
+CPU settings, cancellation and decoding are identical. The Swift lease still
+verifies the exact candidate SHA-256 before passing its descriptor. Build evidence
+records both base and compiled wrapper hashes. Tests reject altered source and
+unreviewed candidates and prove the default 1.7B copy is byte-identical.
+
+
+Both physical candidates completed all six fixed prompts on the same connected
+iPhone17 Pro Max / iOS26.6.1 in separate fresh processes. The aggregate pair is
+`tests/cpu-model-device-results.json`; signed source/wrapper/build provenance and
+the cancelled/failed attempts are in `tests/cpu-model-builds.json`.
+
+| Candidate | Median begin wall ms | First native piece from begin ms (range) | OS lifetime peak MiB |
+|---|---:|---:|---:|
+| 1.7B | 18350 | 16370–19099 | 527.9 |
+| 0.6B | 5867 | 5610–6053 | 521.3 |
+
+This is one six-prompt run per candidate in fixed order, with uncontrolled OS
+caches and no independent traffic, acoustic, thermal, energy, endurance or human
+quality measurement. Footprint values are not model file sizes or a complete
+memory audit. The first 1.7B attempt was cancelled after foreground revocation;
+the fixed retry completed. The first 0.6B attempt failed at the original exact
+size guard; the reviewed lab specialization then completed. Neither attempt was
+counted as success. The ordinary shipping wrapper remains byte-identical.
+CI validates the actual pair in normal and optimized Python. Full VC-LLM-06 and
+S08 acceptance remain NOT_RUN/HOLD pending the missing evidence.
