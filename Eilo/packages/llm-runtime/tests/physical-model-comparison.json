@@ -2,7 +2,7 @@
   "schema": 1,
   "task": "VC-LLM-06",
   "status": "NOT_RUN",
-  "reason": "Both pinned Q4_K_M candidates and an isolated iPhone CPU diagnostic adapter are prepared. Scoped wall timing/process-lifetime OS memory diagnostics do not establish independently observed traffic or human quality acceptance. Physical Android unavailable; full comparison remains NOT_RUN.",
+  "reason": "Both exact pinned Q4_K_M candidates completed six fixed-prompt iPhone CPU diagnostics in separate processes; supporting wall timing and OS lifetime footprint aggregates are in physical-ios-trial/tests/cpu-model-device-results.json. Human quality ratings, independently observed traffic and physical Android comparison remain missing. Full comparison acceptance stays NOT_RUN.",
   "platforms": [
     {
       "platform": "iOS",

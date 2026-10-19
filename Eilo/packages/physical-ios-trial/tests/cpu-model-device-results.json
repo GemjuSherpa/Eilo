@@ -1,0 +1,230 @@
+[
+  {
+    "backend": "CPU",
+    "cases": [
+      {
+        "begin_wall_ms": 16317.074041697197,
+        "first_native_piece_from_begin_ms": 16369.547583337408,
+        "fixture_id": "compare-01",
+        "generation_wall_ms": 17464.816874999087,
+        "memory": {
+          "current_phys_footprint_bytes": 24134576,
+          "process_lifetime_peak_bytes": 553552064
+        },
+        "native_piece_count": 21,
+        "output_bytes": 91,
+        "prompt_tokens": 519,
+        "verified_open_and_load_ms": 609.2323333141394
+      },
+      {
+        "begin_wall_ms": 17653.92158331815,
+        "first_native_piece_from_begin_ms": 17709.475499985274,
+        "fixture_id": "compare-02",
+        "generation_wall_ms": 18300.513708323706,
+        "memory": {
+          "current_phys_footprint_bytes": 515212592,
+          "process_lifetime_peak_bytes": 553552064
+        },
+        "native_piece_count": 11,
+        "output_bytes": 25,
+        "prompt_tokens": 520,
+        "verified_open_and_load_ms": 610.7329166261479
+      },
+      {
+        "begin_wall_ms": 17941.336833348032,
+        "first_native_piece_from_begin_ms": 17998.269250034355,
+        "fixture_id": "compare-03",
+        "generation_wall_ms": 21316.467000055127,
+        "memory": {
+          "current_phys_footprint_bytes": 515228976,
+          "process_lifetime_peak_bytes": 553552064
+        },
+        "native_piece_count": 56,
+        "output_bytes": 262,
+        "prompt_tokens": 518,
+        "verified_open_and_load_ms": 602.6351666660048
+      },
+      {
+        "begin_wall_ms": 18758.15329165198,
+        "first_native_piece_from_begin_ms": 18819.307875004597,
+        "fixture_id": "compare-04",
+        "generation_wall_ms": 19931.88758334145,
+        "memory": {
+          "current_phys_footprint_bytes": 515228976,
+          "process_lifetime_peak_bytes": 553552064
+        },
+        "native_piece_count": 19,
+        "output_bytes": 76,
+        "prompt_tokens": 530,
+        "verified_open_and_load_ms": 826.5968332998455
+      },
+      {
+        "begin_wall_ms": 19037.64170833165,
+        "first_native_piece_from_begin_ms": 19098.739375011064,
+        "fixture_id": "compare-05",
+        "generation_wall_ms": 20271.003625006415,
+        "memory": {
+          "current_phys_footprint_bytes": 515228976,
+          "process_lifetime_peak_bytes": 553552064
+        },
+        "native_piece_count": 20,
+        "output_bytes": 108,
+        "prompt_tokens": 523,
+        "verified_open_and_load_ms": 891.7136249947362
+      },
+      {
+        "begin_wall_ms": 18910.536791663617,
+        "first_native_piece_from_begin_ms": 18971.653749991674,
+        "fixture_id": "compare-06",
+        "generation_wall_ms": 19478.644499962684,
+        "memory": {
+          "current_phys_footprint_bytes": 515228976,
+          "process_lifetime_peak_bytes": 553552064
+        },
+        "native_piece_count": 9,
+        "output_bytes": 34,
+        "prompt_tokens": 518,
+        "verified_open_and_load_ms": 879.0868750074878
+      }
+    ],
+    "context_tokens": 4096,
+    "enable_thinking": false,
+    "fixture_manifest_sha256": "0e6bfb28b2bb8f93dfd6a06838fddc0f43a15c8bb1d824ee0988bb3f70ef5746",
+    "memory_scope": "PROCESS_LIFETIME_INCLUDING_PREPARATION",
+    "microphone": "NOT_OPENED",
+    "model_bytes": 1282439424,
+    "model_open": "FRESH_HANDLE_PER_PROMPT_OS_CACHES_UNCONTROLLED",
+    "model_sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120",
+    "network_observation": "NOT_RUN",
+    "os_build": "Version 26.6.1 (Build 23G83)",
+    "output_token_limit": 256,
+    "phase": "COMPLETED",
+    "physical_gate_acceptance": "NOT_RUN",
+    "physical_memory_bytes": 12262113280,
+    "process_id": "2BB09A5E-825E-4445-9109-904B9E2463B8",
+    "quality": "NOT_RUN",
+    "raw_text_exported": false,
+    "runtime_revision": "8345f333951c661d166b00e6f9362e553768f292",
+    "sampler": "greedy",
+    "schema_version": 1,
+    "scope": "IOS_CPU_MODEL_DIAGNOSTIC",
+    "speaker": "NOT_OPENED",
+    "threads": 2,
+    "timing_scope": "BEGIN_INCLUDES_TOKENIZATION_CONTEXT_AND_PREFILL_FIRST_PIECE_INCLUDES_NATIVE_NEXT_DECODE",
+    "updated_utc": "2026-10-19T11:45:30Z"
+  },
+  {
+    "backend": "CPU",
+    "cases": [
+      {
+        "begin_wall_ms": 5586.695999954827,
+        "first_native_piece_from_begin_ms": 5610.376333293971,
+        "fixture_id": "compare-01",
+        "generation_wall_ms": 5986.765416630078,
+        "memory": {
+          "current_phys_footprint_bytes": 24380336,
+          "process_lifetime_peak_bytes": 546588312
+        },
+        "native_piece_count": 16,
+        "output_bytes": 74,
+        "prompt_tokens": 519,
+        "verified_open_and_load_ms": 284.00266665266827
+      },
+      {
+        "begin_wall_ms": 5772.97858329257,
+        "first_native_piece_from_begin_ms": 5797.177208296489,
+        "fixture_id": "compare-02",
+        "generation_wall_ms": 6033.414708334021,
+        "memory": {
+          "current_phys_footprint_bytes": 511345992,
+          "process_lifetime_peak_bytes": 546588312
+        },
+        "native_piece_count": 10,
+        "output_bytes": 13,
+        "prompt_tokens": 520,
+        "verified_open_and_load_ms": 291.61304171429947
+      },
+      {
+        "begin_wall_ms": 5801.415499998257,
+        "first_native_piece_from_begin_ms": 5826.069958333392,
+        "fixture_id": "compare-03",
+        "generation_wall_ms": 6377.840541652404,
+        "memory": {
+          "current_phys_footprint_bytes": 512869704,
+          "process_lifetime_peak_bytes": 546588312
+        },
+        "native_piece_count": 23,
+        "output_bytes": 95,
+        "prompt_tokens": 518,
+        "verified_open_and_load_ms": 284.02566665317863
+      },
+      {
+        "begin_wall_ms": 6028.680499992333,
+        "first_native_piece_from_begin_ms": 6053.392666683067,
+        "fixture_id": "compare-04",
+        "generation_wall_ms": 6489.28579170024,
+        "memory": {
+          "current_phys_footprint_bytes": 521405768,
+          "process_lifetime_peak_bytes": 546588312
+        },
+        "native_piece_count": 18,
+        "output_bytes": 69,
+        "prompt_tokens": 530,
+        "verified_open_and_load_ms": 296.39662499539554
+      },
+      {
+        "begin_wall_ms": 5972.408875008114,
+        "first_native_piece_from_begin_ms": 5996.536666643806,
+        "fixture_id": "compare-05",
+        "generation_wall_ms": 6508.38483334519,
+        "memory": {
+          "current_phys_footprint_bytes": 520602952,
+          "process_lifetime_peak_bytes": 546588312
+        },
+        "native_piece_count": 21,
+        "output_bytes": 108,
+        "prompt_tokens": 523,
+        "verified_open_and_load_ms": 294.9602917069569
+      },
+      {
+        "begin_wall_ms": 5932.668333349284,
+        "first_native_piece_from_begin_ms": 5957.307333359495,
+        "fixture_id": "compare-06",
+        "generation_wall_ms": 6930.505458381958,
+        "memory": {
+          "current_phys_footprint_bytes": 515720520,
+          "process_lifetime_peak_bytes": 546588312
+        },
+        "native_piece_count": 39,
+        "output_bytes": 153,
+        "prompt_tokens": 518,
+        "verified_open_and_load_ms": 294.76470832014456
+      }
+    ],
+    "context_tokens": 4096,
+    "enable_thinking": false,
+    "fixture_manifest_sha256": "0e6bfb28b2bb8f93dfd6a06838fddc0f43a15c8bb1d824ee0988bb3f70ef5746",
+    "memory_scope": "PROCESS_LIFETIME_INCLUDING_PREPARATION",
+    "microphone": "NOT_OPENED",
+    "model_bytes": 484219808,
+    "model_open": "FRESH_HANDLE_PER_PROMPT_OS_CACHES_UNCONTROLLED",
+    "model_sha256": "9b1a69f90cc7b7404ffeabd12f58391a6323ea08ae6e517f6cfd56bbb2caf5ca",
+    "network_observation": "NOT_RUN",
+    "os_build": "Version 26.6.1 (Build 23G83)",
+    "output_token_limit": 256,
+    "phase": "COMPLETED",
+    "physical_gate_acceptance": "NOT_RUN",
+    "physical_memory_bytes": 12262113280,
+    "process_id": "8632DF07-8E47-4B50-89EC-17B74DC0E977",
+    "quality": "NOT_RUN",
+    "raw_text_exported": false,
+    "runtime_revision": "8345f333951c661d166b00e6f9362e553768f292",
+    "sampler": "greedy",
+    "schema_version": 1,
+    "scope": "IOS_CPU_MODEL_DIAGNOSTIC",
+    "speaker": "NOT_OPENED",
+    "threads": 2,
+    "timing_scope": "BEGIN_INCLUDES_TOKENIZATION_CONTEXT_AND_PREFILL_FIRST_PIECE_INCLUDES_NATIVE_NEXT_DECODE",
+    "updated_utc": "2026-10-19T11:53:23Z"
+  }
+]

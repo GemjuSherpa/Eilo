@@ -221,3 +221,24 @@ CPU settings, cancellation and decoding are identical. The Swift lease still
 verifies the exact candidate SHA-256 before passing its descriptor. Build evidence
 records both base and compiled wrapper hashes. Tests reject altered source and
 unreviewed candidates and prove the default 1.7B copy is byte-identical.
+
+
+Both physical candidates completed all six fixed prompts on the same connected
+iPhone17 Pro Max / iOS26.6.1 in separate fresh processes. The aggregate pair is
+`tests/cpu-model-device-results.json`; signed source/wrapper/build provenance and
+the cancelled/failed attempts are in `tests/cpu-model-builds.json`.
+
+| Candidate | Median begin wall ms | First native piece from begin ms (range) | OS lifetime peak MiB |
+|---|---:|---:|---:|
+| 1.7B | 18350 | 16370–19099 | 527.9 |
+| 0.6B | 5867 | 5610–6053 | 521.3 |
+
+This is one six-prompt run per candidate in fixed order, with uncontrolled OS
+caches and no independent traffic, acoustic, thermal, energy, endurance or human
+quality measurement. Footprint values are not model file sizes or a complete
+memory audit. The first 1.7B attempt was cancelled after foreground revocation;
+the fixed retry completed. The first 0.6B attempt failed at the original exact
+size guard; the reviewed lab specialization then completed. Neither attempt was
+counted as success. The ordinary shipping wrapper remains byte-identical.
+CI validates the actual pair in normal and optimized Python. Full VC-LLM-06 and
+S08 acceptance remain NOT_RUN/HOLD pending the missing evidence.
