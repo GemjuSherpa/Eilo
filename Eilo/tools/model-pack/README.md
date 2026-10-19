@@ -46,7 +46,13 @@ into a temporary file, removes failed transfers, rejects existing symlinks and
 corrupt files, and publishes without replacing existing files. It does not
 resume partial downloads. Allow about 5 GB for source and conversion outputs.
 
-Download approval and actual conversion/device results are still pending.
+Download and local conversion were approved. Both independent Q4_K_M outputs
+match SHA-256 `9b1a69f90cc7b7404ffeabd12f58391a6323ea08ae6e517f6cfd56bbb2caf5ca`.
+Content-free conversion evidence is in `docs/models/evidence/qwen3-0.6b-q4-k-m.json`.
+The new converter archive differs from the historical compressed pin: all 3,689
+source files were instead checked against the complete official pinned Git blob
+inventory before building. The cause of the compressed-byte difference is unknown.
+Actual device comparison results are still pending.
 This preparation does not change `physical-model-comparison.json` or accept
 any S08 physical, network, quality, or memory gate. Each candidate must run in
 a fresh app process: the Mach footprint peak is a process-lifetime high-water
