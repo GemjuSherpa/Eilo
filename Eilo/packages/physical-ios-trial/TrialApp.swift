@@ -10,6 +10,8 @@ import CryptoKit
   private let prepare=UIButton(type:.system),probe=UIButton(type:.system),heard=UIButton(type:.system)
   private let microphone=UIButton(type:.system),model=UIButton(type:.system),stopButton=UIButton(type:.system)
   private let synth=AVSpeechSynthesizer(),eligibility=IOSCaptureEligibility(),effects=IOSCaptureEffects()
+  private let fileAsr=UIButton(type:.system)
+  private var fileAsrAutoRun=false,fileAsrRunning=false
   private let quality=UIButton(type:.system),qualityNote=UILabel(),ratings=(1...5).map{_ in UIButton(type:.system)}
   private let survey=TrialVoiceSurvey()
   private var surveyUtterance:AVSpeechUtterance?,surveyTicket:UUID?,surveyVoiceID:String?
@@ -60,8 +62,9 @@ import CryptoKit
     qualityNote.numberOfLines=0;qualityNote.text="Listening survey: 12 fixed phrases. Rate only after playback: 1 unintelligible, 5 fully clear. Timing and traffic verification remain unrun. No microphone is used."
     let scoreRow=UIStackView(arrangedSubviews:ratings);scoreRow.axis = .horizontal;scoreRow.distribution = .fillEqually
     for (i,b) in ratings.enumerated(){b.tag=i+1;button(b,String(i+1),#selector(rateQuality(_:)))}
+    button(fileAsr,"7. Run six-file ASR diagnostic (no mic)",#selector(runFileAsr))
     button(quality,"6. Play next listening-survey phrase",#selector(playQuality))
-    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
+    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
     let scroll=UIScrollView();scroll.translatesAutoresizingMaskIntoConstraints=false;vc.view.addSubview(scroll);scroll.addSubview(stack)
     NSLayoutConstraint.activate([scroll.leadingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.leadingAnchor),scroll.trailingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.trailingAnchor),scroll.topAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.topAnchor),scroll.bottomAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.bottomAnchor),stack.leadingAnchor.constraint(equalTo:scroll.contentLayoutGuide.leadingAnchor,constant:20),stack.trailingAnchor.constraint(equalTo:scroll.contentLayoutGuide.trailingAnchor,constant:-20),stack.topAnchor.constraint(equalTo:scroll.contentLayoutGuide.topAnchor,constant:16),stack.bottomAnchor.constraint(equalTo:scroll.contentLayoutGuide.bottomAnchor,constant:-20),stack.widthAnchor.constraint(equalTo:scroll.frameLayoutGuide.widthAnchor,constant:-40)])
     button(permissionButton,"Grant microphone permission (no capture)",#selector(grantPermission));button(prepare,"1. Prepare models",#selector(prepareModels));button(probe,"2. Play offline voice probe",#selector(playProbe));button(heard,"3. I heard the complete probe",#selector(confirmHeard));button(microphone,"4. Check microphone → clarification",#selector(startMic));button(model,"5. Speak fixed synthetic model reply",#selector(startModel));button(stopButton,"Stop and clear",#selector(stop))
@@ -74,6 +77,7 @@ import CryptoKit
     eligibility.visible=true;eligibility.protectedData(app.isProtectedDataAvailable)
     report["os_build"]=ProcessInfo.processInfo.operatingSystemVersionString;report["physical_memory_bytes"]=ProcessInfo.processInfo.physicalMemory
     report["phase"]="LAUNCHED_NO_CAPTURE";save();updateButtons()
+    if CommandLine.arguments.contains("--run-file-asr-diagnostic"){fileAsrAutoRun=true;prepareModels()}
     NotificationCenter.default.addObserver(forName:AVAudioSession.interruptionNotification,object:nil,queue:.main){[weak self]_ in self?.invalidateAudio()}
     NotificationCenter.default.addObserver(forName:AVAudioSession.routeChangeNotification,object:nil,queue:.main){[weak self] n in
       guard let reason=n.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,[AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue,AVAudioSession.RouteChangeReason.noSuitableRouteForCategory.rawValue,AVAudioSession.RouteChangeReason.override.rawValue].contains(reason) else{return};self?.invalidateAudio()
@@ -84,6 +88,7 @@ import CryptoKit
     let idle = !active && !survey.awaitingRating
     prepare.isEnabled = !ready && idle;probe.isEnabled=ready && operatorAttested && idle;heard.isEnabled=probeDone && !audible && idle
     microphone.isEnabled=ready && audible && idle;model.isEnabled=ready && audible && idle
+    fileAsr.isEnabled=ready && idle
     quality.isEnabled=ready && audible && operatorAttested && idle && voiceFixtures.count==12 && survey.nextFixture != nil
     for b in ratings{b.isEnabled=survey.awaitingRating && eligibility.allowed && !active};stopButton.isEnabled=true
   }
@@ -92,6 +97,24 @@ import CryptoKit
     let r:[String:Any]=["schema_version":1,"scope":"INTERNAL_IOS_LISTENING_SURVEY","physical_gate_acceptance":"NOT_RUN","acoustic_timing":"NOT_RUN","network_observation":"NOT_RUN","radio_state":"OPERATOR_DECLARED_OFF_AT_BUILD","radio_attestation_recorded_utc":declared,"fixture_sha256":fixtureDigest,"voice_id":voice,"os_build":ProcessInfo.processInfo.operatingSystemVersionString,"updated_utc":ISO8601DateFormatter().string(from:Date()),"attempts":survey.aggregate]
     let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("voice-survey-results.json")
     if let data=try? JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]){try? data.write(to:url,options:.atomic)}
+  }
+  private func saveFileAsr(_ phase:String,_ rows:[[String:Any]]){
+    let r:[String:Any]=["schema_version":1,"scope":"IOS_DEVICE_FILE_ASR_DIAGNOSTIC","phase":phase,"input_kind":"FROZEN_SYNTHETIC_FILES","microphone":"NOT_OPENED","physical_quality_acceptance":"NOT_RUN","acoustic_timing":"NOT_RUN","raw_text_exported":false,"fixture_manifest_sha256":TrialFileAsr.fixtureDigest,"os_build":ProcessInfo.processInfo.operatingSystemVersionString,"physical_memory_bytes":ProcessInfo.processInfo.physicalMemory,"updated_utc":ISO8601DateFormatter().string(from:Date()),"cases":rows]
+    let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("file-asr-results.json")
+    if let data=try? JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]){try? data.write(to:url,options:.atomic)}
+  }
+  @objc private func runFileAsr(){
+    guard ready,!active,!survey.awaitingRating,eligibility.allowed,let store,let asr else{return}
+    let operation=audioEpoch.begin(),deadline=ProcessInfo.processInfo.systemUptime+180
+    active=true;fileAsrRunning=true;updateButtons();status.text="Running six fixed ASR files. No microphone or speaker is active.";saveFileAsr("RUNNING",[])
+    let assets=Bundle.main.bundleURL.appendingPathComponent("TrialAssets")
+    installer.async{[weak self] in
+      guard let self else{return}
+      do{
+        let rows=try TrialFileAsr.run(assets:assets,store:store,selection:asr,allowed:{self.audioEpoch.current(operation) && ProcessInfo.processInfo.systemUptime<deadline})
+        DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.audioEpoch.cancel();self.active=false;self.fileAsrRunning=false;self.saveFileAsr("COMPLETED",rows);self.status.text="Six-file ASR diagnostic completed. Runtime and edit counts only; physical microphone quality remains unrun.";self.updateButtons()}
+      }catch{DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.audioEpoch.cancel();self.active=false;self.fileAsrRunning=false;self.saveFileAsr("INFERENCE_FAILED",[]);self.status.text="File ASR diagnostic failed. No success inferred.";self.updateButtons()}}
+    }
   }
   @objc private func playQuality(){
     guard ready,audible,operatorAttested,eligibility.allowed,!active,!survey.awaitingRating,voiceFixtures.count==12,
@@ -150,7 +173,7 @@ import CryptoKit
         let v=try SpeechPackSelection(packID:"physical-lab",runtimeRevision:runtime,kind:.vad,pins:pins.filter{$0.id=="vad"})
         let a=try SpeechPackSelection(packID:"physical-lab",runtimeRevision:runtime,kind:.asr,pins:pins.filter{$0.id != "vad"})
         let last=rows.last!;let l=try LlmPackSelection(packID:"physical-lab",runtimeRevision:runtime,model:LlmArtifactPin(id:"llm",sha256:last["sha256"] as! String,bytes:(last["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence))
-        DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.store=store;self.vad=v;self.asr=a;self.llm=l;self.ready=true;self.status.text="Models verified. Play the voice probe next.";self.report["phase"]="MODELS_READY";self.save();self.updateButtons()}
+        DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.store=store;self.vad=v;self.asr=a;self.llm=l;self.ready=true;self.status.text="Models verified. Play the voice probe next.";self.report["phase"]="MODELS_READY";self.save();self.updateButtons();if self.fileAsrAutoRun{self.fileAsrAutoRun=false;self.runFileAsr()}}
       }catch{let failedStage=preparationStage;DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.report["preparation_stage"]=failedStage;self.fail("MODEL_PREPARATION_FAILED");self.status.text="Trial stopped: MODEL_PREPARATION_FAILED / "+failedStage}}
     }
   }
@@ -225,7 +248,7 @@ import CryptoKit
     report["input_kind"]=synthetic ? "FIXED_SYNTHETIC_PROMPT":"PHYSICAL_MICROPHONE_UNCALIBRATED"
     guard turn.submit(final,confidence:confidence) else{fail("REPLY_SUBMIT_FAILED");return};report["phase"]="REPLY_SUBMITTED";save()
   }
-  @objc private func stop(){if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
+  @objc private func stop(){fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
   private func invalidateAudio(){stop();audible=false;probeDone=false;updateButtons()}
   func applicationWillResignActive(_ application:UIApplication){eligibility.visible=false;report["foreground"]=false;invalidateAudio()}
   func applicationDidBecomeActive(_ application:UIApplication){eligibility.visible=true;eligibility.protectedData(application.isProtectedDataAvailable);controller.permissionChanged();report["foreground"]=true;save()}

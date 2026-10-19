@@ -46,6 +46,8 @@ jobs:
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_report.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_voice_survey.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_voice_survey.py -v
+          python3 -m unittest discover -s ../physical-ios-trial -p test_file_asr_report.py -v
+          python3 -O -m unittest discover -s ../physical-ios-trial -p test_file_asr_report.py -v
           python3 ../vad-runtime/generate_rate_filter.py --check
           python3 -O ../vad-runtime/generate_rate_filter.py --check
       - name: Generate privacy-reduced synthetic JSON and HTML

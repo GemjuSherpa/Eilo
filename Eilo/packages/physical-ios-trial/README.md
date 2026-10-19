@@ -139,3 +139,25 @@ Android trial or general voice quality acceptance is inferred. The original one-
 was partial; completion is established by this later full export. Raw audio/text was not collected.
 The signed build snapshot retains its historical awaiting-operator status; this separate result
 supplies the completed ratings. S08 HOLD and production readiness gates are unchanged.
+
+## Six-file iPhone ASR diagnostic (VC-TURN-10 supporting evidence)
+
+The separate lab app can run the six existing checksum-frozen synthetic ASR fixtures directly
+through the signed native ASR lease on its installer worker. Control7 starts it explicitly;
+`--run-file-asr-diagnostic` is an opt-in development launch argument that prepares the pack
+and runs the same file-only path. Neither path opens microphone or speaker. Stop/background
+revokes the worker capability and prevents stale results; the worker also checks a180second
+whole-run deadline. Native calls are cooperative and cannot be forcibly preempted mid-call.
+
+Build staging verifies the original WAV format/hash and deterministic float PCM hashes from
+`tests/asr-pcm-pins.json`. Scoring uses the existing frozen lowercase ASCII normalization and
+substitution/deletion/insertion tie order. Only case IDs, input hashes, sample/edit counts and
+local file-ASR runtime are exported in `Documents/file-asr-results.json`. These durations include
+stream creation/inference; they are not acoustic first-response latency. No transcript/reference
+text is exported. Bundled fixtures are the existing synthetic files, not new microphone recordings.
+
+`file_asr_report.py` rejects changed inputs, missing cases, inconsistent counts, nonfinite timing
+and unsupported content/acceptance claims. Incomplete/cancelled runs contain no success rows.
+This small single-voice diagnostic is not the physical200-utterance/accent/noise matrix; microphone
+recognition quality, confidence calibration and the full S08 gate remain NOT_RUN. SDK compilation,
+synthetic scoring tests and actual device execution are recorded as separate evidence.
