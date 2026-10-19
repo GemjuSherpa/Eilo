@@ -2,6 +2,8 @@
 Signing/provisioning and physical launch are deliberately separate operator steps.
 """
 import argparse
+import array
+import wave
 from datetime import datetime, timezone
 import hashlib
 import importlib.util
@@ -107,13 +109,24 @@ def main():
     shutil.copy2(model,assets/'silero.onnx');shutil.copy2(gguf,assets/'model.gguf')
     for r in pins:require(sha256(assets/r['filename'])==r['sha256'],'staged model changed')
     shutil.copy2(HERE.parent/'offline-speech/tests/voice-trial-fixtures.json',assets/'voice-trial-fixtures.json')
+    fixtures_path=HERE.parent/'asr-runtime/tests/fixtures.json'
+    shutil.copy2(fixtures_path,assets/'asr-fixtures.json');pcm_pins=[]
+    for row in json.loads(fixtures_path.read_text())['cases']:
+        wav=asr/'fixtures'/row['file'];require(sha256(wav)==row['sha256'],'synthetic ASR fixture changed')
+        with wave.open(str(wav),'rb') as w:
+            require((w.getnchannels(),w.getsampwidth(),w.getframerate(),w.getnframes())==(1,2,16000,row['samples']),'invalid ASR fixture format')
+            pcm=array.array('h',w.readframes(w.getnframes()))
+        raw=assets/(row['id']+'.f32');raw.write_bytes(array.array('f',(v/32768 for v in pcm)).tobytes())
+        pcm_pins.append(dict(id=row['id'],samples=row['samples'],sha256=sha256(raw)))
+    require(pcm_pins==json.loads((HERE/'tests/asr-pcm-pins.json').read_text()),'frozen PCM conversion changed')
+    (assets/'asr-pcm-pins.json').write_text(json.dumps(pcm_pins))
     (assets/'pins.json').write_text(json.dumps(pins))
     (assets/'operator.json').write_text(json.dumps(dict(schema_version=1,radio_off_attested=a.operator_radio_off_attestation,source='HUMAN_OPERATOR' if a.operator_radio_off_attestation else 'NOT_PROVIDED',recorded_utc=datetime.now(timezone.utc).isoformat())))
     info=dict(CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)',CFBundleExecutable='$(EXECUTABLE_NAME)',CFBundleName='EiloForegroundTrial',CFBundleDisplayName='Eilo Foreground Trial',CFBundlePackageType='APPL',CFBundleShortVersionString='0.1',CFBundleVersion='1',LSRequiresIPhoneOS=True,NSMicrophoneUsageDescription='Run an explicitly started local foreground voice test. No recordings are saved.',UILaunchScreen={},UIApplicationSceneManifest={'UIApplicationSupportsMultipleScenes':False})
     (output/'Info.plist').write_bytes(plistlib.dumps(info))
     framework=vad/'ios/onnxruntime.xcframework/ios-arm64'
     flags=['$(inherited)',*map(str,objects),*map(str,libs),str(dynamic),'-framework','onnxruntime','-framework','Accelerate','-framework','CoreML','-lc++']
-    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift']
+    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift',HERE/'TrialAsrScore.swift',HERE/'TrialFileAsr.swift']
     proj=project(output,sources,assets,flags,framework)
     command=['xcodebuild','-project',str(proj),'-scheme','EiloForegroundTrial','-configuration','Release','-sdk','iphoneos','-destination','generic/platform=iOS','-derivedDataPath',str(output/'DerivedData'),'CODE_SIGNING_ALLOWED=NO','-jobs','3','build']
     with (output/'app-build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=600)

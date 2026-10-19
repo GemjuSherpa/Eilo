@@ -1,0 +1,32 @@
+[
+  {
+    "id": "question",
+    "samples": 37228,
+    "sha256": "3f42bb8e2bb053fb686c1eafa6c7510ba3bcd28ff56d10e08a905d9e95d872b3"
+  },
+  {
+    "id": "name",
+    "samples": 47660,
+    "sha256": "ff409f54982a9e5759f799d8ed5f0d3fbf4356b6d9b165595604e4806df99c89"
+  },
+  {
+    "id": "numbers",
+    "samples": 64875,
+    "sha256": "7866bc444fadce72c298c233b227444c9a004489ecdd395b56fbc5d73bf4a543"
+  },
+  {
+    "id": "quiet",
+    "samples": 52727,
+    "sha256": "0014ba6d535b59fbec2e55b2e36478e4ab1e98ea2b9bd0f8de02e0958a4568c9"
+  },
+  {
+    "id": "pause",
+    "samples": 50745,
+    "sha256": "9580d3dc8a5d6e7abf2edac0bfed9ef21769eac890eff7032dafdba468c9ccce"
+  },
+  {
+    "id": "noise",
+    "samples": 49047,
+    "sha256": "226c47a62e58ff0567d9ad9c4fc34256b0429a476376ce2430e8aa013cd253ff"
+  }
+]
