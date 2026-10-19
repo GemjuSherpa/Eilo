@@ -128,3 +128,14 @@ Only fixture IDs, SDK attempt states and operator scores are exported in a separ
 State is session-local: export the latest survey before restarting the app or starting another
 session. The display does not reveal the fixed phrase text before a score. Ratings are unblinded
 single-operator listening evidence, not an independent quality study or production readiness.
+
+## Operator results — 19 October 2026 (Melbourne)
+
+The validated `tests/listening-survey-operator-results.json` records all12 frozen phrases,
+12SDK-completed attempts and12operator scores of5/5, with no retries. The exact installed voice
+is com.apple.voice.super-compact.en-AU.Karen on iOS26.6.1/build23G83. This is one operator's
+listening assessment in a single foreground session. No independent timing, traffic measurement,
+Android trial or general voice quality acceptance is inferred. The original one-score export
+was partial; completion is established by this later full export. Raw audio/text was not collected.
+The signed build snapshot retains its historical awaiting-operator status; this separate result
+supplies the completed ratings. S08 HOLD and production readiness gates are unchanged.

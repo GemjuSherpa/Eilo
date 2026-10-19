@@ -1,0 +1,87 @@
+{
+  "acoustic_timing": "NOT_RUN",
+  "attempts": [
+    {
+      "attempt": 1,
+      "fixture_id": "voice-01",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 2,
+      "fixture_id": "voice-02",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 3,
+      "fixture_id": "voice-03",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 4,
+      "fixture_id": "voice-04",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 5,
+      "fixture_id": "voice-05",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 6,
+      "fixture_id": "voice-06",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 7,
+      "fixture_id": "voice-07",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 8,
+      "fixture_id": "voice-08",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 9,
+      "fixture_id": "voice-09",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 10,
+      "fixture_id": "voice-10",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 11,
+      "fixture_id": "voice-11",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    },
+    {
+      "attempt": 12,
+      "fixture_id": "voice-12",
+      "intelligibility": 5,
+      "sdk_status": "SDK_COMPLETED"
+    }
+  ],
+  "fixture_sha256": "35eecc8aa70638999474fa9f29e94aed062ae943774fc1ed7d4188bd72dfa2b6",
+  "network_observation": "NOT_RUN",
+  "os_build": "Version 26.6.1 (Build 23G83)",
+  "physical_gate_acceptance": "NOT_RUN",
+  "radio_attestation_recorded_utc": "2026-10-18T13:37:36.924391+00:00",
+  "radio_state": "OPERATOR_DECLARED_OFF_AT_BUILD",
+  "schema_version": 1,
+  "scope": "INTERNAL_IOS_LISTENING_SURVEY",
+  "updated_utc": "2026-10-19T10:27:32Z",
+  "voice_id": "com.apple.voice.super-compact.en-AU.Karen"
+}
