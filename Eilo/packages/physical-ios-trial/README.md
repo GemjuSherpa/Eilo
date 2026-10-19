@@ -210,3 +210,14 @@ the diagnostic instead of substituting RSS or a sampled maximum.
 Validate exports using `python3 packages/physical-ios-trial/model_diagnostic_report.py PATH`.
 Quality, independent network observation, Android and full VC-LLM-06 physical
 acceptance remain NOT_RUN even after this limited diagnostic completes.
+
+
+The audited C++ wrapper has an exact 1.7B file-size guard. `model_wrapper.py`
+generates a lab-only source copy with precisely the selected candidate's pinned
+size; the base file remains unchanged. The full base source SHA-256 and exact
+candidate size/hash must match the two reviewed pins before specialization.
+Only that numeric constant changes: descriptor checks, Qwen3/Q4_K_M validation,
+CPU settings, cancellation and decoding are identical. The Swift lease still
+verifies the exact candidate SHA-256 before passing its descriptor. Build evidence
+records both base and compiled wrapper hashes. Tests reject altered source and
+unreviewed candidates and prove the default 1.7B copy is byte-identical.
