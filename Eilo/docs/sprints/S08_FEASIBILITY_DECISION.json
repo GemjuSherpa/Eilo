@@ -71,8 +71,8 @@
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/llm-runtime/tests/physical-model-comparison.json",
-          "sha256": "fcfc4b955011c509fd880a75b609bd8c30788b3c5c25281dcd0938ccb6b0fbc3",
-          "blocker": "0.6B artifact/exact comparison adapter and physical CPU/quality/memory trial missing."
+          "sha256": "ab957b54644723e505784656d4c4b73f691c357d76897200d3168967000e260b",
+          "blocker": "Scoped iPhone CPU diagnostics completed both pinned models; human quality, independent traffic observation and physical Android comparison remain missing. Full VC-LLM-06 acceptance remains NOT_RUN."
         },
         {
           "task": "VC-VOICE-06",
@@ -149,8 +149,8 @@
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/llm-runtime/tests/physical-model-comparison.json",
-          "sha256": "fcfc4b955011c509fd880a75b609bd8c30788b3c5c25281dcd0938ccb6b0fbc3",
-          "blocker": "Physical Android unavailable. 0.6B artifact/exact comparison adapter and physical CPU/quality/memory trial missing."
+          "sha256": "ab957b54644723e505784656d4c4b73f691c357d76897200d3168967000e260b",
+          "blocker": "Scoped iPhone CPU diagnostics completed both pinned models; human quality, independent traffic observation and physical Android comparison remain missing. Full VC-LLM-06 acceptance remains NOT_RUN."
         },
         {
           "task": "VC-VOICE-06",

@@ -19,6 +19,8 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE.parent / 'vad-runtime'))
 from check_installer import verify, verified_asr, require, sha256, run
 
+from model_wrapper import wrapper
+
 BUNDLE = 'com.eilo.ForegroundVoiceTrial'
 
 
@@ -71,12 +73,14 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ['asr-cache','vad-cache','vad-model','llm-cache','llm-model','output']:
         p.add_argument('--'+name, type=Path, required=True)
+    p.add_argument('--comparison-model', choices=['Qwen3-1.7B-Q4_K_M','Qwen3-0.6B-Q4_K_M'], default='Qwen3-1.7B-Q4_K_M')
     p.add_argument('--operator-radio-off-attestation', action='store_true', help='Record the human operator declaration; never an OS/network verification.')
     a = p.parse_args()
     asr,vad,model,llm,gguf,output = [v.resolve() for v in (a.asr_cache,a.vad_cache,a.vad_model,a.llm_cache,a.llm_model,a.output)]
     verify(vad,model);asr_model,record=verified_asr(asr)
     llm_here=HERE.parent/'llm-runtime';prov=json.loads((llm_here/'provenance.json').read_text())
-    require(gguf.is_file() and not gguf.is_symlink() and gguf.stat().st_size==prov['model']['bytes'] and sha256(gguf)==prov['model']['sha256'],'LLM model changed')
+    model_pin=next(r for r in json.loads((HERE/'tests/model-comparison-pins.json').read_text()) if r['model']==a.comparison_model)
+    require(gguf.is_file() and not gguf.is_symlink() and gguf.stat().st_size==model_pin['bytes'] and sha256(gguf)==model_pin['sha256'],'LLM model changed')
     source=llm/('llama.cpp-'+prov['runtime']['commit']);archive=llm/'llama-v0.6.0.tar.gz'
     require(sha256(archive)==prov['runtime']['source_archive_sha256'],'LLM archive changed')
     spec=importlib.util.spec_from_file_location('trial_llm_host',llm_here/'check_host.py');host=importlib.util.module_from_spec(spec);spec.loader.exec_module(host);host.verify_tree(archive,source,source.name)
@@ -99,15 +103,18 @@ def main():
     run(['xcrun','clang++',*target,'-dynamiclib',obj,moon/'libmoonshine.a','-framework','Accelerate','-framework','Foundation','-Wl,-twolevel_namespace','-Wl,-exported_symbols_list,'+str(exports),'-Wl,-install_name,@rpath/'+dynamic.name,'-o',dynamic])
     require(set(run(['xcrun','nm','-gUj',dynamic]).splitlines())==names and 'TWOLEVEL' in run(['xcrun','otool','-hv',dynamic]),'ASR isolation changed')
     headers=vad/'ios/onnxruntime.xcframework/ios-arm64/onnxruntime.framework/Headers';objects=[]
-    for src in [HERE.parent/'vad-runtime/eilo_vad.cc',HERE.parent/'vad-runtime/eilo_vad_onnx.cc',llm_here/'eilo_llm.cc']:
+    compiled_wrapper,wrapper_evidence=wrapper((llm_here/'eilo_llm.cc').read_bytes(),model_pin)
+    wrapper_source=output/'eilo_llm_trial.cc';wrapper_source.write_bytes(compiled_wrapper)
+    for src in [HERE.parent/'vad-runtime/eilo_vad.cc',HERE.parent/'vad-runtime/eilo_vad_onnx.cc',wrapper_source]:
         obj=output/(src.stem+'.o');objects.append(obj)
         run(['xcrun','clang++',*target,'-std=c++17','-Wall','-Wextra','-Werror','-I',HERE.parent/'vad-runtime/include','-I',headers,'-I',llm_here/'include','-I',source/'include','-I',source/'ggml/include','-c',src,'-o',obj])
     assets=output/'TrialAssets';assets.mkdir();pins=[]
     for i,r in enumerate(record['model']['files']):
         pins.append(dict(id='asr-'+str(i),filename=r['file'],sha256=r['local_sha256'],bytes=r['bytes']));shutil.copy2(asr_model/r['file'],assets/r['file'])
-    pins += [dict(id='vad',filename='silero.onnx',sha256=sha256(model),bytes=model.stat().st_size),dict(id='llm',filename='model.gguf',sha256=prov['model']['sha256'],bytes=gguf.stat().st_size)]
+    pins += [dict(id='vad',filename='silero.onnx',sha256=sha256(model),bytes=model.stat().st_size),dict(id='llm',filename='model.gguf',sha256=model_pin['sha256'],bytes=gguf.stat().st_size)]
     shutil.copy2(model,assets/'silero.onnx');shutil.copy2(gguf,assets/'model.gguf')
     for r in pins:require(sha256(assets/r['filename'])==r['sha256'],'staged model changed')
+    shutil.copy2(HERE.parent/'llm-runtime/tests/model-comparison-fixtures.json',assets/'model-comparison-fixtures.json')
     shutil.copy2(HERE.parent/'offline-speech/tests/voice-trial-fixtures.json',assets/'voice-trial-fixtures.json')
     fixtures_path=HERE.parent/'asr-runtime/tests/fixtures.json'
     shutil.copy2(fixtures_path,assets/'asr-fixtures.json');pcm_pins=[]
@@ -126,13 +133,13 @@ def main():
     (output/'Info.plist').write_bytes(plistlib.dumps(info))
     framework=vad/'ios/onnxruntime.xcframework/ios-arm64'
     flags=['$(inherited)',*map(str,objects),*map(str,libs),str(dynamic),'-framework','onnxruntime','-framework','Accelerate','-framework','CoreML','-lc++']
-    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift',HERE/'TrialAsrScore.swift',HERE/'TrialFileAsr.swift']
+    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift',HERE/'TrialAsrScore.swift',HERE/'TrialFileAsr.swift',HERE/'TrialModelDiagnostic.swift']
     proj=project(output,sources,assets,flags,framework)
     command=['xcodebuild','-project',str(proj),'-scheme','EiloForegroundTrial','-configuration','Release','-sdk','iphoneos','-destination','generic/platform=iOS','-derivedDataPath',str(output/'DerivedData'),'CODE_SIGNING_ALLOWED=NO','-jobs','3','build']
     with (output/'app-build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=600)
     app=output/'DerivedData/Build/Products/Release-iphoneos/EiloForegroundTrial.app'
     require(app.is_dir(),'unsigned app missing')
-    result=dict(schema_version=1,scope='UNSIGNED_INTERNAL_PHYSICAL_TRIAL_BUILD',bundle_identifier=BUNDLE,app_binary_sha256=sha256(app/'EiloForegroundTrial'),asr_dynamic_sha256=sha256(dynamic),operator_configuration_sha256=sha256(assets/'operator.json'),model_files=[{k:r[k] for k in ['filename','sha256','bytes']} for r in pins],source_sha256=[dict(path=str(s.relative_to(ROOT)),sha256=sha256(s)) for s in sources],signing='NOT_RUN',installation='NOT_RUN',physical_execution='NOT_RUN',production='NOT_ENABLED')
+    result=dict(llm_wrapper=wrapper_evidence,schema_version=1,scope='UNSIGNED_INTERNAL_PHYSICAL_TRIAL_BUILD',bundle_identifier=BUNDLE,app_binary_sha256=sha256(app/'EiloForegroundTrial'),asr_dynamic_sha256=sha256(dynamic),operator_configuration_sha256=sha256(assets/'operator.json'),model_files=[{k:r[k] for k in ['filename','sha256','bytes']} for r in pins],source_sha256=[dict(path=str(s.relative_to(ROOT)),sha256=sha256(s)) for s in sources],signing='NOT_RUN',installation='NOT_RUN',physical_execution='NOT_RUN',production='NOT_ENABLED')
     (output/'build-results.json').write_text(json.dumps(result,indent=2)+'\n')
     print('Unsigned separate physical-trial app build PASS. Signing, installation and physical execution NOT_RUN.')
 

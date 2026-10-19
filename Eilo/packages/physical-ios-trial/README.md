@@ -175,3 +175,70 @@ file-only launch then completed; signed build/source provenance is in `tests/fil
 
 CI also validates the committed twelve-score operator export and six-case device ASR export in
 normal and optimized Python, so their shape, frozen inputs and scope remain checked after review.
+
+## CPU model diagnostic
+
+Control8, or explicit `--run-cpu-model-diagnostic` at a fresh launch, runs the six
+frozen `llm-runtime/tests/model-comparison-fixtures.json` prompts without opening
+microphone or speaker. One diagnostic is allowed per app process; always use a
+fresh process for each candidate. The builder accepts `--comparison-model`
+`Qwen3-1.7B-Q4_K_M` (default) or `Qwen3-0.6B-Q4_K_M`, with exact reviewed file
+size/SHA-256 from `tests/model-comparison-pins.json`. Arbitrary model pins are not
+accepted. Each prompt opens a fresh native model handle; OS caches are uncontrolled.
+Both use the existing CPU runtime, two threads, context4096, greedy sampling,
+output limit256, native Qwen rules/template and thinking disabled.
+
+The aggregate `Documents/cpu-model-results.json` records fixed fixture IDs and
+counts only. Generated text is discarded. `begin_wall_ms` includes native prompt
+tokenization, context creation and prefill; `first_native_piece_from_begin_ms`
+ends after `eilo_llm_next` releases its first nonempty piece, including that call's
+native decode. These are wall-clock diagnostic boundaries, not pure prefill,
+acoustic latency or externally verified token timing. Opening/loading is measured
+separately and includes descriptor verification. Stop/background revokes results
+and requests native cancellation; the 600-second deadline is cooperative. The foreground diagnostic temporarily
+disables the idle timer and restores its previous value on completion, failure,
+Stop, or backgrounding; this does not authorize background or screen-off runs.
+
+Memory is the public Mach TASK_VM_INFO ledger's native process-lifetime footprint
+peak, read only when the returned struct includes the field. It includes model
+preparation and all earlier activity in that process, and is never reset per row.
+Do not infer a per-prompt or model-only allocation peak. Automatic fresh-process
+launches provide the comparison path; manually running earlier trial controls
+can contaminate the lifetime high-water mark. Unsupported OS memory metrics fail
+the diagnostic instead of substituting RSS or a sampled maximum.
+
+Validate exports using `python3 packages/physical-ios-trial/model_diagnostic_report.py PATH`.
+Quality, independent network observation, Android and full VC-LLM-06 physical
+acceptance remain NOT_RUN even after this limited diagnostic completes.
+
+
+The audited C++ wrapper has an exact 1.7B file-size guard. `model_wrapper.py`
+generates a lab-only source copy with precisely the selected candidate's pinned
+size; the base file remains unchanged. The full base source SHA-256 and exact
+candidate size/hash must match the two reviewed pins before specialization.
+Only that numeric constant changes: descriptor checks, Qwen3/Q4_K_M validation,
+CPU settings, cancellation and decoding are identical. The Swift lease still
+verifies the exact candidate SHA-256 before passing its descriptor. Build evidence
+records both base and compiled wrapper hashes. Tests reject altered source and
+unreviewed candidates and prove the default 1.7B copy is byte-identical.
+
+
+Both physical candidates completed all six fixed prompts on the same connected
+iPhone17 Pro Max / iOS26.6.1 in separate fresh processes. The aggregate pair is
+`tests/cpu-model-device-results.json`; signed source/wrapper/build provenance and
+the cancelled/failed attempts are in `tests/cpu-model-builds.json`.
+
+| Candidate | Median begin wall ms | First native piece from begin ms (range) | OS lifetime peak MiB |
+|---|---:|---:|---:|
+| 1.7B | 18350 | 16370–19099 | 527.9 |
+| 0.6B | 5867 | 5610–6053 | 521.3 |
+
+This is one six-prompt run per candidate in fixed order, with uncontrolled OS
+caches and no independent traffic, acoustic, thermal, energy, endurance or human
+quality measurement. Footprint values are not model file sizes or a complete
+memory audit. The first 1.7B attempt was cancelled after foreground revocation;
+the fixed retry completed. The first 0.6B attempt failed at the original exact
+size guard; the reviewed lab specialization then completed. Neither attempt was
+counted as success. The ordinary shipping wrapper remains byte-identical.
+CI validates the actual pair in normal and optimized Python. Full VC-LLM-06 and
+S08 acceptance remain NOT_RUN/HOLD pending the missing evidence.
