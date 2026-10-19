@@ -647,5 +647,17 @@
     "specialized_guard_06b_generation_exit": 0,
     "output_content_exported": false,
     "generated_pieces": 8
+  },
+  "evaluation_configuration": {
+    "xcode_configuration": "Release",
+    "swift_compilation_conditions": [
+      "DEBUG",
+      "EILO_VAD_EVALUATION",
+      "EILO_ASR_EVALUATION",
+      "EILO_LLM_EVALUATION"
+    ],
+    "scope": "EXPLICIT_LAB_EVALUATION_NOT_SHIPPING_RELEASE_ACCEPTANCE",
+    "cold_warm_alternating_order_protocol": "NOT_RUN",
+    "battery_thermal_observation": "NOT_RUN"
   }
 }
