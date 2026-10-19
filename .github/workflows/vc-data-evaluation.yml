@@ -29,6 +29,8 @@ jobs:
       - name: Deterministic synthetic tests (no corpora/models/microphone)
         run: |
           python3 -m unittest discover -s tests -v
+          python3 -m unittest discover -s ../../tools/model-pack -p test_fetch_comparison_source.py -v
+          python3 -O -m unittest discover -s ../../tools/model-pack -p test_fetch_comparison_source.py -v
           python3 -O -m unittest discover -s tests -v
       - name: Native VAD sanitizer contracts (no models or capture)
         run: |

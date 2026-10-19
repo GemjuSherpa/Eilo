@@ -27,3 +27,28 @@ cmp .local/model-build/qwen3-1.7b-q4-k-m.gguf .local/model-build/qwen3-1.7b-q4-k
 Independent repeat evidence is recorded after both executions complete, not inferred from a recipe.
 
 VC-PACK-02 passed locally: both outputs are byte-identical, 1,282,439,424 bytes; SHA-256 c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120. File type 15 (Q4_K_M), 311 tensors (F32/Q4_K/Q6_K); tokenizer/template match BF16 exactly. No reply quality or mobile RAM/latency result is claimed.
+
+
+### CPU comparison source preparation
+
+`qwen3-0.6b-source-lock.json` pins the official Apache-2.0 BF16 source snapshot
+for VC-LLM-06. The selected files total 1,519,193,708 bytes. No weights are
+committed. The official GGUF repository currently provides Q8_0; the comparison
+requires a local BF16 → Q4_K_M conversion with verified converter provenance,
+followed by an independent repeat quantization and output hashes.
+
+Run `python3 tools/model-pack/fetch_comparison_source.py` to print the plan
+without network access. Only after explicit operator download approval, use
+`--download-approved --destination .local/model-build/qwen3-0.6b-source`.
+`--verify-only --destination PATH` checks an existing snapshot without network.
+The helper checks the pinned byte size and LFS SHA-256 or Git blob SHA-1, streams
+into a temporary file, removes failed transfers, rejects existing symlinks and
+corrupt files, and publishes without replacing existing files. It does not
+resume partial downloads. Allow about 5 GB for source and conversion outputs.
+
+Download approval and actual conversion/device results are still pending.
+This preparation does not change `physical-model-comparison.json` or accept
+any S08 physical, network, quality, or memory gate. Each candidate must run in
+a fresh app process: the Mach footprint peak is a process-lifetime high-water
+mark and cannot be reset between models. Fixed synthetic prompts only; human
+quality ratings and independent traffic observation remain separate evidence.
