@@ -172,3 +172,6 @@ six-case result cannot accept the200utterance matrix or the broader quality targ
 transcripts/references/audio were exported. Initial development installation stalled; stopping
 only that client and retrying with a180second timeout installed successfully. The explicit
 file-only launch then completed; signed build/source provenance is in `tests/file-asr-build.json`.
+
+CI also validates the committed twelve-score operator export and six-case device ASR export in
+normal and optimized Python, so their shape, frozen inputs and scope remain checked after review.
