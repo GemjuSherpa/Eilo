@@ -195,7 +195,9 @@ ends after `eilo_llm_next` releases its first nonempty piece, including that cal
 native decode. These are wall-clock diagnostic boundaries, not pure prefill,
 acoustic latency or externally verified token timing. Opening/loading is measured
 separately and includes descriptor verification. Stop/background revokes results
-and requests native cancellation; the 600-second deadline is cooperative.
+and requests native cancellation; the 600-second deadline is cooperative. The foreground diagnostic temporarily
+disables the idle timer and restores its previous value on completion, failure,
+Stop, or backgrounding; this does not authorize background or screen-off runs.
 
 Memory is the public Mach TASK_VM_INFO ledger's native process-lifetime footprint
 peak, read only when the returned struct includes the field. It includes model

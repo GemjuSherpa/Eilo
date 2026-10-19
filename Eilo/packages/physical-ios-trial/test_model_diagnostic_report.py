@@ -1,6 +1,6 @@
 import copy
 import unittest
-from model_diagnostic_report import FIXED, validate
+from model_diagnostic_report import FIXED, validate, validate_pair
 
 
 def sample():
@@ -32,6 +32,19 @@ class DiagnosticTests(unittest.TestCase):
             elif mode == 'reordered':report['cases'].reverse()
             else:report['phase'] = 'CANCELLED'
             with self.assertRaises(ValueError):validate(report)
+
+    def test_pair_requires_distinct_candidates_and_processes(self):
+        import json
+        from pathlib import Path
+        reports = [sample(), sample()]
+        with self.assertRaises(ValueError):validate_pair(reports)
+        pin = json.loads(Path(__file__).with_name('tests').joinpath('model-comparison-pins.json').read_text())[1]
+        reports[1].update(model_sha256=pin['sha256'], model_bytes=pin['bytes'])
+        with self.assertRaises(ValueError):validate_pair(reports)
+        reports[1]['process_id'] = '87654321-1234-1234-1234-123456789ABC'
+        validate_pair(reports)
+        reports[1].update(phase='RUNNING', cases=[])
+        with self.assertRaises(ValueError):validate_pair(reports)
 
     def test_timing_and_memory(self):
         for key, value in [('begin_wall_ms', float('nan')), ('generation_wall_ms', 1), ('native_piece_count', 257), ('prompt_tokens', True), ('output_bytes', 999999)]:
