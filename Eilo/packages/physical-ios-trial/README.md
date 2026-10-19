@@ -105,3 +105,37 @@ After the native installer fixes, both source-bound native evaluations were reru
 approved models: the eight-case signed VAD/ASR installer and file-fed capture → local model →
 SDK speech evaluator passed. Their current reports and source audits were refreshed together.
 The existing host-JNI report is retained; no new Android device execution is claimed.
+
+## Listening survey contract (VC-VOICE-06 preparation)
+
+A separate partial listening survey uses the existing 12 frozen phrases. Operator scores are
+1–5 (1 unintelligible, 5 fully clear); SDK completion only unlocks rating controls. Stop,
+interruption or background invalidates pending callbacks/ratings. Retries are retained and
+bounded to three attempts per phrase. No automatic rating or acoustic timestamp is inferred.
+`TrialVoiceSurvey.swift` owns the bounded state; the portable probe covers stale/duplicate
+completion, invalid/premature ratings, cancellation and limits. `voice_survey.py` rejects content,
+out-of-order or duplicate rated phrases, unknown fields and fabricated timing/network acceptance.
+Partial scores never populate the frozen physical-voice-trials acceptance report. Survey state
+is a lab fixture, not production voice readiness. The scrolling UI collection integration is developed on its own task branch,
+consolidated into one sprint PR.
+
+The survey requires prepared models and the heard offline probe as session setup. Scroll to
+**6. Play next listening-survey phrase**, listen once, then select a score from1–5 after SDK
+completion. Repeat for12phrases; no microphone control is needed. Stop/background revokes the
+pending score, retaining the attempt. The exact voice ID remains fixed within one app session.
+Only fixture IDs, SDK attempt states and operator scores are exported in a separate owned file
+`Documents/voice-survey-results.json`; no audio/text, acoustic onset or traffic measurement.
+State is session-local: export the latest survey before restarting the app or starting another
+session. The display does not reveal the fixed phrase text before a score. Ratings are unblinded
+single-operator listening evidence, not an independent quality study or production readiness.
+
+## Operator results — 19 October 2026 (Melbourne)
+
+The validated `tests/listening-survey-operator-results.json` records all12 frozen phrases,
+12SDK-completed attempts and12operator scores of5/5, with no retries. The exact installed voice
+is com.apple.voice.super-compact.en-AU.Karen on iOS26.6.1/build23G83. This is one operator's
+listening assessment in a single foreground session. No independent timing, traffic measurement,
+Android trial or general voice quality acceptance is inferred. The original one-score export
+was partial; completion is established by this later full export. Raw audio/text was not collected.
+The signed build snapshot retains its historical awaiting-operator status; this separate result
+supplies the completed ratings. S08 HOLD and production readiness gates are unchanged.
