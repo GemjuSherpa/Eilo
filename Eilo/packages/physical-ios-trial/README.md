@@ -161,3 +161,14 @@ and unsupported content/acceptance claims. Incomplete/cancelled runs contain no 
 This small single-voice diagnostic is not the physical200-utterance/accent/noise matrix; microphone
 recognition quality, confidence calibration and the full S08 gate remain NOT_RUN. SDK compilation,
 synthetic scoring tests and actual device execution are recorded as separate evidence.
+
+### Device result — 19 October 2026 (Melbourne)
+
+The owned iPhone export in `tests/file-asr-device-results.json` completed all six files:
+6word errors/40reference words (15%WER), matching the existing small synthetic baseline.
+Measured file-ASR runtime including stream creation was301–535ms per case. This is a device
+file-inference diagnostic, not microphone accuracy or acoustic response latency; the limited
+six-case result cannot accept the200utterance matrix or the broader quality targets. No raw
+transcripts/references/audio were exported. Initial development installation stalled; stopping
+only that client and retrying with a180second timeout installed successfully. The explicit
+file-only launch then completed; signed build/source provenance is in `tests/file-asr-build.json`.

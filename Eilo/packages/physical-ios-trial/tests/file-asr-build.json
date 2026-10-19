@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "scope": "SIGNED_FILE_ASR_DIAGNOSTIC_BUILD",
+  "runtime_source_commit": "ff088ca",
+  "signing": "CODESIGN_DEEP_STRICT_PASS",
+  "installation": "PASS_BOUNDED_RETRY",
+  "device_execution": "SIX_FILES_COMPLETED",
+  "physical_microphone_quality": "NOT_RUN",
+  "audio_devices": "NOT_OPENED",
+  "app_binary_sha256": "7f3893f53e02a4bff86e565b69db66437e23f9f9aff01f51b81fc94a0ed2846a",
+  "fixture_manifest_sha256": "5f310e91b7cb36d33ab09252cc44f1dd045178cb172e65827a98eebe9ca78102",
+  "pcm_pins_sha256": "9d93eb68c4f1dcb26c23b225a8b3cac4c2e0c7a6d2696c13145928ec34eb70cd",
+  "trial_sources": [
+    {
+      "path": "packages/physical-ios-trial/TrialApp.swift",
+      "sha256": "3ee1be335a451db2a0394ef5d8986ee68aa5f560f5838105fe99d13e5a3194b0"
+    },
+    {
+      "path": "packages/physical-ios-trial/TrialAsrScore.swift",
+      "sha256": "30f975846aec31dffe26b24d1c4910c65cf6ffa4757c22d6ae8002512985fb67"
+    },
+    {
+      "path": "packages/physical-ios-trial/TrialEpoch.swift",
+      "sha256": "464e64aca4e62f9481d9d47bdf75c1e41661f2b36dd9e239ee6b6df3cf3a5267"
+    },
+    {
+      "path": "packages/physical-ios-trial/TrialFileAsr.swift",
+      "sha256": "c50be2494cde4b46ee898ba3b91c5ba781b1670c0fafc9619c9d715267d73ab7"
+    },
+    {
+      "path": "packages/physical-ios-trial/TrialVoiceSurvey.swift",
+      "sha256": "d0d77c4f7aaca276f82c2616f259a884e2052239eb95d23eb387887a37d0607f"
+    }
+  ],
+  "tests": {
+    "swift": 309,
+    "python_normal": 10,
+    "python_optimized": 10,
+    "normal_simulator_launches": 3,
+    "strict_device_simulator": "PASS",
+    "portable_edit_scoring": "PASS"
+  },
+  "note": "Build evidence only. Six synthetic files do not establish physical microphone quality or the 200-utterance matrix."
+}
