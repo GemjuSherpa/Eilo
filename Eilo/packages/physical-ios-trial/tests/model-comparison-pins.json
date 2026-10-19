@@ -1,0 +1,12 @@
+[
+  {
+    "model": "Qwen3-1.7B-Q4_K_M",
+    "bytes": 1282439424,
+    "sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120"
+  },
+  {
+    "model": "Qwen3-0.6B-Q4_K_M",
+    "bytes": 484219808,
+    "sha256": "9b1a69f90cc7b7404ffeabd12f58391a6323ea08ae6e517f6cfd56bbb2caf5ca"
+  }
+]
