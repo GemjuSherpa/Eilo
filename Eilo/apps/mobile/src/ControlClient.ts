@@ -1,7 +1,14 @@
 import { parseStateEvent, type StateEvent } from '@eilo/contracts';
 import NativeControl from './specs/NativeEiloControl';
+export interface DisplayPreferences {
+  text: boolean;
+  images: boolean;
+  video: boolean;
+  voiceOnly: boolean;
+}
 export interface ControlPreferences {
-  version: 1;
+  version: 2;
+  display: DisplayPreferences;
   historyChoice: 'none' | 'private' | 'history';
   onboardingComplete: boolean;
   historyAvailable: boolean;
@@ -26,7 +33,11 @@ export type ControlCommand =
   | 'completeOnboarding'
   | 'background'
   | 'volume'
-  | 'privateSession';
+  | 'privateSession'
+  | 'displayText'
+  | 'displayImages'
+  | 'displayVideo'
+  | 'voiceOnly';
 export interface ControlClient {
   snapshot(): Promise<ControlSnapshot>;
   command(name: ControlCommand, value?: string): Promise<ControlSnapshot>;
@@ -67,8 +78,8 @@ export function decodeSnapshot(source: string): ControlSnapshot {
   const preferences = raw as Record<string, unknown>;
   if (
     Object.keys(preferences).sort().join(',') !==
-      'backgroundConsent,historyAvailable,historyChoice,historyEnabled,onboardingComplete,privateSession,version,volume' ||
-    preferences.version !== 1 ||
+      'backgroundConsent,display,historyAvailable,historyChoice,historyEnabled,onboardingComplete,privateSession,version,volume' ||
+    preferences.version !== 2 ||
     !['none', 'private', 'history'].includes(
       String(preferences.historyChoice),
     ) ||
@@ -91,8 +102,19 @@ export function decodeSnapshot(source: string): ControlSnapshot {
   ) {
     throw new Error('Native settings unavailable');
   }
+  const display = preferences.display;
+  if (
+    !display ||
+    typeof display !== 'object' ||
+    Array.isArray(display) ||
+    Object.keys(display).sort().join(',') !== 'images,text,video,voiceOnly' ||
+    Object.values(display).some(flag => typeof flag !== 'boolean')
+  ) {
+    throw new Error('Native display settings unavailable');
+  }
   const validated: ControlPreferences = {
-    version: 1,
+    version: 2,
+    display: display as DisplayPreferences,
     historyChoice:
       preferences.historyChoice as ControlPreferences['historyChoice'],
     onboardingComplete: preferences.onboardingComplete as boolean,

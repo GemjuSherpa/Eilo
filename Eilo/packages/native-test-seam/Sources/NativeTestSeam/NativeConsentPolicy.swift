@@ -1,7 +1,11 @@
 import Foundation
 public enum HistoryChoice:String,Codable { case unselected="none",privateMode="private",history }
+public struct DisplayPreferences:Codable {
+ public var text=true;public var images=false;public var video=false;public var voiceOnly=false
+ public init() {}
+}
 public struct ConsentRecord:Codable {
- public var version=1;public var historyChoice:HistoryChoice = .unselected;public var disclosureVersion=0;public var backgroundConsent=false;public var volume=100
+ public var version=2;public var display:DisplayPreferences?=DisplayPreferences();public var historyChoice:HistoryChoice = .unselected;public var disclosureVersion=0;public var backgroundConsent=false;public var volume=100
  public init() {}
 }
 public protocol ConsentPersistence { func load() throws -> ConsentRecord?;func save(_ record:ConsentRecord) throws -> Bool }
@@ -11,7 +15,7 @@ public final class NativeConsentPolicy:@unchecked Sendable {
  private var record=ConsentRecord();private var privateMode=true;private var privateExplicit=false
  public init(persistence:any ConsentPersistence,historyAvailable:@escaping ()->Bool={false}) {
   self.persistence=persistence;self.historyAvailable=historyAvailable
-  if let loaded=try? persistence.load(),loaded.version==1,(0...1).contains(loaded.disclosureVersion),(0...100).contains(loaded.volume) { record=loaded }
+  if let loaded=try? persistence.load(),(1...2).contains(loaded.version),(0...1).contains(loaded.disclosureVersion),(0...100).contains(loaded.volume) { record=loaded;record.version=2;if record.display == nil { record.display=DisplayPreferences() } }
  }
  private func save(_ value:ConsentRecord)->Bool {
   do { guard try persistence.save(value) else { return false };record=value;return true } catch { return false }
@@ -41,9 +45,17 @@ public final class NativeConsentPolicy:@unchecked Sendable {
  }
  public var backgroundRequested:Bool { lock.lock();defer { lock.unlock() };return record.backgroundConsent && record.disclosureVersion==1 && record.historyChoice != .unselected }
  public var personalWritesAllowed:Bool { lock.lock();defer { lock.unlock() };return record.historyChoice == .history && !privateMode && historyAvailable() }
+ /// UI-only preference changes require a foreground, unlocked native host. No voice-command route is exposed.
+ @discardableResult public func chooseDisplay(_ name:String,enabled:Bool,authorized:Bool)->Bool {
+  lock.lock();defer { lock.unlock() };guard authorized else { return false }
+  var next=record;var display=next.display ?? DisplayPreferences()
+  switch name { case "displayText":display.text=enabled;case "displayImages":display.images=enabled;case "displayVideo":display.video=enabled;case "voiceOnly":display.voiceOnly=enabled;default:return false }
+  next.display=display;return save(next)
+ }
  public func snapshot()->[String:Any] {
   lock.lock();defer { lock.unlock() }
-  return ["version":1,"historyChoice":record.historyChoice.rawValue,"onboardingComplete":record.disclosureVersion==1 && record.historyChoice != .unselected,"historyAvailable":historyAvailable(),"historyEnabled":personalWritesAllowed,"backgroundConsent":record.backgroundConsent,"privateSession":privateMode,"volume":record.volume]
+  let d=record.display ?? DisplayPreferences()
+  return ["version":2,"display":["text":d.text,"images":d.images,"video":d.video,"voiceOnly":d.voiceOnly],"historyChoice":record.historyChoice.rawValue,"onboardingComplete":record.disclosureVersion==1 && record.historyChoice != .unselected,"historyAvailable":historyAvailable(),"historyEnabled":personalWritesAllowed,"backgroundConsent":record.backgroundConsent,"privateSession":privateMode,"volume":record.volume]
  }
 }
 #if os(iOS)
@@ -56,7 +68,10 @@ public final class IOSConsentPersistence:ConsentPersistence {
   let attributes=try FileManager.default.attributesOfItem(atPath:file.path)
   guard let size=attributes[.size] as? NSNumber,size.intValue<=4096 else { return nil }
   let data=try Data(contentsOf:file)
-  guard let object=try JSONSerialization.jsonObject(with:data) as? [String:Any],Set(object.keys)==Set(["version","historyChoice","disclosureVersion","backgroundConsent","volume"]) else { return nil }
+  guard let object=try JSONSerialization.jsonObject(with:data) as? [String:Any],let version=object["version"] as? Int else { return nil }
+  let legacy:Set<String>=["version","historyChoice","disclosureVersion","backgroundConsent","volume"]
+  guard (version==1 && Set(object.keys)==legacy) || (version==2 && Set(object.keys)==legacy.union(["display"])) else { return nil }
+  if version==2 { guard let display=object["display"] as? [String:Any],Set(display.keys)==Set(["text","images","video","voiceOnly"]) else { return nil } }
   return try JSONDecoder().decode(ConsentRecord.self,from:data)
  }
  public func save(_ record:ConsentRecord) throws -> Bool {

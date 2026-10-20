@@ -51,7 +51,8 @@ const fixture = (
   capturePending: false,
   speakerConfirmationRequired: false,
   preferences: {
-    version: 1,
+    version: 2,
+    display: { text: true, images: false, video: false, voiceOnly: false },
     historyChoice: 'private',
     onboardingComplete: false,
     historyAvailable: false,
@@ -205,6 +206,27 @@ test('bridge decoder rejects personal fields, invalid states and oversized paylo
     ),
   ).toThrow();
   expect(() => decodeSnapshot(' '.repeat(4097))).toThrow();
+  for (const display of [
+    null,
+    { text: true },
+    { text: 1, images: false, video: false, voiceOnly: false },
+    {
+      text: true,
+      images: false,
+      video: false,
+      voiceOnly: false,
+      transcript: 'synthetic',
+    },
+  ]) {
+    expect(() =>
+      decodeSnapshot(
+        JSON.stringify({
+          ...fixture('stopped'),
+          preferences: { ...fixture('stopped').preferences, display },
+        }),
+      ),
+    ).toThrow();
+  }
 });
 
 test('an older snapshot cannot replace a newer native event', async () => {

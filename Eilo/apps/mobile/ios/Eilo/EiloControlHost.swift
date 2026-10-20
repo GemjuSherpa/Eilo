@@ -27,8 +27,10 @@ import UIKit
   @objc func command(_ name:String,value:String) -> String {
     guard let app else { return "{}" }
     if name.utf8.count>32 || value.utf8.count>8 { return "{}" }
-    if name != "history" && name != "volume" && name != "privateSession" && !value.isEmpty { return "{}" }
+    if name != "history" && name != "volume" && name != "privateSession" && !["displayText","displayImages","displayVideo","voiceOnly"].contains(name) && !value.isEmpty { return "{}" }
     switch name {
+    case "displayText","displayImages","displayVideo","voiceOnly":
+      guard value=="true" || value=="false",app.consent.chooseDisplay(name,enabled:value=="true",authorized:app.captureEligibility.allowed) else { return "{}" }
     case "privateSession":
       guard value=="true",app.captureEligibility.allowed else { return snapshot() }
       app.conversationController.privacyTransition(.privateSession)
