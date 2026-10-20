@@ -14,6 +14,10 @@ class NetworkTraceTests(unittest.TestCase):
             self.assertEqual(command[command.index('--attach')+1], '123')
             self.assertEqual(command[command.index('--device')+1], DEVICE)
             self.assertEqual(command[command.index('--time-limit')+1], '300s')
+            self.assertEqual(command[command.index('--template')+1], 'Blank')
+            self.assertEqual(command[command.index('--instrument')+1], 'Network Connections')
+            self.assertNotIn('HTTP Traffic', command)
+            self.assertNotIn('Network', command)
             for prohibited in ['--all-processes', '--no-prompt', '--har', '--launch']:
                 self.assertNotIn(prohibited, command)
             self.assertEqual(p['recording'], 'NOT_RUN')
@@ -31,5 +35,8 @@ class NetworkTraceTests(unittest.TestCase):
                 with self.assertRaises(ValueError): plan(DEVICE, 123, 300, path)
             for device in [None, "", "all", "iPhone", "00008150-0000000000000001; command"]:
                 with self.assertRaises(ValueError): plan(device, 123, 300, new)
+            broken = Path(d)/'broken.trace'
+            broken.symlink_to(Path(d)/'missing')
+            with self.assertRaises(ValueError): plan(DEVICE, 123, 300, broken)
             new.mkdir()
             with self.assertRaises(ValueError): plan(DEVICE, 123, 300, new)
