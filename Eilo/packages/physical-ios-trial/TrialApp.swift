@@ -15,6 +15,10 @@ import CryptoKit
   private let modelQualitySession=TrialModelQualitySession(),modelQualitySessionID=UUID().uuidString
   private var modelQualityCancellation:TrialModelCancellation?
   private var modelQualityRunning=false
+  private let phaseDiagnostic=UIButton(type:.system)
+  private var phaseAutoRun=false,phaseRunning=false,phaseUsed=false
+  private var phaseRows=[[String:Any]](),batteryMonitoring:Bool?
+  private let phaseProcess=UUID().uuidString
   private let modelDiagnostic=UIButton(type:.system)
   private var modelDiagnosticAutoRun=false,modelDiagnosticRunning=false,modelDiagnosticUsed=false
   private var diagnosticIdleTimer:Bool?
@@ -80,7 +84,9 @@ import CryptoKit
     button(modelDiagnostic,"8. Run fixed CPU model diagnostic (no audio)",#selector(runModelDiagnostic))
     button(fileAsr,"7. Run six-file ASR diagnostic (no mic)",#selector(runFileAsr))
     button(quality,"6. Play next listening-survey phrase",#selector(playQuality))
-    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
+    button(phaseDiagnostic,"10. Run 18 native-phase samples (no audio)",#selector(runPhaseDiagnostic))
+    phaseDiagnostic.isHidden = !TrialPhaseDiagnostic.available
+    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
     let scroll=UIScrollView();scroll.translatesAutoresizingMaskIntoConstraints=false;vc.view.addSubview(scroll);scroll.addSubview(stack)
     NSLayoutConstraint.activate([scroll.leadingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.leadingAnchor),scroll.trailingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.trailingAnchor),scroll.topAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.topAnchor),scroll.bottomAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.bottomAnchor),stack.leadingAnchor.constraint(equalTo:scroll.contentLayoutGuide.leadingAnchor,constant:20),stack.trailingAnchor.constraint(equalTo:scroll.contentLayoutGuide.trailingAnchor,constant:-20),stack.topAnchor.constraint(equalTo:scroll.contentLayoutGuide.topAnchor,constant:16),stack.bottomAnchor.constraint(equalTo:scroll.contentLayoutGuide.bottomAnchor,constant:-20),stack.widthAnchor.constraint(equalTo:scroll.frameLayoutGuide.widthAnchor,constant:-40)])
     button(permissionButton,"Grant microphone permission (no capture)",#selector(grantPermission));button(prepare,"1. Prepare models",#selector(prepareModels));button(probe,"2. Play offline voice probe",#selector(playProbe));button(heard,"3. I heard the complete probe",#selector(confirmHeard));button(microphone,"4. Check microphone → clarification",#selector(startMic));button(model,"5. Speak fixed synthetic model reply",#selector(startModel));button(stopButton,"Stop and clear",#selector(stop))
@@ -93,7 +99,8 @@ import CryptoKit
     eligibility.visible=true;eligibility.protectedData(app.isProtectedDataAvailable)
     report["os_build"]=ProcessInfo.processInfo.operatingSystemVersionString;report["physical_memory_bytes"]=ProcessInfo.processInfo.physicalMemory
     report["phase"]="LAUNCHED_NO_CAPTURE";save();updateButtons()
-    if CommandLine.arguments.contains("--run-cpu-model-diagnostic"){modelDiagnosticAutoRun=true;prepareModels()}
+    if CommandLine.arguments.contains("--run-native-phase-diagnostic"),TrialPhaseDiagnostic.available{phaseAutoRun=true;prepareModels()}
+    else if CommandLine.arguments.contains("--run-cpu-model-diagnostic"){modelDiagnosticAutoRun=true;prepareModels()}
     else if CommandLine.arguments.contains("--run-file-asr-diagnostic"){fileAsrAutoRun=true;prepareModels()}
     NotificationCenter.default.addObserver(forName:AVAudioSession.interruptionNotification,object:nil,queue:.main){[weak self]_ in self?.invalidateAudio()}
     NotificationCenter.default.addObserver(forName:AVAudioSession.routeChangeNotification,object:nil,queue:.main){[weak self] n in
@@ -107,6 +114,7 @@ import CryptoKit
     microphone.isEnabled=ready && audible && idle;model.isEnabled=ready && audible && idle
     modelQuality.isEnabled=ready && idle && modelQualitySession.canBegin
     for b in modelQualityRatings{b.isEnabled=modelQualitySession.awaitingRating && eligibility.allowed && !active}
+    phaseDiagnostic.isEnabled=TrialPhaseDiagnostic.available && ready && idle && !phaseUsed
     modelDiagnostic.isEnabled=ready && idle && !modelDiagnosticUsed
     fileAsr.isEnabled=ready && idle
     quality.isEnabled=ready && audible && operatorAttested && idle && voiceFixtures.count==12 && survey.nextFixture != nil
@@ -177,7 +185,44 @@ import CryptoKit
     let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("cpu-model-results.json")
     if let data=try? JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]){try? data.write(to:url,options:.atomic)}
   }
+  private func savePhaseDiagnostic(_ phase:String){
+    guard let llm else{return}
+    let r:[String:Any]=["schema_version":1,"scope":"IOS_NATIVE_PHASE_RELOAD_DIAGNOSTIC","phase":phase,"process_id":phaseProcess,
+      "model_sha256":llm.model.sha256,"model_bytes":llm.model.bytes,"runtime_revision":llm.runtimeRevision,
+      "fixture_manifest_sha256":TrialModelDiagnostic.fixtureDigest,"os_build":ProcessInfo.processInfo.operatingSystemVersionString,
+      "physical_memory_bytes":ProcessInfo.processInfo.physicalMemory,"updated_utc":ISO8601DateFormatter().string(from:Date()),
+      "context_tokens":4096,"output_token_limit":256,"threads":2,"sampler":"greedy","enable_thinking":false,"backend":"CPU",
+      "model_open":"FRESH_HANDLE_EVERY_SAMPLE_THREE_ROUNDS_OS_CACHES_UNCONTROLLED",
+      "cold_cache":"NOT_ESTABLISHED","resident_model_warm":"NOT_RUN","memory_scope":"PROCESS_LIFETIME_INCLUDING_PREPARATION",
+      "timing_clock":"std::chrono::steady_clock","battery_scope":"OS_LEVEL_BEFORE_AFTER_USB_CONNECTED_NOT_ENERGY_MEASUREMENT",
+      "microphone":"NOT_OPENED","speaker":"NOT_OPENED","raw_text_exported":false,"network_observation":"NOT_RUN",
+      "quality":"NOT_RUN","physical_gate_acceptance":"NOT_RUN","cases":phaseRows]
+    let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("native-phase-results.json")
+    do{let data=try JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]);try data.write(to:url,options:.atomic)}
+    catch{status.text="Phase report could not be saved. Keep the app open and report the failure."}
+  }
+  @objc private func runPhaseDiagnostic(){
+    guard TrialPhaseDiagnostic.available,ready,!active,!survey.awaitingRating,!modelQualitySession.awaitingRating,!phaseUsed,eligibility.allowed,let store,let llm else{return}
+    phaseUsed=true;phaseRunning=true;active=true;phaseRows=[]
+    diagnosticIdleTimer=UIApplication.shared.isIdleTimerDisabled;UIApplication.shared.isIdleTimerDisabled=true
+    batteryMonitoring=UIDevice.current.isBatteryMonitoringEnabled;UIDevice.current.isBatteryMonitoringEnabled=true
+    let cancellation=TrialModelCancellation();diagnosticCancellation=cancellation
+    let operation=audioEpoch.begin(),deadline=ProcessInfo.processInfo.systemUptime+1800
+    status.text="Running 18 fresh-handle samples. OS caches uncontrolled; no audio.";savePhaseDiagnostic("RUNNING");updateButtons()
+    let assets=Bundle.main.bundleURL.appendingPathComponent("TrialAssets")
+    installer.async{[weak self] in
+      guard let self else{return}
+      do{
+        let rows=try TrialPhaseDiagnostic.run(assets:assets,store:store,selection:llm,cancellation:cancellation,
+          allowed:{self.audioEpoch.current(operation) && ProcessInfo.processInfo.systemUptime<deadline},progress:{rows in
+            DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.phaseRows=rows;self.status.text="Native phase samples: \(rows.count)/18. No audio.";self.savePhaseDiagnostic("RUNNING")}
+          })
+        DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.phaseRows=rows;self.audioEpoch.cancel();self.active=false;self.phaseRunning=false;self.diagnosticCancellation=nil;self.restoreDiagnosticIdleTimer();self.status.text="All 18 phase samples completed. Leave the app open for export.";self.savePhaseDiagnostic("COMPLETED");self.updateButtons()}
+      }catch{DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.audioEpoch.cancel();self.active=false;self.phaseRunning=false;self.diagnosticCancellation=nil;self.restoreDiagnosticIdleTimer();self.status.text="Phase diagnostic failed. Completed samples retained; no acceptance inferred.";self.savePhaseDiagnostic("INFERENCE_FAILED");self.updateButtons()}}
+    }
+  }
   private func restoreDiagnosticIdleTimer(){
+    if let previous=batteryMonitoring{UIDevice.current.isBatteryMonitoringEnabled=previous;batteryMonitoring=nil}
     if let previous=diagnosticIdleTimer{UIApplication.shared.isIdleTimerDisabled=previous;diagnosticIdleTimer=nil}
   }
   @objc private func runModelDiagnostic(){
@@ -271,7 +316,7 @@ import CryptoKit
         let v=try SpeechPackSelection(packID:"physical-lab",runtimeRevision:runtime,kind:.vad,pins:pins.filter{$0.id=="vad"})
         let a=try SpeechPackSelection(packID:"physical-lab",runtimeRevision:runtime,kind:.asr,pins:pins.filter{$0.id != "vad"})
         let last=rows.last!;let l=try LlmPackSelection(packID:"physical-lab",runtimeRevision:runtime,model:LlmArtifactPin(id:"llm",sha256:last["sha256"] as! String,bytes:(last["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence))
-        DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.store=store;self.vad=v;self.asr=a;self.llm=l;self.ready=true;self.status.text="Models verified. Play the voice probe next.";self.report["phase"]="MODELS_READY";self.save();self.updateButtons();if self.modelDiagnosticAutoRun{self.modelDiagnosticAutoRun=false;self.runModelDiagnostic()}else if self.fileAsrAutoRun{self.fileAsrAutoRun=false;self.runFileAsr()}}
+        DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.store=store;self.vad=v;self.asr=a;self.llm=l;self.ready=true;self.status.text="Models verified. Play the voice probe next.";self.report["phase"]="MODELS_READY";self.save();self.updateButtons();if self.phaseAutoRun{self.phaseAutoRun=false;self.runPhaseDiagnostic()}else if self.modelDiagnosticAutoRun{self.modelDiagnosticAutoRun=false;self.runModelDiagnostic()}else if self.fileAsrAutoRun{self.fileAsrAutoRun=false;self.runFileAsr()}}
       }catch{let failedStage=preparationStage;DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.report["preparation_stage"]=failedStage;self.fail("MODEL_PREPARATION_FAILED");self.status.text="Trial stopped: MODEL_PREPARATION_FAILED / "+failedStage}}
     }
   }
@@ -346,7 +391,7 @@ import CryptoKit
     report["input_kind"]=synthetic ? "FIXED_SYNTHETIC_PROMPT":"PHYSICAL_MICROPHONE_UNCALIBRATED"
     guard turn.submit(final,confidence:confidence) else{fail("REPLY_SUBMIT_FAILED");return};report["phase"]="REPLY_SUBMITTED";save()
   }
-  @objc private func stop(){let qualityPending=modelQualityRunning || modelQualitySession.awaitingRating;modelQualityCancellation?.cancel();modelQualityCancellation=nil;modelQualityRunning=false;modelQualitySession.cancel();modelQualityAnswer.text=nil;if qualityPending{modelQualityNote.text=modelQualitySession.canBegin ? "Review stopped. Pending answer/rating cleared; prior scores retained. Replay to rate." : "Review stopped or attempt limit reached. Prior scores retained; keep the app open for export."};saveModelQuality();restoreDiagnosticIdleTimer();modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
+  @objc private func stop(){let qualityPending=modelQualityRunning || modelQualitySession.awaitingRating;modelQualityCancellation?.cancel();modelQualityCancellation=nil;modelQualityRunning=false;modelQualitySession.cancel();modelQualityAnswer.text=nil;if qualityPending{modelQualityNote.text=modelQualitySession.canBegin ? "Review stopped. Pending answer/rating cleared; prior scores retained. Replay to rate." : "Review stopped or attempt limit reached. Prior scores retained; keep the app open for export."};saveModelQuality();restoreDiagnosticIdleTimer();phaseAutoRun=false;if phaseRunning{savePhaseDiagnostic("CANCELLED");phaseRunning=false};modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
   private func invalidateAudio(){stop();audible=false;probeDone=false;updateButtons()}
   func applicationWillResignActive(_ application:UIApplication){eligibility.visible=false;report["foreground"]=false;invalidateAudio()}
   func applicationDidBecomeActive(_ application:UIApplication){eligibility.visible=true;eligibility.protectedData(application.isProtectedDataAvailable);controller.permissionChanged();report["foreground"]=true;save()}
