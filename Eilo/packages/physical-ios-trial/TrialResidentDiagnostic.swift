@@ -25,22 +25,21 @@ enum TrialResidentDiagnostic {
     guard corpus.prompts.map({$0.id})==(1...6).map({String(format:"compare-%02d",$0)}) else{throw LlmFailure.unavailable}
     var rows=[[String:Any]]()
     for group in TrialResidentSchedule.groups{
-      let coolingStart=ProcessInfo.processInfo.systemUptime
-      var before=TrialPhaseDiagnostic.environment()
-      while before["thermal_state"] as? Int != 0{
-        guard allowed(),ProcessInfo.processInfo.systemUptime-coolingStart<300 else{throw TrialResidentFailure.thermalLimit}
-        progress(rows,"Waiting for nominal thermal state before group \(group.index)/12. No inference or audio.")
-        Thread.sleep(forTimeInterval:5);before=TrialPhaseDiagnostic.environment()
-      }
-      let coolingMs=(ProcessInfo.processInfo.systemUptime-coolingStart)*1000
       guard allowed(),eilo_trial_residency_begin(Int32(group.candidate))==1 else{throw LlmFailure.unavailable}
       do{
         let lease=try LlmPackLease.resolve(store:store,selection:selections[group.candidate]);defer{lease.close()}
         let prompt=corpus.prompts.first{$0.id==group.fixture}!
         for repetition in 0...2{
           guard allowed() else{throw LlmFailure.cancelled}
-          let environment=repetition==0 ? before:TrialPhaseDiagnostic.environment()
-          guard let thermal=environment["thermal_state"] as? Int,thermal<2 else{throw TrialResidentFailure.thermalLimit}
+          let coolingStart=ProcessInfo.processInfo.systemUptime
+          var environment=TrialPhaseDiagnostic.environment()
+          while (environment["thermal_state"] as? Int ?? 3)>=2{
+            guard allowed(),ProcessInfo.processInfo.systemUptime-coolingStart<300 else{throw TrialResidentFailure.thermalLimit}
+            progress(rows,"Waiting below serious thermal state before sample \(rows.count+1)/36. No inference or audio.")
+            Thread.sleep(forTimeInterval:5);environment=TrialPhaseDiagnostic.environment()
+          }
+          let coolingMs=(ProcessInfo.processInfo.systemUptime-coolingStart)*1000
+          guard allowed() else{throw LlmFailure.cancelled}
           let start=ProcessInfo.processInfo.systemUptime
           let stream=try lease.openStream(allowed:allowed,threads:2,created:{cancellation.publish($0)})
           defer{stream.close();cancellation.clear()}
@@ -60,7 +59,7 @@ enum TrialResidentDiagnostic {
           rows.append(["fixture_id":group.fixture,"group_index":group.index,"candidate_index":group.candidate,"repetition":repetition,"sample_index":rows.count+1,
                        "condition":repetition==0 ? "MODEL_UNLOADED":"MODEL_WEIGHTS_RESIDENT","prompt_tokens":plan.promptTokens,"native_piece_count":pieces,"output_bytes":outputBytes,
                        "verified_open_and_load_ms":verifiedOpenMs,"sample_wall_ms":(ProcessInfo.processInfo.systemUptime-start)*1000,
-                       "cooldown_before_group_ms":repetition==0 ? coolingMs:0,"native_phases":Dictionary(uniqueKeysWithValues:zip(TrialPhaseDiagnostic.keys,values)),
+                       "cooldown_before_sample_ms":coolingMs,"native_phases":Dictionary(uniqueKeysWithValues:zip(TrialPhaseDiagnostic.keys,values)),
                        "residency":["vendor_model_loads":stats[0],"generation_loads":stats[1],"resident_models":stats[2],"live_handles":stats[3],"candidate_index":stats[4]],
                        "environment_before":environment,"environment_after":TrialPhaseDiagnostic.environment(),"memory":try TrialModelDiagnostic.footprint()])
           progress(rows,"Resident comparison: \(rows.count)/36 samples. No audio.")
