@@ -5,10 +5,8 @@
   "production": "NOT_ENABLED",
   "source_commit": "a61d28715c8eca747e0dc949bc2976aa855f3a40",
   "signing": "CODESIGN_DEEP_STRICT_PASS",
-  "installation": "BLOCKED_INSUFFICIENT_STORAGE",
-  "additional_disk_space_required_bytes": 630180887,
-  "total_disk_space_required_bytes": 1977574039,
-  "launch": "NOT_RUN",
+  "installation": "PASS_AFTER_APPROVED_LAB_APP_REMOVAL",
+  "launch": "BLOCKED_IOS_SECURITY_OPERATOR_OPEN_REQUIRED",
   "physical_execution": "NOT_RUN",
   "schema2_completed_samples": 0,
   "unsigned_app_binary_sha256": "42e451c4bbf0557509d9ca0b08237d0d4572db6ecba2590056a2f960d7c897c4",
@@ -374,5 +372,16 @@
       "EILO_RESIDENT_COMPARISON"
     ],
     "shipping_release_acceptance": "NOT_RUN"
-  }
+  },
+  "installation_attempts": [
+    {
+      "result": "BLOCKED_INSUFFICIENT_STORAGE",
+      "additional_disk_space_required_bytes": 630180887,
+      "total_disk_space_required_bytes": 1977574039
+    },
+    {
+      "result": "PASS_AFTER_APPROVED_LAB_APP_REMOVAL",
+      "known_aggregate_backups": 7
+    }
+  ]
 }
