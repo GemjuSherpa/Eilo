@@ -1,0 +1,61 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "fixture_id": "compare-01",
+      "model_status": "GENERATED",
+      "rubric_quality": 1
+    },
+    {
+      "attempt": 2,
+      "fixture_id": "compare-02",
+      "model_status": "GENERATED",
+      "rubric_quality": 5
+    },
+    {
+      "attempt": 3,
+      "fixture_id": "compare-03",
+      "model_status": "GENERATED",
+      "rubric_quality": 5
+    },
+    {
+      "attempt": 4,
+      "fixture_id": "compare-04",
+      "model_status": "GENERATED",
+      "rubric_quality": 1
+    },
+    {
+      "attempt": 5,
+      "fixture_id": "compare-05",
+      "model_status": "GENERATED",
+      "rubric_quality": 5
+    },
+    {
+      "attempt": 6,
+      "fixture_id": "compare-06",
+      "model_status": "GENERATED",
+      "rubric_quality": 5
+    }
+  ],
+  "audio_devices": "NOT_OPENED",
+  "context_tokens": 4096,
+  "enable_thinking": false,
+  "fixture_manifest_sha256": "0e6bfb28b2bb8f93dfd6a06838fddc0f43a15c8bb1d824ee0988bb3f70ef5746",
+  "model_bytes": 1282439424,
+  "model_sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120",
+  "network_observation": "NOT_RUN",
+  "os_build": "Version 26.6.1 (Build 23G83)",
+  "output_token_limit": 256,
+  "physical_gate_acceptance": "NOT_RUN",
+  "quality_scale": "FROZEN_RUBRIC_1_TO_5",
+  "rating_source": "HUMAN_OPERATOR_UI",
+  "raw_audio_saved": false,
+  "raw_text_exported": false,
+  "runtime_revision": "8345f333951c661d166b00e6f9362e553768f292",
+  "sampler": "greedy",
+  "schema_version": 1,
+  "scope": "IOS_MODEL_QUALITY_COLLECTION",
+  "session_id": "0A8CA855-938A-4B02-8797-9D54FF5956AA",
+  "threads": 2,
+  "updated_utc": "2026-10-20T05:14:34Z"
+}

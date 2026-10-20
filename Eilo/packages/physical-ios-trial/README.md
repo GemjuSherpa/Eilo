@@ -274,3 +274,27 @@ actually collected; the contract/controls do not create scores. Quality collecti
 alone does not complete the full comparison protocol, independent traffic,
 Android or S08 feasibility acceptance. One consolidated PR follows the completed
 collection sprint and actual operator evidence.
+
+
+Both candidates completed six genuine operator rubric ratings on iOS26.6.1.
+No generation failed or was cancelled in these quality sessions. The individual
+exports and validated pair are in `tests/model-quality-*-operator-results.json`
+and `tests/model-quality-operator-results.json`; build/source provenance is in
+`tests/model-quality-builds.json`.
+
+| Frozen fixture | 0.6B rating | 1.7B rating |
+|---|---:|---:|
+| compare-01 | 4 | 1 |
+| compare-02 | 5 | 5 |
+| compare-03 | 4 | 5 |
+| compare-04 | 5 | 1 |
+| compare-05 | 5 | 5 |
+| compare-06 | 5 | 5 |
+| Mean of six | 4.67 | 3.67 |
+
+These are one operator's unblinded ratings of six fixed replies per candidate,
+with 0.6B reviewed first. They do not establish general model preference or
+complete the repeated cold/warm, alternating-order, thermal, traffic or Android
+protocol. The two scores of1 for 1.7B are preserved as entered. Generated answers
+were only visible during review and are absent from every exported report.
+CI validates the actual completed pair in normal and optimized Python.
