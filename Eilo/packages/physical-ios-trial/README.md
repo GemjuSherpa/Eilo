@@ -242,3 +242,35 @@ size guard; the reviewed lab specialization then completed. Neither attempt was
 counted as success. The ordinary shipping wrapper remains byte-identical.
 CI validates the actual pair in normal and optimized Python. Full VC-LLM-06 and
 S08 acceptance remain NOT_RUN/HOLD pending the missing evidence.
+
+
+## Human model-answer quality collection
+
+Control9 generates one of the six frozen generic prompts with the current exact
+model pin. It shows the prompt, frozen rubric and bounded answer as plain UIKit
+text after generation. The operator rates correctness/clarity from1 (incorrect or
+unusable) to5 (correct and clear), then the answer clears. Generation cannot
+supply a rating. There are at most three attempts per fixture; Stop, background
+or interruption clears the pending answer and revokes its score controls.
+The idle timer is temporarily disabled during foreground generation and restored
+on every exit. Other trial controls are disabled while a quality rating is pending.
+
+The complete answer must be valid UTF8, at most16KiB, contain no prohibited
+control characters or reasoning/role/tool/tag markup. Mathematical comparisons
+remain plain text. This lab display guard is separate from the unchanged spoken
+output guard and never authorizes speech. Worker byte buffers are cleared; no
+claim of complete private-memory erasure follows from removing UI text.
+
+Only IDs, attempt status, genuine human scores, candidate/corpus pins and OS/session
+metadata save to `Documents/model-quality-results.json`. Answers, prompts, rubrics,
+audio and timings are not exported. Ratings are session-local; leave the app open
+for export after all six. Starting a new review session can replace that candidate's
+previous file. Export before replacing the app with the other candidate. Saving
+errors are displayed and prior in-memory scores retained.
+
+Validate with `model_quality_report.py`; `--pair` requires six scored fixtures for
+each exact candidate in distinct sessions. Human results have NOT_RUN status until
+actually collected; the contract/controls do not create scores. Quality collection
+alone does not complete the full comparison protocol, independent traffic,
+Android or S08 feasibility acceptance. One consolidated PR follows the completed
+collection sprint and actual operator evidence.

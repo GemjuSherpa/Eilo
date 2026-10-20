@@ -7,6 +7,7 @@ final class TrialModelQualitySession {
   private var pending:UUID?
   var awaitingRating:Bool{guard let p=pending,let a=attempts.last else{return false};return a.ticket==p && a.status=="GENERATED"}
   var nextFixture:Int?{(1...6).first{f in !attempts.contains{$0.fixture==f && $0.rating != nil}}}
+  var canBegin:Bool{guard pending==nil,let fixture=nextFixture else{return false};return attempts.filter({$0.fixture==fixture}).count<3}
   func begin()->(UUID,Int)?{
     guard pending==nil,let fixture=nextFixture,attempts.filter({$0.fixture==fixture}).count<3 else{return nil}
     let ticket=UUID();attempts.append(Attempt(fixture:fixture,ticket:ticket));pending=ticket;return(ticket,fixture)
