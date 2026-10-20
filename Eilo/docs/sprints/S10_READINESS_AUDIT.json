@@ -186,7 +186,7 @@
   "evidence": [
     {
       "artifact": "docs/sprints/S08_FEASIBILITY_DECISION.json",
-      "sha256": "dc2411ecf2ff44901a54a40256c6a38ab5ff026b4d472e082fea0b818fc2b3fa"
+      "sha256": "33e7701eff206dc0075996636b492181bd1bcda5411afa7723369166bfcad06f"
     },
     {
       "artifact": "docs/sprints/S09_REVIEW.md",

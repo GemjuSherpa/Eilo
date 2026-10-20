@@ -11,3 +11,9 @@ After permission, verify the installed signed binary against the existing reside
 Tooling checks reject invalid target IDs/PIDs, booleans masquerading as numbers, unbounded durations, relative paths and existing trace paths. Normal/optimized test commands are wired into synthetic CI. Existing iPhone evidence and gate metrics remain untouched in this task.
 
 References: [Apple: Analyzing HTTP traffic with Instruments](https://developer.apple.com/documentation/foundation/analyzing-http-traffic-with-instruments), [Apple WWDC21: Analyze HTTP traffic in Instruments](https://developer.apple.com/videos/play/wwdc2021/10212/). Installed `xctrace help record` documents explicit PID attachment, time limits and privacy-prompt controls.
+
+## Evidence status refresh
+
+The separate `task/ios-model-evidence-status` updates the VC-LLM-06 pending reason and both-platform S08 blocker descriptions to acknowledge PR83's actual 36-sample supporting iPhone run. Acceptance rows remain empty/null and NOT_RUN; no prior quality score is assigned to a new output. Only the affected checksum edges through the S08 dependency audit, S10 readiness audit and S10 preflight evidence are refreshed. This does not rerun or approve those historical sprints. The refreshed graph validates all 42 artifact/source references; the model-comparison validator and pending decision CLI pass, and all 47 acoustic/evidence regressions pass in normal and optimized Python. No app code changed in this evidence subtask.
+
+The planning subtask passed all 39 physical-trial Python tests in normal/optimized modes, 309 Swift tests, normal simulator app build/install and three fresh ten-second launches (`network-observation-contract`). Network recording is still NOT_RUN pending explicit operator permission. No new packages, downloads, services, audio access or phone trial occurred during preparation.

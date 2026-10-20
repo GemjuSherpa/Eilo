@@ -71,8 +71,8 @@
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/llm-runtime/tests/physical-model-comparison.json",
-          "sha256": "9c61c90c3f2fab892b83de8b0df0063964bf178b3a9130dcd0101650d56caba8",
-          "blocker": "Scoped iPhone CPU diagnostics and six operator rubric ratings per candidate collected. Full repeated cold/warm and alternating-order, battery/thermal, traffic and Android protocol remains missing; acceptance NOT_RUN."
+          "sha256": "bbe4d46b075953501a19fe4ad055962ee62e1203c8ecd2b74df4c27c08f98b04",
+          "blocker": "Supporting iPhone diagnostics, earlier six rubric ratings per candidate and a separate 36-sample alternating resident comparison are collected. New-output ratings, independent traffic, energy/endurance and physical Android remain pending; acceptance NOT_RUN."
         },
         {
           "task": "VC-VOICE-06",
@@ -149,8 +149,8 @@
           "physical_status": "NOT_RUN",
           "evidence_kind": "unrun",
           "artifact": "packages/llm-runtime/tests/physical-model-comparison.json",
-          "sha256": "9c61c90c3f2fab892b83de8b0df0063964bf178b3a9130dcd0101650d56caba8",
-          "blocker": "Scoped iPhone CPU diagnostics and six operator rubric ratings per candidate collected. Full repeated cold/warm and alternating-order, battery/thermal, traffic and Android protocol remains missing; acceptance NOT_RUN."
+          "sha256": "bbe4d46b075953501a19fe4ad055962ee62e1203c8ecd2b74df4c27c08f98b04",
+          "blocker": "Supporting iPhone diagnostics, earlier six rubric ratings per candidate and a separate 36-sample alternating resident comparison are collected. New-output ratings, independent traffic, energy/endurance and physical Android remain pending; acceptance NOT_RUN."
         },
         {
           "task": "VC-VOICE-06",
