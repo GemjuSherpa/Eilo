@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import { Action, styles, type Colors } from './Onboarding';
 import type { ControlCommand, ControlSnapshot } from './ControlClient';
+import { ConversationRipple } from './ConversationRipple';
 export function Home({
   colors,
   snapshot,
@@ -28,6 +29,7 @@ export function Home({
         Eilo
       </Text>
       <Text style={[styles.body, { color: colors.secondary_text }]}>Guest</Text>
+      <ConversationRipple snapshot={snapshot} error={error} colors={colors} />
       <Text
         accessibilityLiveRegion="polite"
         style={[styles.body, { color: colors.text }]}
