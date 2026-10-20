@@ -10,7 +10,7 @@ def synthetic():
     for index,(fixture,group,candidate,rep) in enumerate(schedule()):
         row=copy.deepcopy(base['cases'][0]);row.pop('round')
         row.update(fixture_id=fixture,group_index=group,candidate_index=candidate,repetition=rep,sample_index=index+1,
-                   condition='MODEL_UNLOADED' if rep==0 else 'MODEL_WEIGHTS_RESIDENT',cooldown_before_group_ms=0,
+                   condition='MODEL_UNLOADED' if rep==0 else 'MODEL_WEIGHTS_RESIDENT',cooldown_before_sample_ms=0,
                    residency=dict(vendor_model_loads=1,generation_loads=rep+1,resident_models=1,live_handles=0,candidate_index=candidate))
         row['environment_before']['system_uptime_s']=index+1;row['environment_after']['system_uptime_s']=index+1.1
         if rep:row['native_phases']['model_load_ms']=0
@@ -43,11 +43,13 @@ class ResidentReportTests(unittest.TestCase):
             with self.assertRaises(ValueError):validate(r)
         r=synthetic();r['model_pins'][0]['candidate_index']=False
         with self.assertRaises(ValueError):validate(r)
-        for index,value in [(0,1),(1,2)]:
+        for index,value in [(0,2),(1,2)]:
             r=synthetic();r['cases'][index]['environment_before']['thermal_state']=value
             with self.assertRaises(ValueError):validate(r)
-        r=synthetic();r['cases'][1]['cooldown_before_group_ms']=1
+        r=synthetic();r['cases'][1]['cooldown_before_sample_ms']=-1
         with self.assertRaises(ValueError):validate(r)
+        r=synthetic();r['cases'][0]['environment_before']['thermal_state']=1;validate(r)
+        r['cases'][1]['cooldown_before_sample_ms']=5000;validate(r)
         r=synthetic();r['cases'].pop()
         with self.assertRaises(ValueError):validate(r)
 

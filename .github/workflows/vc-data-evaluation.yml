@@ -53,6 +53,10 @@ jobs:
           python3 -O ../physical-ios-trial/phase_report.py --pair ../physical-ios-trial/tests/native-phase-device-results.json
           python3 -m unittest discover -s ../physical-ios-trial -p test_phase_report.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_phase_report.py -v
+          python3 -m unittest discover -s ../physical-ios-trial -p test_resident_report_v1.py -v
+          python3 -O -m unittest discover -s ../physical-ios-trial -p test_resident_report_v1.py -v
+          python3 ../physical-ios-trial/resident_report_v1.py ../physical-ios-trial/tests/resident-initial-thermal-limit-results.json
+          python3 -O ../physical-ios-trial/resident_report_v1.py ../physical-ios-trial/tests/resident-initial-thermal-limit-results.json
           python3 -m unittest discover -s ../physical-ios-trial -p test_resident_report.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_resident_report.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_resident_wrapper.py -v

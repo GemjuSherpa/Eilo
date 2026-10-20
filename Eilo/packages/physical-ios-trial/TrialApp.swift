@@ -200,7 +200,7 @@ import CryptoKit
   private func saveResidentDiagnostic(_ phase:String){
     guard let llm,let comparisonLlm else{return}
     let pins=[llm,comparisonLlm].enumerated().map{index,s in ["candidate_index":index,"model_sha256":s.model.sha256,"model_bytes":s.model.bytes] as [String:Any]}
-    let r:[String:Any]=["schema_version":1,"scope":"IOS_RESIDENT_MODEL_COMPARISON","phase":phase,"process_id":residentProcess,"model_pins":pins,
+    let r:[String:Any]=["schema_version":2,"scope":"IOS_RESIDENT_MODEL_COMPARISON","phase":phase,"process_id":residentProcess,"model_pins":pins,
       "runtime_revision":llm.runtimeRevision,"fixture_manifest_sha256":TrialModelDiagnostic.fixtureDigest,
       "os_build":ProcessInfo.processInfo.operatingSystemVersionString,"physical_memory_bytes":ProcessInfo.processInfo.physicalMemory,
       "updated_utc":ISO8601DateFormatter().string(from:Date()),"context_tokens":4096,"output_token_limit":256,"threads":2,"sampler":"greedy","enable_thinking":false,"backend":"CPU",
@@ -208,7 +208,7 @@ import CryptoKit
       "cold_start_scope":"MODEL_UNLOADED_AT_GROUP_START_OS_CACHES_UNCONTROLLED_PROCESS_REUSED",
       "warm_scope":"GENERIC_MODEL_WEIGHTS_ONLY_FRESH_CONTEXT_KV_SAMPLER_EACH_GENERATION",
       "candidate_order":"1P7_THEN_0P6_ODD_FIXTURES_REVERSED_EVEN_FIXTURES",
-      "thermal_policy":"WAIT_FOR_NOMINAL_GROUP_START_MAX_300S_REFUSE_SERIOUS_SAMPLE_START",
+      "thermal_policy":"WAIT_BELOW_SERIOUS_BEFORE_EACH_SAMPLE_MAX_300S",
       "timing_clock":"std::chrono::steady_clock","battery_scope":"OS_LEVEL_BEFORE_AFTER_USB_CONNECTED_NOT_ENERGY_MEASUREMENT",
       "microphone":"NOT_OPENED","speaker":"NOT_OPENED","raw_text_exported":false,"network_observation":"NOT_RUN","quality":"NOT_RUN","physical_gate_acceptance":"NOT_RUN","cases":residentRows]
     let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("resident-model-results.json")
@@ -222,7 +222,7 @@ import CryptoKit
     batteryMonitoring=UIDevice.current.isBatteryMonitoringEnabled;UIDevice.current.isBatteryMonitoringEnabled=true
     let cancellation=TrialModelCancellation();diagnosticCancellation=cancellation
     let operation=audioEpoch.begin(),deadline=ProcessInfo.processInfo.systemUptime+3600
-    status.text="Running 36 alternating model samples, with nominal-temperature group starts. No audio.";saveResidentDiagnostic("RUNNING");updateButtons()
+    status.text="Running 36 alternating model samples, with recorded nominal/fair sample starts. No audio.";saveResidentDiagnostic("RUNNING");updateButtons()
     let assets=Bundle.main.bundleURL.appendingPathComponent("TrialAssets")
     installer.async{[weak self] in
       guard let self else{return}

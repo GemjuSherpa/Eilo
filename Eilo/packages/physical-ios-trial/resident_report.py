@@ -8,16 +8,16 @@ from model_diagnostic_report import require, integer
 from resident_wrapper import CANDIDATES
 
 MODEL_PINS=[dict(candidate_index=i,model_sha256=digest,model_bytes=size) for i,(_,size,digest) in enumerate(CANDIDATES)]
-FIXED={**PHASE_FIXED,'scope':'IOS_RESIDENT_MODEL_COMPARISON','model_pins':MODEL_PINS,
+FIXED={**PHASE_FIXED,'schema_version':2,'scope':'IOS_RESIDENT_MODEL_COMPARISON','model_pins':MODEL_PINS,
        'model_open':'EXPLICIT_SCOPED_MODEL_WEIGHTS_RESIDENCY_THREE_FRESH_GENERATIONS',
        'cold_start_scope':'MODEL_UNLOADED_AT_GROUP_START_OS_CACHES_UNCONTROLLED_PROCESS_REUSED',
        'warm_scope':'GENERIC_MODEL_WEIGHTS_ONLY_FRESH_CONTEXT_KV_SAMPLER_EACH_GENERATION',
        'candidate_order':'1P7_THEN_0P6_ODD_FIXTURES_REVERSED_EVEN_FIXTURES',
-       'thermal_policy':'WAIT_FOR_NOMINAL_GROUP_START_MAX_300S_REFUSE_SERIOUS_SAMPLE_START'}
+       'thermal_policy':'WAIT_BELOW_SERIOUS_BEFORE_EACH_SAMPLE_MAX_300S'}
 for key in ['cold_cache','resident_model_warm']:del FIXED[key]
 VARIABLE={'phase','process_id','os_build','physical_memory_bytes','updated_utc','cases'}
 COMMON={'prompt_tokens','native_piece_count','output_bytes','verified_open_and_load_ms','sample_wall_ms','native_phases','environment_before','environment_after','memory'}
-ROW=COMMON|{'fixture_id','group_index','candidate_index','repetition','sample_index','condition','cooldown_before_group_ms','residency'}
+ROW=COMMON|{'fixture_id','group_index','candidate_index','repetition','sample_index','condition','cooldown_before_sample_ms','residency'}
 
 
 def schedule():
@@ -45,7 +45,7 @@ def validate(report):
         require(row['condition']==('MODEL_UNLOADED' if rep==0 else 'MODEL_WEIGHTS_RESIDENT'),'condition')
         stats=dict(vendor_model_loads=1,generation_loads=rep+1,resident_models=1,live_handles=0,candidate_index=candidate)
         require(exact(row['residency'],stats),'native residency counters')
-        require(finite(row['cooldown_before_group_ms'],0,305000) and (rep==0 or row['cooldown_before_group_ms']==0),'cooldown')
+        require(finite(row['cooldown_before_sample_ms'],0,305000),'cooldown')
         # Reuse strict common numeric/OS/pin validation, then enforce the real
         # resident schedule and cross-sample constraints here. No report is promoted.
         common={k:row[k] for k in COMMON}
@@ -53,7 +53,7 @@ def validate(report):
         validate_phase({**PHASE_FIXED,**metadata,**{k:MODEL_PINS[candidate][k] for k in ['model_sha256','model_bytes']},'phase':'RUNNING','cases':[common]})
         require((row['native_phases']['model_load_ms']>0) if rep==0 else row['native_phases']['model_load_ms']==0,'actual cold load / warm no-load')
         before,after=row['environment_before'],row['environment_after']
-        require(before['thermal_state']==0 if rep==0 else before['thermal_state']<2,'thermal start policy')
+        require(before['thermal_state']<2,'thermal start policy')
         require(before['system_uptime_s']>=previous,'sample time order');previous=after['system_uptime_s']
         require(row['memory']['process_lifetime_peak_bytes']>=peak,'process peak monotonicity');peak=row['memory']['process_lifetime_peak_bytes']
         key=(fixture,candidate)
