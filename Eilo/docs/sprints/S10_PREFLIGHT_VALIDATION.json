@@ -33,7 +33,7 @@
   "documents": [
     {
       "artifact": "docs/sprints/S10_READINESS_AUDIT.json",
-      "sha256": "1e6990db34cd4f9dddaf6c76bae06634d938c02784c0f50cbf226b752438bce2"
+      "sha256": "6acbd8d3864ae376d38e342372945467133fff0ccd363986611292d392d8fe22"
     },
     {
       "artifact": "docs/sprints/S10_VALIDATION_PLAN.md",

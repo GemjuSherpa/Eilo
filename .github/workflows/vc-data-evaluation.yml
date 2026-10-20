@@ -61,6 +61,10 @@ jobs:
           python3 -O ../physical-ios-trial/resident_report.py ../physical-ios-trial/tests/resident-interrupted-25-results.json
           python3 ../physical-ios-trial/resident_report.py ../physical-ios-trial/tests/resident-model-device-results.json
           python3 -O ../physical-ios-trial/resident_report.py ../physical-ios-trial/tests/resident-model-device-results.json
+          python3 -m unittest discover -s ../physical-ios-trial -p 'test_network*.py' -v
+          python3 -O -m unittest discover -s ../physical-ios-trial -p 'test_network*.py' -v
+          python3 ../physical-ios-trial/network_observation_report.py ../physical-ios-trial/tests/network-observation-attempt.json
+          python3 -O ../physical-ios-trial/network_observation_report.py ../physical-ios-trial/tests/network-observation-attempt.json
           python3 -m unittest discover -s ../physical-ios-trial -p test_resident_report.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_resident_report.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_resident_wrapper.py -v
