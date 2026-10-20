@@ -2,7 +2,7 @@ import Foundation
 @main struct QualityStateProbe {
   static func require(_ value:Bool){if !value{fatalError("Model quality state invariant failed")}}
   static func main(){
-    let s=TrialModelQualitySession();require(s.nextFixture==1 && !s.awaitingRating && !s.rate(5))
+    let s=TrialModelQualitySession();require(s.canBegin && s.nextFixture==1 && !s.awaitingRating && !s.rate(5))
     let (a,f)=s.begin()!;require(f==1 && s.begin()==nil && !s.rate(5) && !s.finish(UUID()))
     require(s.finish(a) && !s.finish(a) && s.awaitingRating && !s.rate(0) && !s.rate(6))
     s.cancel();require(!s.awaitingRating && !s.rate(5) && !s.finish(a) && s.nextFixture==1)
@@ -12,7 +12,7 @@ import Foundation
     require(s.nextFixture==nil && s.begin()==nil && s.aggregate.count==8)
     let stopped=TrialModelQualitySession()
     for _ in 0..<3{let (ticket,_)=stopped.begin()!;stopped.cancel();require(!stopped.finish(ticket) && !stopped.rate(5))}
-    require(stopped.begin()==nil && stopped.nextFixture==1)
+    require(!stopped.canBegin && stopped.begin()==nil && stopped.nextFixture==1)
     print("Model quality stale/cancel/retry/rating/order state probe PASS")
   }
 }
