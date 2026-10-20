@@ -6,9 +6,9 @@
   "source_commit": "a61d28715c8eca747e0dc949bc2976aa855f3a40",
   "signing": "CODESIGN_DEEP_STRICT_PASS",
   "installation": "PASS_AFTER_APPROVED_LAB_APP_REMOVAL",
-  "launch": "BLOCKED_IOS_SECURITY_OPERATOR_OPEN_REQUIRED",
-  "physical_execution": "NOT_RUN",
-  "schema2_completed_samples": 0,
+  "launch": "PASS_AFTER_OPERATOR_VERIFICATION_EXPLICIT_FIXED_TRIAL",
+  "physical_execution": "COMPLETED_36_VALIDATED_SAMPLES",
+  "schema2_completed_samples": 36,
   "unsigned_app_binary_sha256": "42e451c4bbf0557509d9ca0b08237d0d4572db6ecba2590056a2f960d7c897c4",
   "app_binary_sha256": "99a7dcb07b1ea9e8de540153be6ea427b35669ff12879b0f67865713c2e3b2c6",
   "asr_dynamic_sha256": "8d30da03a286d5b9b50e0d07f893310731462ae89a5eb6faa039c85388d7d8bd",
@@ -382,6 +382,42 @@
     {
       "result": "PASS_AFTER_APPROVED_LAB_APP_REMOVAL",
       "known_aggregate_backups": 7
+    }
+  ],
+  "launch_attempts": [
+    "IOS_SECURITY_LAUNCH_DENIED",
+    "OPERATOR_CONFIRMED_APP_OPENS",
+    "EXPLICIT_FIXED_TRIAL_LAUNCH_PASS"
+  ],
+  "interrupted_schema2_attempt": {
+    "report": "packages/physical-ios-trial/tests/resident-interrupted-25-results.json",
+    "phase": "CANCELLED",
+    "completed_samples": 25,
+    "cause": "NOT_RECORDED",
+    "sha256": "e4b6039f395611ebde55cd1fb3a6035c463f13e6f7225d5d7eaf767bfe1b2885"
+  },
+  "aggregate_report": "packages/physical-ios-trial/tests/resident-model-device-results.json",
+  "aggregate_report_sha256": "d2e3a708d801c5234788893bf31f08f9ae89444337f057cfa9973206113a4627",
+  "lab_instrumentation_files": [
+    {
+      "path": "packages/physical-ios-trial/resident_wrapper.py",
+      "sha256": "9f045bf98581c95c36168026f88cb34ec1653089bbad561146ac3287082bb151"
+    },
+    {
+      "path": "packages/physical-ios-trial/phase_wrapper.py",
+      "sha256": "2742dba054d7ac5800fc0e21ad810df534c6b7f00254a5cc5a92c433b3f1c18e"
+    },
+    {
+      "path": "packages/physical-ios-trial/include/eilo_trial_residency.h",
+      "sha256": "279ff59079c229a43d383c6f545f98f1bfaa1c2f027259bf2d98384b619fa84c"
+    },
+    {
+      "path": "packages/physical-ios-trial/include/eilo_trial_metrics.h",
+      "sha256": "65da908a80936bce18a0a06812afcc2902b93aed10ab701a6c8bd7b2a8c44f60"
+    },
+    {
+      "path": "packages/physical-ios-trial/include/module.modulemap",
+      "sha256": "6ef7cc957276aa4c3451b705a795cee835bf269281351de851f1c2c09b0ab1d0"
     }
   ]
 }

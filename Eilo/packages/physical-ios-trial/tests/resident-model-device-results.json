@@ -1,0 +1,1773 @@
+{
+  "backend": "CPU",
+  "battery_scope": "OS_LEVEL_BEFORE_AFTER_USB_CONNECTED_NOT_ENERGY_MEASUREMENT",
+  "candidate_order": "1P7_THEN_0P6_ODD_FIXTURES_REVERSED_EVEN_FIXTURES",
+  "cases": [
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.11991668725386262,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447837.8454875417,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447819.72821820836,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-01",
+      "group_index": 1,
+      "memory": {
+        "current_phys_footprint_bytes": 542116008,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 16410.096,
+        "begin_to_first_token_ms": 16357.352417,
+        "context_setup_ms": 35.589166,
+        "first_sample_ms": 0.309,
+        "model_load_ms": 123.015208,
+        "prefill_ms": 16321.069834,
+        "tokenize_ms": 0.362208
+      },
+      "native_piece_count": 21,
+      "output_bytes": 91,
+      "prompt_tokens": 519,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 1,
+      "sample_wall_ms": 18117.21241666237,
+      "verified_open_and_load_ms": 593.5230833711103
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 1.3201666879467666,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447857.3476949167,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447837.84682625,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-01",
+      "group_index": 1,
+      "memory": {
+        "current_phys_footprint_bytes": 542230696,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 17881.973667,
+        "begin_to_first_token_ms": 17826.19325,
+        "context_setup_ms": 8.519,
+        "first_sample_ms": 0.153042,
+        "model_load_ms": 0,
+        "prefill_ms": 17817.122,
+        "tokenize_ms": 0.383167
+      },
+      "native_piece_count": 21,
+      "output_bytes": 91,
+      "prompt_tokens": 519,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 2,
+      "sample_wall_ms": 19500.832166697364,
+      "verified_open_and_load_ms": 474.9752916977741
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 8.004874980542809,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447878.56052525004,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447857.35571870836,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-01",
+      "group_index": 1,
+      "memory": {
+        "current_phys_footprint_bytes": 543393960,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19519.129,
+        "begin_to_first_token_ms": 19459.731584,
+        "context_setup_ms": 8.447084,
+        "first_sample_ms": 0.44325,
+        "model_load_ms": 0,
+        "prefill_ms": 19450.439042,
+        "tokenize_ms": 0.362708
+      },
+      "native_piece_count": 21,
+      "output_bytes": 91,
+      "prompt_tokens": 519,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 3,
+      "sample_wall_ms": 21204.429625009652,
+      "verified_open_and_load_ms": 473.33958331728354
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.048124988097697496,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447886.5694145834,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447879.5459979167,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-01",
+      "group_index": 2,
+      "memory": {
+        "current_phys_footprint_bytes": 511149720,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6324.676583,
+        "begin_to_first_token_ms": 6298.819042,
+        "context_setup_ms": 23.91425,
+        "first_sample_ms": 0.227125,
+        "model_load_ms": 118.397166,
+        "prefill_ms": 6274.226916,
+        "tokenize_ms": 0.436375
+      },
+      "native_piece_count": 16,
+      "output_bytes": 74,
+      "prompt_tokens": 519,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 4,
+      "sample_wall_ms": 7023.363000014797,
+      "verified_open_and_load_ms": 298.5725000035018
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 1.5573333366774023,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447893.45216804167,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447886.5709934584,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-01",
+      "group_index": 2,
+      "memory": {
+        "current_phys_footprint_bytes": 511100568,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6301.45,
+        "begin_to_first_token_ms": 6275.612458,
+        "context_setup_ms": 8.695625,
+        "first_sample_ms": 0.132083,
+        "model_load_ms": 0,
+        "prefill_ms": 6266.396584,
+        "tokenize_ms": 0.372542
+      },
+      "native_piece_count": 16,
+      "output_bytes": 74,
+      "prompt_tokens": 519,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 5,
+      "sample_wall_ms": 6881.143625010736,
+      "verified_open_and_load_ms": 179.74824999691918
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 1.7197083216160536,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447900.30514508334,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447893.4539047917,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-01",
+      "group_index": 2,
+      "memory": {
+        "current_phys_footprint_bytes": 511100568,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6272.18025,
+        "begin_to_first_token_ms": 6247.223458,
+        "context_setup_ms": 8.5075,
+        "first_sample_ms": 0.110458,
+        "model_load_ms": 0,
+        "prefill_ms": 6238.238208,
+        "tokenize_ms": 0.352417
+      },
+      "native_piece_count": 16,
+      "output_bytes": 74,
+      "prompt_tokens": 519,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 6,
+      "sample_wall_ms": 6851.205541694071,
+      "verified_open_and_load_ms": 181.24200002057478
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.026999972760677338,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447908.27700195834,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447901.45479808334,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-02",
+      "group_index": 3,
+      "memory": {
+        "current_phys_footprint_bytes": 511051416,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6273.276666,
+        "begin_to_first_token_ms": 6247.375333,
+        "context_setup_ms": 8.9435,
+        "first_sample_ms": 0.228167,
+        "model_load_ms": 128.878833,
+        "prefill_ms": 6237.721583,
+        "tokenize_ms": 0.464042
+      },
+      "native_piece_count": 10,
+      "output_bytes": 13,
+      "prompt_tokens": 520,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 7,
+      "sample_wall_ms": 6822.173124994151,
+      "verified_open_and_load_ms": 305.12029165402055
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 7.836958335246891,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447915.04661220836,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447908.28485733335,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-02",
+      "group_index": 3,
+      "memory": {
+        "current_phys_footprint_bytes": 511035032,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6327.317375,
+        "begin_to_first_token_ms": 6298.91325,
+        "context_setup_ms": 8.434459,
+        "first_sample_ms": 0.24,
+        "model_load_ms": 0,
+        "prefill_ms": 6289.836125,
+        "tokenize_ms": 0.38075
+      },
+      "native_piece_count": 10,
+      "output_bytes": 13,
+      "prompt_tokens": 520,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 8,
+      "sample_wall_ms": 6761.724625015631,
+      "verified_open_and_load_ms": 175.9273333591409
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 2.189749968238175,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447922.33722808334,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447915.0488199167,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-02",
+      "group_index": 3,
+      "memory": {
+        "current_phys_footprint_bytes": 511051416,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6677.2095,
+        "begin_to_first_token_ms": 6645.264666,
+        "context_setup_ms": 11.583583,
+        "first_sample_ms": 0.143583,
+        "model_load_ms": 0,
+        "prefill_ms": 6633.045417,
+        "tokenize_ms": 0.472375
+      },
+      "native_piece_count": 10,
+      "output_bytes": 13,
+      "prompt_tokens": 520,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 9,
+      "sample_wall_ms": 7288.371999980882,
+      "verified_open_and_load_ms": 315.9520833287388
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.036833283957093954,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447944.55201437505,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447923.6578064167,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-02",
+      "group_index": 4,
+      "memory": {
+        "current_phys_footprint_bytes": 516327664,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19628.299541,
+        "begin_to_first_token_ms": 19567.398291,
+        "context_setup_ms": 26.096833,
+        "first_sample_ms": 0.278208,
+        "model_load_ms": 137.47875,
+        "prefill_ms": 19540.568875,
+        "tokenize_ms": 0.437
+      },
+      "native_piece_count": 11,
+      "output_bytes": 25,
+      "prompt_tokens": 520,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 10,
+      "sample_wall_ms": 20894.172833301127,
+      "verified_open_and_load_ms": 651.587541680783
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.443625051062554,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447965.71065670834,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447944.56147837505,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-02",
+      "group_index": 4,
+      "memory": {
+        "current_phys_footprint_bytes": 516409584,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19763.616875,
+        "begin_to_first_token_ms": 19701.163208,
+        "context_setup_ms": 9.130042,
+        "first_sample_ms": 0.274375,
+        "model_load_ms": 0,
+        "prefill_ms": 19691.321792,
+        "tokenize_ms": 0.418375
+      },
+      "native_piece_count": 11,
+      "output_bytes": 25,
+      "prompt_tokens": 520,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 11,
+      "sample_wall_ms": 21149.13854165934,
+      "verified_open_and_load_ms": 722.3899166565388
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.40358336083591,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447986.57034033333,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447965.72007925005,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-02",
+      "group_index": 4,
+      "memory": {
+        "current_phys_footprint_bytes": 516409584,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19489.717333,
+        "begin_to_first_token_ms": 19428.819458,
+        "context_setup_ms": 9.002791,
+        "first_sample_ms": 0.165167,
+        "model_load_ms": 0,
+        "prefill_ms": 19419.184292,
+        "tokenize_ms": 0.449833
+      },
+      "native_piece_count": 11,
+      "output_bytes": 25,
+      "prompt_tokens": 520,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 12,
+      "sample_wall_ms": 20850.21829168545,
+      "verified_open_and_load_ms": 746.3681666995399
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.037624966353178024,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448011.1980595834,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 447987.58200000005,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-03",
+      "group_index": 5,
+      "memory": {
+        "current_phys_footprint_bytes": 516442352,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19274.644833,
+        "begin_to_first_token_ms": 19213.713208,
+        "context_setup_ms": 8.543666,
+        "first_sample_ms": 0.30125,
+        "model_load_ms": 135.44775,
+        "prefill_ms": 19204.4555,
+        "tokenize_ms": 0.395375
+      },
+      "native_piece_count": 56,
+      "output_bytes": 262,
+      "prompt_tokens": 518,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 13,
+      "sample_wall_ms": 23616.02037504781,
+      "verified_open_and_load_ms": 636.7281666607596
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.906416642479599,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448035.00413608336,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448011.20798633335,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-03",
+      "group_index": 5,
+      "memory": {
+        "current_phys_footprint_bytes": 516458736,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19296.320459,
+        "begin_to_first_token_ms": 19235.443834,
+        "context_setup_ms": 9.24975,
+        "first_sample_ms": 0.165208,
+        "model_load_ms": 0,
+        "prefill_ms": 19225.553375,
+        "tokenize_ms": 0.45775
+      },
+      "native_piece_count": 56,
+      "output_bytes": 262,
+      "prompt_tokens": 518,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 14,
+      "sample_wall_ms": 23796.11170833232,
+      "verified_open_and_load_ms": 758.5733750020154
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.825791697949171,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448059.4468014167,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448035.013982,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-03",
+      "group_index": 5,
+      "memory": {
+        "current_phys_footprint_bytes": 516491504,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19787.201166,
+        "begin_to_first_token_ms": 19721.164541,
+        "context_setup_ms": 9.572042,
+        "first_sample_ms": 0.161209,
+        "model_load_ms": 0,
+        "prefill_ms": 19710.96725,
+        "tokenize_ms": 0.447791
+      },
+      "native_piece_count": 56,
+      "output_bytes": 262,
+      "prompt_tokens": 518,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 15,
+      "sample_wall_ms": 24432.78320832178,
+      "verified_open_and_load_ms": 777.5302083464339
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.03912497777491808,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448068.2295839167,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448060.57113958336,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-03",
+      "group_index": 6,
+      "memory": {
+        "current_phys_footprint_bytes": 518538928,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6647.385625,
+        "begin_to_first_token_ms": 6617.227459,
+        "context_setup_ms": 8.592208,
+        "first_sample_ms": 0.264833,
+        "model_load_ms": 114.589042,
+        "prefill_ms": 6607.943834,
+        "tokenize_ms": 0.408083
+      },
+      "native_piece_count": 23,
+      "output_bytes": 95,
+      "prompt_tokens": 518,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 16,
+      "sample_wall_ms": 7658.409416675568,
+      "verified_open_and_load_ms": 320.81412500701845
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.317958378233016,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448076.06183016667,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448068.238922875,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-03",
+      "group_index": 6,
+      "memory": {
+        "current_phys_footprint_bytes": 518457008,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6789.464125,
+        "begin_to_first_token_ms": 6760.035833,
+        "context_setup_ms": 11.851,
+        "first_sample_ms": 0.132417,
+        "model_load_ms": 0,
+        "prefill_ms": 6747.501291,
+        "tokenize_ms": 0.534
+      },
+      "native_piece_count": 23,
+      "output_bytes": 95,
+      "prompt_tokens": 518,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 17,
+      "sample_wall_ms": 7822.871999989729,
+      "verified_open_and_load_ms": 345.77950002858415
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.567166678607464,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448083.9257125,
+        "thermal_state": 2
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448076.0714145,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-03",
+      "group_index": 6,
+      "memory": {
+        "current_phys_footprint_bytes": 518473392,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6819.874625,
+        "begin_to_first_token_ms": 6788.764666,
+        "context_setup_ms": 11.775167,
+        "first_sample_ms": 0.133459,
+        "model_load_ms": 0,
+        "prefill_ms": 6776.316,
+        "tokenize_ms": 0.521209
+      },
+      "native_piece_count": 23,
+      "output_bytes": 95,
+      "prompt_tokens": 518,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 18,
+      "sample_wall_ms": 7854.263999965042,
+      "verified_open_and_load_ms": 344.24220834625885
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 210201.58595830435,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448301.0056620417,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448295.2415772917,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-04",
+      "group_index": 7,
+      "memory": {
+        "current_phys_footprint_bytes": 504432280,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 5062.305333,
+        "begin_to_first_token_ms": 5040.656958,
+        "context_setup_ms": 22.013666,
+        "first_sample_ms": 0.249375,
+        "model_load_ms": 99.906958,
+        "prefill_ms": 5018.019458,
+        "tokenize_ms": 0.358541
+      },
+      "native_piece_count": 18,
+      "output_bytes": 69,
+      "prompt_tokens": 530,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 19,
+      "sample_wall_ms": 5764.012333354913,
+      "verified_open_and_load_ms": 323.695958359167
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 8.945125038735569,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448307.12467550003,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448301.0146231667,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-04",
+      "group_index": 7,
+      "memory": {
+        "current_phys_footprint_bytes": 504514200,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 5534.800541,
+        "begin_to_first_token_ms": 5512.268875,
+        "context_setup_ms": 8.421208,
+        "first_sample_ms": 0.224917,
+        "model_load_ms": 0,
+        "prefill_ms": 5503.248875,
+        "tokenize_ms": 0.360084
+      },
+      "native_piece_count": 18,
+      "output_bytes": 69,
+      "prompt_tokens": 530,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 20,
+      "sample_wall_ms": 6110.020208347123,
+      "verified_open_and_load_ms": 176.42850003903732
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 8.586416661273688,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448313.5251462917,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448307.13327695837,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-04",
+      "group_index": 7,
+      "memory": {
+        "current_phys_footprint_bytes": 504366744,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 5802.53825,
+        "begin_to_first_token_ms": 5779.349417,
+        "context_setup_ms": 8.432292,
+        "first_sample_ms": 0.117625,
+        "model_load_ms": 0,
+        "prefill_ms": 5770.440291,
+        "tokenize_ms": 0.346167
+      },
+      "native_piece_count": 18,
+      "output_bytes": 69,
+      "prompt_tokens": 530,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 21,
+      "sample_wall_ms": 6391.83849998517,
+      "verified_open_and_load_ms": 176.29716667579487
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.022666645236313343,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448334.16200375004,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448314.24935733335,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-04",
+      "group_index": 8,
+      "memory": {
+        "current_phys_footprint_bytes": 511068400,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 18279.195666,
+        "begin_to_first_token_ms": 18223.649708,
+        "context_setup_ms": 24.41275,
+        "first_sample_ms": 0.270625,
+        "model_load_ms": 141.577625,
+        "prefill_ms": 18198.534,
+        "tokenize_ms": 0.409834
+      },
+      "native_piece_count": 19,
+      "output_bytes": 76,
+      "prompt_tokens": 530,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 22,
+      "sample_wall_ms": 19912.606375000905,
+      "verified_open_and_load_ms": 601.6287499805912
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.010083333123475,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448354.6090405,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448334.17103325005,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-04",
+      "group_index": 8,
+      "memory": {
+        "current_phys_footprint_bytes": 511133936,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 18874.523125,
+        "begin_to_first_token_ms": 18813.553,
+        "context_setup_ms": 8.3675,
+        "first_sample_ms": 0.269042,
+        "model_load_ms": 0,
+        "prefill_ms": 18804.523875,
+        "tokenize_ms": 0.376208
+      },
+      "native_piece_count": 19,
+      "output_bytes": 76,
+      "prompt_tokens": 530,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 23,
+      "sample_wall_ms": 20437.969041639008,
+      "verified_open_and_load_ms": 462.4862083001062
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.122083312831819,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448375.6027128334,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448354.6181814584,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-04",
+      "group_index": 8,
+      "memory": {
+        "current_phys_footprint_bytes": 511133936,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19219.034625,
+        "begin_to_first_token_ms": 19158.060167,
+        "context_setup_ms": 10.002208,
+        "first_sample_ms": 0.161459,
+        "model_load_ms": 0,
+        "prefill_ms": 19147.443125,
+        "tokenize_ms": 0.437125
+      },
+      "native_piece_count": 19,
+      "output_bytes": 76,
+      "prompt_tokens": 530,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 24,
+      "sample_wall_ms": 20984.49174995767,
+      "verified_open_and_load_ms": 647.1753749647178
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.0366666354238987,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448398.3433429167,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448376.68536145834,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-05",
+      "group_index": 9,
+      "memory": {
+        "current_phys_footprint_bytes": 511183088,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19790.76375,
+        "begin_to_first_token_ms": 19729.851583,
+        "context_setup_ms": 28.011709,
+        "first_sample_ms": 0.273375,
+        "model_load_ms": 140.870583,
+        "prefill_ms": 19701.138417,
+        "tokenize_ms": 0.411959
+      },
+      "native_piece_count": 20,
+      "output_bytes": 108,
+      "prompt_tokens": 523,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 25,
+      "sample_wall_ms": 21657.94666664442,
+      "verified_open_and_load_ms": 652.9311666381545
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.471750003285706,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448420.8794288334,
+        "thermal_state": 2
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448398.3528311667,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-05",
+      "group_index": 9,
+      "memory": {
+        "current_phys_footprint_bytes": 511183088,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 20435.624417,
+        "begin_to_first_token_ms": 20367.849584,
+        "context_setup_ms": 9.55125,
+        "first_sample_ms": 0.167125,
+        "model_load_ms": 0,
+        "prefill_ms": 20357.655542,
+        "tokenize_ms": 0.455334
+      },
+      "native_piece_count": 20,
+      "output_bytes": 108,
+      "prompt_tokens": 523,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 26,
+      "sample_wall_ms": 22526.558166660834,
+      "verified_open_and_load_ms": 775.91941668652
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 210205.0432083197,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448648.4369765834,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448631.08445587504,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-05",
+      "group_index": 9,
+      "memory": {
+        "current_phys_footprint_bytes": 511166680,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 15832.244709,
+        "begin_to_first_token_ms": 15780.637667,
+        "context_setup_ms": 22.773917,
+        "first_sample_ms": 0.261792,
+        "model_load_ms": 0,
+        "prefill_ms": 15757.207792,
+        "tokenize_ms": 0.377292
+      },
+      "native_piece_count": 20,
+      "output_bytes": 108,
+      "prompt_tokens": 523,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 27,
+      "sample_wall_ms": 17352.441541675944,
+      "verified_open_and_load_ms": 504.9097083392553
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.025250017642974854,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448655.76031079167,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448649.16422383336,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-05",
+      "group_index": 10,
+      "memory": {
+        "current_phys_footprint_bytes": 513361584,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 5813.891667,
+        "begin_to_first_token_ms": 5789.971167,
+        "context_setup_ms": 8.933833,
+        "first_sample_ms": 0.231875,
+        "model_load_ms": 112.366209,
+        "prefill_ms": 5780.352584,
+        "tokenize_ms": 0.438333
+      },
+      "native_piece_count": 21,
+      "output_bytes": 108,
+      "prompt_tokens": 523,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 28,
+      "sample_wall_ms": 6596.052833308931,
+      "verified_open_and_load_ms": 287.8062083036639
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.145000018179417,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448662.420394,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448655.769474125,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-05",
+      "group_index": 10,
+      "memory": {
+        "current_phys_footprint_bytes": 513197744,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 5968.073625,
+        "begin_to_first_token_ms": 5943.678333,
+        "context_setup_ms": 8.38575,
+        "first_sample_ms": 0.124375,
+        "model_load_ms": 0,
+        "prefill_ms": 5934.797583,
+        "tokenize_ms": 0.355542
+      },
+      "native_piece_count": 21,
+      "output_bytes": 108,
+      "prompt_tokens": 523,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 29,
+      "sample_wall_ms": 6650.887541647535,
+      "verified_open_and_load_ms": 179.59991667885333
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 8.259666676167399,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448669.183071375,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448662.42867004167,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-05",
+      "group_index": 10,
+      "memory": {
+        "current_phys_footprint_bytes": 513197744,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6064.911,
+        "begin_to_first_token_ms": 6039.894084,
+        "context_setup_ms": 8.3705,
+        "first_sample_ms": 0.125583,
+        "model_load_ms": 0,
+        "prefill_ms": 6031.040959,
+        "tokenize_ms": 0.341208
+      },
+      "native_piece_count": 21,
+      "output_bytes": 108,
+      "prompt_tokens": 523,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 30,
+      "sample_wall_ms": 6754.366833309177,
+      "verified_open_and_load_ms": 177.046041644644
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.023458327632397413,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448677.24002983334,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448669.91095320834,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-06",
+      "group_index": 11,
+      "memory": {
+        "current_phys_footprint_bytes": 513263256,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6048.070167,
+        "begin_to_first_token_ms": 6023.028,
+        "context_setup_ms": 8.696166,
+        "first_sample_ms": 0.230209,
+        "model_load_ms": 116.699625,
+        "prefill_ms": 6013.649958,
+        "tokenize_ms": 0.436833
+      },
+      "native_piece_count": 39,
+      "output_bytes": 153,
+      "prompt_tokens": 518,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 31,
+      "sample_wall_ms": 7329.0442083380185,
+      "verified_open_and_load_ms": 292.28454164694995
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 8.765291655436158,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448684.5476732917,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448677.24881170836,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-06",
+      "group_index": 11,
+      "memory": {
+        "current_phys_footprint_bytes": 513279640,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6127.146166,
+        "begin_to_first_token_ms": 6102.198166,
+        "context_setup_ms": 8.355125,
+        "first_sample_ms": 0.124125,
+        "model_load_ms": 0,
+        "prefill_ms": 6093.349792,
+        "tokenize_ms": 0.3545
+      },
+      "native_piece_count": 39,
+      "output_bytes": 153,
+      "prompt_tokens": 518,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 32,
+      "sample_wall_ms": 7298.828291648533,
+      "verified_open_and_load_ms": 178.66854165913537
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 8.951291674748063,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448691.9211966667,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448684.55664225004,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-06",
+      "group_index": 11,
+      "memory": {
+        "current_phys_footprint_bytes": 513279640,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6167.783667,
+        "begin_to_first_token_ms": 6142.527292,
+        "context_setup_ms": 8.393833,
+        "first_sample_ms": 0.127583,
+        "model_load_ms": 0,
+        "prefill_ms": 6133.612542,
+        "tokenize_ms": 0.378208
+      },
+      "native_piece_count": 39,
+      "output_bytes": 153,
+      "prompt_tokens": 518,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 33,
+      "sample_wall_ms": 7364.521583367605,
+      "verified_open_and_load_ms": 179.38975000288337
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_sample_ms": 0.03354164073243737,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448712.47332320834,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448692.86508820835,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-06",
+      "group_index": 12,
+      "memory": {
+        "current_phys_footprint_bytes": 513755376,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 18522.426958,
+        "begin_to_first_token_ms": 18465.825708,
+        "context_setup_ms": 8.549625,
+        "first_sample_ms": 0.26525,
+        "model_load_ms": 145.127709,
+        "prefill_ms": 18456.58975,
+        "tokenize_ms": 0.406125
+      },
+      "native_piece_count": 9,
+      "output_bytes": 34,
+      "prompt_tokens": 518,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 34,
+      "sample_wall_ms": 19608.20191667881,
+      "verified_open_and_load_ms": 615.695291722659
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 9.290541638620198,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448733.4529132917,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448712.48263337504,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-06",
+      "group_index": 12,
+      "memory": {
+        "current_phys_footprint_bytes": 513886448,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 20008.062833,
+        "begin_to_first_token_ms": 19947.323,
+        "context_setup_ms": 8.346875,
+        "first_sample_ms": 0.164416,
+        "model_load_ms": 0,
+        "prefill_ms": 19938.44675,
+        "tokenize_ms": 0.347709
+      },
+      "native_piece_count": 9,
+      "output_bytes": 34,
+      "prompt_tokens": 518,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 35,
+      "sample_wall_ms": 20970.245291711763,
+      "verified_open_and_load_ms": 462.5669167144224
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_sample_ms": 10.08670829469338,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448754.61742487503,
+        "thermal_state": 2
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 3,
+        "low_power_mode": false,
+        "system_uptime_s": 448733.46301883337,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-06",
+      "group_index": 12,
+      "memory": {
+        "current_phys_footprint_bytes": 513886448,
+        "process_lifetime_peak_bytes": 553568424
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 19855.141625,
+        "begin_to_first_token_ms": 19788.283209,
+        "context_setup_ms": 9.016167,
+        "first_sample_ms": 0.16125,
+        "model_load_ms": 0,
+        "prefill_ms": 19778.665167,
+        "tokenize_ms": 0.423875
+      },
+      "native_piece_count": 9,
+      "output_bytes": 34,
+      "prompt_tokens": 518,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 36,
+      "sample_wall_ms": 21154.369916650467,
+      "verified_open_and_load_ms": 754.9854166572914
+    }
+  ],
+  "cold_start_scope": "MODEL_UNLOADED_AT_GROUP_START_OS_CACHES_UNCONTROLLED_PROCESS_REUSED",
+  "context_tokens": 4096,
+  "enable_thinking": false,
+  "fixture_manifest_sha256": "0e6bfb28b2bb8f93dfd6a06838fddc0f43a15c8bb1d824ee0988bb3f70ef5746",
+  "memory_scope": "PROCESS_LIFETIME_INCLUDING_PREPARATION",
+  "microphone": "NOT_OPENED",
+  "model_open": "EXPLICIT_SCOPED_MODEL_WEIGHTS_RESIDENCY_THREE_FRESH_GENERATIONS",
+  "model_pins": [
+    {
+      "candidate_index": 0,
+      "model_bytes": 1282439424,
+      "model_sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120"
+    },
+    {
+      "candidate_index": 1,
+      "model_bytes": 484219808,
+      "model_sha256": "9b1a69f90cc7b7404ffeabd12f58391a6323ea08ae6e517f6cfd56bbb2caf5ca"
+    }
+  ],
+  "network_observation": "NOT_RUN",
+  "os_build": "Version 26.6.1 (Build 23G83)",
+  "output_token_limit": 256,
+  "phase": "COMPLETED",
+  "physical_gate_acceptance": "NOT_RUN",
+  "physical_memory_bytes": 12262113280,
+  "process_id": "409DF42D-85EC-4CDD-92C0-F0481D749587",
+  "quality": "NOT_RUN",
+  "raw_text_exported": false,
+  "runtime_revision": "8345f333951c661d166b00e6f9362e553768f292",
+  "sampler": "greedy",
+  "schema_version": 2,
+  "scope": "IOS_RESIDENT_MODEL_COMPARISON",
+  "speaker": "NOT_OPENED",
+  "thermal_policy": "WAIT_BELOW_SERIOUS_BEFORE_EACH_SAMPLE_MAX_300S",
+  "threads": 2,
+  "timing_clock": "std::chrono::steady_clock",
+  "updated_utc": "2026-10-20T08:03:36Z",
+  "warm_scope": "GENERIC_MODEL_WEIGHTS_ONLY_FRESH_CONTEXT_KV_SAMPLER_EACH_GENERATION"
+}
