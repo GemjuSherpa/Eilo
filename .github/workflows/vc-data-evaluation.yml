@@ -65,6 +65,10 @@ jobs:
           python3 -O -m unittest discover -s ../physical-ios-trial -p 'test_network*.py' -v
           python3 ../physical-ios-trial/network_observation_report.py ../physical-ios-trial/tests/network-observation-attempt.json
           python3 -O ../physical-ios-trial/network_observation_report.py ../physical-ios-trial/tests/network-observation-attempt.json
+          python3 -m unittest discover -s ../physical-ios-trial -p test_rvi_report.py -v
+          python3 -O -m unittest discover -s ../physical-ios-trial -p test_rvi_report.py -v
+          python3 ../physical-ios-trial/rvi_report.py ../physical-ios-trial/tests/network-rvi-preflight-results.json ../physical-ios-trial/tests/network-rvi-calibration-results.json --json-output "$RUNNER_TEMP/eilo-rvi-review.json" --html-output "$RUNNER_TEMP/eilo-rvi-review.html"
+          python3 -O ../physical-ios-trial/rvi_report.py ../physical-ios-trial/tests/network-rvi-preflight-results.json ../physical-ios-trial/tests/network-rvi-calibration-results.json
           python3 -m unittest discover -s ../physical-ios-trial -p test_resident_report.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_resident_report.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_resident_wrapper.py -v
@@ -90,6 +94,15 @@ jobs:
           python3 -O ../vad-runtime/generate_rate_filter.py --check
       - name: Generate privacy-reduced synthetic JSON and HTML
         run: python3 smoke.py --output "$RUNNER_TEMP/vc-data-reports"
+      - name: Upload redacted blocked RVI review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ios-rvi-blocked-review
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/eilo-rvi-review.json
+            ${{ runner.temp }}/eilo-rvi-review.html
       - name: Upload only synthetic aggregate summaries
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

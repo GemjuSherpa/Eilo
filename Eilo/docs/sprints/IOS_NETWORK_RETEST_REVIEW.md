@@ -43,3 +43,24 @@ The operator ran the separate privileged calibration helper. It verified the uni
 After 60.153 seconds the helper stopped, confirmed interface cleanup and retained only redacted calibration aggregates. It recognized zero markers and zero markers with matching process metadata. These are calibration-match counts, **not Eilo traffic counts**. The record cannot distinguish missing loopback visibility from unrecognized observer metadata, and cannot establish attribution, packet loss coverage or absence of network traffic. Packet/byte acceptance metrics remain null; network observation and the physical gate remain NOT_RUN. `tests/network-rvi-calibration-results.json` preserves the result. No packet file, payload, endpoint list or packet-output line was saved. Independent process checks found no surviving calibration helper or tcpdump, and the interface list was empty.
 
 The observer must not be promoted to a zero-traffic gate or used for an inference acceptance claim. The next prerequisite is a reviewed positive calibration with demonstrable target attribution; any external destination or broader collection requires a new scope review. The existing Instruments 27.1 crash and this alternative's unsuccessful calibration remain separate blockers.
+
+## Offline evidence reporting and CI
+
+`packages/physical-ios-trial/rvi_report.py` validates the two redacted RVI records without opening a device or starting a capture. Its closed schemas require null traffic metrics, NOT_RUN acceptance, verified cleanup, the original metadata-only scope and a finite observation duration within the approved 180 seconds. Marker counts remain separate from traffic counts. A positive attributed marker is rejected by this blocked-evidence schema and requires a reviewed follow-up format; it cannot silently promote acceptance. Duplicate JSON keys, Boolean counts, extra payload/endpoint fields, failed cleanup and non-finite/over-limit durations are rejected.
+
+From `Eilo`, generate an offline review with:
+
+```sh
+python3 packages/physical-ios-trial/rvi_report.py \
+  packages/physical-ios-trial/tests/network-rvi-preflight-results.json \
+  packages/physical-ios-trial/tests/network-rvi-calibration-results.json \
+  --json-output /tmp/eilo-rvi-review.json \
+  --html-output /tmp/eilo-rvi-review.html
+```
+
+Outputs include source SHA-256 provenance and selected aggregate facts only. Arbitrary diagnostic prose and input paths are not rendered. The JSON and HTML destinations must be distinct from each other and the source records. CI validates actual records in normal and optimized Python, runs eight mutation/boundary/CLI tests and uploads only the generated redacted summaries with seven-day retention. The generated HTML labels network verification NOT_RUN and explicitly states that calibration-match counts are not traffic counts.
+
+This completes the available diagnostic/reporting scope of the retest sprint. It does not complete the physical network trial, VC-LLM-06 or S08, and does not enable S10 persistent storage. All task branches consolidate into one final sprint PR; further physical calibration remains separately blocked.
+
+
+Final local validation for the reporting task: 48 physical-trial Python tests and 47 feasibility tests passed in both normal and optimized modes; actual RVI report CLI passed in both modes with JSON/HTML generation; 309 Swift tests passed. The normal app built and installed on the existing iPhone 18 Pro simulator, then passed three fresh launches with ten-second dwell each (`rvi-evidence-report`). Staged secret and whitespace checks passed. These simulator checks are regression checks, not physical network evidence.
