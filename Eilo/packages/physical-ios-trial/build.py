@@ -20,6 +20,7 @@ sys.path.insert(0, str(HERE.parent / 'vad-runtime'))
 from check_installer import verify, verified_asr, require, sha256, run
 
 from model_wrapper import wrapper
+from phase_wrapper import phase_wrapper
 
 BUNDLE = 'com.eilo.ForegroundVoiceTrial'
 
@@ -28,7 +29,7 @@ def identifier(name):
     return hashlib.sha256(name.encode()).hexdigest()[:24].upper()
 
 
-def project(output, sources, assets, flags, framework):
+def project(output, sources, assets, flags, framework, phase_measurements=False):
     """Generate a local native-only Xcode target; no production project edits or account data."""
     objects = {}
     def add(label, isa, **values):
@@ -49,9 +50,9 @@ def project(output, sources, assets, flags, framework):
     group = add('group', 'PBXGroup', children=[*files, resource, dynamic, product], sourceTree='<group>')
     settings = dict(PRODUCT_BUNDLE_IDENTIFIER=BUNDLE, PRODUCT_NAME='EiloForegroundTrial', INFOPLIST_FILE=str(output / 'Info.plist'),
         IPHONEOS_DEPLOYMENT_TARGET='18.0', SDKROOT='iphoneos', TARGETED_DEVICE_FAMILY='1', SWIFT_VERSION='5.0',
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS='DEBUG EILO_VAD_EVALUATION EILO_ASR_EVALUATION EILO_LLM_EVALUATION',
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS='DEBUG EILO_VAD_EVALUATION EILO_ASR_EVALUATION EILO_LLM_EVALUATION'+(' EILO_PHASE_MEASUREMENTS' if phase_measurements else ''),
         SWIFT_TREAT_WARNINGS_AS_ERRORS='YES', SWIFT_OPTIMIZATION_LEVEL='-O', ENABLE_BITCODE='NO',
-        SWIFT_INCLUDE_PATHS=['"'+str(HERE.parent / p / 'include')+'"' for p in ['vad-runtime', 'asr-runtime', 'llm-runtime']],
+        SWIFT_INCLUDE_PATHS=['"'+str(HERE.parent / p / 'include')+'"' for p in ['vad-runtime', 'asr-runtime', 'llm-runtime', 'physical-ios-trial']],
         OTHER_LDFLAGS=['"'+f+'"' if f.startswith('/') else f for f in flags], LD_RUNPATH_SEARCH_PATHS=['$(inherited)', '@executable_path/Frameworks'],
         FRAMEWORK_SEARCH_PATHS=['"'+str(framework)+'"'], ALWAYS_SEARCH_USER_PATHS='NO', CODE_SIGN_STYLE='Automatic', GENERATE_INFOPLIST_FILE='NO')
     configs = [add('target-' + n, 'XCBuildConfiguration', buildSettings=settings, name=n) for n in ['Debug', 'Release']]
@@ -73,6 +74,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ['asr-cache','vad-cache','vad-model','llm-cache','llm-model','output']:
         p.add_argument('--'+name, type=Path, required=True)
+    p.add_argument('--phase-measurements', action='store_true', help='Opt in to lab native phase telemetry and repeated fresh-handle runner; no warm-cache acceptance.')
     p.add_argument('--comparison-model', choices=['Qwen3-1.7B-Q4_K_M','Qwen3-0.6B-Q4_K_M'], default='Qwen3-1.7B-Q4_K_M')
     p.add_argument('--operator-radio-off-attestation', action='store_true', help='Record the human operator declaration; never an OS/network verification.')
     a = p.parse_args()
@@ -103,11 +105,11 @@ def main():
     run(['xcrun','clang++',*target,'-dynamiclib',obj,moon/'libmoonshine.a','-framework','Accelerate','-framework','Foundation','-Wl,-twolevel_namespace','-Wl,-exported_symbols_list,'+str(exports),'-Wl,-install_name,@rpath/'+dynamic.name,'-o',dynamic])
     require(set(run(['xcrun','nm','-gUj',dynamic]).splitlines())==names and 'TWOLEVEL' in run(['xcrun','otool','-hv',dynamic]),'ASR isolation changed')
     headers=vad/'ios/onnxruntime.xcframework/ios-arm64/onnxruntime.framework/Headers';objects=[]
-    compiled_wrapper,wrapper_evidence=wrapper((llm_here/'eilo_llm.cc').read_bytes(),model_pin)
+    compiled_wrapper,wrapper_evidence=(phase_wrapper if a.phase_measurements else wrapper)((llm_here/'eilo_llm.cc').read_bytes(),model_pin)
     wrapper_source=output/'eilo_llm_trial.cc';wrapper_source.write_bytes(compiled_wrapper)
     for src in [HERE.parent/'vad-runtime/eilo_vad.cc',HERE.parent/'vad-runtime/eilo_vad_onnx.cc',wrapper_source]:
         obj=output/(src.stem+'.o');objects.append(obj)
-        run(['xcrun','clang++',*target,'-std=c++17','-Wall','-Wextra','-Werror','-I',HERE.parent/'vad-runtime/include','-I',headers,'-I',llm_here/'include','-I',source/'include','-I',source/'ggml/include','-c',src,'-o',obj])
+        run(['xcrun','clang++',*target,'-std=c++17','-Wall','-Wextra','-Werror','-I',HERE.parent/'vad-runtime/include','-I',headers,'-I',llm_here/'include','-I',HERE/'include','-I',source/'include','-I',source/'ggml/include','-c',src,'-o',obj])
     assets=output/'TrialAssets';assets.mkdir();pins=[]
     for i,r in enumerate(record['model']['files']):
         pins.append(dict(id='asr-'+str(i),filename=r['file'],sha256=r['local_sha256'],bytes=r['bytes']));shutil.copy2(asr_model/r['file'],assets/r['file'])
@@ -133,13 +135,13 @@ def main():
     (output/'Info.plist').write_bytes(plistlib.dumps(info))
     framework=vad/'ios/onnxruntime.xcframework/ios-arm64'
     flags=['$(inherited)',*map(str,objects),*map(str,libs),str(dynamic),'-framework','onnxruntime','-framework','Accelerate','-framework','CoreML','-lc++']
-    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift',HERE/'TrialAsrScore.swift',HERE/'TrialFileAsr.swift',HERE/'TrialModelDiagnostic.swift',HERE/'TrialModelQualitySession.swift',HERE/'TrialModelQualityText.swift',HERE/'TrialModelQuality.swift']
-    proj=project(output,sources,assets,flags,framework)
+    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift',HERE/'TrialAsrScore.swift',HERE/'TrialFileAsr.swift',HERE/'TrialModelDiagnostic.swift',HERE/'TrialModelQualitySession.swift',HERE/'TrialModelQualityText.swift',HERE/'TrialModelQuality.swift',HERE/'TrialPhaseDiagnostic.swift']
+    proj=project(output,sources,assets,flags,framework,a.phase_measurements)
     command=['xcodebuild','-project',str(proj),'-scheme','EiloForegroundTrial','-configuration','Release','-sdk','iphoneos','-destination','generic/platform=iOS','-derivedDataPath',str(output/'DerivedData'),'CODE_SIGNING_ALLOWED=NO','-jobs','3','build']
     with (output/'app-build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=600)
     app=output/'DerivedData/Build/Products/Release-iphoneos/EiloForegroundTrial.app'
     require(app.is_dir(),'unsigned app missing')
-    result=dict(llm_wrapper=wrapper_evidence,schema_version=1,scope='UNSIGNED_INTERNAL_PHYSICAL_TRIAL_BUILD',bundle_identifier=BUNDLE,app_binary_sha256=sha256(app/'EiloForegroundTrial'),asr_dynamic_sha256=sha256(dynamic),operator_configuration_sha256=sha256(assets/'operator.json'),model_files=[{k:r[k] for k in ['filename','sha256','bytes']} for r in pins],source_sha256=[dict(path=str(s.relative_to(ROOT)),sha256=sha256(s)) for s in sources],signing='NOT_RUN',installation='NOT_RUN',physical_execution='NOT_RUN',production='NOT_ENABLED')
+    result=dict(phase_measurements=a.phase_measurements,llm_wrapper=wrapper_evidence,schema_version=1,scope='UNSIGNED_INTERNAL_PHYSICAL_TRIAL_BUILD',bundle_identifier=BUNDLE,app_binary_sha256=sha256(app/'EiloForegroundTrial'),asr_dynamic_sha256=sha256(dynamic),operator_configuration_sha256=sha256(assets/'operator.json'),model_files=[{k:r[k] for k in ['filename','sha256','bytes']} for r in pins],source_sha256=[dict(path=str(s.relative_to(ROOT)),sha256=sha256(s)) for s in sources],signing='NOT_RUN',installation='NOT_RUN',physical_execution='NOT_RUN',production='NOT_ENABLED')
     (output/'build-results.json').write_text(json.dumps(result,indent=2)+'\n')
     print('Unsigned separate physical-trial app build PASS. Signing, installation and physical execution NOT_RUN.')
 
