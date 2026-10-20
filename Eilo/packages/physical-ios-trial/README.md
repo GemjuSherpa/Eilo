@@ -298,3 +298,11 @@ complete the repeated cold/warm, alternating-order, thermal, traffic or Android
 protocol. The two scores of1 for 1.7B are preserved as entered. Generated answers
 were only visible during review and are absent from every exported report.
 CI validates the actual completed pair in normal and optimized Python.
+
+### Opt-in native phase telemetry
+
+`phase_wrapper.py` derives an additional lab-only adapter from the same full-hash-checked base and two exact model pins. It adds numeric worker-thread timing without changing the ordinary adapter, one-generation lifecycle, cancellation checks or cleanup. It is not used by the default build. `include/eilo_trial_metrics.h` documents the seven native monotonic boundaries. Prefill covers the prompt decode loop, excluding tokenization and context/sampler/batch allocation; first-token timing ends after sampling, before byte conversion and the next-token decode required by the ordinary piece API. It is distinct from first returned piece latency. Timings include instrumentation overhead.
+
+An aggregate snapshot is readable only on the same worker after successful generation completion (including after handle destruction), before the next load. Failed/cancelled runs cannot publish it. There is no prompt, answer or handle in this interface. This does not establish resident-model warm reuse, filesystem cold caches, physical performance or production acceptance.
+
+With an existing approved runtime cache, run `python3 check_phase_contract.py --llm-cache PATH`: it verifies the full source tree against its pinned archive, reruns the 31 original scripted lifecycle scenarios against the instrumented adapter under ASan/UBSan, then tests completion-only publication, cleanup preservation, revocation on new load/failure/cancellation, wrong-capacity rejection, timing ordering and thread isolation. `tests/phase_smoke.cc` is an explicit local fixed-input real-runtime probe; verify the exact model SHA before running it. Desktop results never populate phone result rows.
