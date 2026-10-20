@@ -8,17 +8,21 @@ import {
 } from 'react-native';
 import type { ControlSnapshot } from './ControlClient';
 import type { Colors } from './Onboarding';
+import { rippleCycleMs } from './VisualMotion';
 
 /** Decoration reflects native state; it never starts capture or synthesizes progress. */
 export function ConversationRipple({
   snapshot,
   error,
   colors,
+  cycleMs = 1000,
 }: {
   snapshot: ControlSnapshot | null;
   error: boolean;
   colors: Colors;
+  cycleMs?: number;
 }) {
+  const duration = rippleCycleMs(cycleMs) / 2;
   const pulse = useRef(new Animated.Value(0)).current;
   const [reduced, setReduced] = useState(true);
   const [foreground, setForeground] = useState(
@@ -67,13 +71,13 @@ export function ConversationRipple({
       Animated.sequence([
         Animated.timing(pulse, {
           toValue: 1,
-          duration: 500,
+          duration,
           useNativeDriver: true,
           isInteraction: false,
         }),
         Animated.timing(pulse, {
           toValue: 0,
-          duration: 500,
+          duration,
           useNativeDriver: true,
           isInteraction: false,
         }),
@@ -85,7 +89,7 @@ export function ConversationRipple({
       pulse.stopAnimation();
       pulse.setValue(0);
     };
-  }, [moving, pulse, state]);
+  }, [duration, moving, pulse, state]);
   const shape =
     state === 'listening'
       ? styles.listening
