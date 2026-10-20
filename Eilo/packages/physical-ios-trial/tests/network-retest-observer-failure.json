@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "scope": "IOS_CONNECTIONS_ONLY_RETEST_OBSERVER_FAILURE",
+  "network_observation": "NOT_RUN",
+  "coverage": "NOT_ESTABLISHED",
+  "physical_gate_acceptance": "NOT_RUN",
+  "connection_count": null,
+  "sent_bytes": null,
+  "received_bytes": null,
+  "inference_workload": "NOT_STARTED_OBSERVER_PREFLIGHT_FAILED",
+  "microphone": "NOT_OPENED",
+  "speaker": "NOT_OPENED",
+  "http_instrument": "NOT_ENABLED",
+  "observer_template": "Blank plus Network Connections; explicit saved template verified no HTTP strings",
+  "idle_probe_seconds_requested": 30,
+  "cli_result": "STARTED_THEN_EXIT_1_AT_TIME_LIMIT_TRACE_DOCUMENT_MISSING_TEMPLATE",
+  "raw_trace_import": "TOC_IMPORT_SUCCEEDED_SYSTEM_PROCESS_METADATA_PRESENT_NOT_APP_ONLY_COVERAGE",
+  "gui_result": "RECORDING_STARTED_APP_QUIT_DURING_STOP",
+  "diagnosis": "BOTH_HOST_OBSERVERS_CRASH_IN_APPLE_NETWORK_CONNECTION_STATS_MODELING",
+  "crash_reports": [
+    {
+      "process": "xctrace",
+      "captured_local": "2026-10-20 23:52:35.9836 +1100",
+      "exception_type": "EXC_BREAKPOINT",
+      "signal": "SIGTRAP",
+      "termination_namespace": "SIGNAL",
+      "termination_code": 5,
+      "faulting_symbols": [
+        "NetworkConnectionStatsModeling.receive(row:writer:context:)",
+        "NetworkConnectionStatsModeling.__receiveRow(cursor:writer:context:)",
+        "TransformerExecutionUnit.run(yieldBlock:)",
+        "TransformerHostingModeler.populateOutputTables(_:usingObserverations:parameters:checkToYieldBlock:)",
+        "@objc TransformerHostingModeler.populateOutputTables(_:usingObserverations:parameters:checkToYieldBlock:)"
+      ],
+      "source_report_sha256": "9481656a3f374fe86f8f7e37271360161a41aabecbc755003bfe600390f1d396"
+    },
+    {
+      "process": "Instruments",
+      "captured_local": "2026-10-20 23:57:40.9894 +1100",
+      "exception_type": "EXC_BREAKPOINT",
+      "signal": "SIGTRAP",
+      "termination_namespace": "SIGNAL",
+      "termination_code": 5,
+      "faulting_symbols": [
+        "NetworkConnectionStatsModeling.receive(row:writer:context:)",
+        "NetworkConnectionStatsModeling.__receiveRow(cursor:writer:context:)",
+        "TransformerExecutionUnit.run(yieldBlock:)",
+        "TransformerHostingModeler.populateOutputTables(_:usingObserverations:parameters:checkToYieldBlock:)",
+        "@objc TransformerHostingModeler.populateOutputTables(_:usingObserverations:parameters:checkToYieldBlock:)"
+      ],
+      "source_report_sha256": "334e87f8805cf84d298079572176fb211631b998ea338291054b79da8b4247f7"
+    }
+  ],
+  "privacy": {
+    "committed": "REDACTED_DIAGNOSTIC_METADATA_ONLY",
+    "http_payloads": "NOT_CAPTURED_BY_THIS_RETEST_CONFIGURATION",
+    "other_app_connection_tables": "NOT_INSPECTED_OR_EXPORTED",
+    "raw_artifacts": "EXPLICIT_IDLE_PROBE_TRACE_AND_TOC_REMOVED_AFTER_METADATA_VALIDATION",
+    "profiler_recovery_or_import_caches": "NOT_INSPECTED_OR_CLEARED"
+  },
+  "remediation": "APPLE_PROFILER_FIX_OR_DIFFERENT_SCOPED_OBSERVER_REQUIRES_REVIEW_NO_SECURITY_WORKAROUND"
+}
