@@ -11,10 +11,13 @@ def main():
     if not sources:
         raise ValueError('native Swift sources missing')
     trial = ROOT / 'packages/physical-ios-trial'
-    sources.extend([trial / 'TrialApp.swift', trial / 'TrialEpoch.swift', trial / 'TrialVoiceSurvey.swift', trial / 'TrialAsrScore.swift', trial / 'TrialFileAsr.swift', trial / 'TrialModelDiagnostic.swift', trial / 'TrialModelQualitySession.swift', trial / 'TrialModelQualityText.swift', trial / 'TrialModelQuality.swift'])
+    sources.extend([trial / 'TrialApp.swift', trial / 'TrialEpoch.swift', trial / 'TrialVoiceSurvey.swift', trial / 'TrialAsrScore.swift', trial / 'TrialFileAsr.swift', trial / 'TrialModelDiagnostic.swift', trial / 'TrialModelQualitySession.swift', trial / 'TrialModelQualityText.swift', trial / 'TrialModelQuality.swift', trial / 'TrialPhaseDiagnostic.swift'])
     for sdk, target in [('iphonesimulator', 'arm64-apple-ios18.0-simulator'), ('iphoneos', 'arm64-apple-ios18.0')]:
         sysroot = subprocess.check_output(['xcrun', '--sdk', sdk, '--show-sdk-path'], text=True, timeout=30).strip()
         subprocess.run(['xcrun', 'swiftc', '-swift-version', '5', '-warnings-as-errors', '-parse-as-library', '-typecheck',
+            '-target', target, '-sdk', sysroot, *map(str, sources)], check=True, timeout=120)
+        subprocess.run(['xcrun', 'swiftc', '-swift-version', '5', '-warnings-as-errors', '-parse-as-library', '-typecheck',
+            '-D', 'EILO_PHASE_MEASUREMENTS', '-I', str(trial / 'include'),
             '-target', target, '-sdk', sysroot, *map(str, sources)], check=True, timeout=120)
         print(sdk + ': all native Swift source typechecks PASS with warnings as errors.', flush=True)
 
