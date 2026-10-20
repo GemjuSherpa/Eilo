@@ -101,6 +101,10 @@ jobs:
       - name: Strict native Swift device and simulator types
         run: |
           python3 scripts/check-native-ios-types.py
+          xcrun swiftc packages/physical-ios-trial/TrialModelQualitySession.swift packages/physical-ios-trial/tests/model_quality_state_probe.swift -o "$RUNNER_TEMP/eilo-model-quality-state"
+          "$RUNNER_TEMP/eilo-model-quality-state"
+          xcrun swiftc packages/physical-ios-trial/TrialModelQualityText.swift packages/physical-ios-trial/tests/model_quality_text_probe.swift -o "$RUNNER_TEMP/eilo-model-quality-text"
+          "$RUNNER_TEMP/eilo-model-quality-text"
           xcrun swiftc packages/physical-ios-trial/TrialEpoch.swift packages/physical-ios-trial/tests/epoch_probe.swift -o "$RUNNER_TEMP/eilo-trial-epoch"
           "$RUNNER_TEMP/eilo-trial-epoch"
           xcrun swiftc packages/physical-ios-trial/TrialVoiceSurvey.swift packages/physical-ios-trial/tests/voice_survey_probe.swift -o "$RUNNER_TEMP/eilo-voice-survey"

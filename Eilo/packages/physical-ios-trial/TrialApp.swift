@@ -10,6 +10,11 @@ import CryptoKit
   private let prepare=UIButton(type:.system),probe=UIButton(type:.system),heard=UIButton(type:.system)
   private let microphone=UIButton(type:.system),model=UIButton(type:.system),stopButton=UIButton(type:.system)
   private let synth=AVSpeechSynthesizer(),eligibility=IOSCaptureEligibility(),effects=IOSCaptureEffects()
+  private let modelQuality=UIButton(type:.system),modelQualityNote=UILabel(),modelQualityAnswer=UILabel()
+  private let modelQualityRatings=(1...5).map{_ in UIButton(type:.system)}
+  private let modelQualitySession=TrialModelQualitySession(),modelQualitySessionID=UUID().uuidString
+  private var modelQualityCancellation:TrialModelCancellation?
+  private var modelQualityRunning=false
   private let modelDiagnostic=UIButton(type:.system)
   private var modelDiagnosticAutoRun=false,modelDiagnosticRunning=false,modelDiagnosticUsed=false
   private var diagnosticIdleTimer:Bool?
@@ -67,10 +72,15 @@ import CryptoKit
     qualityNote.numberOfLines=0;qualityNote.text="Listening survey: 12 fixed phrases. Rate only after playback: 1 unintelligible, 5 fully clear. Timing and traffic verification remain unrun. No microphone is used."
     let scoreRow=UIStackView(arrangedSubviews:ratings);scoreRow.axis = .horizontal;scoreRow.distribution = .fillEqually
     for (i,b) in ratings.enumerated(){b.tag=i+1;button(b,String(i+1),#selector(rateQuality(_:)))}
+    modelQualityNote.numberOfLines=0;modelQualityNote.text="Answer quality: six fixed prompts. Read the rubric and answer, then rate 1 incorrect/unusable to 5 correct/clear. This session's scores save automatically; leave the app open for export. No audio."
+    modelQualityAnswer.numberOfLines=0
+    let modelScoreRow=UIStackView(arrangedSubviews:modelQualityRatings);modelScoreRow.axis = .horizontal;modelScoreRow.distribution = .fillEqually
+    for (i,b) in modelQualityRatings.enumerated(){b.tag=i+1;button(b,String(i+1),#selector(rateModelQuality(_:)))}
+    button(modelQuality,"9. Review next fixed model answer",#selector(runModelQuality))
     button(modelDiagnostic,"8. Run fixed CPU model diagnostic (no audio)",#selector(runModelDiagnostic))
     button(fileAsr,"7. Run six-file ASR diagnostic (no mic)",#selector(runFileAsr))
     button(quality,"6. Play next listening-survey phrase",#selector(playQuality))
-    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
+    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
     let scroll=UIScrollView();scroll.translatesAutoresizingMaskIntoConstraints=false;vc.view.addSubview(scroll);scroll.addSubview(stack)
     NSLayoutConstraint.activate([scroll.leadingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.leadingAnchor),scroll.trailingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.trailingAnchor),scroll.topAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.topAnchor),scroll.bottomAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.bottomAnchor),stack.leadingAnchor.constraint(equalTo:scroll.contentLayoutGuide.leadingAnchor,constant:20),stack.trailingAnchor.constraint(equalTo:scroll.contentLayoutGuide.trailingAnchor,constant:-20),stack.topAnchor.constraint(equalTo:scroll.contentLayoutGuide.topAnchor,constant:16),stack.bottomAnchor.constraint(equalTo:scroll.contentLayoutGuide.bottomAnchor,constant:-20),stack.widthAnchor.constraint(equalTo:scroll.frameLayoutGuide.widthAnchor,constant:-40)])
     button(permissionButton,"Grant microphone permission (no capture)",#selector(grantPermission));button(prepare,"1. Prepare models",#selector(prepareModels));button(probe,"2. Play offline voice probe",#selector(playProbe));button(heard,"3. I heard the complete probe",#selector(confirmHeard));button(microphone,"4. Check microphone → clarification",#selector(startMic));button(model,"5. Speak fixed synthetic model reply",#selector(startModel));button(stopButton,"Stop and clear",#selector(stop))
@@ -92,9 +102,11 @@ import CryptoKit
   }
   private func button(_ b:UIButton,_ title:String,_ action:Selector){b.setTitle(title,for:.normal);b.titleLabel?.font = .preferredFont(forTextStyle:.headline);b.addTarget(self,action:action,for:.touchUpInside)}
   private func updateButtons(){
-    let idle = !active && !survey.awaitingRating
+    let idle = !active && !survey.awaitingRating && !modelQualitySession.awaitingRating
     prepare.isEnabled = !ready && idle;probe.isEnabled=ready && operatorAttested && idle;heard.isEnabled=probeDone && !audible && idle
     microphone.isEnabled=ready && audible && idle;model.isEnabled=ready && audible && idle
+    modelQuality.isEnabled=ready && idle && modelQualitySession.canBegin
+    for b in modelQualityRatings{b.isEnabled=modelQualitySession.awaitingRating && eligibility.allowed && !active}
     modelDiagnostic.isEnabled=ready && idle && !modelDiagnosticUsed
     fileAsr.isEnabled=ready && idle
     quality.isEnabled=ready && audible && operatorAttested && idle && voiceFixtures.count==12 && survey.nextFixture != nil
@@ -105,6 +117,51 @@ import CryptoKit
     let r:[String:Any]=["schema_version":1,"scope":"INTERNAL_IOS_LISTENING_SURVEY","physical_gate_acceptance":"NOT_RUN","acoustic_timing":"NOT_RUN","network_observation":"NOT_RUN","radio_state":"OPERATOR_DECLARED_OFF_AT_BUILD","radio_attestation_recorded_utc":declared,"fixture_sha256":fixtureDigest,"voice_id":voice,"os_build":ProcessInfo.processInfo.operatingSystemVersionString,"updated_utc":ISO8601DateFormatter().string(from:Date()),"attempts":survey.aggregate]
     let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("voice-survey-results.json")
     if let data=try? JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]){try? data.write(to:url,options:.atomic)}
+  }
+  @discardableResult private func saveModelQuality()->Bool{
+    guard let llm,!modelQualitySession.attempts.isEmpty else{return false}
+    let r:[String:Any]=["schema_version":1,"scope":"IOS_MODEL_QUALITY_COLLECTION","fixture_manifest_sha256":TrialModelDiagnostic.fixtureDigest,
+      "runtime_revision":llm.runtimeRevision,"rating_source":"HUMAN_OPERATOR_UI","quality_scale":"FROZEN_RUBRIC_1_TO_5",
+      "raw_text_exported":false,"raw_audio_saved":false,"audio_devices":"NOT_OPENED","physical_gate_acceptance":"NOT_RUN","network_observation":"NOT_RUN",
+      "context_tokens":4096,"output_token_limit":256,"threads":2,"sampler":"greedy","enable_thinking":false,
+      "model_sha256":llm.model.sha256,"model_bytes":llm.model.bytes,"session_id":modelQualitySessionID,
+      "os_build":ProcessInfo.processInfo.operatingSystemVersionString,"updated_utc":ISO8601DateFormatter().string(from:Date()),"attempts":modelQualitySession.aggregate]
+    let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("model-quality-results.json")
+    do{try JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]).write(to:url,options:.atomic);return true}
+    catch{modelQualityNote.text="Quality scores remain in this app session, but saving failed. Keep the app open and report this status.";return false}
+  }
+  @objc private func runModelQuality(){
+    guard ready,!active,!survey.awaitingRating,!modelQualitySession.awaitingRating,eligibility.allowed,let store,let llm,let(ticket,fixture)=modelQualitySession.begin() else{return}
+    diagnosticIdleTimer=UIApplication.shared.isIdleTimerDisabled;UIApplication.shared.isIdleTimerDisabled=true
+    let cancellation=TrialModelCancellation();modelQualityCancellation=cancellation
+    let operation=audioEpoch.begin(),deadline=ProcessInfo.processInfo.systemUptime+120
+    active=true;modelQualityRunning=true;modelQualityAnswer.text=nil;modelQualityNote.text="Generating fixed answer \(fixture) of 6. No audio.";updateButtons();saveModelQuality()
+    let assets=Bundle.main.bundleURL.appendingPathComponent("TrialAssets")
+    installer.async{[weak self] in
+      guard let self else{return}
+      do{
+        let reply=try TrialModelQuality.run(assets:assets,store:store,selection:llm,fixture:fixture,cancellation:cancellation,allowed:{self.audioEpoch.current(operation) && ProcessInfo.processInfo.systemUptime<deadline})
+        DispatchQueue.main.async{
+          guard self.audioEpoch.current(operation),self.modelQualitySession.finish(ticket) else{return}
+          self.audioEpoch.cancel();self.restoreDiagnosticIdleTimer();self.active=false;self.modelQualityRunning=false;self.modelQualityCancellation=nil
+          self.modelQualityAnswer.text="Prompt: "+reply.prompt+"\n\nRubric: "+reply.rubric+"\n\nAnswer: "+reply.answer
+          self.modelQualityNote.text="Rate answer \(fixture) against its rubric: 1 incorrect/unusable, 5 correct/clear. Text clears after rating."
+          self.saveModelQuality();self.updateButtons()
+        }
+      }catch{DispatchQueue.main.async{
+        guard self.audioEpoch.current(operation) else{return}
+        self.audioEpoch.cancel();self.restoreDiagnosticIdleTimer();self.active=false;self.modelQualityRunning=false;self.modelQualityCancellation=nil
+        _ = self.modelQualitySession.fail(ticket);self.modelQualityAnswer.text=nil
+        self.modelQualityNote.text=self.modelQualitySession.canBegin ? "Fixed answer generation failed or its text guard rejected it. No score inferred. Retry, or report repeated failure." : "Three attempts exhausted for this answer. Keep the app open and report the failure; no quality score inferred."
+        self.saveModelQuality();self.updateButtons()
+      }}
+    }
+  }
+  @objc private func rateModelQuality(_ sender:UIButton){
+    guard eligibility.allowed,!active,modelQualitySession.rate(sender.tag) else{return}
+    modelQualityAnswer.text=nil
+    modelQualityNote.text=modelQualitySession.nextFixture==nil ? "All six model answers rated. Leave the app open for aggregate export." : "Rating recorded. Review the next fixed answer."
+    saveModelQuality();updateButtons()
   }
   private func saveModelDiagnostic(_ phase:String,_ rows:[[String:Any]]){
     guard let llm else{return}
@@ -124,7 +181,7 @@ import CryptoKit
     if let previous=diagnosticIdleTimer{UIApplication.shared.isIdleTimerDisabled=previous;diagnosticIdleTimer=nil}
   }
   @objc private func runModelDiagnostic(){
-    guard ready,!active,!survey.awaitingRating,!modelDiagnosticUsed,eligibility.allowed,let store,let llm else{return}
+    guard ready,!active,!survey.awaitingRating,!modelQualitySession.awaitingRating,!modelDiagnosticUsed,eligibility.allowed,let store,let llm else{return}
     diagnosticIdleTimer=UIApplication.shared.isIdleTimerDisabled;UIApplication.shared.isIdleTimerDisabled=true
     modelDiagnosticUsed=true;modelDiagnosticRunning=true;active=true
     let cancellation=TrialModelCancellation();diagnosticCancellation=cancellation
@@ -145,7 +202,7 @@ import CryptoKit
     if let data=try? JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]){try? data.write(to:url,options:.atomic)}
   }
   @objc private func runFileAsr(){
-    guard ready,!active,!survey.awaitingRating,eligibility.allowed,let store,let asr else{return}
+    guard ready,!active,!survey.awaitingRating,!modelQualitySession.awaitingRating,eligibility.allowed,let store,let asr else{return}
     let operation=audioEpoch.begin(),deadline=ProcessInfo.processInfo.systemUptime+180
     active=true;fileAsrRunning=true;updateButtons();status.text="Running six fixed ASR files. No microphone or speaker is active.";saveFileAsr("RUNNING",[])
     let assets=Bundle.main.bundleURL.appendingPathComponent("TrialAssets")
@@ -289,7 +346,7 @@ import CryptoKit
     report["input_kind"]=synthetic ? "FIXED_SYNTHETIC_PROMPT":"PHYSICAL_MICROPHONE_UNCALIBRATED"
     guard turn.submit(final,confidence:confidence) else{fail("REPLY_SUBMIT_FAILED");return};report["phase"]="REPLY_SUBMITTED";save()
   }
-  @objc private func stop(){restoreDiagnosticIdleTimer();modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
+  @objc private func stop(){let qualityPending=modelQualityRunning || modelQualitySession.awaitingRating;modelQualityCancellation?.cancel();modelQualityCancellation=nil;modelQualityRunning=false;modelQualitySession.cancel();modelQualityAnswer.text=nil;if qualityPending{modelQualityNote.text=modelQualitySession.canBegin ? "Review stopped. Pending answer/rating cleared; prior scores retained. Replay to rate." : "Review stopped or attempt limit reached. Prior scores retained; keep the app open for export."};saveModelQuality();restoreDiagnosticIdleTimer();modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
   private func invalidateAudio(){stop();audible=false;probeDone=false;updateButtons()}
   func applicationWillResignActive(_ application:UIApplication){eligibility.visible=false;report["foreground"]=false;invalidateAudio()}
   func applicationDidBecomeActive(_ application:UIApplication){eligibility.visible=true;eligibility.protectedData(application.isProtectedDataAvailable);controller.permissionChanged();report["foreground"]=true;save()}

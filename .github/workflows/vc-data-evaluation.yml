@@ -45,6 +45,10 @@ jobs:
           python3 ../conversation-integration/check_capture_evidence.py
           python3 -O ../conversation-integration/check_capture_evidence.py
           python3 -m unittest discover -s ../physical-ios-trial -p test_report.py -v
+          python3 -m unittest discover -s ../physical-ios-trial -p test_model_quality_report.py -v
+          python3 -O -m unittest discover -s ../physical-ios-trial -p test_model_quality_report.py -v
+          python3 ../physical-ios-trial/model_quality_report.py --pair ../physical-ios-trial/tests/model-quality-operator-results.json
+          python3 -O ../physical-ios-trial/model_quality_report.py --pair ../physical-ios-trial/tests/model-quality-operator-results.json
           python3 -m unittest discover -s ../physical-ios-trial -p test_model_wrapper.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_model_wrapper.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_model_diagnostic_report.py -v
