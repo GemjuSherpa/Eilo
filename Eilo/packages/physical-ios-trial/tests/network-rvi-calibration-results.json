@@ -1,0 +1,21 @@
+{
+  "scope": "EILO_LOOPBACK_ATTRIBUTION_CALIBRATION",
+  "status": "ATTRIBUTION_NOT_CALIBRATED",
+  "physical_gate_acceptance": "NOT_RUN",
+  "packet_lines_retained": false,
+  "packet_files_created": false,
+  "matching_marker_count": 0,
+  "metadata_marker_count": 0,
+  "observer_ready": true,
+  "interface_stopped": true,
+  "elapsed_seconds": 60.153,
+  "schema_version": 1,
+  "marker_send_result_bytes": 41,
+  "inference_started": false,
+  "target_attribution": "NOT_ESTABLISHED",
+  "packet_count": null,
+  "sent_bytes": null,
+  "received_bytes": null,
+  "network_observation": "NOT_RUN",
+  "limitation": "No recognized loopback marker; missing RVI visibility or unrecognized metadata cannot be distinguished from these aggregates."
+}
