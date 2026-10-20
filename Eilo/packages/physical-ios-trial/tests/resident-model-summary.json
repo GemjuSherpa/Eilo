@@ -1,0 +1,370 @@
+{
+  "cold_start_scope": "MODEL_UNLOADED_AT_GROUP_START_OS_CACHES_UNCONTROLLED_PROCESS_REUSED",
+  "fixture_conditions": [
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-01",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 16410.096,
+        "begin_to_first_token_ms": 16357.352417,
+        "context_setup_ms": 35.589166,
+        "first_sample_ms": 0.309,
+        "model_load_ms": 123.015208,
+        "prefill_ms": 16321.069834,
+        "tokenize_ms": 0.362208
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-01",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 18700.5513335,
+        "begin_to_first_token_ms": 18642.962417000002,
+        "context_setup_ms": 8.483042000000001,
+        "first_sample_ms": 0.298146,
+        "model_load_ms": 0.0,
+        "prefill_ms": 18633.780521,
+        "tokenize_ms": 0.3729375
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-01",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6324.676583,
+        "begin_to_first_token_ms": 6298.819042,
+        "context_setup_ms": 23.91425,
+        "first_sample_ms": 0.227125,
+        "model_load_ms": 118.397166,
+        "prefill_ms": 6274.226916,
+        "tokenize_ms": 0.436375
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-01",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6286.815125,
+        "begin_to_first_token_ms": 6261.417958,
+        "context_setup_ms": 8.6015625,
+        "first_sample_ms": 0.1212705,
+        "model_load_ms": 0.0,
+        "prefill_ms": 6252.317396,
+        "tokenize_ms": 0.36247949999999995
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-02",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 19628.299541,
+        "begin_to_first_token_ms": 19567.398291,
+        "context_setup_ms": 26.096833,
+        "first_sample_ms": 0.278208,
+        "model_load_ms": 137.47875,
+        "prefill_ms": 19540.568875,
+        "tokenize_ms": 0.437
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-02",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 19626.667104,
+        "begin_to_first_token_ms": 19564.991333,
+        "context_setup_ms": 9.066416499999999,
+        "first_sample_ms": 0.219771,
+        "model_load_ms": 0.0,
+        "prefill_ms": 19555.253042,
+        "tokenize_ms": 0.434104
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-02",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6273.276666,
+        "begin_to_first_token_ms": 6247.375333,
+        "context_setup_ms": 8.9435,
+        "first_sample_ms": 0.228167,
+        "model_load_ms": 128.878833,
+        "prefill_ms": 6237.721583,
+        "tokenize_ms": 0.464042
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-02",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6502.2634375,
+        "begin_to_first_token_ms": 6472.088958,
+        "context_setup_ms": 10.009021,
+        "first_sample_ms": 0.1917915,
+        "model_load_ms": 0.0,
+        "prefill_ms": 6461.440771,
+        "tokenize_ms": 0.42656249999999996
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-03",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 19274.644833,
+        "begin_to_first_token_ms": 19213.713208,
+        "context_setup_ms": 8.543666,
+        "first_sample_ms": 0.30125,
+        "model_load_ms": 135.44775,
+        "prefill_ms": 19204.4555,
+        "tokenize_ms": 0.395375
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-03",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 19541.760812499997,
+        "begin_to_first_token_ms": 19478.304187499998,
+        "context_setup_ms": 9.410896000000001,
+        "first_sample_ms": 0.16320849999999998,
+        "model_load_ms": 0.0,
+        "prefill_ms": 19468.260312500002,
+        "tokenize_ms": 0.45277049999999996
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-03",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6647.385625,
+        "begin_to_first_token_ms": 6617.227459,
+        "context_setup_ms": 8.592208,
+        "first_sample_ms": 0.264833,
+        "model_load_ms": 114.589042,
+        "prefill_ms": 6607.943834,
+        "tokenize_ms": 0.408083
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-03",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6804.669375,
+        "begin_to_first_token_ms": 6774.4002495,
+        "context_setup_ms": 11.813083500000001,
+        "first_sample_ms": 0.132938,
+        "model_load_ms": 0.0,
+        "prefill_ms": 6761.9086455,
+        "tokenize_ms": 0.5276045
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-04",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 18279.195666,
+        "begin_to_first_token_ms": 18223.649708,
+        "context_setup_ms": 24.41275,
+        "first_sample_ms": 0.270625,
+        "model_load_ms": 141.577625,
+        "prefill_ms": 18198.534,
+        "tokenize_ms": 0.409834
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-04",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 19046.778875,
+        "begin_to_first_token_ms": 18985.8065835,
+        "context_setup_ms": 9.184854,
+        "first_sample_ms": 0.2152505,
+        "model_load_ms": 0.0,
+        "prefill_ms": 18975.983500000002,
+        "tokenize_ms": 0.4066665
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-04",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 5062.305333,
+        "begin_to_first_token_ms": 5040.656958,
+        "context_setup_ms": 22.013666,
+        "first_sample_ms": 0.249375,
+        "model_load_ms": 99.906958,
+        "prefill_ms": 5018.019458,
+        "tokenize_ms": 0.358541
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-04",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 5668.669395499999,
+        "begin_to_first_token_ms": 5645.809146,
+        "context_setup_ms": 8.42675,
+        "first_sample_ms": 0.171271,
+        "model_load_ms": 0.0,
+        "prefill_ms": 5636.844583,
+        "tokenize_ms": 0.3531255
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-05",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 19790.76375,
+        "begin_to_first_token_ms": 19729.851583,
+        "context_setup_ms": 28.011709,
+        "first_sample_ms": 0.273375,
+        "model_load_ms": 140.870583,
+        "prefill_ms": 19701.138417,
+        "tokenize_ms": 0.411959
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-05",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 18133.934563,
+        "begin_to_first_token_ms": 18074.2436255,
+        "context_setup_ms": 16.1625835,
+        "first_sample_ms": 0.2144585,
+        "model_load_ms": 0.0,
+        "prefill_ms": 18057.431667,
+        "tokenize_ms": 0.41631300000000004
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-05",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 5813.891667,
+        "begin_to_first_token_ms": 5789.971167,
+        "context_setup_ms": 8.933833,
+        "first_sample_ms": 0.231875,
+        "model_load_ms": 112.366209,
+        "prefill_ms": 5780.352584,
+        "tokenize_ms": 0.438333
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-05",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6016.4923125000005,
+        "begin_to_first_token_ms": 5991.7862085,
+        "context_setup_ms": 8.378125,
+        "first_sample_ms": 0.124979,
+        "model_load_ms": 0.0,
+        "prefill_ms": 5982.919271,
+        "tokenize_ms": 0.348375
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-06",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 18522.426958,
+        "begin_to_first_token_ms": 18465.825708,
+        "context_setup_ms": 8.549625,
+        "first_sample_ms": 0.26525,
+        "model_load_ms": 145.127709,
+        "prefill_ms": 18456.58975,
+        "tokenize_ms": 0.406125
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-06",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 19931.602229,
+        "begin_to_first_token_ms": 19867.803104500003,
+        "context_setup_ms": 8.681521,
+        "first_sample_ms": 0.162833,
+        "model_load_ms": 0.0,
+        "prefill_ms": 19858.5559585,
+        "tokenize_ms": 0.385792
+      },
+      "sample_count": 2
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "fixture_id": "compare-06",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6048.070167,
+        "begin_to_first_token_ms": 6023.028,
+        "context_setup_ms": 8.696166,
+        "first_sample_ms": 0.230209,
+        "model_load_ms": 116.699625,
+        "prefill_ms": 6013.649958,
+        "tokenize_ms": 0.436833
+      },
+      "sample_count": 1
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "fixture_id": "compare-06",
+      "native_phases_ms": {
+        "begin_to_first_piece_ms": 6147.4649165,
+        "begin_to_first_token_ms": 6122.362729,
+        "context_setup_ms": 8.374479000000001,
+        "first_sample_ms": 0.125854,
+        "model_load_ms": 0.0,
+        "prefill_ms": 6113.481167,
+        "tokenize_ms": 0.36635399999999996
+      },
+      "sample_count": 2
+    }
+  ],
+  "phase": "COMPLETED",
+  "physical_gate_acceptance": "NOT_RUN",
+  "sample_count": 36,
+  "scope": "IOS_RESIDENT_MODEL_COMPARISON",
+  "warm_scope": "GENERIC_MODEL_WEIGHTS_ONLY_FRESH_CONTEXT_KV_SAMPLER_EACH_GENERATION"
+}
