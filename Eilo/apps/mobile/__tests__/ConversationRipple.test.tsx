@@ -26,7 +26,8 @@ const snapshot = (
     privacyEpoch: 0,
   },
   preferences: {
-    version: 1,
+    version: 2,
+    display: { text: true, images: false, video: false, voiceOnly: false },
     historyChoice: 'private',
     onboardingComplete: true,
     historyAvailable: false,

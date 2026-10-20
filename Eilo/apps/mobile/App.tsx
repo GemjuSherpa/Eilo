@@ -24,6 +24,7 @@ import {
   styles as textStyles,
 } from './src/Onboarding';
 import { Home } from './src/Home';
+import { DisplaySettings } from './src/DisplaySettings';
 import {
   nativeControl,
   type ControlClient,
@@ -199,6 +200,12 @@ export default function App({
                               ? 'on'
                               : 'off'}
                           </Text>
+                          <DisplaySettings
+                            colors={colors}
+                            preferences={snapshot?.preferences.display}
+                            disabled={busy || !snapshot || error}
+                            run={run}
+                          />
                           <HistoryChoices
                             colors={colors}
                             preferences={snapshot?.preferences}

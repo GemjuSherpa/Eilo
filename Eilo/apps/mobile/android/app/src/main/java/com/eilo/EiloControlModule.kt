@@ -39,8 +39,11 @@ class EiloControlModule(context: ReactApplicationContext): NativeEiloControlSpec
       try {
         val c=app.conversationController
         val unlocked=!app.getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked
-        if(name.length>32 || value.length>8 || name !in setOf("start","stop","confirmSpeaker","history","completeOnboarding","background","volume","privateSession") || (name !in setOf("history","background","volume","privateSession") && value!="") || (name=="history" && value !in setOf("private","history")) || (name=="background" && value !in setOf("true","false"))) { promise.reject("invalid_command","Unsupported control");return@post }
+        if(name.length>32 || value.length>8 || name !in setOf("start","stop","confirmSpeaker","history","completeOnboarding","background","volume","privateSession","displayText","displayImages","displayVideo","voiceOnly") || (name !in setOf("history","background","volume","privateSession","displayText","displayImages","displayVideo","voiceOnly") && value!="") || (name=="history" && value !in setOf("private","history")) || (name=="background" && value !in setOf("true","false"))) { promise.reject("invalid_command","Unsupported control");return@post }
         when(name) {
+          "displayText","displayImages","displayVideo","voiceOnly" -> {
+            if(value !in setOf("true","false") || !app.consent.chooseDisplay(name,value=="true",app.foregroundCaptureVisible && unlocked)) throw IllegalStateException()
+          }
           "privateSession" -> {
             if(value!="true" || !app.foregroundCaptureVisible || !unlocked) { promise.resolve(snapshot());return@post }
             c.privacyTransition(com.eilo.foundation.PrivacyChange.PRIVATE_SESSION)

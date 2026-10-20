@@ -29,7 +29,9 @@ export function Home({
         Eilo
       </Text>
       <Text style={[styles.body, { color: colors.secondary_text }]}>Guest</Text>
-      <ConversationRipple snapshot={snapshot} error={error} colors={colors} />
+      {!snapshot?.preferences.display.voiceOnly && (
+        <ConversationRipple snapshot={snapshot} error={error} colors={colors} />
+      )}
       <Text
         accessibilityLiveRegion="polite"
         style={[styles.body, { color: colors.text }]}
