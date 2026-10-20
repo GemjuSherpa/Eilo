@@ -18,8 +18,8 @@
       "candidate": "06b",
       "source_commit": "3f89ca8",
       "signing": "CODESIGN_DEEP_STRICT_PASS",
-      "installation": "TIMED_OUT_180_SECONDS",
-      "operator_ratings": "NOT_RUN",
+      "installation": "PASS_BOUNDED_RETRY",
+      "operator_ratings": "AWAITING_OPERATOR_UI",
       "app_binary_sha256": "414dd0049f8c59647e0c8633f0e3de4d9e500773f230708efea285e00522acb7",
       "asr_dynamic_sha256": "8d30da03a286d5b9b50e0d07f893310731462ae89a5eb6faa039c85388d7d8bd",
       "model_files": [
@@ -330,7 +330,8 @@
       ],
       "operator_configuration_sha256": "0e7157d02268faf692451cb85f0ef83ff48e60b6fc593e22b9ee1c18e40ddc97",
       "device_lock_after_timeout": "LOCKED",
-      "retry": "NOT_RUN_AWAITING_OPERATOR_UNLOCK"
+      "retry": "PASS_AFTER_OPERATOR_UNLOCK",
+      "launch": "PASS_NO_AUTOMATIC_INFERENCE_OR_AUDIO"
     },
     {
       "candidate": "17b",
