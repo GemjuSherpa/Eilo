@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "scope": "LOCAL_NATIVE_PHASE_LAB_VALIDATION",
+  "physical_acceptance": "NOT_RUN",
+  "original_adapter_source_sha256": "caca29fa8706736a0af5e25a3b36b0343093cc2857bcd66ff135e8571f039eb9",
+  "scripted_native_lifecycle_scenarios": 31,
+  "adapter_sanitizers": "ASAN_UBSAN_PASS",
+  "phase_contracts": "COMPLETION_CLEANUP_REVOCATION_CAPACITY_CLOCK_ORDER_THREAD_ISOLATION_PASS",
+  "real_cached_model_probe": "PINNED_06B_EIGHT_PIECES_NUMERIC_TIMING_PASS_NETWORK_AND_FORK_DENIED",
+  "python_tests_normal": 28,
+  "python_tests_optimized": 28,
+  "strict_sdk_types": "DEVICE_SIMULATOR_ORDINARY_AND_OPT_IN_PASS",
+  "task_checks": [
+    {
+      "label": "cpu-phase-adapter",
+      "swift_tests": 309,
+      "normal_app_build_install": "PASS",
+      "fresh_simulator_launches": 3,
+      "dwell_seconds": 10,
+      "log_sha256": {
+        "swift": "4b27fb777e1412b401154918fa5c79d23d742036e51deeb4ef2a1cd8be9959e5",
+        "build": "c4d95391f4c5f1d8acb16f82a9e7c069b7dae234f3c1ee8cf63b35e3470244fc",
+        "install": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "launch": "20d1a79dfc52b09e23963b089e3fdd2a1f647eb61078f4ef592602eb63a2e90d"
+      }
+    },
+    {
+      "label": "cpu-phase-runner",
+      "swift_tests": 309,
+      "normal_app_build_install": "PASS",
+      "fresh_simulator_launches": 3,
+      "dwell_seconds": 10,
+      "log_sha256": {
+        "swift": "94dcbd3f1d1684c91f1bd9feeb14db53ae551fdbb429aa4ec23b8537b6dcc7a3",
+        "build": "b096f604a78f924af75d641497666efea0595a86473f679a183265b28e3dbf0e",
+        "install": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "launch": "20d1a79dfc52b09e23963b089e3fdd2a1f647eb61078f4ef592602eb63a2e90d"
+      }
+    },
+    {
+      "label": "cpu-phase-evidence-ci",
+      "swift_tests": 309,
+      "normal_app_build_install": "PASS",
+      "fresh_simulator_launches": 3,
+      "dwell_seconds": 10,
+      "log_sha256": {
+        "swift": "8dde413c33176b48bdf34601ba56899edb13c17d227a9a2cf70a1413fc229fa8",
+        "build": "27efa4b7c9f4de7c74d43e67d1b85d5cb102470b661382e74937b4179d74b441",
+        "install": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "launch": "20d1a79dfc52b09e23963b089e3fdd2a1f647eb61078f4ef592602eb63a2e90d"
+      }
+    }
+  ]
+}
