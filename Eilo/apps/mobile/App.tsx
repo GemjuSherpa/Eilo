@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   AppState,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   Switch,
@@ -111,7 +110,6 @@ export default function App({
   }, [snapshot]);
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={dark ? 'light-content' : 'dark-content'} />
       <NavigationContainer
         theme={{
           ...(dark ? DarkTheme : DefaultTheme),
@@ -126,7 +124,11 @@ export default function App({
         }}
       >
         <Stack.Navigator
-          screenOptions={{ headerShown: false, animation: 'none' }}
+          screenOptions={{
+            headerShown: false,
+            animation: 'none',
+            statusBarStyle: dark ? 'light' : 'dark',
+          }}
         >
           {!continued ? (
             <Stack.Screen name="Welcome">
@@ -151,6 +153,9 @@ export default function App({
               {() => (
                 <Tabs.Navigator
                   screenOptions={{
+                    // Screen headings live in the scrollable content so large
+                    // accessibility text is not clipped by a fixed nav bar.
+                    headerShown: false,
                     tabBarStyle: { minHeight: 64 },
                     headerTitleStyle: { color: colors.text },
                   }}
@@ -159,7 +164,7 @@ export default function App({
                     {() => (
                       <SafeAreaView
                         style={styles.screen}
-                        edges={['left', 'right']}
+                        edges={['top', 'left', 'right']}
                       >
                         <ScrollView>
                           <Home
@@ -177,9 +182,15 @@ export default function App({
                     {() => (
                       <SafeAreaView
                         style={styles.screen}
-                        edges={['left', 'right']}
+                        edges={['top', 'left', 'right']}
                       >
                         <ScrollView>
+                          <Text
+                            accessibilityRole="header"
+                            style={[textStyles.title, { color: colors.text }]}
+                          >
+                            Settings
+                          </Text>
                           <Text
                             style={[textStyles.body, { color: colors.text }]}
                           >
