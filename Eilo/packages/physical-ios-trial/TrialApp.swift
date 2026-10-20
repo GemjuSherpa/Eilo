@@ -15,6 +15,10 @@ import CryptoKit
   private let modelQualitySession=TrialModelQualitySession(),modelQualitySessionID=UUID().uuidString
   private var modelQualityCancellation:TrialModelCancellation?
   private var modelQualityRunning=false
+  private let residentDiagnostic=UIButton(type:.system)
+  private var residentAutoRun=false,residentRunning=false,residentUsed=false
+  private var residentRows=[[String:Any]](),comparisonLlm:LlmPackSelection?
+  private let residentProcess=UUID().uuidString
   private let phaseDiagnostic=UIButton(type:.system)
   private var phaseAutoRun=false,phaseRunning=false,phaseUsed=false
   private var phaseRows=[[String:Any]](),batteryMonitoring:Bool?
@@ -86,7 +90,13 @@ import CryptoKit
     button(quality,"6. Play next listening-survey phrase",#selector(playQuality))
     button(phaseDiagnostic,"10. Run 18 native-phase samples (no audio)",#selector(runPhaseDiagnostic))
     phaseDiagnostic.isHidden = !TrialPhaseDiagnostic.available
-    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
+    button(residentDiagnostic,"11. Run alternating resident-model comparison (no audio)",#selector(runResidentDiagnostic))
+    residentDiagnostic.isHidden = !TrialResidentDiagnostic.available
+    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic,residentDiagnostic,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
+    if TrialResidentDiagnostic.available{
+      let otherControls:[UIView]=[transcript,permissionButton,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic]
+      for view in otherControls{view.isHidden=true}
+    }
     let scroll=UIScrollView();scroll.translatesAutoresizingMaskIntoConstraints=false;vc.view.addSubview(scroll);scroll.addSubview(stack)
     NSLayoutConstraint.activate([scroll.leadingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.leadingAnchor),scroll.trailingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.trailingAnchor),scroll.topAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.topAnchor),scroll.bottomAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.bottomAnchor),stack.leadingAnchor.constraint(equalTo:scroll.contentLayoutGuide.leadingAnchor,constant:20),stack.trailingAnchor.constraint(equalTo:scroll.contentLayoutGuide.trailingAnchor,constant:-20),stack.topAnchor.constraint(equalTo:scroll.contentLayoutGuide.topAnchor,constant:16),stack.bottomAnchor.constraint(equalTo:scroll.contentLayoutGuide.bottomAnchor,constant:-20),stack.widthAnchor.constraint(equalTo:scroll.frameLayoutGuide.widthAnchor,constant:-40)])
     button(permissionButton,"Grant microphone permission (no capture)",#selector(grantPermission));button(prepare,"1. Prepare models",#selector(prepareModels));button(probe,"2. Play offline voice probe",#selector(playProbe));button(heard,"3. I heard the complete probe",#selector(confirmHeard));button(microphone,"4. Check microphone → clarification",#selector(startMic));button(model,"5. Speak fixed synthetic model reply",#selector(startModel));button(stopButton,"Stop and clear",#selector(stop))
@@ -99,7 +109,8 @@ import CryptoKit
     eligibility.visible=true;eligibility.protectedData(app.isProtectedDataAvailable)
     report["os_build"]=ProcessInfo.processInfo.operatingSystemVersionString;report["physical_memory_bytes"]=ProcessInfo.processInfo.physicalMemory
     report["phase"]="LAUNCHED_NO_CAPTURE";save();updateButtons()
-    if CommandLine.arguments.contains("--run-native-phase-diagnostic"),TrialPhaseDiagnostic.available{phaseAutoRun=true;prepareModels()}
+    if CommandLine.arguments.contains("--run-resident-model-comparison"),TrialResidentDiagnostic.available{residentAutoRun=true;prepareModels()}
+    else if CommandLine.arguments.contains("--run-native-phase-diagnostic"),TrialPhaseDiagnostic.available{phaseAutoRun=true;prepareModels()}
     else if CommandLine.arguments.contains("--run-cpu-model-diagnostic"){modelDiagnosticAutoRun=true;prepareModels()}
     else if CommandLine.arguments.contains("--run-file-asr-diagnostic"){fileAsrAutoRun=true;prepareModels()}
     NotificationCenter.default.addObserver(forName:AVAudioSession.interruptionNotification,object:nil,queue:.main){[weak self]_ in self?.invalidateAudio()}
@@ -114,6 +125,7 @@ import CryptoKit
     microphone.isEnabled=ready && audible && idle;model.isEnabled=ready && audible && idle
     modelQuality.isEnabled=ready && idle && modelQualitySession.canBegin
     for b in modelQualityRatings{b.isEnabled=modelQualitySession.awaitingRating && eligibility.allowed && !active}
+    residentDiagnostic.isEnabled=TrialResidentDiagnostic.available && ready && idle && !residentUsed && comparisonLlm != nil
     phaseDiagnostic.isEnabled=TrialPhaseDiagnostic.available && ready && idle && !phaseUsed
     modelDiagnostic.isEnabled=ready && idle && !modelDiagnosticUsed
     fileAsr.isEnabled=ready && idle
@@ -184,6 +196,47 @@ import CryptoKit
       "network_observation":"NOT_RUN","quality":"NOT_RUN","physical_gate_acceptance":"NOT_RUN","cases":rows]
     let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("cpu-model-results.json")
     if let data=try? JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]){try? data.write(to:url,options:.atomic)}
+  }
+  private func saveResidentDiagnostic(_ phase:String){
+    guard let llm,let comparisonLlm else{return}
+    let pins=[llm,comparisonLlm].enumerated().map{index,s in ["candidate_index":index,"model_sha256":s.model.sha256,"model_bytes":s.model.bytes] as [String:Any]}
+    let r:[String:Any]=["schema_version":2,"scope":"IOS_RESIDENT_MODEL_COMPARISON","phase":phase,"process_id":residentProcess,"model_pins":pins,
+      "runtime_revision":llm.runtimeRevision,"fixture_manifest_sha256":TrialModelDiagnostic.fixtureDigest,
+      "os_build":ProcessInfo.processInfo.operatingSystemVersionString,"physical_memory_bytes":ProcessInfo.processInfo.physicalMemory,
+      "updated_utc":ISO8601DateFormatter().string(from:Date()),"context_tokens":4096,"output_token_limit":256,"threads":2,"sampler":"greedy","enable_thinking":false,"backend":"CPU",
+      "model_open":"EXPLICIT_SCOPED_MODEL_WEIGHTS_RESIDENCY_THREE_FRESH_GENERATIONS","memory_scope":"PROCESS_LIFETIME_INCLUDING_PREPARATION",
+      "cold_start_scope":"MODEL_UNLOADED_AT_GROUP_START_OS_CACHES_UNCONTROLLED_PROCESS_REUSED",
+      "warm_scope":"GENERIC_MODEL_WEIGHTS_ONLY_FRESH_CONTEXT_KV_SAMPLER_EACH_GENERATION",
+      "candidate_order":"1P7_THEN_0P6_ODD_FIXTURES_REVERSED_EVEN_FIXTURES",
+      "thermal_policy":"WAIT_BELOW_SERIOUS_BEFORE_EACH_SAMPLE_MAX_300S",
+      "timing_clock":"std::chrono::steady_clock","battery_scope":"OS_LEVEL_BEFORE_AFTER_USB_CONNECTED_NOT_ENERGY_MEASUREMENT",
+      "microphone":"NOT_OPENED","speaker":"NOT_OPENED","raw_text_exported":false,"network_observation":"NOT_RUN","quality":"NOT_RUN","physical_gate_acceptance":"NOT_RUN","cases":residentRows]
+    let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("resident-model-results.json")
+    do{let data=try JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]);try data.write(to:url,options:.atomic)}
+    catch{status.text="Resident report could not be saved. Keep the app open and report the failure."}
+  }
+  @objc private func runResidentDiagnostic(){
+    guard TrialResidentDiagnostic.available,ready,!active,!survey.awaitingRating,!modelQualitySession.awaitingRating,!residentUsed,eligibility.allowed,let store,let llm,let comparisonLlm else{return}
+    residentUsed=true;residentRunning=true;active=true;residentRows=[]
+    diagnosticIdleTimer=UIApplication.shared.isIdleTimerDisabled;UIApplication.shared.isIdleTimerDisabled=true
+    batteryMonitoring=UIDevice.current.isBatteryMonitoringEnabled;UIDevice.current.isBatteryMonitoringEnabled=true
+    let cancellation=TrialModelCancellation();diagnosticCancellation=cancellation
+    let operation=audioEpoch.begin(),deadline=ProcessInfo.processInfo.systemUptime+3600
+    status.text="Running 36 alternating model samples, with recorded nominal/fair sample starts. No audio.";saveResidentDiagnostic("RUNNING");updateButtons()
+    let assets=Bundle.main.bundleURL.appendingPathComponent("TrialAssets")
+    installer.async{[weak self] in
+      guard let self else{return}
+      do{
+        let rows=try TrialResidentDiagnostic.run(assets:assets,store:store,selections:[llm,comparisonLlm],cancellation:cancellation,
+          allowed:{self.audioEpoch.current(operation) && ProcessInfo.processInfo.systemUptime<deadline},progress:{rows,note in
+            DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.residentRows=rows;self.status.text=note;self.saveResidentDiagnostic("RUNNING")}
+          })
+        DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.residentRows=rows;self.audioEpoch.cancel();self.active=false;self.residentRunning=false;self.diagnosticCancellation=nil;self.restoreDiagnosticIdleTimer();self.status.text="All 36 resident comparison samples completed. Leave the app open for export.";self.saveResidentDiagnostic("COMPLETED");self.updateButtons()}
+      }catch{
+        let phase=(error as? TrialResidentFailure) == .thermalLimit ? "THERMAL_LIMIT":"INFERENCE_FAILED"
+        DispatchQueue.main.async{guard self.audioEpoch.current(operation) else{return};self.audioEpoch.cancel();self.active=false;self.residentRunning=false;self.diagnosticCancellation=nil;self.restoreDiagnosticIdleTimer();self.status.text=phase=="THERMAL_LIMIT" ? "Thermal limit reached. Completed samples retained; allow the phone to cool before another run.":"Resident comparison failed. Completed samples retained; no acceptance inferred.";self.saveResidentDiagnostic(phase);self.updateButtons()}
+      }
+    }
   }
   private func savePhaseDiagnostic(_ phase:String){
     guard let llm else{return}
@@ -299,8 +352,8 @@ import CryptoKit
         try? FileManager.default.removeItem(at:root)
         let store=PackStore(root:root,trust:["lab-key":key.publicKey.derRepresentation],runtime:runtime,licenseEvidence:[evidence])
         let artifacts=rows.map{r->[String:Any] in let id=r["id"] as! String,name=r["filename"] as! String
-          return ["id":id,"filename":name,"role":id=="llm" ? "llm":id=="vad" ? "vad":name=="tokenizer.bin" ? "tokenizer":"asr",
-            "url":"https://models.example.test/"+name,"sha256":r["sha256"]!,"bytes":r["bytes"]!,"license":id=="llm" ? "Apache-2.0":"MIT","licenseEvidence":evidence]}
+          return ["id":id,"filename":name,"role":id.hasPrefix("llm") ? "llm":id=="vad" ? "vad":name=="tokenizer.bin" ? "tokenizer":"asr",
+            "url":"https://models.example.test/"+name,"sha256":r["sha256"]!,"bytes":r["bytes"]!,"license":id.hasPrefix("llm") ? "Apache-2.0":"MIT","licenseEvidence":evidence]}
         let data=try JSONSerialization.data(withJSONObject:["schema":1,"packId":"physical-lab","revision":1,"runtimeRevision":runtime,"minAndroid":35,"minIos":18,"artifacts":artifacts],options:[.sortedKeys,.withoutEscapingSlashes])
         preparationStage="VERIFY_LAB_MANIFEST"
         let pack=try VerifiedPack.verify(payload:data,signature:key.signature(for:data).derRepresentation,keyID:"lab-key",algorithm:"ES256",trust:["lab-key":key.publicKey.derRepresentation],runtime:runtime)
@@ -312,11 +365,15 @@ import CryptoKit
         var protected=root;var values=URLResourceValues();values.isExcludedFromBackup=true;try protected.setResourceValues(values)
         try FileManager.default.setAttributes([.protectionKey:FileProtectionType.completeUntilFirstUserAuthentication],ofItemAtPath:root.path)
         preparationStage="SELECT_RUNTIME_PINS"
-        let pins=try rows.filter{$0["id"] as? String != "llm"}.map{try SpeechArtifactPin(id:$0["id"] as! String,filename:$0["filename"] as! String,sha256:$0["sha256"] as! String,bytes:($0["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence)}
+        let pins=try rows.filter{!(($0["id"] as? String ?? "").hasPrefix("llm"))}.map{try SpeechArtifactPin(id:$0["id"] as! String,filename:$0["filename"] as! String,sha256:$0["sha256"] as! String,bytes:($0["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence)}
         let v=try SpeechPackSelection(packID:"physical-lab",runtimeRevision:runtime,kind:.vad,pins:pins.filter{$0.id=="vad"})
         let a=try SpeechPackSelection(packID:"physical-lab",runtimeRevision:runtime,kind:.asr,pins:pins.filter{$0.id != "vad"})
-        let last=rows.last!;let l=try LlmPackSelection(packID:"physical-lab",runtimeRevision:runtime,model:LlmArtifactPin(id:"llm",sha256:last["sha256"] as! String,bytes:(last["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence))
-        DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.store=store;self.vad=v;self.asr=a;self.llm=l;self.ready=true;self.status.text="Models verified. Play the voice probe next.";self.report["phase"]="MODELS_READY";self.save();self.updateButtons();if self.phaseAutoRun{self.phaseAutoRun=false;self.runPhaseDiagnostic()}else if self.modelDiagnosticAutoRun{self.modelDiagnosticAutoRun=false;self.runModelDiagnostic()}else if self.fileAsrAutoRun{self.fileAsrAutoRun=false;self.runFileAsr()}}
+        let last=rows.first{$0["id"] as? String == "llm"}!;let l=try LlmPackSelection(packID:"physical-lab",runtimeRevision:runtime,model:LlmArtifactPin(id:"llm",sha256:last["sha256"] as! String,bytes:(last["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence))
+        let comparison:LlmPackSelection?
+        if let secondary=rows.first(where:{$0["id"] as? String == "llm-06b"}){
+          comparison=try LlmPackSelection(packID:"physical-lab",runtimeRevision:runtime,model:LlmArtifactPin(id:"llm-06b",sha256:secondary["sha256"] as! String,bytes:(secondary["bytes"] as! NSNumber).int64Value,licenseEvidence:evidence))
+        }else{comparison=nil}
+        DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.store=store;self.vad=v;self.asr=a;self.llm=l;self.comparisonLlm=comparison;self.ready=true;self.status.text="Models verified. Play the voice probe next.";self.report["phase"]="MODELS_READY";self.save();self.updateButtons();if self.residentAutoRun{self.residentAutoRun=false;self.runResidentDiagnostic()}else if self.phaseAutoRun{self.phaseAutoRun=false;self.runPhaseDiagnostic()}else if self.modelDiagnosticAutoRun{self.modelDiagnosticAutoRun=false;self.runModelDiagnostic()}else if self.fileAsrAutoRun{self.fileAsrAutoRun=false;self.runFileAsr()}}
       }catch{let failedStage=preparationStage;DispatchQueue.main.async{guard self.modelEpoch.current(preparation) else{return};self.modelCancel=nil;self.report["preparation_stage"]=failedStage;self.fail("MODEL_PREPARATION_FAILED");self.status.text="Trial stopped: MODEL_PREPARATION_FAILED / "+failedStage}}
     }
   }
@@ -391,7 +448,7 @@ import CryptoKit
     report["input_kind"]=synthetic ? "FIXED_SYNTHETIC_PROMPT":"PHYSICAL_MICROPHONE_UNCALIBRATED"
     guard turn.submit(final,confidence:confidence) else{fail("REPLY_SUBMIT_FAILED");return};report["phase"]="REPLY_SUBMITTED";save()
   }
-  @objc private func stop(){let qualityPending=modelQualityRunning || modelQualitySession.awaitingRating;modelQualityCancellation?.cancel();modelQualityCancellation=nil;modelQualityRunning=false;modelQualitySession.cancel();modelQualityAnswer.text=nil;if qualityPending{modelQualityNote.text=modelQualitySession.canBegin ? "Review stopped. Pending answer/rating cleared; prior scores retained. Replay to rate." : "Review stopped or attempt limit reached. Prior scores retained; keep the app open for export."};saveModelQuality();restoreDiagnosticIdleTimer();phaseAutoRun=false;if phaseRunning{savePhaseDiagnostic("CANCELLED");phaseRunning=false};modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
+  @objc private func stop(){let qualityPending=modelQualityRunning || modelQualitySession.awaitingRating;modelQualityCancellation?.cancel();modelQualityCancellation=nil;modelQualityRunning=false;modelQualitySession.cancel();modelQualityAnswer.text=nil;if qualityPending{modelQualityNote.text=modelQualitySession.canBegin ? "Review stopped. Pending answer/rating cleared; prior scores retained. Replay to rate." : "Review stopped or attempt limit reached. Prior scores retained; keep the app open for export."};saveModelQuality();restoreDiagnosticIdleTimer();residentAutoRun=false;if residentRunning{saveResidentDiagnostic("CANCELLED");residentRunning=false};phaseAutoRun=false;if phaseRunning{savePhaseDiagnostic("CANCELLED");phaseRunning=false};modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
   private func invalidateAudio(){stop();audible=false;probeDone=false;updateButtons()}
   func applicationWillResignActive(_ application:UIApplication){eligibility.visible=false;report["foreground"]=false;invalidateAudio()}
   func applicationDidBecomeActive(_ application:UIApplication){eligibility.visible=true;eligibility.protectedData(application.isProtectedDataAvailable);controller.permissionChanged();report["foreground"]=true;save()}

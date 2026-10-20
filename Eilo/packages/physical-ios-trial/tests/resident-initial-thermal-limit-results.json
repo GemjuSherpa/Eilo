@@ -1,0 +1,333 @@
+{
+  "backend": "CPU",
+  "battery_scope": "OS_LEVEL_BEFORE_AFTER_USB_CONNECTED_NOT_ENERGY_MEASUREMENT",
+  "candidate_order": "1P7_THEN_0P6_ODD_FIXTURES_REVERSED_EVEN_FIXTURES",
+  "cases": [
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_group_ms": 0.2854582853615284,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444568.07689612504,
+        "thermal_state": 0
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444549.44165083335,
+        "thermal_state": 0
+      },
+      "fixture_id": "compare-01",
+      "group_index": 1,
+      "memory": {
+        "current_phys_footprint_bytes": 542116056,
+        "process_lifetime_peak_bytes": 553453784
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 16230.715208,
+        "begin_to_first_token_ms": 16179.125625,
+        "context_setup_ms": 44.841709,
+        "first_sample_ms": 0.339583,
+        "model_load_ms": 121.066958,
+        "prefill_ms": 16133.527,
+        "tokenize_ms": 0.399208
+      },
+      "native_piece_count": 21,
+      "output_bytes": 91,
+      "prompt_tokens": 519,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 1,
+      "sample_wall_ms": 17904.14724999573,
+      "verified_open_and_load_ms": 589.8505833465606
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_group_ms": 0,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444587.44123000005,
+        "thermal_state": 0
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444568.0846351667,
+        "thermal_state": 0
+      },
+      "fixture_id": "compare-01",
+      "group_index": 1,
+      "memory": {
+        "current_phys_footprint_bytes": 542066904,
+        "process_lifetime_peak_bytes": 553453784
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 17765.001209,
+        "begin_to_first_token_ms": 17710.130459,
+        "context_setup_ms": 8.458875,
+        "first_sample_ms": 0.240583,
+        "model_load_ms": 0,
+        "prefill_ms": 17701.021875,
+        "tokenize_ms": 0.386458
+      },
+      "native_piece_count": 21,
+      "output_bytes": 91,
+      "prompt_tokens": 519,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 2,
+      "sample_wall_ms": 19356.551083386876,
+      "verified_open_and_load_ms": 467.24450000328943
+    },
+    {
+      "candidate_index": 0,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_group_ms": 0,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444607.07979441667,
+        "thermal_state": 0
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444587.4494381667,
+        "thermal_state": 0
+      },
+      "fixture_id": "compare-01",
+      "group_index": 1,
+      "memory": {
+        "current_phys_footprint_bytes": 542148824,
+        "process_lifetime_peak_bytes": 553453784
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 17977.967583,
+        "begin_to_first_token_ms": 17921.057875,
+        "context_setup_ms": 8.4095,
+        "first_sample_ms": 0.164542,
+        "model_load_ms": 0,
+        "prefill_ms": 17912.090667,
+        "tokenize_ms": 0.376
+      },
+      "native_piece_count": 21,
+      "output_bytes": 91,
+      "prompt_tokens": 519,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 0,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 3,
+      "sample_wall_ms": 19630.31574996421,
+      "verified_open_and_load_ms": 467.831791669596
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_UNLOADED",
+      "cooldown_before_group_ms": 0.028791662771254778,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444614.87331325,
+        "thermal_state": 0
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444607.10672200006,
+        "thermal_state": 0
+      },
+      "fixture_id": "compare-01",
+      "group_index": 2,
+      "memory": {
+        "current_phys_footprint_bytes": 509494960,
+        "process_lifetime_peak_bytes": 553453784
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6024.527791,
+        "begin_to_first_token_ms": 5999.223791,
+        "context_setup_ms": 24.844416,
+        "first_sample_ms": 0.241042,
+        "model_load_ms": 115.503541,
+        "prefill_ms": 5973.707125,
+        "tokenize_ms": 0.404125
+      },
+      "native_piece_count": 16,
+      "output_bytes": 74,
+      "prompt_tokens": 519,
+      "repetition": 0,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 1,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 4,
+      "sample_wall_ms": 6713.999833329581,
+      "verified_open_and_load_ms": 304.4858333305456
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_group_ms": 0,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444621.5709102917,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444614.8825155417,
+        "thermal_state": 0
+      },
+      "fixture_id": "compare-01",
+      "group_index": 2,
+      "memory": {
+        "current_phys_footprint_bytes": 509429424,
+        "process_lifetime_peak_bytes": 553453784
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6098.556125,
+        "begin_to_first_token_ms": 6072.267542,
+        "context_setup_ms": 8.389833,
+        "first_sample_ms": 0.12525,
+        "model_load_ms": 0,
+        "prefill_ms": 6063.378834,
+        "tokenize_ms": 0.356125
+      },
+      "native_piece_count": 16,
+      "output_bytes": 74,
+      "prompt_tokens": 519,
+      "repetition": 1,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 2,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 5,
+      "sample_wall_ms": 6688.356958329678,
+      "verified_open_and_load_ms": 179.0202499832958
+    },
+    {
+      "candidate_index": 1,
+      "condition": "MODEL_WEIGHTS_RESIDENT",
+      "cooldown_before_group_ms": 0,
+      "environment_after": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444628.5155872917,
+        "thermal_state": 1
+      },
+      "environment_before": {
+        "battery_level": 1,
+        "battery_state": 2,
+        "low_power_mode": false,
+        "system_uptime_s": 444621.579751625,
+        "thermal_state": 1
+      },
+      "fixture_id": "compare-01",
+      "group_index": 2,
+      "memory": {
+        "current_phys_footprint_bytes": 509380272,
+        "process_lifetime_peak_bytes": 553453784
+      },
+      "native_phases": {
+        "begin_to_first_piece_ms": 6208.465458,
+        "begin_to_first_token_ms": 6180.729917,
+        "context_setup_ms": 11.438709,
+        "first_sample_ms": 0.135042,
+        "model_load_ms": 0,
+        "prefill_ms": 6168.667541,
+        "tokenize_ms": 0.472
+      },
+      "native_piece_count": 16,
+      "output_bytes": 74,
+      "prompt_tokens": 519,
+      "repetition": 2,
+      "residency": {
+        "candidate_index": 1,
+        "generation_loads": 3,
+        "live_handles": 0,
+        "resident_models": 1,
+        "vendor_model_loads": 1
+      },
+      "sample_index": 6,
+      "sample_wall_ms": 6935.796625039075,
+      "verified_open_and_load_ms": 305.13900000369176
+    }
+  ],
+  "cold_start_scope": "MODEL_UNLOADED_AT_GROUP_START_OS_CACHES_UNCONTROLLED_PROCESS_REUSED",
+  "context_tokens": 4096,
+  "enable_thinking": false,
+  "fixture_manifest_sha256": "0e6bfb28b2bb8f93dfd6a06838fddc0f43a15c8bb1d824ee0988bb3f70ef5746",
+  "memory_scope": "PROCESS_LIFETIME_INCLUDING_PREPARATION",
+  "microphone": "NOT_OPENED",
+  "model_open": "EXPLICIT_SCOPED_MODEL_WEIGHTS_RESIDENCY_THREE_FRESH_GENERATIONS",
+  "model_pins": [
+    {
+      "candidate_index": 0,
+      "model_bytes": 1282439424,
+      "model_sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120"
+    },
+    {
+      "candidate_index": 1,
+      "model_bytes": 484219808,
+      "model_sha256": "9b1a69f90cc7b7404ffeabd12f58391a6323ea08ae6e517f6cfd56bbb2caf5ca"
+    }
+  ],
+  "network_observation": "NOT_RUN",
+  "os_build": "Version 26.6.1 (Build 23G83)",
+  "output_token_limit": 256,
+  "phase": "THERMAL_LIMIT",
+  "physical_gate_acceptance": "NOT_RUN",
+  "physical_memory_bytes": 12262113280,
+  "process_id": "D3A98E87-AA96-4AB7-8C4A-90DE368AB0CE",
+  "quality": "NOT_RUN",
+  "raw_text_exported": false,
+  "runtime_revision": "8345f333951c661d166b00e6f9362e553768f292",
+  "sampler": "greedy",
+  "schema_version": 1,
+  "scope": "IOS_RESIDENT_MODEL_COMPARISON",
+  "speaker": "NOT_OPENED",
+  "thermal_policy": "WAIT_FOR_NOMINAL_GROUP_START_MAX_300S_REFUSE_SERIOUS_SAMPLE_START",
+  "threads": 2,
+  "timing_clock": "std::chrono::steady_clock",
+  "updated_utc": "2026-10-20T06:59:51Z",
+  "warm_scope": "GENERIC_MODEL_WEIGHTS_ONLY_FRESH_CONTEXT_KV_SAMPLER_EACH_GENERATION"
+}

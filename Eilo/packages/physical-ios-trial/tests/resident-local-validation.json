@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scope": "LOCAL_RESIDENT_MODEL_LAB_VALIDATION",
+  "physical_gate_acceptance": "NOT_RUN",
+  "original_adapter_source_sha256": "caca29fa8706736a0af5e25a3b36b0343093cc2857bcd66ff135e8571f039eb9",
+  "scripted_original_abi_scenarios": 31,
+  "adapter_sanitizers": "ASAN_UBSAN_PASS",
+  "resident_contracts": "ONE_MODEL_THREE_FRESH_CONTEXTS_KV_CLEARS_BOTH_SIZES_SCOPE_CANCEL_FAILURE_ABANDONMENT_INODE_THREAD_SETTINGS_THREAD_ISOLATION_PASS",
+  "real_cached_model_probes": "BOTH_PINNED_MODELS_ONE_LOAD_THREE_GENERATIONS_WARM_REUSE_AND_SCOPE_CLEANUP_NETWORK_AND_FORK_DENIED",
+  "python_tests_normal": 37,
+  "python_tests_optimized": 37,
+  "strict_swift_sdk_types": "DEVICE_SIMULATOR_ORDINARY_PHASE_RESIDENT_CONFIGURATIONS_PASS",
+  "portable_schedule_probe": "BALANCED_ALTERNATING_SIX_FIXTURES_BOTH_CANDIDATES_PASS",
+  "task_checks": [
+    {
+      "label": "resident-adapter",
+      "swift_tests": 309,
+      "normal_app_build_install": "PASS",
+      "fresh_simulator_launches": 3,
+      "dwell_seconds": 10,
+      "log_sha256": {
+        "swift": "1c4f954dd079cca091e9dd1aae39fd489e98396986fad2d7b7eec3a4aac8d908",
+        "build": "96f19a00bd22544d032b53e9da8606e890f30e91a5ddaa052433dde81f48cdb5",
+        "install": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "launch": "20d1a79dfc52b09e23963b089e3fdd2a1f647eb61078f4ef592602eb63a2e90d"
+      }
+    },
+    {
+      "label": "resident-runner",
+      "swift_tests": 309,
+      "normal_app_build_install": "PASS",
+      "fresh_simulator_launches": 3,
+      "dwell_seconds": 10,
+      "log_sha256": {
+        "swift": "b5f4f7e9df6b6acbd57f7a84c6ac885d671b629ad5f029a3d524ac6c39ac9456",
+        "build": "f3cea4445a87d3a73ba1fe2f6451bc8e4c8fccf21126c2214bbad5d67347485b",
+        "install": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "launch": "20d1a79dfc52b09e23963b089e3fdd2a1f647eb61078f4ef592602eb63a2e90d"
+      }
+    },
+    {
+      "label": "resident-thermal-policy",
+      "swift_tests": 309,
+      "normal_app_build_install": "PASS",
+      "fresh_simulator_launches": 3,
+      "dwell_seconds": 10,
+      "log_sha256": {
+        "swift": "2d5cd27bad2994dc4778ec80d53d0defc3a5eef1b00842b6827a09e768f8d15e",
+        "build": "12224d980a40afac74743c7c7626c82f4be1a5bbfe15bc92deb7ceefd090a079",
+        "install": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "launch": "20d1a79dfc52b09e23963b089e3fdd2a1f647eb61078f4ef592602eb63a2e90d"
+      }
+    },
+    {
+      "label": "resident-final-evidence-ci",
+      "swift_tests": 309,
+      "normal_app_build_install": "PASS",
+      "fresh_simulator_launches": 3,
+      "dwell_seconds": 10,
+      "log_sha256": {
+        "swift": "680c246de96eb17fbb989e41e59c8d9cdfa01f964bc34ae77b0d5aeeba6d1e9f",
+        "build": "ecc46cbef44e815650ed5c8a90167950c3f17e313467b8155f2a7dab7f37bba6",
+        "install": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "launch": "20d1a79dfc52b09e23963b089e3fdd2a1f647eb61078f4ef592602eb63a2e90d"
+      }
+    }
+  ]
+}
