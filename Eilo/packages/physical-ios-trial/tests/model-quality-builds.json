@@ -340,7 +340,7 @@
       "source_commit": "3f89ca8",
       "signing": "CODESIGN_DEEP_STRICT_PASS",
       "installation": "PASS",
-      "operator_ratings": "AWAITING_OPERATOR_UI",
+      "operator_ratings": "SIX_HUMAN_RATINGS_VALIDATED",
       "app_binary_sha256": "661867dcee027c322d15cb54ffd9557c15a64fa7f9d1183ce49868b0b9d803ce",
       "asr_dynamic_sha256": "8d30da03a286d5b9b50e0d07f893310731462ae89a5eb6faa039c85388d7d8bd",
       "model_files": [
@@ -650,7 +650,9 @@
         }
       ],
       "operator_configuration_sha256": "b51b91ca686b244a67f45aaed53e5d426848ebe70d93fb6522b9b5033db6ceb0",
-      "launch": "PASS_NO_AUTOMATIC_INFERENCE_OR_AUDIO"
+      "launch": "PASS_NO_AUTOMATIC_INFERENCE_OR_AUDIO",
+      "operator_report": "tests/model-quality-17b-operator-results.json",
+      "operator_report_sha256": "0a85fe2ae1b07d2c7a874b8d53cd458edd6ee354761d2f7cd2e55f122e5abc67"
     }
   ]
 }
