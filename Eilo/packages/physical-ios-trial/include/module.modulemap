@@ -1,0 +1,4 @@
+module CEiloTrialMetrics {
+  header "eilo_trial_metrics.h"
+  export *
+}
