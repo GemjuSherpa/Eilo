@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "scope": "IOS_XCODE_27_1_NETWORK_OBSERVER_PREFLIGHT",
+  "status": "OBSERVER_CRASHED",
+  "network_observation": "NOT_RUN",
+  "coverage": "NOT_ESTABLISHED",
+  "physical_gate_acceptance": "NOT_RUN",
+  "connection_count": null,
+  "sent_bytes": null,
+  "received_bytes": null,
+  "inference_workload": "NOT_STARTED_IDLE_OBSERVER_PREFLIGHT_FAILED",
+  "microphone": "NOT_OPENED",
+  "speaker": "NOT_OPENED",
+  "toolchain": {
+    "installation": "USER_INSTALLED_AT_EXISTING_XCODE_PATH",
+    "bundle_version": "27.1",
+    "bundle_build": "27A9274",
+    "xcodebuild_version": "27.1",
+    "xcodebuild_build": "27A9275",
+    "xctrace_version": "27.1",
+    "xctrace_build": "27A9275",
+    "codesign_deep_strict": "PASS",
+    "developer_directory": "UNCHANGED_BY_AGENT",
+    "gatekeeper_assessment": "ACCEPTED_MAC_APP_STORE"
+  },
+  "probe": {
+    "template": "Blank",
+    "instruments": [
+      "Network Connections"
+    ],
+    "target": "VERIFIED_OWNED_EILO_PID",
+    "requested_seconds": 30,
+    "recording": "ATTACHED_AND_REACHED_TIME_LIMIT",
+    "exit_code": 1,
+    "export": "DOCUMENT_MISSING_TEMPLATE",
+    "http_instrument": false,
+    "all_process_target": false
+  },
+  "crash": {
+    "process": "xctrace",
+    "captured_local": "2026-10-21 00:28:22.7850 +1100",
+    "exception_type": "EXC_BREAKPOINT",
+    "signal": "SIGTRAP",
+    "termination_namespace": "SIGNAL",
+    "termination_code": 5,
+    "faulting_symbols": [
+      "NetworkConnectionStatsModeling.receive(row:writer:context:)",
+      "NetworkConnectionStatsModeling.__receiveRow(cursor:writer:context:)",
+      "TransformerExecutionUnit.run(yieldBlock:)",
+      "TransformerHostingModeler.populateOutputTables(_:usingObserverations:parameters:checkToYieldBlock:)",
+      "@objc TransformerHostingModeler.populateOutputTables(_:usingObserverations:parameters:checkToYieldBlock:)"
+    ],
+    "source_report_sha256": "d9f2fdf6b7c555f854ed38f9b44e6694d5dd2494804c9993973cfd493da0916b"
+  },
+  "alternative_review": {
+    "instrument": "Activity Monitor",
+    "process_network_columns": [],
+    "network_columns_scope": "WHOLE_DEVICE_ONLY_NOT_ACCEPTED_FOR_EILO"
+  },
+  "privacy": {
+    "http_payloads": "NOT_CAPTURED_BY_RETEST_CONFIGURATION",
+    "connection_event_tables": "NOT_INSPECTED_OR_EXPORTED",
+    "explicit_probe_trace": "REMOVED_AFTER_DIAGNOSTIC_HASHING",
+    "profiler_caches": "NOT_INSPECTED_OR_CLEARED"
+  },
+  "rvi_preflight": {
+    "permission": "USER_APPROVED_MAX_180_SECONDS_METADATA_ONLY",
+    "status": "SERVICE_NOT_LOADED_ADMIN_ACTION_REQUIRED",
+    "start_result": "BOOTSTRAP_LOOK_UP_1102_START_FAILED",
+    "helper": "INSTALLED_APPLE_SIGNATURE_VERIFIED",
+    "service": "com.apple.rpmuxd",
+    "service_state": "NOT_LOADED",
+    "administrator_authentication": "USER_ACTION_REQUIRED",
+    "packet_capture": "NOT_STARTED"
+  }
+}
