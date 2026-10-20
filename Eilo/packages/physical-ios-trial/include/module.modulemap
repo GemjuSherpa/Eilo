@@ -2,3 +2,7 @@ module CEiloTrialMetrics {
   header "eilo_trial_metrics.h"
   export *
 }
+module CEiloTrialResidency {
+  header "eilo_trial_residency.h"
+  export *
+}
