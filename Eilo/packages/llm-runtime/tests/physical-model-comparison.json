@@ -2,7 +2,7 @@
   "schema": 1,
   "task": "VC-LLM-06",
   "status": "NOT_RUN",
-  "reason": "Scoped six-prompt iPhone CPU diagnostics and six genuine operator rubric ratings per exact candidate are available in physical-ios-trial/tests. Full repeated cold/warm runs, alternating candidate order, battery/thermal observations, independent traffic verification and physical Android comparison remain missing. Overall acceptance stays NOT_RUN.",
+  "reason": "Supporting iPhone evidence includes six genuine earlier rubric ratings per candidate and a separate completed 36-sample alternating model-unloaded/weight-retained comparison with native phase timings and thermal/battery observations (physical-ios-trial/tests/resident-model-device-results.json). OS caches were uncontrolled. These new outputs have not been rated; independent traffic verification, energy/endurance and physical Android remain missing. Overall acceptance stays NOT_RUN.",
   "platforms": [
     {
       "platform": "iOS",
