@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   AppState,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   Switch,
@@ -25,6 +24,9 @@ import {
   styles as textStyles,
 } from './src/Onboarding';
 import { Home } from './src/Home';
+import { DisplaySettings } from './src/DisplaySettings';
+import { MemoryUnavailable } from './src/MemoryUnavailable';
+import { acknowledgeClearedPresentation } from './src/SpokenPresentation';
 import {
   nativeControl,
   type ControlClient,
@@ -109,9 +111,20 @@ export default function App({
       setContinued(snapshot.preferences.onboardingComplete);
     }
   }, [snapshot]);
+  useEffect(() => {
+    if (
+      snapshot &&
+      !error &&
+      !busy &&
+      !['standby', 'listening', 'thinking', 'speaking'].includes(
+        snapshot.controller.state,
+      )
+    ) {
+      acknowledgeClearedPresentation(snapshot.controller);
+    }
+  }, [snapshot, error, busy]);
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={dark ? 'light-content' : 'dark-content'} />
       <NavigationContainer
         theme={{
           ...(dark ? DarkTheme : DefaultTheme),
@@ -126,7 +139,11 @@ export default function App({
         }}
       >
         <Stack.Navigator
-          screenOptions={{ headerShown: false, animation: 'none' }}
+          screenOptions={{
+            headerShown: false,
+            animation: 'none',
+            statusBarStyle: dark ? 'light' : 'dark',
+          }}
         >
           {!continued ? (
             <Stack.Screen name="Welcome">
@@ -150,8 +167,15 @@ export default function App({
             <Stack.Screen name="Companion">
               {() => (
                 <Tabs.Navigator
+                  initialRouteName="Home"
+                  backBehavior="initialRoute"
                   screenOptions={{
+                    // Screen headings live in the scrollable content so large
+                    // accessibility text is not clipped by a fixed nav bar.
+                    headerShown: false,
                     tabBarStyle: { minHeight: 64 },
+                    tabBarIcon: () => null,
+                    tabBarIconStyle: { display: 'none' },
                     headerTitleStyle: { color: colors.text },
                   }}
                 >
@@ -159,16 +183,26 @@ export default function App({
                     {() => (
                       <SafeAreaView
                         style={styles.screen}
-                        edges={['left', 'right']}
+                        edges={['top', 'left', 'right']}
+                      >
+                        <Home
+                          colors={colors}
+                          snapshot={snapshot}
+                          busy={busy}
+                          error={error}
+                          run={run}
+                        />
+                      </SafeAreaView>
+                    )}
+                  </Tabs.Screen>
+                  <Tabs.Screen name="Memory">
+                    {() => (
+                      <SafeAreaView
+                        style={styles.screen}
+                        edges={['top', 'left', 'right']}
                       >
                         <ScrollView>
-                          <Home
-                            colors={colors}
-                            snapshot={snapshot}
-                            busy={busy}
-                            error={error}
-                            run={run}
-                          />
+                          <MemoryUnavailable colors={colors} />
                         </ScrollView>
                       </SafeAreaView>
                     )}
@@ -177,9 +211,15 @@ export default function App({
                     {() => (
                       <SafeAreaView
                         style={styles.screen}
-                        edges={['left', 'right']}
+                        edges={['top', 'left', 'right']}
                       >
                         <ScrollView>
+                          <Text
+                            accessibilityRole="header"
+                            style={[textStyles.title, { color: colors.text }]}
+                          >
+                            Settings
+                          </Text>
                           <Text
                             style={[textStyles.body, { color: colors.text }]}
                           >
@@ -188,6 +228,12 @@ export default function App({
                               ? 'on'
                               : 'off'}
                           </Text>
+                          <DisplaySettings
+                            colors={colors}
+                            preferences={snapshot?.preferences.display}
+                            disabled={busy || !snapshot || error}
+                            run={run}
+                          />
                           <HistoryChoices
                             colors={colors}
                             preferences={snapshot?.preferences}

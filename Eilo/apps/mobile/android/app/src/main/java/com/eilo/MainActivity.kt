@@ -21,13 +21,19 @@ class MainActivity : ReactActivity() {
   }
   private val controller get() = (application as MainApplication).conversationController
   override fun onCreate(savedInstanceState: android.os.Bundle?) {
+    // Covers app-switcher/screenshot surfaces before any volatile spoken text is rendered.
+    window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
     supportFragmentManager.fragmentFactory = com.swmansion.rnscreens.fragment.restoration.RNScreensFragmentFactory()
     super.onCreate(savedInstanceState)
     controller.bindPermissionAdapter(com.eilo.foundation.AndroidMicrophonePermission(this))
   }
-  override fun onResume() { super.onResume(); (application as MainApplication).foregroundCaptureVisible=true; controller.permissionChanged() }
+  override fun onResume() {
+    super.onResume();val app=application as MainApplication;app.foregroundCaptureVisible=true;controller.permissionChanged()
+    val d=app.consent.snapshot()["display"] as? Map<*,*> ?: emptyMap<Any,Any>()
+    controller.setSpokenPresentationEnabled(!getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked && d["text"]==true && d["voiceOnly"]==false)
+  }
   // Exit stops unless a consented native service is already active and the device remains unlocked.
-  override fun onPause() { val app=application as MainApplication;app.foregroundCaptureVisible=false;if(!app.captureAllowed()) controller.stop();super.onPause() }
+  override fun onPause() { val app=application as MainApplication;app.foregroundCaptureVisible=false;controller.setSpokenPresentationEnabled(false);if(!app.captureAllowed()) controller.stop();super.onPause() }
   override fun onDestroy() {
     consentConfirmation?.invoke(false);consentConfirmation=null
     controller.bindPermissionAdapter(com.eilo.foundation.UnavailablePermissionAdapter())

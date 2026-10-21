@@ -1,5 +1,5 @@
 import ReactTestRenderer, { act } from 'react-test-renderer';
-import { Text } from 'react-native';
+import { Text, ScrollView } from 'react-native';
 import App from '../App';
 import { Home } from '../src/Home';
 import {
@@ -17,6 +17,7 @@ jest.mock('../src/specs/NativeEiloControl', () => ({
   default: null,
 }));
 jest.mock('@react-navigation/native', () => ({
+  useIsFocused: () => true,
   NavigationContainer: ({ children }: { children: React.ReactNode }) =>
     children,
   DefaultTheme: { colors: {} },
@@ -51,7 +52,8 @@ const fixture = (
   capturePending: false,
   speakerConfirmationRequired: false,
   preferences: {
-    version: 1,
+    version: 2,
+    display: { text: true, images: false, video: false, voiceOnly: false },
     historyChoice: 'private',
     onboardingComplete: false,
     historyAvailable: false,
@@ -205,6 +207,27 @@ test('bridge decoder rejects personal fields, invalid states and oversized paylo
     ),
   ).toThrow();
   expect(() => decodeSnapshot(' '.repeat(4097))).toThrow();
+  for (const display of [
+    null,
+    { text: true },
+    { text: 1, images: false, video: false, voiceOnly: false },
+    {
+      text: true,
+      images: false,
+      video: false,
+      voiceOnly: false,
+      transcript: 'synthetic',
+    },
+  ]) {
+    expect(() =>
+      decodeSnapshot(
+        JSON.stringify({
+          ...fixture('stopped'),
+          preferences: { ...fixture('stopped').preferences, display },
+        }),
+      ),
+    ).toThrow();
+  }
 });
 
 test('an older snapshot cannot replace a newer native event', async () => {
@@ -260,6 +283,51 @@ test('unknown native state still offers Stop and never Start', async () => {
     view?.root.findByProps({ accessibilityLabel: 'Stop' }).props.onPress(),
   );
   expect(commands).toEqual(['stop']);
+  await act(() => view?.unmount());
+});
+test('Stop stays enabled outside scrolling content during pending work', async () => {
+  const commands: string[] = [];
+  let view: ReactTestRenderer.ReactTestRenderer | undefined;
+  await act(() => {
+    view = ReactTestRenderer.create(
+      <Home
+        colors={tokens.colors.light}
+        snapshot={{ ...fixture('listening'), capturePending: true }}
+        busy
+        error={false}
+        run={name => commands.push(name)}
+      />,
+    );
+  });
+  const button = view!.root.findByProps({ accessibilityLabel: 'Stop' });
+  expect(button.props.accessibilityState.disabled).toBe(false);
+  let ancestor = button.parent;
+  while (ancestor) {
+    expect(ancestor.type).not.toBe(ScrollView);
+    ancestor = ancestor.parent;
+  }
+  await act(() => button.props.onPress());
+  expect(commands).toEqual(['stop']);
+  await act(() => view?.unmount());
+});
+test('Memory navigation does not activate history or offer unimplemented storage actions', async () => {
+  const fake = fakeClient();
+  let view: ReactTestRenderer.ReactTestRenderer | undefined;
+  await act(() => {
+    view = ReactTestRenderer.create(<App client={fake.client} />);
+  });
+  await act(() =>
+    view!.root
+      .findByProps({ accessibilityLabel: 'Continue as guest' })
+      .props.onPress(),
+  );
+  const words = view!.root
+    .findAllByType(Text)
+    .map(node => node.props.children)
+    .join(' ');
+  expect(words).toContain('Memory is not available');
+  expect(words).toContain('Your conversations are not saved');
+  expect(fake.commands).toEqual(['completeOnboarding']);
   await act(() => view?.unmount());
 });
 

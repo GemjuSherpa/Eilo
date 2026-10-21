@@ -198,6 +198,36 @@ public final class NativeController: @unchecked Sendable {
     lock.lock();defer{lock.unlock()};guard continuationToken !== token,!stopping,[.thinking,.speaking].contains(currentState),accepts(token) else{return false}
     continuationToken=token;continuationCancel=cancel;return true
   }
+  // Separate volatile presentation; never included in the metadata snapshot or diagnostics.
+  private var spokenClauses:[String]=[],spokenOmitted=false,spokenInterrupted=false
+  private var spokenRevision:UInt64=0,spokenPresentationEnabled=false
+  private var spokenCardId="",spokenSuppressed=false
+  private func bumpSpoken(){if spokenRevision<9_007_199_254_740_991{spokenRevision+=1}}
+  private func clearSpoken(resetSuppression:Bool=true){if resetSuppression{spokenSuppressed=false};spokenClauses.removeAll();spokenCardId="";spokenOmitted=false;spokenInterrupted=false;bumpSpoken()}
+  public func setSpokenPresentationEnabled(_ enabled:Bool){lock.lock();defer{lock.unlock()};spokenPresentationEnabled=enabled;if !enabled{clearSpoken(resetSuppression:false)}}
+  func markSpokenInterruption(){lock.lock();defer{lock.unlock()};guard currentState == .error,!locked,!stopping,!spokenSuppressed else{return};spokenClauses.removeAll();spokenCardId="";spokenOmitted=false;spokenInterrupted=true;spokenCardId=UUID().uuidString.lowercased();bumpSpoken()}
+  public func clearSpokenPresentation(){lock.lock();defer{lock.unlock()};clearSpoken()}
+  /// A visual-only dismissal never changes audio work or controller generation.
+  public func dismissSpokenPresentation(session:String,epoch:UInt64,card:String,onlyIdle:Bool=false)->Bool{
+    lock.lock();defer{lock.unlock()}
+    guard !locked,!stopping,!card.isEmpty,session==sessionID.uuidString.lowercased(),epoch==privacyEpoch,card==spokenCardId,
+      !onlyIdle || currentState == .standby || currentState == .error else{return false}
+    clearSpoken(resetSuppression:false);spokenSuppressed=true;return true
+  }
+  func recordSpokenClause(_ ticket:SpeechWorkTicket,text:String){_ = speechTransaction(ticket){
+    guard spokenPresentationEnabled,!spokenSuppressed,!text.isEmpty,text.utf8.count<=1024,!text.contains("\0") else{return false}
+    spokenInterrupted=false;if spokenCardId.isEmpty{spokenCardId=UUID().uuidString.lowercased()};spokenClauses.append(text)
+    while spokenClauses.count>32 || spokenClauses.reduce(0,{$0+$1.utf8.count})>4096 {spokenClauses.removeFirst();spokenOmitted=true}
+    bumpSpoken();return true
+  }}
+  /// Host additionally requires foreground/unlocked access and the native text preference.
+  public func spokenPresentation(allowed:Bool)->[String:Any]{
+    lock.lock();defer{lock.unlock()}
+    guard allowed,!locked,!stopping,permissionGranted(),modelStatus == .ready,
+      (activeToken != nil && [.standby,.capturing,.thinking,.speaking].contains(currentState)) || (currentState == .error && spokenInterrupted) else{return [:]}
+    return ["version":1,"sessionId":sessionID.uuidString.lowercased(),"operationId":(activeToken?.operationID ?? stoppedOperationID).uuidString.lowercased(),"generation":generation,"privacyEpoch":privacyEpoch,
+      "revision":spokenRevision,"cardId":spokenCardId,"clauses":spokenClauses,"interrupted":spokenInterrupted,"earlierClausesOmitted":spokenOmitted]
+  }
   private var speechWork: SpeechWorkTicket?
   func prepareSpeechWork(_ token:GenerationToken,cancel:@escaping()->Void,publish:(SpeechWorkTicket)->Void={_ in})->SpeechWorkTicket? {
     lock.lock();defer{lock.unlock()}
@@ -255,7 +285,8 @@ public final class NativeController: @unchecked Sendable {
     return dispatch(.failure,failure:.unavailable,token:token)
   }
   private func revokeVadCapture() { let previous=vadCapture;vadCapture=nil;previous?.revoke() }
-  func invalidateGeneration() {
+  func invalidateGeneration(preserveSpoken:Bool=false) {
+    if !preserveSpoken {clearSpoken()}
     revokeVadCapture()
     interruptedCapture=nil;independentCapture=nil
     activeToken?.cancel(); activeToken = nil; stoppedOperationID=UUID()
@@ -263,9 +294,9 @@ public final class NativeController: @unchecked Sendable {
     let speech=speechWork;speechWork=nil;speech?.cancelled=true;speech?.cancel()
     let previous = llmWork; llmWork = nil; previous?.cancelled = true
     previous?.cancel() // Signal only; worker destruction/join never runs in this monitor.
-    if generation == 9_007_199_254_740_991 { sessionID = UUID(); generation = 0 } else { generation += 1 }
+    if generation == 9_007_199_254_740_991 { clearSpoken();sessionID = UUID(); generation = 0 } else { generation += 1 }
   }
-  func issueGeneration() { invalidateGeneration(); activeToken = GenerationToken(sessionID,generation,privacyEpoch) }
+  func issueGeneration(preserveSpoken:Bool=false) { invalidateGeneration(preserveSpoken:preserveSpoken); activeToken = GenerationToken(sessionID,generation,privacyEpoch) }
   func accepts(_ token: GenerationToken?) -> Bool {
     guard let token, token === activeToken, !token.cancelled, token.privacyEpoch == privacyEpoch else { return false }
     guard permissionGranted() else { stop(); return false }
@@ -313,7 +344,7 @@ public final class NativeController: @unchecked Sendable {
     if [.speechDetected,.endpoint,.speechReady,.playbackFinished,.failure].contains(event) && !accepts(token) { return false }
     guard let next = Self.nextState(currentState, event) else { return false }
     if event == .playbackFinished,let token{playback.finish(token)}
-    if event == .start || event == .speechDetected || event == .playbackFinished || event == .resume { issueGeneration() }
+    if event == .start || event == .speechDetected || event == .playbackFinished || event == .resume { issueGeneration(preserveSpoken:event == .playbackFinished) }
     if (event == .pause || event == .failure) && !stop() { return false }
     if next != .capturing { revokeVadCapture() }
     currentState = next
@@ -368,9 +399,10 @@ public final class NativeController: @unchecked Sendable {
     lock.lock(); defer { lock.unlock() }
     guard !stopping else { return }
     guard permissionGranted() else { stop(); return }
+    let replyWasActive=[ControllerState.thinking,.speaking].contains(currentState)
     invalidateGeneration()
     do { playback.cancel();try effects.cancelWork() } catch { stop(); currentState = .error; currentError = .unexpected; return }
-    if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration(); updateIdle() }
+    if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration();spokenInterrupted=replyWasActive;if replyWasActive{spokenCardId=UUID().uuidString.lowercased()};bumpSpoken(); updateIdle() }
   }
   /// Cancellation precedes the replacement token. No capture reopen or revival after Stop.
   /// The lease must represent independently verified echo-separated user speech.
@@ -383,7 +415,7 @@ public final class NativeController: @unchecked Sendable {
       try effects.cancelWork()
       guard generation==expected,privacyEpoch==epoch,!locked else{return nil}
       guard independentSpeechStillVerified(),permissionGranted(),modelStatus == .ready else{stop();return nil}
-      issueGeneration();currentState = .capturing;hasConversation=true;interruptedCapture=activeToken;independentCapture=independentSpeechStillVerified;return activeToken
+      issueGeneration();spokenInterrupted=true;spokenCardId=UUID().uuidString.lowercased();bumpSpoken();currentState = .capturing;hasConversation=true;interruptedCapture=activeToken;independentCapture=independentSpeechStillVerified;return activeToken
     }catch{stop();return nil}
   }
   @discardableResult public func stop() -> Bool {

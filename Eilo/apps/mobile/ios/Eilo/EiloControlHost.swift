@@ -26,9 +26,39 @@ import UIKit
   }
   @objc func command(_ name:String,value:String) -> String {
     guard let app else { return "{}" }
+    if name=="dismissPresentation" || name=="autoHidePresentation" {
+      guard app.captureEligibility.allowed,value.utf8.count<=256,
+        let bytes=value.data(using:.utf8),let fields=try? JSONSerialization.jsonObject(with:bytes) as? [Any],fields.count==3,
+        let session=fields[0] as? String,let epoch=fields[1] as? UInt64,let card=fields[2] as? String,
+        let canonical=try? JSONSerialization.data(withJSONObject:[session,epoch,card]),canonical==bytes,
+        app.conversationController.dismissSpokenPresentation(session:session,epoch:epoch,card:card,onlyIdle:name=="autoHidePresentation") else{return "{}"}
+      return "{\"dismissed\":true}"
+    }
+    if name=="presentationReady",value.utf8.count<=256 {
+      let c=app.conversationController,meta=app.conversationController.snapshot()
+      let tuple:[Any]=[meta["sessionId"] ?? "",meta["operationId"] ?? "",meta["generation"] ?? 0,meta["privacyEpoch"] ?? 0]
+      guard app.captureEligibility.allowed,c.token == nil,
+        let expected=try? JSONSerialization.data(withJSONObject:tuple),value.data(using:.utf8)==expected else{return "{}"}
+      for scene in UIApplication.shared.connectedScenes where scene.activationState == .foregroundActive {
+        (scene.delegate as? SceneDelegate)?.revealClearedPresentation()
+      }
+      return snapshot()
+    }
+    if name=="presentation",value.isEmpty {
+      let display=app.consent.snapshot()["display"] as? [String:Bool] ?? [:]
+      let allowed=app.captureEligibility.allowed && display["text"]==true && display["voiceOnly"]==false
+      app.conversationController.setSpokenPresentationEnabled(allowed)
+      let result=app.conversationController.spokenPresentation(allowed:allowed)
+      guard let bytes=try? JSONSerialization.data(withJSONObject:result,options:.sortedKeys),bytes.count<=32768 else{return "{}"}
+      return String(data:bytes,encoding:.utf8) ?? "{}"
+    }
     if name.utf8.count>32 || value.utf8.count>8 { return "{}" }
-    if name != "history" && name != "volume" && name != "privateSession" && !value.isEmpty { return "{}" }
+    if name != "history" && name != "volume" && name != "privateSession" && !["displayText","displayImages","displayVideo","voiceOnly"].contains(name) && !value.isEmpty { return "{}" }
     switch name {
+    case "displayText","displayImages","displayVideo","voiceOnly":
+      guard value=="true" || value=="false",app.consent.chooseDisplay(name,enabled:value=="true",authorized:app.captureEligibility.allowed) else { return "{}" }
+      let display=app.consent.snapshot()["display"] as? [String:Bool] ?? [:]
+      app.conversationController.setSpokenPresentationEnabled(app.captureEligibility.allowed && display["text"]==true && display["voiceOnly"]==false)
     case "privateSession":
       guard value=="true",app.captureEligibility.allowed else { return snapshot() }
       app.conversationController.privacyTransition(.privateSession)

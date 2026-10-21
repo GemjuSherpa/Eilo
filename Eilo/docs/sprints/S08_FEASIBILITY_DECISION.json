@@ -166,12 +166,12 @@
   "policy_observations": [
     {
       "artifact": "apps/mobile/ios/Eilo/AppDelegate.swift",
-      "sha256": "26fef8b9fa86a3347e8cc9003c49fdb1f2677ce2776999bb53f4ce43e2875075",
+      "sha256": "92cf068869d3789eaefa7346d2cf2f203af3e946127e4c16597b6f46465e2151",
       "observation": "Default NativeController models are missing; PackStore trust map empty. Scene resignation/protected-data loss stop capture."
     },
     {
       "artifact": "packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift",
-      "sha256": "ee5a488b6bcad48031bc9ab56904fdfa2659ba118d9ea8f289679357a23fe590",
+      "sha256": "379bdaaf10b2410f486832d3351484576dee0a6c8650f51e617546983cb8a62d",
       "observation": "Start requires model readiness; default ModelReadiness is MissingModelReadiness. Lock invalidates generation and privacy work."
     },
     {
