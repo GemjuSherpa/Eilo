@@ -22,7 +22,7 @@ final class IOSClauseSink:NativeClauseSink {
 /// native queue until sealed/cancelled. Authorization defaults to denied; S07 owns
 /// pre-speech policy. Reference release is not certified String/SDK memory erasure.
 final class NativeClauseQueue {
-  private final class Clause{let id=UUID();var text:String?,timeout:(any IdleCancellation)?;init(_ text:String){self.text=text}}
+  private final class Clause{let id=UUID();var text:String?,completedText:String?,timeout:(any IdleCancellation)?;init(_ text:String){self.text=text}}
   private static let timers=NativeIdleScheduler()
   private let controller:NativeController,sink:any NativeClauseSink,scheduler:any IdleScheduler,authorized:(GenerationToken,String)->Bool
   private let ledger=PlaybackLedger()
@@ -69,7 +69,7 @@ final class NativeClauseQueue {
     let clause=waiting.removeFirst();active=clause
     clause.timeout=scheduler.schedule(60_000){[weak self,weak clause] in if let clause{self?.event(clause,.failed)}}
     guard !closed,active===clause else{clause.timeout?.cancel();clause.timeout=nil;return}
-    let text=clause.text;clause.text=nil
+    let text=clause.text;clause.text=nil;clause.completedText=text
     guard let text,authorized(ticket.token,text),!closed,!ticket.cancelled,controller.accepts(ticket.token),sink.enqueue(ticket.token,text:text,event:{[weak self,clause] in self?.event(clause,$0)}) else{if active===clause{fail()};return}
   }
   private func event(_ clause:Clause,_ event:OfflineSpeechEvent){_ = controller.speechTransaction(ticket){
@@ -78,12 +78,13 @@ final class NativeClauseQueue {
     ledger.event(clause.id,event)
     switch event {
     case .started:return controller.speechStarted(ticket)
-    case .finished:active=nil;_ = controller.speechGap(ticket);pump();return true
+    case .finished:if let text=clause.completedText {controller.recordSpokenClause(ticket,text:text)};clause.completedText=nil;active=nil;_ = controller.speechGap(ticket);pump();return true
+    case .interrupted:fail();controller.markSpokenInterruption();return false
     default:fail();return false
     }
   }}
   private func fail(){clear();_ = controller.dispatch(.failure,failure:.unavailable,token:ticket.token)}
-  private func clear(){ledger.cancel(active:active?.id,waiting:waiting.map{$0.id});if !controller.speechPrivacyCurrent(ticket){ledger.clear()};closed=true;fragment="";active?.timeout?.cancel();active?.timeout=nil;active?.text=nil;active=nil;waiting.forEach{$0.text=nil};waiting.removeAll();cleared();sink.cancel()}
+  private func clear(){ledger.cancel(active:active?.id,waiting:waiting.map{$0.id});if !controller.speechPrivacyCurrent(ticket){ledger.clear()};closed=true;fragment="";active?.timeout?.cancel();active?.timeout=nil;active?.text=nil;active?.completedText=nil;active=nil;waiting.forEach{$0.text=nil};waiting.removeAll();cleared();sink.cancel()}
   func progress(permitted:()->Bool={false})->[PlaybackProgress]{controller.speechMetadata(ticket,permitted:permitted,ledger:ledger)}
   func cancel(){_ = controller.speechTransaction(ticket){controller.cancelGeneration();return true}}
 }

@@ -1,12 +1,53 @@
 import XCTest
 @testable import NativeTestSeam
 final class NativeClauseQueueTests:XCTestCase {
+  func testSdkInterruptionLabelsOnlyAnEmptyCompletedSpeechView()throws{
+    let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}))
+    q.enqueue("Unfinished words.");s.callbacks[0](.started);s.callbacks[0](.interrupted)
+    let result=c.spokenPresentation(allowed:true)
+    XCTAssertEqual(result["interrupted"] as? Bool,true);XCTAssertEqual(result["clauses"] as? [String],[])
+    c.stop();XCTAssertTrue(c.spokenPresentation(allowed:true).isEmpty)
+  }
+  func testDisabledPresentationCannotAccumulateOrResurrectCompletedText()throws{
+    let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}))
+    c.setSpokenPresentationEnabled(false);q.enqueue("Hidden synthetic text.");s.callbacks[0](.finished)
+    c.setSpokenPresentationEnabled(true);XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
+    q.enqueue("Visible completed text.");s.callbacks[1](.finished);XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],["Visible completed text."])
+    c.setSpokenPresentationEnabled(false);c.setSpokenPresentationEnabled(true)
+    XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
+  }
+  func testPresentationContainsOnlySdkCompletedClausesAndSurvivesNormalTurnEnd()throws{
+    let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}))
+    XCTAssertTrue(q.enqueue("Completed."));XCTAssertTrue(q.enqueue("Not finished."));XCTAssertTrue(q.seal())
+    s.callbacks[0](.started);XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
+    s.callbacks[0](.finished);XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],["Completed."])
+    XCTAssertTrue(c.spokenPresentation(allowed:false).isEmpty);XCTAssertNil(c.snapshot()["clauses"])
+    s.callbacks[1](.finished);XCTAssertEqual(c.state,.standby)
+    XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],["Completed.","Not finished."])
+    XCTAssertTrue(c.dispatch(.speechDetected,token:c.token));XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
+  }
+  func testPresentationStopLockAndPreferenceClearRejectLateCallbacks()throws{
+    for locked in [false,true]{let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}));q.enqueue("Only completed.");s.callbacks[0](.finished)
+      c.clearSpokenPresentation();XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
+      q.enqueue("Never completed.");if locked{c.privacyTransition(.lock)}else{c.stop()};s.callbacks.last?(.finished)
+      XCTAssertTrue(c.spokenPresentation(allowed:true).isEmpty)
+    }
+  }
+  func testPresentationBoundsAndCancellationLabelDoNotReleasePartialClause()throws{
+    let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}))
+    for i in 0..<8{q.enqueue(String(repeating:"x",count:900));s.callbacks[i](.finished)}
+    let shown=c.spokenPresentation(allowed:true),clauses=try XCTUnwrap(shown["clauses"] as? [String])
+    XCTAssertLessThanOrEqual(clauses.reduce(0,{$0+$1.utf8.count}),4096);XCTAssertEqual(shown["earlierClausesOmitted"] as? Bool,true)
+    q.enqueue("Unfinished private suffix.");s.callbacks.last?(.started);q.cancel();s.callbacks.last?(.finished)
+    XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
+    XCTAssertEqual(c.spokenPresentation(allowed:true)["interrupted"] as? Bool,true)
+  }
   final class Sink:NativeClauseSink{
     var texts:[String]=[],callbacks:[(OfflineSpeechEvent)->Void]=[],stops=0,ok=true
     func enqueue(_ token:GenerationToken,text:String,event:@escaping(OfflineSpeechEvent)->Void)->Bool{texts.append(text);callbacks.append(event);return ok}
     func cancel(){stops+=1}
   }
-  func controller()->NativeController{let c=NativeController(effects:LlmControllerJobTests.Effects(),permission:LlmControllerJobTests.Permission(),models:LlmControllerJobTests.Models());XCTAssertTrue(c.dispatch(.start));XCTAssertTrue(c.dispatch(.speechDetected,token:c.token));XCTAssertTrue(c.dispatch(.endpoint,token:c.token));return c}
+  func controller()->NativeController{let c=NativeController(effects:LlmControllerJobTests.Effects(),permission:LlmControllerJobTests.Permission(),models:LlmControllerJobTests.Models());XCTAssertTrue(c.dispatch(.start));XCTAssertTrue(c.dispatch(.speechDetected,token:c.token));XCTAssertTrue(c.dispatch(.endpoint,token:c.token));c.setSpokenPresentationEnabled(true);return c}
   func testOrderGapAndSealOnlyEndAfterLastClause()throws{let c=controller(),t=c.token!,s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:t,sink:s,authorized:{_,_ in true}))
     XCTAssertTrue(q.enqueue("First."));XCTAssertTrue(q.enqueue("Second."));XCTAssertTrue(q.seal());XCTAssertEqual(s.texts,["First."])
     s.callbacks[0](.started);XCTAssertEqual(c.state,.speaking);s.callbacks[0](.finished);XCTAssertTrue(c.token===t);XCTAssertEqual(s.texts,["First.","Second."])
