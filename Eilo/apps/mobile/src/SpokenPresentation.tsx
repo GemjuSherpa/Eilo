@@ -12,6 +12,7 @@ type Identity = Pick<
 export interface SpokenPresentation extends Identity {
   version: 1;
   revision: number;
+  cardId: string;
   clauses: string[];
   interrupted: boolean;
   earlierClausesOmitted: boolean;
@@ -57,7 +58,7 @@ export function decodePresentation(
   const data = value as Record<string, unknown>;
   if (
     Object.keys(data).sort().join(',') !==
-      'clauses,earlierClausesOmitted,generation,interrupted,operationId,privacyEpoch,revision,sessionId,version' ||
+      'cardId,clauses,earlierClausesOmitted,generation,interrupted,operationId,privacyEpoch,revision,sessionId,version' ||
     data.version !== 1 ||
     !Number.isSafeInteger(data.revision) ||
     (data.revision as number) < 0 ||
@@ -74,6 +75,15 @@ export function decodePresentation(
     ) ||
     data.clauses.reduce((sum, text) => sum + (text as string).length, 0) >
       4096 ||
+    typeof data.cardId !== 'string' ||
+    ((data.clauses.length > 0 || data.interrupted) &&
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(
+        data.cardId,
+      )) ||
+    (data.cardId !== '' &&
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(
+        data.cardId,
+      )) ||
     !samePresentationIdentity(data as unknown as Identity, expected)
   ) {
     throw new Error('Presentation unavailable');

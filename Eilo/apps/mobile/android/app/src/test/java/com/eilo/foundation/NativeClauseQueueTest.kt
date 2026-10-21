@@ -2,6 +2,15 @@ package com.eilo.foundation
 import org.junit.Assert.*
 import org.junit.Test
 class NativeClauseQueueTest {
+    @Test fun cardIdentitySurvivesNormalEndAndChangesForNewQuery(){
+        val c=controller();val s=Sink();val q=NativeClauseQueue.create(c,c.token()!!,s){_,_->true}!!
+        assertEquals("",c.spokenPresentation(true)["cardId"]);q.enqueue("First.");q.enqueue("Second.");q.seal();s.callbacks[0](OfflineSpeechEvent.FINISHED)
+        val first=c.spokenPresentation(true)["cardId"] as String;assertNotNull(java.util.UUID.fromString(first))
+        s.callbacks[1](OfflineSpeechEvent.FINISHED);assertEquals(first,c.spokenPresentation(true)["cardId"])
+        c.dispatch(ControllerEvent.SPEECH_DETECTED,token=c.token());assertEquals("",c.spokenPresentation(true)["cardId"])
+        c.dispatch(ControllerEvent.ENDPOINT,token=c.token());val next=Sink();val q2=NativeClauseQueue.create(c,c.token()!!,next){_,_->true}!!
+        q2.enqueue("New answer.");next.callbacks[0](OfflineSpeechEvent.FINISHED);assertNotEquals(first,c.spokenPresentation(true)["cardId"])
+    }
     @Test fun sdkInterruptionLabelsOnlyAnEmptyView(){
         val c=controller();val s=Sink();val q=NativeClauseQueue.create(c,c.token()!!,s){_,_->true}!!
         q.enqueue("Unfinished words.");s.callbacks[0](OfflineSpeechEvent.STARTED);s.callbacks[0](OfflineSpeechEvent.INTERRUPTED)

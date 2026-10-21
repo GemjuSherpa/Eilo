@@ -45,6 +45,7 @@ const envelope = (control = snapshot.controller) => ({
   generation: control.generation,
   privacyEpoch: control.privacyEpoch,
   revision: 1,
+  cardId: '00000000-0000-4000-8000-000000000009',
   clauses: ['Completed synthetic clause.'],
   interrupted: false,
   earlierClausesOmitted: false,
