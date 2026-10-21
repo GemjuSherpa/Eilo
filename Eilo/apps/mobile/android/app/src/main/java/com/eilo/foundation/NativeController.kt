@@ -211,16 +211,21 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         continuationToken = token; continuationCancel = cancel; return true
     }
     private val spokenClauses=mutableListOf<String>()
-    private var spokenCardId=""
+    private var spokenCardId="";private var spokenSuppressed=false
     private var spokenPresentationEnabled=false
     private var spokenOmitted=false;private var spokenInterrupted=false;private var spokenRevision=0L
     private fun bumpSpoken(){if(spokenRevision<9007199254740991L)spokenRevision++}
-    private fun clearSpoken(){spokenClauses.clear();spokenCardId="";spokenOmitted=false;spokenInterrupted=false;bumpSpoken()}
-    @Synchronized fun setSpokenPresentationEnabled(enabled:Boolean){spokenPresentationEnabled=enabled;if(!enabled)clearSpoken()}
-    @Synchronized internal fun markSpokenInterruption(){if(currentState!=ControllerState.ERROR || locked || stopping)return;spokenClauses.clear();spokenCardId="";spokenOmitted=false;spokenInterrupted=true;spokenCardId=UUID.randomUUID().toString();bumpSpoken()}
+    private fun clearSpoken(resetSuppression:Boolean=true){if(resetSuppression)spokenSuppressed=false;spokenClauses.clear();spokenCardId="";spokenOmitted=false;spokenInterrupted=false;bumpSpoken()}
+    @Synchronized fun setSpokenPresentationEnabled(enabled:Boolean){spokenPresentationEnabled=enabled;if(!enabled)clearSpoken(false)}
+    @Synchronized internal fun markSpokenInterruption(){if(currentState!=ControllerState.ERROR || locked || stopping || spokenSuppressed)return;spokenClauses.clear();spokenCardId="";spokenOmitted=false;spokenInterrupted=true;spokenCardId=UUID.randomUUID().toString();bumpSpoken()}
     @Synchronized fun clearSpokenPresentation(){clearSpoken()}
+    /** Visual dismissal has no audio cancellation or state transition authority. */
+    @Synchronized fun dismissSpokenPresentation(session:String,epoch:Long,card:String,onlyIdle:Boolean=false):Boolean {
+        if(locked || stopping || card.isEmpty() || session!=sessionId.toString() || epoch!=privacyEpoch || card!=spokenCardId || (onlyIdle && currentState !in setOf(ControllerState.STANDBY,ControllerState.ERROR)))return false
+        clearSpoken(false);spokenSuppressed=true;return true
+    }
     @Synchronized internal fun recordSpokenClause(ticket:SpeechWorkTicket,text:String){speechTransaction(ticket){
-        if(!spokenPresentationEnabled || text.isEmpty() || text.toByteArray(Charsets.UTF_8).size>1024 || text.contains('\u0000'))return@speechTransaction false
+        if(!spokenPresentationEnabled || spokenSuppressed || text.isEmpty() || text.toByteArray(Charsets.UTF_8).size>1024 || text.contains('\u0000'))return@speechTransaction false
         spokenInterrupted=false;if(spokenCardId.isEmpty())spokenCardId=UUID.randomUUID().toString();spokenClauses+=text
         while(spokenClauses.size>32 || spokenClauses.sumOf{it.toByteArray(Charsets.UTF_8).size}>4096){spokenClauses.removeAt(0);spokenOmitted=true}
         bumpSpoken();true

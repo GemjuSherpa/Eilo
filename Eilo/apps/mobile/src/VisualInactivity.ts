@@ -24,6 +24,7 @@ export function useVisualInactivity(
   revision: number,
   activity: VisualActivity,
   onHidden?: (key: string) => void,
+  beforeAutoHide?: (key: string) => Promise<boolean>,
 ) {
   const [screenReader, setScreenReader] = useState(true);
   const [focused, setFocused] = useState(false);
@@ -37,8 +38,8 @@ export function useVisualInactivity(
     activity.loading ||
     activity.video ||
     activity.pinned;
-  const latest = useRef({ cardKey, blocked, onHidden });
-  latest.current = { cardKey, blocked, onHidden };
+  const latest = useRef({ cardKey, blocked, onHidden, beforeAutoHide });
+  latest.current = { cardKey, blocked, onHidden, beforeAutoHide };
   const last = useRef({
     cardKey: null as string | null,
     revision: -1,
@@ -92,7 +93,8 @@ export function useVisualInactivity(
       return;
     }
     let timer: ReturnType<typeof setTimeout>;
-    const check = () => {
+    let cancelled = false;
+    const check = async () => {
       if (latest.current.cardKey !== cardKey || latest.current.blocked) {
         return;
       }
@@ -105,11 +107,33 @@ export function useVisualInactivity(
         timer = setTimeout(check, Math.min(idleMs, idleMs - elapsed));
         return;
       }
+      if (latest.current.beforeAutoHide) {
+        let allowed = false;
+        try {
+          allowed = await latest.current.beforeAutoHide(cardKey);
+        } catch {
+          /* Retain on unknown native state. */
+        }
+        if (
+          cancelled ||
+          latest.current.cardKey !== cardKey ||
+          latest.current.blocked
+        ) {
+          return;
+        }
+        if (!allowed) {
+          timer = setTimeout(check, idleMs);
+          return;
+        }
+      }
       setHiddenKey(cardKey);
       latest.current.onHidden?.(cardKey);
     };
     timer = setTimeout(check, Math.max(0, idleMs - (now - last.current.at)));
-    return () => clearTimeout(timer);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, [cardKey, revision, interaction, blocked, hiddenKey]);
   const interact = useCallback(() => {
     const current = visualTime();

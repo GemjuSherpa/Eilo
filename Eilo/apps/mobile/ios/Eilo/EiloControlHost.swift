@@ -26,6 +26,14 @@ import UIKit
   }
   @objc func command(_ name:String,value:String) -> String {
     guard let app else { return "{}" }
+    if name=="dismissPresentation" || name=="autoHidePresentation" {
+      guard app.captureEligibility.allowed,value.utf8.count<=256,
+        let bytes=value.data(using:.utf8),let fields=try? JSONSerialization.jsonObject(with:bytes) as? [Any],fields.count==3,
+        let session=fields[0] as? String,let epoch=fields[1] as? UInt64,let card=fields[2] as? String,
+        let canonical=try? JSONSerialization.data(withJSONObject:[session,epoch,card]),canonical==bytes,
+        app.conversationController.dismissSpokenPresentation(session:session,epoch:epoch,card:card,onlyIdle:name=="autoHidePresentation") else{return "{}"}
+      return "{\"dismissed\":true}"
+    }
     if name=="presentationReady",value.utf8.count<=256 {
       let c=app.conversationController,meta=app.conversationController.snapshot()
       let tuple:[Any]=[meta["sessionId"] ?? "",meta["operationId"] ?? "",meta["generation"] ?? 0,meta["privacyEpoch"] ?? 0]

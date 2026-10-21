@@ -50,6 +50,7 @@ const envelope = (control = snapshot.controller) => ({
   interrupted: false,
   earlierClausesOmitted: false,
 });
+let discardCurrent: (id: string) => void;
 function HookView({
   value = snapshot,
   blocked = false,
@@ -59,7 +60,12 @@ function HookView({
   blocked?: boolean;
   reader: PresentationReader;
 }) {
-  const content = useSpokenPresentation(value, blocked, reader);
+  const { value: content, discard } = useSpokenPresentation(
+    value,
+    blocked,
+    reader,
+  );
+  discardCurrent = discard;
   return <SpokenReply value={content} colors={tokens.colors.light} />;
 }
 let view: Renderer.ReactTestRenderer | undefined;
@@ -189,4 +195,31 @@ test('new generation rejects late old content and disabled text makes no reads',
   );
   await act(() => jest.advanceTimersByTime(1000));
   expect(reader).toHaveBeenCalledTimes(count);
+});
+
+test('dismiss releases current JS clauses, rejects late same-card polls and cannot dismiss a newer card', async () => {
+  let current = envelope();
+  const reader = jest.fn(async () => JSON.stringify(current));
+  await act(() => {
+    view = Renderer.create(<HookView reader={reader} />);
+  });
+  await act(() => changed('active'));
+  const oldDiscard = discardCurrent;
+  await act(() => discardCurrent(current.cardId));
+  expect(view!.root.findAllByProps({ testID: 'spoken-reply' })).toHaveLength(0);
+  await act(() => jest.advanceTimersByTime(250));
+  expect(view!.root.findAllByProps({ testID: 'spoken-reply' })).toHaveLength(0);
+  current = {
+    ...current,
+    cardId: '00000000-0000-4000-8000-000000000008',
+    revision: 2,
+  };
+  await act(() => jest.advanceTimersByTime(250));
+  expect(
+    view!.root.findAllByProps({ testID: 'spoken-reply' }).length,
+  ).toBeGreaterThan(0);
+  await act(() => oldDiscard('00000000-0000-4000-8000-000000000009'));
+  expect(
+    view!.root.findAllByProps({ testID: 'spoken-reply' }).length,
+  ).toBeGreaterThan(0);
 });

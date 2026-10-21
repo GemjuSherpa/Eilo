@@ -39,6 +39,18 @@ class EiloControlModule(context: ReactApplicationContext): NativeEiloControlSpec
       try {
         val c=app.conversationController
         val unlocked=!app.getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked
+        if(name=="dismissPresentation" || name=="autoHidePresentation") {
+          // Parse failures/stale stamps must not reach the generic stop-on-error path.
+          val dismissed=try {
+            if(!app.foregroundCaptureVisible || !unlocked || value.length>256)false else {
+              val fields=org.json.JSONArray(value)
+              fields.length()==3 && fields.get(0) is String && fields.get(1) is Number && fields.get(2) is String &&
+                fields.get(1).toString()==fields.getLong(1).toString() &&
+                c.dismissSpokenPresentation(fields.getString(0),fields.getLong(1),fields.getString(2),name=="autoHidePresentation")
+            }
+          } catch (_:Exception){false}
+          promise.resolve(if(dismissed)"{\"dismissed\":true}" else "{}");return@post
+        }
         if(name=="presentationReady") {
           // Android's secure window needs no JS acknowledgement. Never stop a newer session for a stale read.
           promise.resolve(if(value.length<=256)snapshot() else "{}");return@post

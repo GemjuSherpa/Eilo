@@ -2,6 +2,24 @@ package com.eilo.foundation
 import org.junit.Assert.*
 import org.junit.Test
 class NativeClauseQueueTest {
+    @Test fun dismissIsVisualOnlySuppressesSameReplyAndRejectsStaleCard(){
+        val c=controller();val s=Sink();val token=c.token()!!;val q=NativeClauseQueue.create(c,token,s){_,_->true}!!
+        q.enqueue("First.");q.enqueue("Second.");q.seal();s.callbacks[0](OfflineSpeechEvent.FINISHED)
+        val shown=c.spokenPresentation(true);val session=shown["sessionId"] as String;val epoch=shown["privacyEpoch"] as Long;val card=shown["cardId"] as String
+        assertFalse(c.dismissSpokenPresentation(session,epoch,card,true));assertTrue(c.dismissSpokenPresentation(session,epoch,card))
+        assertSame(token,c.token());assertFalse(token.cancelled);assertEquals(0,s.stops)
+        c.setSpokenPresentationEnabled(false);c.setSpokenPresentationEnabled(true);s.callbacks[1](OfflineSpeechEvent.FINISHED)
+        assertEquals(ControllerState.STANDBY,c.state());assertEquals(emptyList<String>(),c.spokenPresentation(true)["clauses"])
+        c.dispatch(ControllerEvent.SPEECH_DETECTED,token=c.token());c.dispatch(ControllerEvent.ENDPOINT,token=c.token())
+        val sink=Sink();val next=NativeClauseQueue.create(c,c.token()!!,sink){_,_->true}!!;next.enqueue("New.");sink.callbacks[0](OfflineSpeechEvent.FINISHED)
+        assertFalse(c.dismissSpokenPresentation(session,epoch,card));assertEquals(listOf("New."),c.spokenPresentation(true)["clauses"])
+    }
+    @Test fun idleDismissReleasesCompletedCardWithoutStoppingStandby(){
+        val c=controller();val s=Sink();val q=NativeClauseQueue.create(c,c.token()!!,s){_,_->true}!!;q.enqueue("Done.");q.seal();s.callbacks[0](OfflineSpeechEvent.FINISHED)
+        val v=c.spokenPresentation(true);val token=c.token()
+        assertTrue(c.dismissSpokenPresentation(v["sessionId"] as String,v["privacyEpoch"] as Long,v["cardId"] as String,true))
+        assertSame(token,c.token());assertEquals(ControllerState.STANDBY,c.state());assertEquals(emptyList<String>(),c.spokenPresentation(true)["clauses"])
+    }
     @Test fun cardIdentitySurvivesNormalEndAndChangesForNewQuery(){
         val c=controller();val s=Sink();val q=NativeClauseQueue.create(c,c.token()!!,s){_,_->true}!!
         assertEquals("",c.spokenPresentation(true)["cardId"]);q.enqueue("First.");q.enqueue("Second.");q.seal();s.callbacks[0](OfflineSpeechEvent.FINISHED)
