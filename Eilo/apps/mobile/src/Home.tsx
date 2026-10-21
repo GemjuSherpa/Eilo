@@ -3,19 +3,22 @@ import { useIsFocused } from '@react-navigation/native';
 import { Action, styles, type Colors } from './Onboarding';
 import type { ControlCommand, ControlSnapshot } from './ControlClient';
 import { ConversationRipple } from './ConversationRipple';
-import { SpokenReply, useSpokenPresentation } from './SpokenPresentation';
+import { useSpokenPresentation } from './SpokenPresentation';
+import { ResultCards } from './ResultCards';
 export function Home({
   colors,
   snapshot,
   busy,
   error,
   run,
+  resultEnvelope = null,
 }: {
   colors: Colors;
   snapshot: ControlSnapshot | null;
   busy: boolean;
   error: boolean;
   run: (name: ControlCommand) => void;
+  resultEnvelope?: unknown;
 }) {
   const focused = useIsFocused();
   const spoken = useSpokenPresentation(snapshot, busy || error || !focused);
@@ -79,7 +82,28 @@ export function Home({
             />
           </>
         )}
-        <SpokenReply value={spoken} colors={colors} />
+        <ResultCards
+          envelope={
+            focused &&
+            !busy &&
+            !error &&
+            state !== undefined &&
+            ['standby', 'listening', 'thinking', 'speaking'].includes(state)
+              ? resultEnvelope
+              : null
+          }
+          expected={snapshot?.controller ?? null}
+          spoken={spoken}
+          preferences={
+            snapshot?.preferences.display ?? {
+              text: false,
+              images: false,
+              video: false,
+              voiceOnly: true,
+            }
+          }
+          colors={colors}
+        />
       </ScrollView>
       <View testID="conversation-safety-controls">
         <Action
