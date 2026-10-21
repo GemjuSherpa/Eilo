@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "sprint": "S14",
+  "base_main": "80287363b4049e8cf96d10d0ee1a02b4cada2158",
+  "scope": "AVAILABLE_INDEPENDENT_IMPLEMENTATION_AND_DENIAL_PATHS",
+  "sprint_acceptance": "PARTIAL_PENDING_PROVIDER_RUNTIME_AND_PHYSICAL_ACCEPTANCE",
+  "s08_decision": "HOLD",
+  "persistent_memory_allowed": false,
+  "physical_device_tests": "NOT_RUN_FOR_S14",
+  "tests": {
+    "mobile_jest": 56,
+    "contract_tests": 33,
+    "swift": 320,
+    "android_native": 373,
+    "failures": 0,
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "simulator_build_install": "PASS",
+    "fresh_ten_second_launches": 3,
+    "simulator_run_label": "s14-privacy-audit"
+  },
+  "tasks": [
+    {
+      "task": "VC-VIS-01",
+      "implementation": "IMPLEMENTED_LOCAL_ONLY",
+      "remaining": "Physical visuals NOT_RUN",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-03",
+      "implementation": "IMPLEMENTED_LOCAL_ONLY",
+      "remaining": "Shipping joined voice caller unconfigured; physical acceptance NOT_RUN",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-02",
+      "implementation": "IMPLEMENTED_LOCAL_ONLY",
+      "remaining": "Physical VoiceOver/TalkBack NOT_RUN",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-04",
+      "implementation": "SETTINGS_IMPLEMENTED_VOICE_ROUTE_BLOCKED",
+      "remaining": "Voice preference interpreter unconfigured; no unauthorized voice route",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-05",
+      "implementation": "CONSUMER_IMPLEMENTED_SOURCE_BLOCKED",
+      "remaining": "S15 authorized provider/result broker unconfigured",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-09",
+      "implementation": "IMPLEMENTED_LOCAL_ONLY",
+      "remaining": "Physical Android Back, VoiceOver/TalkBack/thumb reach NOT_RUN",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-06",
+      "implementation": "IMPLEMENTED_LOCAL_ONLY",
+      "remaining": "Provider/player loading integration blocked; conservative screen-reader behavior",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-08",
+      "implementation": "LIVE_PLAYBACK_BLOCKED",
+      "remaining": "No assessed source/native asset broker; denied media path only",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-07",
+      "implementation": "SPOKEN_IMPLEMENTED_SOURCE_CANCELLATION_BLOCKED",
+      "remaining": "No production result request exists; S15 cancellation integration pending",
+      "physical_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VIS-10",
+      "implementation": "IMPLEMENTED_LOCAL_ONLY",
+      "remaining": "Physical app-switcher/recording/cache forensic acceptance NOT_RUN; released references are not certified erasure",
+      "physical_acceptance": "NOT_RUN"
+    }
+  ],
+  "source_sha256": {
+    "apps/mobile/src/Home.tsx": "d3a017d8f3bf80459dd063bc76eb5f1f7951b1c29a27f200b9ff6a3ead0074a4",
+    "apps/mobile/src/SpokenPresentation.tsx": "2d7c29cbd1e7ae0b5da8e8f783cb3433bf1f0f9cfe188c304c30eae4068273f3",
+    "apps/mobile/src/ResultCards.tsx": "eab8db3f727ffd24fd9529de9c32337a90a1b11328884019ff2801f129b4d53b",
+    "apps/mobile/src/VisualInactivity.ts": "ea0148a5f2ead4c6315f5ea4a54f5a7ff3ae1ba0702450eb610f5ebdb5d8af39",
+    "apps/mobile/src/ConversationRipple.tsx": "2c7164ad756bbe28cbd564f4925e1a427a573c979697521e78d196271a2d6fd7",
+    "apps/mobile/src/DisplaySettings.tsx": "e619b7c97fb1e95d9bfb9d101e2f436f5fad3ac02078152389b5fc01e19a78e1",
+    "apps/mobile/ios/Eilo/AppDelegate.swift": "92cf068869d3789eaefa7346d2cf2f203af3e946127e4c16597b6f46465e2151",
+    "apps/mobile/ios/Eilo/EiloControlHost.swift": "4ace821b9db655851faf8661c918935fe317490d0be02b32b68567ac8a29ae92",
+    "apps/mobile/android/app/src/main/java/com/eilo/MainActivity.kt": "2f1f55e1b9304a41df774836882a1b5b02f7eb67adfc87cbdd4efb1ca79543e9",
+    "apps/mobile/android/app/src/main/java/com/eilo/EiloControlModule.kt": "7dbc60e60e2de64c0f8cf616dda5d4d486fb598b5cc0e89fd3746a940e8c0c94",
+    "packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift": "379bdaaf10b2410f486832d3351484576dee0a6c8650f51e617546983cb8a62d",
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeController.kt": "cad2f4a04292138b81184437730ed8f99b033b543161792ac704e023669e499a"
+  },
+  "limits": [
+    "No real search, media retrieval or playback was enabled.",
+    "No new dependency, account, download or physical microphone/speaker use.",
+    "No S08/S10/S11/S12 release or persistence gate promoted.",
+    "Source/desktop/simulator checks do not substitute for physical acceptance."
+  ]
+}
