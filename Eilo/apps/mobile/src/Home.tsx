@@ -47,6 +47,8 @@ export function Home({
   const needsStop = !!active || error || !snapshot || state === 'error';
   const canPresentResults =
     focused &&
+    snapshot?.preferences.display.text === true &&
+    !snapshot.preferences.display.voiceOnly &&
     !busy &&
     !error &&
     state !== undefined &&

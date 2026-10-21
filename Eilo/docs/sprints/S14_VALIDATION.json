@@ -8,7 +8,7 @@
   "persistent_memory_allowed": false,
   "physical_device_tests": "NOT_RUN_FOR_S14",
   "tests": {
-    "mobile_jest": 56,
+    "mobile_jest": 58,
     "contract_tests": 33,
     "swift": 320,
     "android_native": 373,
@@ -17,7 +17,7 @@
     "eslint": "PASS",
     "simulator_build_install": "PASS",
     "fresh_ten_second_launches": 3,
-    "simulator_run_label": "s14-privacy-audit"
+    "simulator_run_label": "s14-display-card-guard"
   },
   "tasks": [
     {
@@ -82,7 +82,7 @@
     }
   ],
   "source_sha256": {
-    "apps/mobile/src/Home.tsx": "d3a017d8f3bf80459dd063bc76eb5f1f7951b1c29a27f200b9ff6a3ead0074a4",
+    "apps/mobile/src/Home.tsx": "7eb7b56866ba7fba20206b28a816c8a2a7d7fb5a570f66812b0d275571b85282",
     "apps/mobile/src/SpokenPresentation.tsx": "2d7c29cbd1e7ae0b5da8e8f783cb3433bf1f0f9cfe188c304c30eae4068273f3",
     "apps/mobile/src/ResultCards.tsx": "eab8db3f727ffd24fd9529de9c32337a90a1b11328884019ff2801f129b4d53b",
     "apps/mobile/src/VisualInactivity.ts": "ea0148a5f2ead4c6315f5ea4a54f5a7ff3ae1ba0702450eb610f5ebdb5d8af39",

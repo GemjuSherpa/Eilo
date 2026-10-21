@@ -113,3 +113,50 @@ test('pin survives idle and normal completion; dismiss works while pinned withou
   expect(action('Pin card')).toBeDefined();
   expect(action('Unpin card')).toBeUndefined();
 });
+
+test.each(['voiceOnly', 'textOff'] as const)(
+  '%s exposes no controls for a hidden source card',
+  async preference => {
+    mockSpoken = null;
+    const changed: ControlSnapshot = {
+      ...snapshot,
+      preferences: {
+        ...snapshot.preferences,
+        display: {
+          ...snapshot.preferences.display,
+          text: preference !== 'textOff',
+          voiceOnly: preference === 'voiceOnly',
+        },
+      },
+    };
+    const result = {
+      context,
+      revision: 1,
+      items: [
+        {
+          id: '00000000-0000-4000-8000-000000000003',
+          kind: 'article',
+          title: 'Synthetic hidden source',
+          summary: 'Synthetic private result',
+          source: { name: 'Fixture', url: 'https://example.org' },
+          details: [],
+          media: { images: 'unavailable', video: 'unavailable' },
+        },
+      ],
+    };
+    await act(() => {
+      view = Renderer.create(
+        <Home
+          colors={tokens.colors.light}
+          snapshot={changed}
+          busy={false}
+          error={false}
+          run={jest.fn()}
+          resultEnvelope={result}
+        />,
+      );
+    });
+    expect(action('Pin card')).toBeUndefined();
+    expect(action('Dismiss card')).toBeUndefined();
+  },
+);
