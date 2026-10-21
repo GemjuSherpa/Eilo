@@ -63,9 +63,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
+  private var privacyCover:UIView?
   private var controller: NativeController? { (UIApplication.shared.delegate as? AppDelegate)?.conversationController }
-  func sceneWillResignActive(_ scene: UIScene) { (UIApplication.shared.delegate as? AppDelegate)?.captureVisible=false; controller?.stop() }
-  func sceneDidBecomeActive(_ scene: UIScene) { (UIApplication.shared.delegate as? AppDelegate)?.captureVisible=true; controller?.permissionChanged() }
+  private func coverPresentation(){
+    guard let window else{return}
+    if privacyCover == nil {
+      let cover=UIView(frame:window.bounds);cover.backgroundColor = .systemBackground
+      cover.autoresizingMask=[.flexibleWidth,.flexibleHeight];cover.isAccessibilityElement=true
+      cover.accessibilityLabel="Eilo. Conversation hidden.";privacyCover=cover;window.addSubview(cover)
+    }
+    if let privacyCover{window.bringSubviewToFront(privacyCover)}
+  }
+  // A current stopped-identity acknowledgement is required after JS commits a cleared view.
+  func revealClearedPresentation(){privacyCover?.removeFromSuperview();privacyCover=nil}
+  func sceneWillResignActive(_ scene: UIScene) { coverPresentation();controller?.setSpokenPresentationEnabled(false);(UIApplication.shared.delegate as? AppDelegate)?.captureVisible=false; controller?.stop() }
+  func sceneDidBecomeActive(_ scene: UIScene) {
+    guard let app=UIApplication.shared.delegate as? AppDelegate else{return}
+    app.captureVisible=true;controller?.permissionChanged()
+    let d=app.consent.snapshot()["display"] as? [String:Bool] ?? [:]
+    controller?.setSpokenPresentationEnabled(app.captureEligibility.allowed && d["text"]==true && d["voiceOnly"]==false)
+  }
   func sceneDidDisconnect(_ scene: UIScene) { controller?.stop() }
 
   func scene(

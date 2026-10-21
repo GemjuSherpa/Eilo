@@ -25,6 +25,7 @@ import {
 } from './src/Onboarding';
 import { Home } from './src/Home';
 import { DisplaySettings } from './src/DisplaySettings';
+import { acknowledgeClearedPresentation } from './src/SpokenPresentation';
 import {
   nativeControl,
   type ControlClient,
@@ -109,6 +110,18 @@ export default function App({
       setContinued(snapshot.preferences.onboardingComplete);
     }
   }, [snapshot]);
+  useEffect(() => {
+    if (
+      snapshot &&
+      !error &&
+      !busy &&
+      !['standby', 'listening', 'thinking', 'speaking'].includes(
+        snapshot.controller.state,
+      )
+    ) {
+      acknowledgeClearedPresentation(snapshot.controller);
+    }
+  }, [snapshot, error, busy]);
   return (
     <SafeAreaProvider>
       <NavigationContainer

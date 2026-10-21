@@ -210,6 +210,25 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (continuationToken === token || stopping || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING) || !accepts(token)) return false
         continuationToken = token; continuationCancel = cancel; return true
     }
+    private val spokenClauses=mutableListOf<String>()
+    private var spokenPresentationEnabled=false
+    private var spokenOmitted=false;private var spokenInterrupted=false;private var spokenRevision=0L
+    private fun bumpSpoken(){if(spokenRevision<9007199254740991L)spokenRevision++}
+    private fun clearSpoken(){spokenClauses.clear();spokenOmitted=false;spokenInterrupted=false;bumpSpoken()}
+    @Synchronized fun setSpokenPresentationEnabled(enabled:Boolean){spokenPresentationEnabled=enabled;if(!enabled)clearSpoken()}
+    @Synchronized internal fun markSpokenInterruption(){if(currentState!=ControllerState.ERROR || locked || stopping)return;spokenClauses.clear();spokenOmitted=false;spokenInterrupted=true;bumpSpoken()}
+    @Synchronized fun clearSpokenPresentation(){clearSpoken()}
+    @Synchronized internal fun recordSpokenClause(ticket:SpeechWorkTicket,text:String){speechTransaction(ticket){
+        if(!spokenPresentationEnabled || text.isEmpty() || text.toByteArray(Charsets.UTF_8).size>1024 || text.contains('\u0000'))return@speechTransaction false
+        spokenInterrupted=false;spokenClauses+=text
+        while(spokenClauses.size>32 || spokenClauses.sumOf{it.toByteArray(Charsets.UTF_8).size}>4096){spokenClauses.removeAt(0);spokenOmitted=true}
+        bumpSpoken();true
+    }}
+    /** Volatile content is separate from the metadata snapshot and never logged. */
+    @Synchronized fun spokenPresentation(allowed:Boolean):Map<String,Any>{
+        if(!allowed || locked || stopping || !permissionGranted() || modelStatus()!=ModelStatus.READY || !((activeToken!=null && currentState in setOf(ControllerState.STANDBY,ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) || (currentState==ControllerState.ERROR && spokenInterrupted)))return emptyMap()
+        return mapOf("version" to 1,"sessionId" to sessionId.toString(),"operationId" to (activeToken?.operationId ?: stoppedOperationId).toString(),"generation" to generation,"privacyEpoch" to privacyEpoch,"revision" to spokenRevision,"clauses" to spokenClauses.toList(),"interrupted" to spokenInterrupted,"earlierClausesOmitted" to spokenOmitted)
+    }
     private var speechWork: SpeechWorkTicket? = null
     @Synchronized internal fun prepareSpeechWork(token: GenerationToken, cancel: () -> Unit, publish: (SpeechWorkTicket) -> Unit = {}): SpeechWorkTicket? {
         if (speechWork != null || stopping || speakerRequired || currentState !in setOf(ControllerState.THINKING, ControllerState.SPEAKING) || !accepts(token)) return null
@@ -263,7 +282,8 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         } finally { abandonVadCapture(permit) }
     }
     private fun revokeVadCapture(){val previous=vadCapture;vadCapture=null;previous?.revoke()}
-    private fun invalidateGeneration() {
+    private fun invalidateGeneration(preserveSpoken:Boolean=false) {
+        if(!preserveSpoken)clearSpoken()
         revokeVadCapture()
         interruptedCapture=null;independentCapture=null
         activeToken?.cancelled = true; activeToken = null; stoppedOperationId=UUID.randomUUID()
@@ -279,10 +299,10 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
             catch (_: LinkageError) { diagnostics.record(SafeComponent.MODEL, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
             catch (_: Exception) { diagnostics.record(SafeComponent.MODEL, SafeError.UNAVAILABLE, SafeSeverity.WARNING) }
         }
-        if (generation == 9007199254740991L) { sessionId = UUID.randomUUID(); generation = 0 } else generation++
+        if (generation == 9007199254740991L) { clearSpoken();sessionId = UUID.randomUUID(); generation = 0 } else generation++
     }
-    private fun issueGeneration() {
-        invalidateGeneration()
+    private fun issueGeneration(preserveSpoken:Boolean=false) {
+        invalidateGeneration(preserveSpoken)
         activeToken = GenerationToken(sessionId, UUID.randomUUID(), generation, privacyEpoch)
     }
     private fun accepts(token: GenerationToken?): Boolean {
@@ -336,7 +356,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
         if (event in setOf(ControllerEvent.SPEECH_DETECTED, ControllerEvent.ENDPOINT, ControllerEvent.SPEECH_READY, ControllerEvent.PLAYBACK_FINISHED, ControllerEvent.FAILURE) && !accepts(token)) return false
         val next = nextState(currentState, event) ?: return false
         if(event==ControllerEvent.PLAYBACK_FINISHED && token!=null)playback.finish(token)
-        if (event == ControllerEvent.START || event == ControllerEvent.SPEECH_DETECTED || event == ControllerEvent.PLAYBACK_FINISHED || event == ControllerEvent.RESUME) issueGeneration()
+        if (event == ControllerEvent.START || event == ControllerEvent.SPEECH_DETECTED || event == ControllerEvent.PLAYBACK_FINISHED || event == ControllerEvent.RESUME) issueGeneration(event==ControllerEvent.PLAYBACK_FINISHED)
         if ((event == ControllerEvent.PAUSE || event == ControllerEvent.FAILURE) && !stop()) return false
         if(next!=ControllerState.CAPTURING)revokeVadCapture()
         currentState = next
@@ -387,9 +407,10 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
     @Synchronized fun cancelGeneration() {
         if (stopping) return
         if (!permissionGranted()) { stop(); return }
+        val replyWasActive=currentState in setOf(ControllerState.THINKING,ControllerState.SPEAKING)
         invalidateGeneration()
         try { playback.cancel();effects.cancelWork() } catch (_: Exception) { stop(); currentState = ControllerState.ERROR; currentError = SafeError.UNEXPECTED; return }
-        if (currentState in setOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) { currentState = ControllerState.STANDBY; issueGeneration(); updateIdle() }
+        if (currentState in setOf(ControllerState.CAPTURING,ControllerState.THINKING,ControllerState.SPEAKING)) { currentState = ControllerState.STANDBY; issueGeneration();spokenInterrupted=replyWasActive;bumpSpoken(); updateIdle() }
     }
     /** Cancel old work before creating the new turn; never reopen capture or revive a stopped run.
      * Verification is disk-free native echo-separated speech evidence, not an energy threshold. */
@@ -402,7 +423,7 @@ class NativeController(private val diagnostics: SafeDiagnostics = SafeDiagnostic
             effects.cancelWork()
             if(generation!=expected || privacyEpoch!=epoch || locked)return null
             if(!verified() || !permissionGranted() || modelStatus()!=ModelStatus.READY){stop();return null}
-            issueGeneration();currentState=ControllerState.CAPTURING;hasConversation=true;interruptedCapture=activeToken;independentCapture=verified;activeToken
+            issueGeneration();spokenInterrupted=true;bumpSpoken();currentState=ControllerState.CAPTURING;hasConversation=true;interruptedCapture=activeToken;independentCapture=verified;activeToken
         }catch(_:Exception){stop();null}
     }
     @Synchronized fun stop(): Boolean {

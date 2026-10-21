@@ -17,6 +17,7 @@ jest.mock('../src/specs/NativeEiloControl', () => ({
   default: null,
 }));
 jest.mock('@react-navigation/native', () => ({
+  useIsFocused: () => true,
   NavigationContainer: ({ children }: { children: React.ReactNode }) =>
     children,
   DefaultTheme: { colors: {} },

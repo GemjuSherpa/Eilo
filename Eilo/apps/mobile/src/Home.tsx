@@ -1,7 +1,9 @@
 import { Text, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import { Action, styles, type Colors } from './Onboarding';
 import type { ControlCommand, ControlSnapshot } from './ControlClient';
 import { ConversationRipple } from './ConversationRipple';
+import { SpokenReply, useSpokenPresentation } from './SpokenPresentation';
 export function Home({
   colors,
   snapshot,
@@ -15,6 +17,8 @@ export function Home({
   error: boolean;
   run: (name: ControlCommand) => void;
 }) {
+  const focused = useIsFocused();
+  const spoken = useSpokenPresentation(snapshot, busy || error || !focused);
   const state = snapshot?.controller.state;
   const active =
     snapshot?.capturePending ||
@@ -55,9 +59,11 @@ export function Home({
       </Text>
       <Action
         colors={colors}
-        label={active || error ? 'Stop' : 'Start'}
+        label={active || error || state === 'error' ? 'Stop' : 'Start'}
         disabled={(!snapshot && !error) || busy}
-        onPress={() => run(active || error ? 'stop' : 'start')}
+        onPress={() =>
+          run(active || error || state === 'error' ? 'stop' : 'start')
+        }
       />
       {snapshot?.speakerConfirmationRequired && (
         <>
@@ -72,6 +78,7 @@ export function Home({
           />
         </>
       )}
+      <SpokenReply value={spoken} colors={colors} />
     </View>
   );
 }

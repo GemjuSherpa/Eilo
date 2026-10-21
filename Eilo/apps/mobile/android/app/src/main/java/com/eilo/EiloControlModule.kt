@@ -39,10 +39,23 @@ class EiloControlModule(context: ReactApplicationContext): NativeEiloControlSpec
       try {
         val c=app.conversationController
         val unlocked=!app.getSystemService(android.app.KeyguardManager::class.java).isDeviceLocked
+        if(name=="presentationReady") {
+          // Android's secure window needs no JS acknowledgement. Never stop a newer session for a stale read.
+          promise.resolve(if(value.length<=256)snapshot() else "{}");return@post
+        }
+        if(name=="presentation" && value.isEmpty()) {
+          val display=app.consent.snapshot()["display"] as? Map<*,*> ?: emptyMap<Any,Any>()
+          val allowed=app.foregroundCaptureVisible && unlocked && display["text"]==true && display["voiceOnly"]==false
+          c.setSpokenPresentationEnabled(allowed)
+          val result=JSONObject(c.spokenPresentation(allowed)).toString()
+          promise.resolve(if(result.toByteArray(Charsets.UTF_8).size<=32768)result else "{}");return@post
+        }
         if(name.length>32 || value.length>8 || name !in setOf("start","stop","confirmSpeaker","history","completeOnboarding","background","volume","privateSession","displayText","displayImages","displayVideo","voiceOnly") || (name !in setOf("history","background","volume","privateSession","displayText","displayImages","displayVideo","voiceOnly") && value!="") || (name=="history" && value !in setOf("private","history")) || (name=="background" && value !in setOf("true","false"))) { promise.reject("invalid_command","Unsupported control");return@post }
         when(name) {
           "displayText","displayImages","displayVideo","voiceOnly" -> {
             if(value !in setOf("true","false") || !app.consent.chooseDisplay(name,value=="true",app.foregroundCaptureVisible && unlocked)) throw IllegalStateException()
+            val display=app.consent.snapshot()["display"] as? Map<*,*> ?: emptyMap<Any,Any>()
+            c.setSpokenPresentationEnabled(app.foregroundCaptureVisible && unlocked && display["text"]==true && display["voiceOnly"]==false)
           }
           "privateSession" -> {
             if(value!="true" || !app.foregroundCaptureVisible || !unlocked) { promise.resolve(snapshot());return@post }
