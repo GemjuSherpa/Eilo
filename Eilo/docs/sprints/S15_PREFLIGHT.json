@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "sprint": "S15",
-  "scope": "READ_ONLY_PROVIDER_PREFLIGHT",
+  "scope": "OFFLINE_CONFIRMATION_GATEWAY_AND_RESULT_BOUNDARIES",
   "reviewed_on": "2026-10-21",
   "based_on_s14_head": "87ac0dba6fceca68b16028053443d556d9288611",
   "selected_provider": null,
@@ -11,7 +11,6 @@
   "funded_budget_usd": 0,
   "authorized_live_requests": 0,
   "accounts_created": false,
-  "keys_created": false,
   "services_provisioned": false,
   "dependencies_installed": false,
   "live_api_queries_sent": false,
@@ -20,33 +19,33 @@
   "tasks": [
     {
       "task": "VC-SEARCH-01",
-      "implementation": "PUBLIC_DOCUMENT_REVIEW_ONLY_PENDING_CONTRACT",
+      "implementation": "PUBLIC_DOCUMENTS_REVIEWED_CONTRACT_PENDING",
       "verification": "PUBLIC_DOCUMENTS_REVIEWED"
     },
     {
       "task": "VC-SEARCH-02",
-      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
-      "verification": "NOT_RUN"
+      "implementation": "OFFLINE_PROTOCOL_IMPLEMENTED_NATIVE_CONFIRMATION_BLOCKED",
+      "verification": "OFFLINE_TESTS_PASS_PHYSICAL_NOT_RUN"
     },
     {
       "task": "VC-SEARCH-03",
-      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
-      "verification": "NOT_RUN"
+      "implementation": "OFFLINE_REQUEST_CORE_IMPLEMENTED_HTTPS_AND_BUDGET_BINDING_BLOCKED",
+      "verification": "OFFLINE_TESTS_PASS_PHYSICAL_NOT_RUN"
     },
     {
       "task": "VC-SEARCH-04",
-      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
-      "verification": "NOT_RUN"
+      "implementation": "OFFLINE_NORMALIZATION_IMPLEMENTED_PROVIDER_AND_NATIVE_PROJECTION_BLOCKED",
+      "verification": "OFFLINE_TESTS_PASS_PHYSICAL_NOT_RUN"
     },
     {
       "task": "VC-SEARCH-05",
-      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
-      "verification": "NOT_RUN"
+      "implementation": "DENIAL_PATH_VERIFIED_LIVE_RETRIEVAL_BLOCKED",
+      "verification": "OFFLINE_TESTS_PASS_PHYSICAL_NOT_RUN"
     },
     {
       "task": "VC-SEARCH-06",
-      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
-      "verification": "NOT_RUN"
+      "implementation": "OFFLINE_FALLBACK_IMPLEMENTED_NATIVE_CONTINUATION_BLOCKED",
+      "verification": "OFFLINE_TESTS_PASS_PHYSICAL_NOT_RUN"
     }
   ],
   "blockers": [
@@ -55,5 +54,17 @@
     "Shipping joined voice/search caller and authorized result/asset broker remain unconfigured.",
     "Live media depends on VC-VIS-08 and the native broker; no URL hit grants playback rights."
   ],
-  "next_review": "Select retention requirement; then prepare exact plan/contract/budget proposal before requesting new consequential access."
+  "next_review": "Resolve retention preference, approved compatible provider plan/terms/region and funded caps; obtain separate permission before accounts, native credential enrollment, hosting, transport or live queries.",
+  "implementation_reviewed_on": "2026-10-22",
+  "base_main": "fae219efba9cbc1d703567c3572486d5935620be",
+  "sprint_acceptance": "PARTIAL_OFFLINE_ONLY",
+  "provider_keys_created": false,
+  "production_key_enrollment": false,
+  "test_keys": "EPHEMERAL_PROCESS_ONLY",
+  "external_dependencies_added": 0,
+  "shipping_mobile_search": "NOT_CONNECTED",
+  "https_listener": "NOT_IMPLEMENTED",
+  "provider_transport": "NOT_CONFIGURED",
+  "authoritative_budget_adapter": "NOT_CONFIGURED",
+  "native_confirmation_adapter": "NOT_IMPLEMENTED"
 }

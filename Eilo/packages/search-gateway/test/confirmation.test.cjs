@@ -16,6 +16,8 @@ function harness(options = {}) {
 test('default and unregistered/unreviewed profiles cannot create previews', () => {
   assert.equal(createConfirmationAuthority().preview(input, 'scope-a'), null);
   assert.equal(createConfirmationAuthority({ profile }).preview(input, 'scope-a'), null);
+  const hidden = Object.create(null, Object.fromEntries(Object.entries(profile).map(([key, value]) => [key, { value, enumerable: false }])));
+  assert.equal(harness({ profile: hidden }).authority.preview(input, 'scope-a'), null);
   for (const patch of [{ approved: false }, { maxRequests: 0 }, { retentionReviewed: false }, { licenseReviewed: 'true' }, { endpoint: 'https://example.org' }]) {
     const h = harness({ profile: { ...profile, ...patch } }); assert.equal(h.authority.preview(input, 'scope-a'), null);
   }
@@ -49,7 +51,8 @@ test('expiry boundary, rollback, scope revocation and clear discard outstanding 
 });
 test('bounded previews reject controls, huge/malformed payloads, getters and non-text media without retaining them', () => {
   const h = harness(); const getter = Object.defineProperty({ mediaTypes: ['text'] }, 'query', { get() { throw new Error('must not execute'); }, enumerable: true });
-  for (const bad of [getter, null, [], { ...input, query: 'x'.repeat(257) }, { ...input, query: ' trailing ' }, { ...input, query: 'x\n' }, { ...input, query: 'x\u202e' }, { ...input, query: '\ud800' }, { ...input, location: [0, 0] }, { ...input, mediaTypes: ['image'] }]) {
+  const mediaGetter = Object.defineProperty([], '0', { get() { throw new Error('must not execute'); }, enumerable: true });
+  for (const bad of [getter, { ...input, mediaTypes: mediaGetter }, null, [], { ...input, query: 'x'.repeat(257) }, { ...input, query: ' trailing ' }, { ...input, query: 'x\n' }, { ...input, query: 'x\u202e' }, { ...input, query: '\ud800' }, { ...input, location: [0, 0] }, { ...input, mediaTypes: ['image'] }]) {
     assert.equal(h.authority.preview(bad, 'scope-a'), null);
   }
   for (let i = 0; i < 4; i++) { assert.ok(h.authority.preview(input, 'scope-a')); }
