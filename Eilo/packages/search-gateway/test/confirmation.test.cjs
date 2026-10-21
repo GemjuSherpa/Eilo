@@ -55,7 +55,7 @@ test('bounded previews reject controls, huge/malformed payloads, getters and non
   for (let i = 0; i < 4; i++) { assert.ok(h.authority.preview(input, 'scope-a')); }
   assert.equal(h.authority.preview(input, 'scope-a'), null);
   assert.equal(JSON.stringify(h.authority).includes(input.query), false);
-  h.setTime(NaN); assert.deepEqual(h.authority.diagnostics(), { pendingPreviews: 0, pendingTickets: 0 });
+  h.setTime(NaN); assert.equal(h.authority.preview(input, 'scope-a'), null); assert.deepEqual(h.authority.diagnostics(), { pendingPreviews: 0, pendingTickets: 0 });
 });
 
 test('Unicode query bytes remain exact and multi-byte bounds are enforced', () => {
@@ -77,4 +77,15 @@ test('revocation is permanent for this authority and scope cancellation leaves u
   const pending = h.ticket(); h.authority.disable();
   assert.equal(h.authority.binding(), null); assert.equal(h.authority.consume(pending, input, 'scope-a'), false);
   assert.equal(h.authority.preview(input, 'scope-a'), null);
+});
+
+test('idle expiry proactively releases query/ticket references without waiting for another request', t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const h = harness(); h.authority.preview(input, 'scope-a'); const ticket = h.ticket('scope-b');
+  assert.deepEqual(h.authority.diagnostics(), { pendingPreviews: 1, pendingTickets: 1 });
+  h.setTime(30000); t.mock.timers.tick(29999);
+  assert.deepEqual(h.authority.diagnostics(), { pendingPreviews: 1, pendingTickets: 1 });
+  t.mock.timers.tick(1);
+  assert.deepEqual(h.authority.diagnostics(), { pendingPreviews: 0, pendingTickets: 0 });
+  assert.equal(h.authority.consume(ticket, input, 'scope-b'), false);
 });
