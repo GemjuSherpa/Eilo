@@ -25,6 +25,7 @@ import {
 } from './src/Onboarding';
 import { Home } from './src/Home';
 import { DisplaySettings } from './src/DisplaySettings';
+import { MemoryUnavailable } from './src/MemoryUnavailable';
 import { acknowledgeClearedPresentation } from './src/SpokenPresentation';
 import {
   nativeControl,
@@ -166,11 +167,15 @@ export default function App({
             <Stack.Screen name="Companion">
               {() => (
                 <Tabs.Navigator
+                  initialRouteName="Home"
+                  backBehavior="initialRoute"
                   screenOptions={{
                     // Screen headings live in the scrollable content so large
                     // accessibility text is not clipped by a fixed nav bar.
                     headerShown: false,
                     tabBarStyle: { minHeight: 64 },
+                    tabBarIcon: () => null,
+                    tabBarIconStyle: { display: 'none' },
                     headerTitleStyle: { color: colors.text },
                   }}
                 >
@@ -180,14 +185,24 @@ export default function App({
                         style={styles.screen}
                         edges={['top', 'left', 'right']}
                       >
+                        <Home
+                          colors={colors}
+                          snapshot={snapshot}
+                          busy={busy}
+                          error={error}
+                          run={run}
+                        />
+                      </SafeAreaView>
+                    )}
+                  </Tabs.Screen>
+                  <Tabs.Screen name="Memory">
+                    {() => (
+                      <SafeAreaView
+                        style={styles.screen}
+                        edges={['top', 'left', 'right']}
+                      >
                         <ScrollView>
-                          <Home
-                            colors={colors}
-                            snapshot={snapshot}
-                            busy={busy}
-                            error={error}
-                            run={run}
-                          />
+                          <MemoryUnavailable colors={colors} />
                         </ScrollView>
                       </SafeAreaView>
                     )}
