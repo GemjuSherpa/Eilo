@@ -100,5 +100,19 @@
     "No new dependency, account, download or physical microphone/speaker use.",
     "No S08/S10/S11/S12 release or persistence gate promoted.",
     "Source/desktop/simulator checks do not substitute for physical acceptance."
-  ]
+  ],
+  "evidence_refresh": {
+    "signed_installer_ios_cases": 8,
+    "signed_installer_host_jni_cases": 8,
+    "joined_simulator_cases": 3,
+    "microphone": "NOT_USED",
+    "physical_acceptance": "NOT_RUN",
+    "synthetic_workflow_multiline_commands": "PASS",
+    "acoustic_tests_normal": 47,
+    "acoustic_tests_optimized": 47,
+    "installer_tampering_tests_normal": 4,
+    "installer_tampering_tests_optimized": 4,
+    "validators_weakened": false,
+    "historical_s09_records_changed": false
+  }
 }
