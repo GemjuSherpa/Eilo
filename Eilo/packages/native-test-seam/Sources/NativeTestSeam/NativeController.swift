@@ -201,14 +201,15 @@ public final class NativeController: @unchecked Sendable {
   // Separate volatile presentation; never included in the metadata snapshot or diagnostics.
   private var spokenClauses:[String]=[],spokenOmitted=false,spokenInterrupted=false
   private var spokenRevision:UInt64=0,spokenPresentationEnabled=false
+  private var spokenCardId=""
   private func bumpSpoken(){if spokenRevision<9_007_199_254_740_991{spokenRevision+=1}}
-  private func clearSpoken(){spokenClauses.removeAll();spokenOmitted=false;spokenInterrupted=false;bumpSpoken()}
+  private func clearSpoken(){spokenClauses.removeAll();spokenCardId="";spokenOmitted=false;spokenInterrupted=false;bumpSpoken()}
   public func setSpokenPresentationEnabled(_ enabled:Bool){lock.lock();defer{lock.unlock()};spokenPresentationEnabled=enabled;if !enabled{clearSpoken()}}
-  func markSpokenInterruption(){lock.lock();defer{lock.unlock()};guard currentState == .error,!locked,!stopping else{return};spokenClauses.removeAll();spokenOmitted=false;spokenInterrupted=true;bumpSpoken()}
+  func markSpokenInterruption(){lock.lock();defer{lock.unlock()};guard currentState == .error,!locked,!stopping else{return};spokenClauses.removeAll();spokenCardId="";spokenOmitted=false;spokenInterrupted=true;spokenCardId=UUID().uuidString.lowercased();bumpSpoken()}
   public func clearSpokenPresentation(){lock.lock();defer{lock.unlock()};clearSpoken()}
   func recordSpokenClause(_ ticket:SpeechWorkTicket,text:String){_ = speechTransaction(ticket){
     guard spokenPresentationEnabled,!text.isEmpty,text.utf8.count<=1024,!text.contains("\0") else{return false}
-    spokenInterrupted=false;spokenClauses.append(text)
+    spokenInterrupted=false;if spokenCardId.isEmpty{spokenCardId=UUID().uuidString.lowercased()};spokenClauses.append(text)
     while spokenClauses.count>32 || spokenClauses.reduce(0,{$0+$1.utf8.count})>4096 {spokenClauses.removeFirst();spokenOmitted=true}
     bumpSpoken();return true
   }}
@@ -218,7 +219,7 @@ public final class NativeController: @unchecked Sendable {
     guard allowed,!locked,!stopping,permissionGranted(),modelStatus == .ready,
       (activeToken != nil && [.standby,.capturing,.thinking,.speaking].contains(currentState)) || (currentState == .error && spokenInterrupted) else{return [:]}
     return ["version":1,"sessionId":sessionID.uuidString.lowercased(),"operationId":(activeToken?.operationID ?? stoppedOperationID).uuidString.lowercased(),"generation":generation,"privacyEpoch":privacyEpoch,
-      "revision":spokenRevision,"clauses":spokenClauses,"interrupted":spokenInterrupted,"earlierClausesOmitted":spokenOmitted]
+      "revision":spokenRevision,"cardId":spokenCardId,"clauses":spokenClauses,"interrupted":spokenInterrupted,"earlierClausesOmitted":spokenOmitted]
   }
   private var speechWork: SpeechWorkTicket?
   func prepareSpeechWork(_ token:GenerationToken,cancel:@escaping()->Void,publish:(SpeechWorkTicket)->Void={_ in})->SpeechWorkTicket? {
@@ -394,7 +395,7 @@ public final class NativeController: @unchecked Sendable {
     let replyWasActive=[ControllerState.thinking,.speaking].contains(currentState)
     invalidateGeneration()
     do { playback.cancel();try effects.cancelWork() } catch { stop(); currentState = .error; currentError = .unexpected; return }
-    if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration();spokenInterrupted=replyWasActive;bumpSpoken(); updateIdle() }
+    if [.capturing,.thinking,.speaking].contains(currentState) { currentState = .standby; issueGeneration();spokenInterrupted=replyWasActive;if replyWasActive{spokenCardId=UUID().uuidString.lowercased()};bumpSpoken(); updateIdle() }
   }
   /// Cancellation precedes the replacement token. No capture reopen or revival after Stop.
   /// The lease must represent independently verified echo-separated user speech.
@@ -407,7 +408,7 @@ public final class NativeController: @unchecked Sendable {
       try effects.cancelWork()
       guard generation==expected,privacyEpoch==epoch,!locked else{return nil}
       guard independentSpeechStillVerified(),permissionGranted(),modelStatus == .ready else{stop();return nil}
-      issueGeneration();spokenInterrupted=true;bumpSpoken();currentState = .capturing;hasConversation=true;interruptedCapture=activeToken;independentCapture=independentSpeechStillVerified;return activeToken
+      issueGeneration();spokenInterrupted=true;spokenCardId=UUID().uuidString.lowercased();bumpSpoken();currentState = .capturing;hasConversation=true;interruptedCapture=activeToken;independentCapture=independentSpeechStillVerified;return activeToken
     }catch{stop();return nil}
   }
   @discardableResult public func stop() -> Bool {

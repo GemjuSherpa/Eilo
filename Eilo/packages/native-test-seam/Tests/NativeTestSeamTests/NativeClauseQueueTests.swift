@@ -1,6 +1,16 @@
 import XCTest
 @testable import NativeTestSeam
 final class NativeClauseQueueTests:XCTestCase {
+  func testPresentationCardIdentitySurvivesNormalEndButChangesForANewQuery()throws{
+    let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}))
+    XCTAssertEqual(c.spokenPresentation(allowed:true)["cardId"] as? String,"")
+    q.enqueue("First.");q.enqueue("Second.");q.seal();s.callbacks[0](.finished)
+    let first=try XCTUnwrap(c.spokenPresentation(allowed:true)["cardId"] as? String);XCTAssertNotNil(UUID(uuidString:first))
+    s.callbacks[1](.finished);XCTAssertEqual(c.spokenPresentation(allowed:true)["cardId"] as? String,first)
+    c.dispatch(.speechDetected,token:c.token);XCTAssertEqual(c.spokenPresentation(allowed:true)["cardId"] as? String,"")
+    c.dispatch(.endpoint,token:c.token);let next=Sink();let q2=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:next,authorized:{_,_ in true}))
+    q2.enqueue("New answer.");next.callbacks[0](.finished);XCTAssertNotEqual(c.spokenPresentation(allowed:true)["cardId"] as? String,first)
+  }
   func testSdkInterruptionLabelsOnlyAnEmptyCompletedSpeechView()throws{
     let c=controller(),s=Sink();let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}))
     q.enqueue("Unfinished words.");s.callbacks[0](.started);s.callbacks[0](.interrupted)

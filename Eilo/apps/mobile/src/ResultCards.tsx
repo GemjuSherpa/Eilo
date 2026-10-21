@@ -97,7 +97,9 @@ export function parseResultEnvelope(
 ): ResultCardData[] {
   if (
     !expected ||
-    !closed(value, ['context', 'items']) ||
+    !closed(value, ['context', 'revision', 'items']) ||
+    !Number.isSafeInteger(value.revision) ||
+    (value.revision as number) < 0 ||
     !closed(value.context, [
       'sessionId',
       'operationId',

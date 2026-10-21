@@ -32,6 +32,7 @@ const spoken: SpokenPresentation = {
   ...context,
   version: 1,
   revision: 1,
+  cardId: '00000000-0000-4000-8000-000000000009',
   clauses: ['Completed fixture answer.'],
   interrupted: false,
   earlierClausesOmitted: false,
@@ -58,7 +59,7 @@ afterEach(async () => {
 
 test('missing sources, stale scope, duplicate IDs and unknown fields produce no cards', () => {
   expect(
-    parseResultEnvelope({ context, items: [result] }, context),
+    parseResultEnvelope({ context, revision: 1, items: [result] }, context),
   ).toHaveLength(1);
   for (const items of [
     [{ ...result, source: null }],
@@ -73,14 +74,20 @@ test('missing sources, stale scope, duplicate IDs and unknown fields produce no 
   }
   expect(
     parseResultEnvelope(
-      { context: { ...context, privacyEpoch: 3 }, items: [result] },
+      {
+        context: { ...context, privacyEpoch: 3 },
+        revision: 1,
+        items: [result],
+      },
       context,
     ),
   ).toEqual([]);
   const getter = jest.fn(() => result.title);
   const bad = { ...result };
   Object.defineProperty(bad, 'title', { get: getter, enumerable: true });
-  expect(parseResultEnvelope({ context, items: [bad] }, context)).toEqual([]);
+  expect(
+    parseResultEnvelope({ context, revision: 1, items: [bad] }, context),
+  ).toEqual([]);
   expect(getter).not.toHaveBeenCalled();
 });
 test('source attribution rejects unsafe targets without making any request', () => {
@@ -104,7 +111,7 @@ test('source cards replace default text while retaining a recoverable spoken ans
   await act(() => {
     view = Renderer.create(
       <ResultCards
-        envelope={{ context, items: [result] }}
+        envelope={{ context, revision: 1, items: [result] }}
         expected={context}
         spoken={spoken}
         preferences={preferences}
@@ -138,7 +145,7 @@ test('media flags never authorize loading, and Voice only suppresses all result 
   await act(() => {
     view = Renderer.create(
       <ResultCards
-        envelope={{ context, items: [video] }}
+        envelope={{ context, revision: 1, items: [video] }}
         expected={context}
         spoken={spoken}
         preferences={{ ...preferences, images: true, video: true }}
@@ -152,7 +159,7 @@ test('media flags never authorize loading, and Voice only suppresses all result 
   await act(() =>
     view!.update(
       <ResultCards
-        envelope={{ context, items: [video] }}
+        envelope={{ context, revision: 1, items: [video] }}
         expected={context}
         spoken={spoken}
         preferences={{ ...preferences, voiceOnly: true }}
@@ -166,7 +173,7 @@ test('malformed result falls back to speech, but stale speech cannot resurface',
   await act(() => {
     view = Renderer.create(
       <ResultCards
-        envelope={{ context, items: [{ ...result, source: {} }] }}
+        envelope={{ context, revision: 1, items: [{ ...result, source: {} }] }}
         expected={context}
         spoken={spoken}
         preferences={preferences}
