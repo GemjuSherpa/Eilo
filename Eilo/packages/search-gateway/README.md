@@ -1,0 +1,9 @@
+# Offline search boundary
+
+This server-only Node workspace is disconnected from the shipping mobile app. It has no HTTP listener, provider SDK, fetch/DNS call, account, key enrollment, deployed gateway or approved provider profile. Default construction cannot issue a preview or ticket. Fixture approvals and generated test keys are not production permission. No external dependency was added.
+
+The confirmation core bounds exact query bytes and pending records, admits text only, and requires a registered P-256 public key to verify a one-use challenge bound to provider and query hash. Tickets expire on a monotonic clock and are consumed once even after an invalid request. Scope cancellation/clear releases pending references; diagnostics expose counts only. It never reads history, location, audio or an account identifier and writes nothing to storage/logs.
+
+A signature proves possession of a registered key, **not that a user saw or confirmed a query**. Activation requires a separately implemented trusted native view/voice confirmation adapter that presents the exact query/provider, checks active/unlocked session and explicit consent, then signs only that challenge. Key registration must be approved/authenticated outside the request body. Neither native adapter nor registration exists. The caller's opaque scope must be server-bound; accepting an arbitrary client scope or public key would defeat the boundary. No app route/permission is enabled by this package.
+
+Unknown provider rights, retention, region, funding, confirmation registration or transport keep live search disabled. Query minimization is not proven by a JSON schema; a reviewed native caller must supply only the user-approved minimized query. These tests verify offline protocol properties, not physical packet privacy, native user consent or legal/provider approval. Releasing strings is not certified memory erasure.
