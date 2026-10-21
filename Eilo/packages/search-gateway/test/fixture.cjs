@@ -1,15 +1,15 @@
 'use strict';
 const { generateKeyPairSync, sign } = require('node:crypto');
-const { createConfirmationAuthority } = require('../confirmation.cjs');
+const { createConfirmationAuthority, confirmationMessage } = require('../confirmation.cjs');
 const profile = Object.freeze({ id: 'fixture-provider', revision: 'a'.repeat(64), approved: true, licenseReviewed: true, retentionReviewed: true, regionReviewed: true, maxRequests: 3 });
 const input = Object.freeze({ query: 'Synthetic museum hours', mediaTypes: ['text'] });
 function fixture(options = {}) {
   const keys = generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
   const authority = createConfirmationAuthority({ profile, publicKey: keys.publicKey, ...options });
   const request = (scope = 'scope-a') => {
-    const preview = authority.preview(input, scope);
-    const signature = sign('sha256', Buffer.from(preview.challenge), keys.privateKey).toString('base64url');
-    return JSON.stringify({ version: 1, ticket: authority.confirm(preview.id, signature, scope), ...input });
+    const nonce = authority.challenge(scope);
+    const signature = sign('sha256', Buffer.from(confirmationMessage(nonce, input)), keys.privateKey).toString('base64url');
+    return JSON.stringify({ version: 1, ticket: nonce.id, signature, ...input });
   };
   return { authority, request };
 }

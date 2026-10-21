@@ -9,8 +9,8 @@ function readWire(body) {
   return value;
 }
 function validRequest(value) {
-  if (!closed(value, ['version', 'ticket', 'query', 'mediaTypes']) || value.version !== 1 ||
-    !idValid(value.ticket) || !queryValid(value.query) || !textOnly(value.mediaTypes)) { return null; }
+  if (!closed(value, ['version', 'ticket', 'signature', 'query', 'mediaTypes']) || value.version !== 1 ||
+    !idValid(value.ticket) || typeof value.signature !== 'string' || value.signature.length > 192 || !/^[A-Za-z0-9_-]+$/.test(value.signature) || !queryValid(value.query) || !textOnly(value.mediaTypes)) { return null; }
   return value;
 }
 function readRequest(body) { return validRequest(readWire(body)); }
@@ -39,7 +39,7 @@ function createGateway({ profile = null, authority = null, transport = null, res
       const input = Object.freeze({ query: request.query, mediaTypes: Object.freeze(['text']) });
       // A failed attempt cannot replay a valid ticket with a new request or refreshed budget.
       let confirmed = false;
-      try { confirmed = authority?.consume(request.ticket, input, scope) === true; } catch { /* Missing authority denies. */ }
+      try { confirmed = authority?.consume(request.ticket, input, scope, request.signature) === true; } catch { /* Missing authority denies. */ }
       if (!confirmed) { return unavailable('denied'); }
       if (!configured()) { return unavailable('unavailable'); }
       if (online !== true) { return unavailable('offline'); }

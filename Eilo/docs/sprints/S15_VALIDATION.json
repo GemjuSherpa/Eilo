@@ -48,7 +48,7 @@
     "lockfile_validation": "OFFLINE_LOCAL_WORKSPACE_ONLY_PASS",
     "simulator_build_install": "PASS",
     "fresh_ten_second_launches": 3,
-    "simulator_run_label": "s15-offline-fallback"
+    "simulator_run_label": "s15-queryless-confirmation"
   },
   "authorized_live_requests": 0,
   "funded_budget_usd": 0,
@@ -60,16 +60,16 @@
   "persistent_memory_allowed": false,
   "source_sha256": {
     "packages/search-gateway/.eslintrc.cjs": "e7def413a71e68749a7f280a89c0cf1504fd5eb18fecab59f46693eacdee6355",
-    "packages/search-gateway/README.md": "b4b50a8bc7b674fe4abac05c45c97acfb0c5d33426740c8727bcf10c1503ad7b",
-    "packages/search-gateway/confirmation.cjs": "111a49a826dd9533079cefcf12f8b6749b2d2933145a83644d462e99e3858601",
+    "packages/search-gateway/README.md": "61b5225dfaf87bf3f27f0362621e5dfd6120ad7c69229b078cc5e47879764277",
+    "packages/search-gateway/confirmation.cjs": "9e02fbc7c9fb4f3967a5571ee7e22aedb1d706a9ab15e2c123400b727848fd14",
     "packages/search-gateway/fallback.cjs": "7120223e367df34342c2e429621c91cc3ae7a5e3c2ed66dc93833a3fa0274381",
-    "packages/search-gateway/gateway.cjs": "7fea762279b47142d9f588afe35ba7bd6d2e80636b982088899032e62f2c7a0a",
+    "packages/search-gateway/gateway.cjs": "3037ba8453f2e92d01dd1f8dedcab003694a54dbd2be7140f0f9be761932bab7",
     "packages/search-gateway/index.cjs": "e1e060fcf1964a583c40fe88c2fb38b01b8df52288361af15dd34df073697749",
     "packages/search-gateway/normalize.cjs": "c64a3ba2727eccdeebd0866590d47fbfd779ca804e50c9ab1727e684c706a6d9",
     "packages/search-gateway/package.json": "1da477d4bbf7b4e30eea2e878f7d89df29a0c4db93f4ba8a8dd9d819010997c0",
-    "packages/search-gateway/test/confirmation.test.cjs": "b49824102806cc1eeed66377ee0d24505de077d398d69eefa05fa5f22e16165c",
+    "packages/search-gateway/test/confirmation.test.cjs": "21c2d851b8abc229fbd65caf39ab38a7dd136f4b2bd4672e7dfcd2d143859b81",
     "packages/search-gateway/test/fallback.test.cjs": "353c42d15901328057761986a62b08f64ddaecc764e9919ddb63fbc4abecb0ae",
-    "packages/search-gateway/test/fixture.cjs": "850ebd487bdbca5d5a70e048e41a7b988f6093249414d8b07e0238a78ea62ec4",
+    "packages/search-gateway/test/fixture.cjs": "8bb1d53e0251cc40de3ce2ee7e9aa39673305e15dba8b032d621243b201e8dbd",
     "packages/search-gateway/test/gateway.test.cjs": "57147c748fbf8c7c9d4935ada8787470f0df48584c8cff96df4b2ae745d35113",
     "packages/search-gateway/test/media-denial.test.cjs": "9311439ef0808b424768f751e221484696c8478ff25a62588c58dd4adf9428e9",
     "packages/search-gateway/test/normalize.test.cjs": "25966a6ba7cb6d26d26ab1c83c5c88b4040ee40ebd9391de318e00d3d2329aac",
@@ -80,6 +80,7 @@
     "docs/sprints/S15_PROVIDER_ASSESSMENT.md": "974c61d1f64563eb95730b11d32a9de8b188657f13d89b84237fdd91780b5654"
   },
   "limits": [
+    "Native local confirmation must precede any network request, including query-free nonce setup; denied/cancelled prompts must send no request.",
     "A registered signature does not establish explicit user consent; trusted native UI/voice and enrollment are unimplemented.",
     "No HTTP listener, HTTPS deployment, approved provider/endpoint adapter or authoritative funded reservation exists.",
     "Attribution URL validation is syntactic, not DNS/redirect/SSRF or factual/license verification.",
@@ -87,5 +88,6 @@
     "In-memory attempt limits do not establish global billing safety across restarts/replicas.",
     "Native query/session/epoch binding, offline continuation, permitted media/broker/player and physical/privacy acceptance remain blocked.",
     "No live provider queries, credentials, accounts, paid services, package downloads or physical audio were used."
-  ]
+  ],
+  "confirmation_protocol": "QUERY_FREE_NONCE_THEN_POST_CONSENT_QUERY_AND_SIGNATURE"
 }
