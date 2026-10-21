@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "sprint": "S15",
+  "scope": "READ_ONLY_PROVIDER_PREFLIGHT",
+  "reviewed_on": "2026-10-21",
+  "based_on_s14_head": "87ac0dba6fceca68b16028053443d556d9288611",
+  "selected_provider": null,
+  "contract_accepted": false,
+  "retention_preference": "PENDING_OWNER_INPUT",
+  "default_policy": "LIVE_SEARCH_DISABLED",
+  "funded_budget_usd": 0,
+  "authorized_live_requests": 0,
+  "accounts_created": false,
+  "keys_created": false,
+  "services_provisioned": false,
+  "dependencies_installed": false,
+  "live_api_queries_sent": false,
+  "physical_acceptance": "NOT_RUN",
+  "persistent_memory_allowed": false,
+  "tasks": [
+    {
+      "task": "VC-SEARCH-01",
+      "implementation": "PUBLIC_DOCUMENT_REVIEW_ONLY_PENDING_CONTRACT",
+      "verification": "PUBLIC_DOCUMENTS_REVIEWED"
+    },
+    {
+      "task": "VC-SEARCH-02",
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN"
+    },
+    {
+      "task": "VC-SEARCH-03",
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN"
+    },
+    {
+      "task": "VC-SEARCH-04",
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN"
+    },
+    {
+      "task": "VC-SEARCH-05",
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN"
+    },
+    {
+      "task": "VC-SEARCH-06",
+      "implementation": "NOT_STARTED_DEPENDENCY_BLOCKED",
+      "verification": "NOT_RUN"
+    }
+  ],
+  "blockers": [
+    "No selected/approved provider contract, retention/region and billing envelope.",
+    "No approved isolated gateway hosting or credential configuration.",
+    "Shipping joined voice/search caller and authorized result/asset broker remain unconfigured.",
+    "Live media depends on VC-VIS-08 and the native broker; no URL hit grants playback rights."
+  ],
+  "next_review": "Select retention requirement; then prepare exact plan/contract/budget proposal before requesting new consequential access."
+}
