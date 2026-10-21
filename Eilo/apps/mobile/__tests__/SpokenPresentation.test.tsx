@@ -223,3 +223,55 @@ test('dismiss releases current JS clauses, rejects late same-card polls and cann
     view!.root.findAllByProps({ testID: 'spoken-reply' }).length,
   ).toBeGreaterThan(0);
 });
+
+test.each(['stop', 'privacyEpoch', 'voiceOnly', 'textOff'] as const)(
+  '%s removes synthetic private content and rejects an in-flight prior response',
+  async transition => {
+    let finish: (source: string) => void = () => {};
+    let defer = false;
+    const reader = jest.fn(() =>
+      defer
+        ? new Promise<string>(done => {
+            finish = done;
+          })
+        : Promise.resolve(JSON.stringify(envelope())),
+    );
+    await act(() => {
+      view = Renderer.create(<HookView reader={reader} />);
+    });
+    await act(() => changed('active'));
+    expect(
+      view!.root.findAllByProps({ testID: 'spoken-reply' }).length,
+    ).toBeGreaterThan(0);
+    defer = true;
+    await act(() => jest.advanceTimersByTime(250));
+    const oldFinish = finish;
+    const replacement: ControlSnapshot = {
+      ...snapshot,
+      controller: { ...snapshot.controller },
+      preferences: {
+        ...snapshot.preferences,
+        display: { ...snapshot.preferences.display },
+      },
+    };
+    if (transition === 'stop') {
+      replacement.controller.state = 'stopped';
+    }
+    if (transition === 'privacyEpoch') {
+      replacement.controller.privacyEpoch++;
+    }
+    if (transition === 'voiceOnly') {
+      replacement.preferences.display.voiceOnly = true;
+    }
+    if (transition === 'textOff') {
+      replacement.preferences.display.text = false;
+    }
+    await act(() =>
+      view!.update(<HookView value={replacement} reader={reader} />),
+    );
+    await act(() => oldFinish(JSON.stringify(envelope())));
+    expect(view!.root.findAllByProps({ testID: 'spoken-reply' })).toHaveLength(
+      0,
+    );
+  },
+);

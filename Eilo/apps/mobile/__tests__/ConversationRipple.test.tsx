@@ -3,6 +3,7 @@ import {
   AccessibilityInfo,
   Animated,
   AppState,
+  StyleSheet,
   type AppStateStatus,
 } from 'react-native';
 import tokens from '@eilo/design-tokens';
@@ -134,5 +135,21 @@ test('late initial motion query cannot overwrite a new accessibility choice', as
   await act(() => appChanged('active'));
   await act(() => motionChanged(true));
   await act(() => resolve(false));
+  expect(start).not.toHaveBeenCalled();
+});
+
+test('stopped, standby and thinking have distinct static shapes', async () => {
+  const shapes = [];
+  for (const state of ['stopped', 'standby', 'thinking'] as const) {
+    await act(() => {
+      view = Renderer.create(draw(snapshot(state)));
+    });
+    const shape = StyleSheet.flatten(
+      view.root.findByProps({ testID: `ripple-${state}` }).props.style,
+    );
+    shapes.push([shape.width, shape.height, shape.borderRadius]);
+    await act(() => view.unmount());
+  }
+  expect(new Set(shapes.map(shape => JSON.stringify(shape))).size).toBe(3);
   expect(start).not.toHaveBeenCalled();
 });

@@ -97,6 +97,8 @@ export function ConversationRipple({
       ? styles.speaking
       : state === 'thinking'
       ? styles.thinking
+      : state === 'standby'
+      ? styles.standby
       : styles.idle;
   return (
     <View
@@ -151,6 +153,7 @@ const styles = StyleSheet.create({
   inner: { width: 60, height: 60, borderRadius: 30, borderWidth: 1 },
   listening: { width: 138, height: 138, borderRadius: 69 },
   speaking: { width: 152, height: 116, borderRadius: 58 },
+  standby: { width: 112, height: 80, borderRadius: 40, opacity: 0.65 },
   thinking: { width: 104, height: 104, borderRadius: 28 },
   idle: { width: 88, height: 88, borderRadius: 44, opacity: 0.55 },
 });
