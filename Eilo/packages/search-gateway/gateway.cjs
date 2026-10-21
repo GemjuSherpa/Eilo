@@ -1,7 +1,7 @@
 'use strict';
 const { closed, queryValid, textOnly, scopeValid, idValid, approvedProfile } = require('./validation.cjs');
 const { normalizeResults } = require('./normalize.cjs');
-const unavailable = status => Object.freeze({ status, results: Object.freeze([]), localResponseRequired: true });
+const { fallback: unavailable, success } = require('./fallback.cjs');
 function readWire(body) {
   if (!(typeof body === 'string' || Buffer.isBuffer(body)) || Buffer.byteLength(body) > 2048) { return null; }
   let value;
@@ -82,7 +82,7 @@ function createGateway({ profile = null, authority = null, transport = null, res
         let results;
         try { results = normalizeResults(response.body); } catch { return unavailable('result_rejected'); }
         if (!configured() || entry.cancelled) { return unavailable('revoked'); }
-        return Object.freeze({ status: 'ok', results, localResponseRequired: false });
+        return results.length ? success(results) : unavailable('no_results');
       } finally {
         entry.callerFinished = true; release();
         clearTimeout(timer); signal?.removeEventListener('abort', onAbort); entry.notify = null;

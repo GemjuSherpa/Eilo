@@ -53,7 +53,7 @@ test('scope revocation, caller abort and permanent disable reject pending/late r
 test('transport/normalizer failures, wrong content types and overlarge bodies give generic fallback', async () => {
   for (const bad of [{ status: 429, contentType: 'application/json', body: '' }, { status: 503, contentType: 'application/json', body: 'private error' }, { ...response(), contentType: 'text/html' }, { ...response(), body: 'x'.repeat(32769) }, { ...response(), cookie: 'private' }]) {
     const h = fixture(), g = gateway(h, { transport: async () => bad });
-    const result = await g.execute(h.request(), context); assert.notEqual(result.status, 'ok'); assert.deepEqual(result.results, []); assert.equal(result.localResponseRequired, true); assert.equal(JSON.stringify(result).includes('private'), false);
+    const result = await g.execute(h.request(), context); assert.notEqual(result.status, 'ok'); assert.deepEqual(result.results, []); assert.equal(result.offerOfflineAnswer, true); assert.equal(JSON.stringify(result).includes('private'), false);
   }
   const h = fixture(), g = gateway(h, { transport: async () => { throw new Error('private exception'); } });
   assert.equal((await g.execute(h.request(), context)).status, 'provider_error');
