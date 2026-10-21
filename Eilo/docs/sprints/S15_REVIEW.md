@@ -1,0 +1,11 @@
+# S15 — confirmed search boundary
+
+This sprint builds the available offline safeguards without enabling live search. No provider/contract/retention/region/funding decision, account, deployed gateway, key registration, package download or physical network trial is implied. Shipping native search/voice confirmation and HTTPS/provider transport remain unconfigured. S08 remains HOLD and persistent memory remains disabled.
+
+## VC-SEARCH-02 — offline confirmation protocol
+
+A new server-only workspace, with no external dependencies or listener, accepts bounded exact query bytes and text-only previews. Default/unreviewed/unfunded profile or missing registered P-256 key denies previews. A one-use signed challenge binds query digest, provider and reviewed profile revision. A ticket has the preview's monotonic expiry, is consumed once even on an invalid attempt, and can be cancelled/revoked by opaque scope. Permanent authority disable releases pending references and refuses new work. Pending storage is bounded; diagnostics contain only counts.
+
+This proves offline replay/shape/expiry/key-possession properties. It does **not** prove explicit user consent: a registered signature alone cannot prove that a user saw the preview. The trusted native view/voice adapter must display the exact minimized query/provider and enforce foreground/unlocked active-session confirmation before signing; key enrollment and server-bound scope mapping must be approved and verified. Those integrations are not implemented, and no shipping app command can request a search. A closed schema does not itself detect private information pasted into a query. JavaScript reference release is not certified erasure.
+
+Validation: seven Node protocol tests cover default denial, profile restrictions, forged flags/modified signatures/query/media, cross-scope/replay rejection, expiry at the boundary, clock rollback/non-finite clocks, cancellation/revocation, bounded storage, Unicode byte limits and getter rejection. Existing mobile/contract tests, workspace lint/type checks and the standard 320-Swift/normal simulator build/install/three ten-second launch checks pass (s15-confirmation-core). The lockfile adds only the local workspace; no external dependency version changes or installation is required. Native consent/packet/HTTPS acceptance remains NOT_RUN.

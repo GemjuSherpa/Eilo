@@ -1,0 +1,14 @@
+{
+  "name": "@eilo/search-gateway",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Offline-tested server boundary; no listener, provider transport or mobile activation",
+  "main": "index.cjs",
+  "scripts": {
+    "test": "node --test test/*.test.cjs",
+    "lint": "eslint . --ext .cjs"
+  },
+  "engines": {
+    "node": "^22.13.0 || ^24.3.0 || >=26.0.0"
+  }
+}
