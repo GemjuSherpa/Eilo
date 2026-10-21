@@ -5,7 +5,8 @@
   "workspaces": [
     "apps/mobile",
     "packages/contracts",
-    "packages/design-tokens"
+    "packages/design-tokens",
+    "packages/search-gateway"
   ],
   "packageManager": "npm@11.6.2",
   "engines": {

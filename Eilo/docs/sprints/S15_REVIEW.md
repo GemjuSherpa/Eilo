@@ -1,0 +1,55 @@
+# S15 — confirmed search boundary
+
+This sprint builds the available offline safeguards without enabling live search. No provider/contract/retention/region/funding decision, account, deployed gateway, key registration, package download or physical network trial is implied. Shipping native search/voice confirmation and HTTPS/provider transport remain unconfigured. S08 remains HOLD and persistent memory remains disabled.
+
+## VC-SEARCH-02 — offline confirmation protocol
+
+A new server-only workspace, with no external dependencies or listener, issues query-free nonces only. Default/unreviewed/zero-allowance profile or missing registered P-256 key denies nonce setup. Query and signature arrive together in a bounded text-only execution request. The canonical proof binds query digest, provider, reviewed profile revision and one-use nonce. A nonce has a monotonic expiry, is consumed even on an invalid attempt, and can be cancelled/revoked by opaque scope. Permanent authority disable releases pending references and refuses new work. Pending storage is bounded; diagnostics contain only counts.
+
+This proves offline replay/shape/expiry/key-possession properties. It does **not** prove explicit user consent: a registered signature alone cannot prove that a user saw the preview. The trusted native view/voice adapter must display the exact minimized query/provider and enforce foreground/unlocked active-session confirmation before any network request (including query-free nonce setup), then sign only the frozen approved query; key enrollment and server-bound scope mapping must be approved and verified. Those integrations are not implemented, and no shipping app command can request a search. A closed schema does not itself detect private information pasted into a query. JavaScript reference release is not certified erasure.
+
+Validation: seven Node protocol tests cover default denial, profile restrictions, forged flags/modified signatures/query/media, cross-scope/replay rejection, expiry at the boundary, clock rollback/non-finite clocks, cancellation/revocation, bounded storage, Unicode byte limits and getter rejection. Existing mobile/contract tests, workspace lint/type checks and the standard 320-Swift/normal simulator build/install/three ten-second launch checks pass (s15-confirmation-core). The lockfile adds only the local workspace; no external dependency version changes or installation is required. Native consent/packet/HTTPS acceptance remains NOT_RUN.
+
+## VC-SEARCH-03 — offline gateway request core
+
+The in-memory gateway accepts a closed 2-KiB UTF-8 request containing version, nonce/ticket ID, signature, exact query and text-only media types; additional transcript/account/location/endpoint/confirmation fields are rejected. Provider/review revision must match the confirmation authority. Valid requests consume their ticket before offline/budget/transport checks; malformed objects with an extractable ticket invalidate it. Funding is denied unless a server-owned callback synchronously confirms an exclusive reservation; the local attempt cap is conservative and is not a cross-replica billing ledger. No actual budget adapter exists.
+
+Concurrency is reserved before callbacks to prevent re-entrant budget logic from bypassing cancellation or limits. Timeouts/revocation abort and return fallback promptly, but an adapter ignoring AbortSignal retains its capacity slot until it settles. Late replies never publish. Responses are limited to JSON/32 KiB before normalization and raw errors never leave the boundary. The injected transport is a fixture port; no listener, HTTPS deployment, endpoint/DNS/redirect handling, streaming decompression, real logging configuration or native scope registration is implemented. Live gateway/packet and production resource acceptance remain NOT_RUN.
+
+Validation: 15 Node tests (eight gateway tests plus seven confirmation tests), including malformed UTF-8/extra private fields, wrong provider/revision, missing/async/failed budget, ticket replay after denial, byte caps, timeout and abort-ignoring capacity, cancellation/late replies and re-entrant budget callbacks. Lint and standard Swift/simulator regression checks pass (s15-gateway-core); no external network or physical audio was used.
+
+## VC-SEARCH-04 — untrusted result normalization
+
+The gateway now uses its built-in bounded JSON normalizer rather than an injected parser callback. It admits at most eight records with explicit sources, four known result kinds, plain bounded text/details, canonical nullable timestamps and nullable HTTPS license references. Unknown fields, markup, unsafe address shapes, ports/credentials, query/fragment tracking and malformed/oversized data reject the whole response. No absent rating, time, date or license is invented. Records are deeply frozen, carry generated opaque IDs, remain sourceVerified=false, and cannot enable images/video. Instruction-shaped plain text remains data; no command, fetch or model action is executed.
+
+URL checking is syntactic and does not establish DNS/redirect safety, publisher truth or reuse rights. Actual provider adaptation, approved licensing/attribution and native S14 projection remain blocked/unconfigured. The normalizer's evidence fields are not passed directly into S14's separate closed envelope. Real-network SSRF, packet and provider acceptance remain NOT_RUN.
+
+Integration exposed a revocation window: the transport slot had been released before final response processing. It now stays tracked until both the transport has settled and the caller has finished, so revocation during final policy/normalization checks still discards the reply. Validation: 20 Node tests, warning-free lint and standard Swift/normal simulator regression checks pass (s15-result-normalization), including malformed sources/dates/licenses, tracking/private URL forms, malicious snippets, immutable output and the final-processing revocation race.
+
+## VC-SEARCH-05 — denied-media path; live retrieval BLOCKED
+
+Text-only request validation refuses image/video lists, asset URLs, tap/autoplay/display flags and client license claims before budget reservation or fixture transport. Normalized video metadata stays unavailable even with a syntactically valid license reference; thumbnails/embeds/media-grant fields reject the response. Binary media or mismatched MIME responses never publish. There is no media loader, player, native asset grant, tracking-pixel request or cache of media bytes.
+
+The retention audit also found that expiry had only been purged on a later call. A single unreferenced timer now proactively releases expired nonce references while idle. Scope cancellation, clear and disable cancel/reschedule it; diagnostics are read-only. A fake-clock boundary test observes proactive cleanup without another request. This is reference release, not certified erasure.
+
+Validation: 24 Node tests, warning-free lint and the standard Swift/simulator checks pass (s15-media-denial). These include three new denied-media/MIME/license tests and proactive idle expiry. Actual permitted-origin/redirect/DNS/size/decompression/decoder checks, native session-only asset cache and VC-VIS-08 pause-before-play/explicit-resume are still BLOCKED on approved provider/native broker/player work. Physical media, cache-forensic and packet acceptance remains NOT_RUN; denial tests do not satisfy live retrieval acceptance.
+
+## VC-SEARCH-06 — explicit offline and capacity fallback
+
+Finite fallback statuses provide bounded notices for offline, unavailable/denied, busy, exhausted capacity,429, timeout, provider failure, rejected or empty results. They contain no provider exception, query, URL or claimed live facts. Results remain explicitly untrusted provider data. No gateway budget controls local inference; this server-only workspace is not imported by the shipping mobile app and exposes no model/audio/history operation.
+
+Replaced the prototype's ambiguous localResponseRequired flag: fallback may offer an offline answer, but requires native eligibility, never resumes automatically and always requires fresh confirmation for retry. Revoked requests offer no fallback action, so cancellation/Stop/lock cannot become an instruction to run a local model or audio. Actual native continuation/current-query binding is still unconfigured and must recheck eligibility before any display, inference or voice action.
+
+Validation: 27 Node tests, full workspace lint/type checks/mobile/contract tests, 320 Swift tests and standard normal simulator build/install/three fresh launches pass (s15-offline-fallback). Fixtures cover all fallback states, no sensitive error echo, no automatic resume and consumed-ticket retry after revocation. These are offline protocol outcomes, not real airplane-mode/provider/billing/privacy acceptance. Live search and physical acceptance remain blocked/NOT_RUN.
+
+## Consolidated scope and acceptance
+
+All currently available offline portions are consolidated for one sprint PR; the six full tasks remain partially accepted/dependency-blocked as recorded in S15_PREFLIGHT.json and S15_VALIDATION.json. There is no shipping search action or network listener. The local package is server-only and has no external dependencies. Final structural tests also reject non-enumerable profile fields (which could otherwise be lost while copying) and nested media-array getters. Profile approval flags in fixtures and generated process-only test keys confer no real provider or user permission.
+
+Actual native preview/voice confirmation and authenticated key registration, server-bound scope, provider/legal/retention/region/funded approval, authoritative quota binding, HTTPS/streaming/logging/endpoint deployment, native projection/continuation and permitted media/player integration remain open. Physical/native consent, packet, DNS/redirect, logging/storage forensic, airplane-mode and provider billing acceptance remain NOT_RUN. No S08/persistent-memory or release gate is promoted.
+
+## Final consent-order review
+
+Removed the prototype's query-taking preview/confirmation round trip. Authority challenge setup now takes only a server-bound opaque scope and returns no query or digest. It stores only nonce/scope/deadline metadata. The query and canonical P-256 proof are verified together on execution; a new test asserts there is no server preview API accepting query text. Native confirmation still must precede every network request, so denied/cancelled native prompts send neither query nor handshake. The registered signature alone still does not prove that the native UI obtained consent; that trusted adapter and its packet trial remain unimplemented.
+
+All 27 protocol tests, full workspace checks and the standard Swift/simulator regression pass on this final protocol (s15-queryless-confirmation). The first PR Android runner rejected its NDK download as an invalid ZIP before compilation; no SDK version or gate was changed. The consent-order code revision is independently justified and receives fresh exact-head CI. No current live query/data collection occurred.
