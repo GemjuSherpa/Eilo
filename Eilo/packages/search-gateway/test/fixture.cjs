@@ -13,5 +13,6 @@ function fixture(options = {}) {
   };
   return { authority, request };
 }
-const response = () => ({ status: 200, contentType: 'application/json', body: '{"items":[]}' });
-module.exports = { fixture, profile, input, response };
+const item = Object.freeze({ kind: 'article', title: 'Synthetic source', summary: 'Fixture facts, not a live result.', source: { name: 'Fixture publisher', url: 'https://example.org/article' }, details: [], publishedAt: null, licenseRef: null });
+const response = () => ({ status: 200, contentType: 'application/json', body: JSON.stringify({ version: 1, items: [item] }) });
+module.exports = { fixture, profile, input, response, item };

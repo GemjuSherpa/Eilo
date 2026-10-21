@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const { setImmediate: tick } = require('node:timers/promises');
 const { createGateway, readRequest } = require('../gateway.cjs');
 const { fixture, profile, input, response } = require('./fixture.cjs');
-function gateway(h, options = {}) { return createGateway({ profile, authority: h.authority, reserveBudget: () => true, normalize: () => Object.freeze([]), transport: async () => response(), ...options }); }
+function gateway(h, options = {}) { return createGateway({ profile, authority: h.authority, reserveBudget: () => true, transport: async () => response(), ...options }); }
 const context = { scope: 'scope-a', online: true };
 test('closed request parser rejects private fields, malformed UTF-8, oversized bodies and media', () => {
   const h = fixture(), good = JSON.parse(h.request()); assert.ok(readRequest(JSON.stringify(good)));
@@ -75,4 +75,15 @@ test('re-entrant budget callbacks cannot bypass cancellation, concurrency or per
   g = gateway(h, { profile: { ...profile, maxRequests: 1 }, reserveBudget: () => { nested = g.execute(h.request(), context); return true; }, transport: async () => { calls++; return response(); } });
   assert.equal((await g.execute(h.request(), context)).status, 'ok');
   assert.equal((await nested).status, 'budget_exhausted'); assert.equal(calls, 1);
+});
+
+test('revocation during the final configuration check still owns the response until processing finishes', async () => {
+  const h = fixture(); let received = false, revoked = false, g;
+  const authority = { ...h.authority, binding() {
+    if (received && !revoked) { revoked = true; g.revokeScope('scope-a'); }
+    return h.authority.binding();
+  } };
+  g = gateway(h, { authority, transport: async () => { received = true; return response(); } });
+  const result = await g.execute(h.request(), context);
+  assert.equal(result.status, 'revoked'); assert.deepEqual(result.results, []); assert.equal(g.diagnostics().inFlight, 0);
 });
