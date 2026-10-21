@@ -52,6 +52,24 @@ final class NativeClauseQueueTests:XCTestCase {
     XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
     XCTAssertEqual(c.spokenPresentation(allowed:true)["interrupted"] as? Bool,true)
   }
+  func testDismissIsVisualOnlySuppressesSameReplyAndRejectsStaleCard()throws{
+    let c=controller(),s=Sink(),token=c.token!;let q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:token,sink:s,authorized:{_,_ in true}))
+    q.enqueue("First.");q.enqueue("Second.");q.seal();s.callbacks[0](.finished)
+    let shown=c.spokenPresentation(allowed:true),session=try XCTUnwrap(shown["sessionId"] as? String),epoch=try XCTUnwrap(shown["privacyEpoch"] as? UInt64),card=try XCTUnwrap(shown["cardId"] as? String)
+    XCTAssertFalse(c.dismissSpokenPresentation(session:session,epoch:epoch,card:card,onlyIdle:true))
+    XCTAssertTrue(c.dismissSpokenPresentation(session:session,epoch:epoch,card:card));XCTAssertTrue(c.token===token);XCTAssertFalse(token.cancelled);XCTAssertEqual(s.stops,0)
+    c.setSpokenPresentationEnabled(false);c.setSpokenPresentationEnabled(true);s.callbacks[1](.finished)
+    XCTAssertEqual(c.state,.standby);XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
+    XCTAssertTrue(c.dispatch(.speechDetected,token:c.token));XCTAssertTrue(c.dispatch(.endpoint,token:c.token))
+    let sink=Sink(),next=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:sink,authorized:{_,_ in true}));next.enqueue("New.");sink.callbacks[0](.finished)
+    XCTAssertFalse(c.dismissSpokenPresentation(session:session,epoch:epoch,card:card));XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],["New."])
+  }
+  func testIdleDismissReleasesCompletedCardWithoutStoppingStandby()throws{
+    let c=controller(),s=Sink(),q=try XCTUnwrap(NativeClauseQueue.create(controller:c,token:c.token!,sink:s,authorized:{_,_ in true}));q.enqueue("Done.");q.seal();s.callbacks[0](.finished)
+    let v=c.spokenPresentation(allowed:true),token=c.token
+    XCTAssertTrue(c.dismissSpokenPresentation(session:v["sessionId"] as! String,epoch:v["privacyEpoch"] as! UInt64,card:v["cardId"] as! String,onlyIdle:true))
+    XCTAssertTrue(c.token===token);XCTAssertEqual(c.state,.standby);XCTAssertEqual(c.spokenPresentation(allowed:true)["clauses"] as? [String],[])
+  }
   final class Sink:NativeClauseSink{
     var texts:[String]=[],callbacks:[(OfflineSpeechEvent)->Void]=[],stops=0,ok=true
     func enqueue(_ token:GenerationToken,text:String,event:@escaping(OfflineSpeechEvent)->Void)->Bool{texts.append(text);callbacks.append(event);return ok}

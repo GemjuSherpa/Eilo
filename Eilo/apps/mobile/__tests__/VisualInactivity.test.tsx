@@ -20,13 +20,21 @@ function Harness({
   revision = 1,
   activity = idle,
   onHidden = undefined,
+  beforeAutoHide = undefined,
 }: {
   card?: string;
   revision?: number;
   activity?: VisualActivity;
   onHidden?: (key: string) => void;
+  beforeAutoHide?: (key: string) => Promise<boolean>;
 }) {
-  controls = useVisualInactivity(card, revision, activity, onHidden);
+  controls = useVisualInactivity(
+    card,
+    revision,
+    activity,
+    onHidden,
+    beforeAutoHide,
+  );
   return <Text>{controls.visible ? 'visible' : 'hidden'}</Text>;
 }
 beforeEach(() => {
@@ -126,5 +134,27 @@ test('a hidden card stays hidden on old callbacks; a new card appears and old ac
   await act(() => view!.update(<Harness card="card-b" />));
   expect(controls.visible).toBe(true);
   await act(() => oldHide());
+  expect(controls.visible).toBe(true);
+});
+
+test('unknown native auto-dismiss retains the card; stale acknowledgements cannot hide a new card', async () => {
+  const denied = jest.fn(async () => false);
+  await act(() => {
+    view = Renderer.create(<Harness beforeAutoHide={denied} />);
+  });
+  await act(() => jest.advanceTimersByTime(20000));
+  expect(denied).toHaveBeenCalledTimes(1);
+  expect(controls.visible).toBe(true);
+  let resolve: (value: boolean) => void = () => {};
+  const delayed = () =>
+    new Promise<boolean>(done => {
+      resolve = done;
+    });
+  await act(() => view!.update(<Harness beforeAutoHide={delayed} />));
+  await act(() => jest.advanceTimersByTime(20000));
+  await act(() =>
+    view!.update(<Harness card="card-b" beforeAutoHide={delayed} />),
+  );
+  await act(() => resolve(true));
   expect(controls.visible).toBe(true);
 });

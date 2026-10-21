@@ -201,14 +201,21 @@ public final class NativeController: @unchecked Sendable {
   // Separate volatile presentation; never included in the metadata snapshot or diagnostics.
   private var spokenClauses:[String]=[],spokenOmitted=false,spokenInterrupted=false
   private var spokenRevision:UInt64=0,spokenPresentationEnabled=false
-  private var spokenCardId=""
+  private var spokenCardId="",spokenSuppressed=false
   private func bumpSpoken(){if spokenRevision<9_007_199_254_740_991{spokenRevision+=1}}
-  private func clearSpoken(){spokenClauses.removeAll();spokenCardId="";spokenOmitted=false;spokenInterrupted=false;bumpSpoken()}
-  public func setSpokenPresentationEnabled(_ enabled:Bool){lock.lock();defer{lock.unlock()};spokenPresentationEnabled=enabled;if !enabled{clearSpoken()}}
-  func markSpokenInterruption(){lock.lock();defer{lock.unlock()};guard currentState == .error,!locked,!stopping else{return};spokenClauses.removeAll();spokenCardId="";spokenOmitted=false;spokenInterrupted=true;spokenCardId=UUID().uuidString.lowercased();bumpSpoken()}
+  private func clearSpoken(resetSuppression:Bool=true){if resetSuppression{spokenSuppressed=false};spokenClauses.removeAll();spokenCardId="";spokenOmitted=false;spokenInterrupted=false;bumpSpoken()}
+  public func setSpokenPresentationEnabled(_ enabled:Bool){lock.lock();defer{lock.unlock()};spokenPresentationEnabled=enabled;if !enabled{clearSpoken(resetSuppression:false)}}
+  func markSpokenInterruption(){lock.lock();defer{lock.unlock()};guard currentState == .error,!locked,!stopping,!spokenSuppressed else{return};spokenClauses.removeAll();spokenCardId="";spokenOmitted=false;spokenInterrupted=true;spokenCardId=UUID().uuidString.lowercased();bumpSpoken()}
   public func clearSpokenPresentation(){lock.lock();defer{lock.unlock()};clearSpoken()}
+  /// A visual-only dismissal never changes audio work or controller generation.
+  public func dismissSpokenPresentation(session:String,epoch:UInt64,card:String,onlyIdle:Bool=false)->Bool{
+    lock.lock();defer{lock.unlock()}
+    guard !locked,!stopping,!card.isEmpty,session==sessionID.uuidString.lowercased(),epoch==privacyEpoch,card==spokenCardId,
+      !onlyIdle || currentState == .standby || currentState == .error else{return false}
+    clearSpoken(resetSuppression:false);spokenSuppressed=true;return true
+  }
   func recordSpokenClause(_ ticket:SpeechWorkTicket,text:String){_ = speechTransaction(ticket){
-    guard spokenPresentationEnabled,!text.isEmpty,text.utf8.count<=1024,!text.contains("\0") else{return false}
+    guard spokenPresentationEnabled,!spokenSuppressed,!text.isEmpty,text.utf8.count<=1024,!text.contains("\0") else{return false}
     spokenInterrupted=false;if spokenCardId.isEmpty{spokenCardId=UUID().uuidString.lowercased()};spokenClauses.append(text)
     while spokenClauses.count>32 || spokenClauses.reduce(0,{$0+$1.utf8.count})>4096 {spokenClauses.removeFirst();spokenOmitted=true}
     bumpSpoken();return true

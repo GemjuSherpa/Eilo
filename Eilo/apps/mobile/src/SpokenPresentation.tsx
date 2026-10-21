@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, Text, View } from 'react-native';
 import type { StateEvent } from '@eilo/contracts';
 import type { ControlSnapshot } from './ControlClient';
@@ -34,6 +34,20 @@ export function acknowledgeClearedPresentation(identity: Identity) {
   NativeControl?.command('presentationReady', JSON.stringify(tuple)).catch(
     () => {},
   );
+}
+export async function dismissNativePresentation(
+  value: SpokenPresentation,
+  idle: boolean,
+) {
+  try {
+    const result = await NativeControl?.command(
+      idle ? 'autoHidePresentation' : 'dismissPresentation',
+      JSON.stringify([value.sessionId, value.privacyEpoch, value.cardId]),
+    );
+    return result === '{"dismissed":true}';
+  } catch {
+    return false;
+  }
 }
 export function samePresentationIdentity(a: Identity, b: Identity) {
   return (
@@ -100,6 +114,17 @@ export function useSpokenPresentation(
     AppState.currentState === 'active',
   );
   const [value, setValue] = useState<SpokenPresentation | null>(null);
+  const suppressed = useRef<string | null>(null);
+  const currentValue = useRef(value);
+  currentValue.current = value;
+  const discard = useCallback((cardId: string) => {
+    if (currentValue.current?.cardId !== cardId) {
+      return;
+    }
+    suppressed.current = cardId;
+    currentValue.current = null;
+    setValue(null);
+  }, []);
   const enabled =
     !!snapshot &&
     !blocked &&
@@ -142,6 +167,9 @@ export function useSpokenPresentation(
           return;
         }
         const incoming = decodePresentation(source, identity);
+        if (incoming.cardId && incoming.cardId === suppressed.current) {
+          return;
+        }
         setValue(previous =>
           !previous || incoming.revision >= previous.revision
             ? incoming
@@ -165,12 +193,17 @@ export function useSpokenPresentation(
       }
     };
   }, [enabled, identity, reader]);
-  return enabled &&
-    identity &&
-    value &&
-    samePresentationIdentity(value, identity)
-    ? value
-    : null;
+  return {
+    discard,
+    value:
+      enabled &&
+      identity &&
+      value &&
+      value.cardId !== suppressed.current &&
+      samePresentationIdentity(value, identity)
+        ? value
+        : null,
+  };
 }
 
 export function SpokenReply({

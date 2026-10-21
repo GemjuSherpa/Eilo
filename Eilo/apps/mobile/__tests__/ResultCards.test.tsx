@@ -70,7 +70,7 @@ test('missing sources, stale scope, duplicate IDs and unknown fields produce no 
     [{ ...result, title: '<script>bad</script>' }],
     [{ ...result, summary: 'x'.repeat(1025) }],
   ]) {
-    expect(parseResultEnvelope({ context, items }, context)).toEqual([]);
+    expect(parseResultEnvelope({ context, revision: 1, items }, context)).toEqual([]);
   }
   expect(
     parseResultEnvelope(

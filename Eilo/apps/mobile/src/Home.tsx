@@ -1,9 +1,13 @@
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Action, styles, type Colors } from './Onboarding';
 import type { ControlCommand, ControlSnapshot } from './ControlClient';
 import { ConversationRipple } from './ConversationRipple';
-import { useSpokenPresentation } from './SpokenPresentation';
+import {
+  dismissNativePresentation,
+  useSpokenPresentation,
+} from './SpokenPresentation';
 import { parseResultEnvelope, ResultCards } from './ResultCards';
 import { useVisualInactivity } from './VisualInactivity';
 export function Home({
@@ -22,7 +26,19 @@ export function Home({
   resultEnvelope?: unknown;
 }) {
   const focused = useIsFocused();
-  const spoken = useSpokenPresentation(snapshot, busy || error || !focused);
+  const { value: spoken, discard } = useSpokenPresentation(
+    snapshot,
+    busy || error || !focused,
+  );
+  const [pinnedKey, setPinnedKey] = useState<string | null>(null);
+  useEffect(() => {
+    setPinnedKey(null);
+  }, [
+    snapshot?.controller.sessionId,
+    snapshot?.controller.privacyEpoch,
+    snapshot?.preferences.display.text,
+    snapshot?.preferences.display.voiceOnly,
+  ]);
   const state = snapshot?.controller.state;
   const active =
     snapshot?.capturePending ||
@@ -57,13 +73,26 @@ export function Home({
   const revision = rich.length
     ? (resultEnvelope as { revision: number }).revision
     : spoken?.revision ?? 0;
-  const visual = useVisualInactivity(cardKey, revision, {
-    speech: state === 'listening' || state === 'speaking',
-    processing: state === 'thinking',
-    loading: busy,
-    video: false,
-    pinned: false,
-  });
+  const visual = useVisualInactivity(
+    cardKey,
+    revision,
+    {
+      speech: state === 'listening' || state === 'speaking',
+      processing: state === 'thinking',
+      loading: busy,
+      video: false,
+      pinned: !!cardKey && pinnedKey === cardKey,
+    },
+    key => {
+      if (spoken && key === cardKey) {
+        discard(spoken.cardId);
+      }
+    },
+    async key =>
+      !spoken || key !== cardKey
+        ? false
+        : dismissNativePresentation(spoken, true),
+  );
   return (
     <View
       style={layout.screen}
@@ -128,28 +157,50 @@ export function Home({
           </>
         )}
         {visual.visible && (
-          <ResultCards
-            envelope={
-              focused &&
-              !busy &&
-              !error &&
-              state !== undefined &&
-              ['standby', 'listening', 'thinking', 'speaking'].includes(state)
-                ? resultEnvelope
-                : null
-            }
-            expected={snapshot?.controller ?? null}
-            spoken={spoken}
-            preferences={
-              snapshot?.preferences.display ?? {
-                text: false,
-                images: false,
-                video: false,
-                voiceOnly: true,
+          <View>
+            <Action
+              colors={colors}
+              label={pinnedKey === cardKey ? 'Unpin card' : 'Pin card'}
+              onPress={() => {
+                visual.interact();
+                setPinnedKey(pinnedKey === cardKey ? null : cardKey);
+              }}
+            />
+            <Action
+              colors={colors}
+              label="Dismiss card"
+              onPress={() => {
+                if (spoken) {
+                  discard(spoken.cardId);
+                  dismissNativePresentation(spoken, false).catch(() => {});
+                }
+                setPinnedKey(null);
+                visual.hide();
+              }}
+            />
+            <ResultCards
+              envelope={
+                focused &&
+                !busy &&
+                !error &&
+                state !== undefined &&
+                ['standby', 'listening', 'thinking', 'speaking'].includes(state)
+                  ? resultEnvelope
+                  : null
               }
-            }
-            colors={colors}
-          />
+              expected={snapshot?.controller ?? null}
+              spoken={spoken}
+              preferences={
+                snapshot?.preferences.display ?? {
+                  text: false,
+                  images: false,
+                  video: false,
+                  voiceOnly: true,
+                }
+              }
+              colors={colors}
+            />
+          </View>
         )}
       </ScrollView>
       <View testID="conversation-safety-controls">
@@ -157,7 +208,10 @@ export function Home({
           colors={colors}
           label={needsStop ? 'Stop' : 'Start'}
           disabled={!needsStop && busy}
-          onPress={() => run(needsStop ? 'stop' : 'start')}
+          onPress={() => {
+            setPinnedKey(null);
+            run(needsStop ? 'stop' : 'start');
+          }}
         />
       </View>
     </View>
