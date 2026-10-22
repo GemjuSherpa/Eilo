@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "sprint": "S16",
+  "reviewed_base_main": "23271ca4a8b76045fd43fdf242a749d5d12f6d96",
+  "scope": "DOCUMENT_ASSESSMENT_AND_PHYSICAL_MATRIX_PREPARATION_ONLY",
+  "sprint_acceptance": "INCOMPLETE_DEPENDENCY_BLOCKED",
+  "outside_app_enabled": false,
+  "physical_tests": "NOT_RUN",
+  "s08_decision": "HOLD",
+  "persistent_memory_allowed": false,
+  "tasks": [
+    {
+      "task": "VC-SURFACE-03",
+      "preparation": "PUBLIC_DOCUMENT_AND_SOURCE_REVIEW",
+      "implementation": "NATIVE_SURFACE_NOT_IMPLEMENTED",
+      "depends_on": [
+        "VC-AUDIO-10"
+      ],
+      "acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-SURFACE-01",
+      "preparation": "PUBLIC_DOCUMENT_AND_SOURCE_REVIEW",
+      "implementation": "OVERLAY_NOT_IMPLEMENTED",
+      "depends_on": [
+        "VC-AUDIO-09",
+        "VC-VIS-05"
+      ],
+      "acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-SURFACE-02",
+      "preparation": "PHYSICAL_JOURNEYS_DEFINED",
+      "implementation": "DEPENDENCY_BLOCKED",
+      "depends_on": [
+        "VC-SURFACE-01",
+        "VC-VIS-07",
+        "VC-VIS-10"
+      ],
+      "acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-SURFACE-04",
+      "preparation": "GENERIC_PAYLOAD_AND_LIFECYCLE_REQUIREMENTS_DEFINED",
+      "implementation": "DEPENDENCY_BLOCKED",
+      "depends_on": [
+        "VC-SURFACE-03",
+        "VC-VIS-10"
+      ],
+      "acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-SURFACE-05",
+      "preparation": "CONSENT_LOCK_RACE_AND_STALE_SESSION_JOURNEYS_DEFINED",
+      "implementation": "DEPENDENCY_BLOCKED",
+      "depends_on": [
+        "VC-SURFACE-02",
+        "VC-SURFACE-04"
+      ],
+      "acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-SURFACE-06",
+      "preparation": "OFFLINE_MATRIX_CHECKER_AND_COLLECTION_PROTOCOL",
+      "implementation": "PHYSICAL_EXECUTION_BLOCKED",
+      "depends_on": [
+        "VC-VIS-10",
+        "VC-SEARCH-06",
+        "VC-SURFACE-05"
+      ],
+      "acceptance": "NOT_RUN"
+    }
+  ],
+  "remaining": [
+    "Owner-approved physical supported-device/build matrix",
+    "Accepted native background-audio prerequisites",
+    "Native overlay/notification/result adapters and current-session binding",
+    "Physical privacy/accessibility/lifecycle evidence",
+    "Approved provider/native search and permitted media/player prerequisites for relevant journeys"
+  ],
+  "permission_changes": []
+}
