@@ -7,7 +7,7 @@ internal enum class SpeechPackKind { VAD,ASR }
 internal data class SpeechArtifactPin(val id:String,val filename:String,val sha256:String,val bytes:Long,val licenseEvidence:String) {
     init {
         require(id.matches(Regex("[a-z0-9][a-z0-9-]{0,63}")) && sha256.matches(Regex("[a-f0-9]{64}")) && licenseEvidence.matches(Regex("[a-f0-9]{64}")))
-        require(bytes in 1..8_000_000_000L && (PackManifest.validFilename(filename,"asr") || PackManifest.validFilename(filename,"tokenizer")))
+        require(bytes in 1..8_000_000_000L && (PackManifest.validFilename(filename,"asr") || PackManifest.validFilename(filename,"tokenizer") || PackManifest.validFilename(filename,"vad")))
     }
 }
 /** Reviewed native pins, never inferred from manifest order or supplied by JS. */
@@ -16,7 +16,7 @@ internal class SpeechPackSelection(val packId:String,val runtimeRevision:String,
     init {
         require(packId.matches(Regex("[a-z0-9][a-z0-9-]{0,63}")) && runtimeRevision.matches(Regex("[a-f0-9]{40}")))
         require(this.pins.map{it.id}.toSet().size==this.pins.size && this.pins.map{it.filename}.toSet().size==this.pins.size)
-        when(kind){SpeechPackKind.VAD->require(this.pins.size==1 && this.pins[0].filename.endsWith(".onnx"));SpeechPackKind.ASR->require(this.pins.map{it.filename}.toSet()==asrNames)}
+        when(kind){SpeechPackKind.VAD->require(this.pins.size==1 && (this.pins[0].filename.endsWith(".onnx") || this.pins[0].filename=="silero_vad_v5.ort"));SpeechPackKind.ASR->require(this.pins.map{it.filename}.toSet()==asrNames)}
     }
     companion object {val asrNames:Set<String> = java.util.Collections.unmodifiableSet(setOf("adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort","streaming_config.json","tokenizer.bin"))}
 }

@@ -7,10 +7,12 @@ final class SpeechPackLeaseTests:XCTestCase {
   final class Fixture {
     let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString),key=P256.Signing.PrivateKey()
     let runtime=String(repeating:"a",count:40),evidence=String(repeating:"c",count:64)
-    let names=["adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort","streaming_config.json","tokenizer.bin"].sorted()+["silero.onnx"]
+    let vadName:String
+    var names=["adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort","streaming_config.json","tokenizer.bin"].sorted()+["silero.onnx"]
     var sources=[URL](),pins=[SpeechArtifactPin]()
     var store:PackStore!
-    init()throws {
+    init(vadName:String="silero.onnx")throws {
+      self.vadName=vadName;names.removeLast();names.append(vadName)
       try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true)
       store=PackStore(root:root.appendingPathComponent("store"),trust:["test-key":key.publicKey.derRepresentation],runtime:runtime,licenseEvidence:[evidence])
       for (i,name) in names.enumerated(){let file=root.appendingPathComponent(name);try Data([UInt8(i),2,3,4]).write(to:file);sources.append(file)
@@ -22,7 +24,7 @@ final class SpeechPackLeaseTests:XCTestCase {
     }
     func activate(_ revision:Int=1,wrongRole:Bool=false,wrongLicense:Bool=false,wrongAsrRole:Bool=false)throws {
       let artifacts=pins.reversed().map{pin->[String:Any]in
-        let vad=pin.filename=="silero.onnx"
+        let vad=pin.filename==vadName
         return ["id":pin.id,"filename":pin.filename,"role":vad ? (wrongRole ? "asr":"vad"):(pin.filename=="tokenizer.bin" ? "tokenizer":(wrongAsrRole && pin.filename=="streaming_config.json" ? "wake":"asr")),"url":"https://models.example.test/"+pin.filename,"sha256":pin.sha256,"bytes":pin.bytes,"license":wrongLicense ? "Apache-2.0":"MIT","licenseEvidence":evidence]
       }
       let data=try JSONSerialization.data(withJSONObject:["schema":1,"packId":"test-pack","revision":revision,"runtimeRevision":runtime,"minAndroid":35,"minIos":18,"artifacts":artifacts],options:[.sortedKeys,.withoutEscapingSlashes])
@@ -163,6 +165,16 @@ final class SpeechPackLeaseTests:XCTestCase {
       }
       h.slot.close();h.w.run()
     }
+  }
+
+  func testOrtVadFilenameIsExactAndRoleBound(){
+    XCTAssertTrue(PackManifest.validFilename("silero_vad_v5.ort",role:"vad"))
+    for role in ["asr","llm","wake","tokenizer"]{XCTAssertFalse(PackManifest.validFilename("silero_vad_v5.ort",role:role))}
+    for name in ["other.ort","silero_vad_v5.ORT","../silero_vad_v5.ort","silero_vad_v5.ort.bak"]{XCTAssertFalse(PackManifest.validFilename(name,role:"vad"))}
+  }
+  func testSignedOrtVadLeaseRetainsRoleHashAndRevocationChecks()throws{
+    let f=try Fixture(vadName:"silero_vad_v5.ort");try f.activate();let lease=try f.lease(.vad);XCTAssertTrue(lease.verified());lease.close();XCTAssertFalse(lease.verified())
+    let bad=try Fixture(vadName:"silero_vad_v5.ort");XCTAssertThrowsError(try bad.activate(wrongRole:true))
   }
 
 }

@@ -1,0 +1,201 @@
+{
+  "scope": "ANDROID_ART_SIGNED_SPEECH_INSTALLER",
+  "synthetic": true,
+  "worker_verified": true,
+  "physical": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "lab_signing": "EPHEMERAL_ES256",
+  "cases": [
+    {
+      "case": "speech16",
+      "installed": true,
+      "vad_opens": 1,
+      "vad_closes": 1,
+      "vad_calls": 57,
+      "asr_opens": 1,
+      "asr_closes": 1,
+      "asr_accept_calls": 19,
+      "asr_finals": 1,
+      "recognized": 1,
+      "metadata": 1,
+      "transcript_sha256": "cd61bf0cc67fc2233111c91167e2abb3c652200bfe22059a166475d37366b7a8",
+      "source_rate": 16000,
+      "normalized_samples": 29184
+    },
+    {
+      "case": "speech48",
+      "installed": true,
+      "vad_opens": 1,
+      "vad_closes": 1,
+      "vad_calls": 57,
+      "asr_opens": 1,
+      "asr_closes": 1,
+      "asr_accept_calls": 19,
+      "asr_finals": 1,
+      "recognized": 1,
+      "metadata": 1,
+      "transcript_sha256": "cd61bf0cc67fc2233111c91167e2abb3c652200bfe22059a166475d37366b7a8",
+      "source_rate": 48000,
+      "normalized_samples": 29184
+    },
+    {
+      "case": "quiet",
+      "installed": true,
+      "vad_opens": 1,
+      "vad_closes": 1,
+      "vad_calls": 157,
+      "asr_opens": 0,
+      "asr_closes": 0,
+      "asr_accept_calls": 0,
+      "asr_finals": 0,
+      "recognized": 0,
+      "metadata": 1,
+      "transcript_sha256": "",
+      "source_rate": 16000,
+      "normalized_samples": 80000
+    },
+    {
+      "case": "stop-final",
+      "installed": true,
+      "vad_opens": 1,
+      "vad_closes": 1,
+      "vad_calls": 57,
+      "asr_opens": 1,
+      "asr_closes": 1,
+      "asr_accept_calls": 19,
+      "asr_finals": 1,
+      "recognized": 0,
+      "metadata": 0,
+      "transcript_sha256": "",
+      "source_rate": 16000,
+      "normalized_samples": 0
+    },
+    {
+      "case": "replace-final",
+      "installed": true,
+      "vad_opens": 1,
+      "vad_closes": 1,
+      "vad_calls": 57,
+      "asr_opens": 1,
+      "asr_closes": 1,
+      "asr_accept_calls": 19,
+      "asr_finals": 1,
+      "recognized": 0,
+      "metadata": 0,
+      "transcript_sha256": "",
+      "source_rate": 16000,
+      "normalized_samples": 0
+    },
+    {
+      "case": "idle-stop",
+      "installed": true,
+      "vad_opens": 1,
+      "vad_closes": 1,
+      "vad_calls": 1,
+      "asr_opens": 0,
+      "asr_closes": 0,
+      "asr_accept_calls": 0,
+      "asr_finals": 0,
+      "recognized": 0,
+      "metadata": 0,
+      "transcript_sha256": "",
+      "source_rate": 16000,
+      "normalized_samples": 0
+    },
+    {
+      "case": "stale-ticket",
+      "installed": false,
+      "vad_opens": 0,
+      "vad_closes": 0,
+      "vad_calls": 0,
+      "asr_opens": 0,
+      "asr_closes": 0,
+      "asr_accept_calls": 0,
+      "asr_finals": 0,
+      "recognized": 0,
+      "metadata": 0,
+      "transcript_sha256": "",
+      "source_rate": 16000,
+      "normalized_samples": 0
+    },
+    {
+      "case": "corrupt-pack",
+      "installed": false,
+      "vad_opens": 0,
+      "vad_closes": 0,
+      "vad_calls": 0,
+      "asr_opens": 0,
+      "asr_closes": 0,
+      "asr_accept_calls": 0,
+      "asr_finals": 0,
+      "recognized": 0,
+      "metadata": 0,
+      "transcript_sha256": "",
+      "source_rate": 16000,
+      "normalized_samples": 0
+    }
+  ],
+  "schema_version": 1,
+  "runtime_profile": "SINGLE_PINNED_MOONSHINE_ORT_1_23_2",
+  "ort_header_commit": "a83fc4d58cb48eb68890dd689f94f28288cf2278",
+  "abi": "arm64-v8a",
+  "android_api": 35,
+  "library_sha256": {
+    "libonnxruntime.so": "86e85022fc539963177e478c8e9a8a8219bc3b0d7515bf5297a62986dbc45e7a",
+    "libeilo_vad_jni.so": "33db457f5195a31e8d074f5ec38434d5c5f391797fefca47fd5c0b8f7b800d42",
+    "libmoonshine.so": "922eddb6a0316f94091f40c5304db152e1b33ac4ad36db97823157dd402e19e0",
+    "libeilo_asr_jni.so": "cf38a4798ce1707e8adceffabc9e3adb3566098de03ca4d3b60152007d418829"
+  },
+  "evaluation_apk_sha256": "7b98239851de1d1d35eb8665a0004730f4367eb76fd182b313ffd5f48e158666",
+  "normal_apk_sha256": "99576eeae48d89546d11a448578dec28e65d2ad567bf703c67708be793679270",
+  "temporary_files_removed": true,
+  "normal_app_restored": true,
+  "internet_permission": "ABSENT",
+  "microphone_permission": "ABSENT",
+  "fixture_sha256": "763fa4368b002d09fc0a52b17cc091568ef32346ba30f0cff1cdac226ac962d5",
+  "vad_model_sha256": "437ce5b0557554fdea448a3d55c8c18726da8afa75f19bce04e9eb0308463467",
+  "vad_source_model_sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
+  "vad_conversion": {
+    "runtime": "1.23.0",
+    "format": "ORT",
+    "optimization": "DISABLED",
+    "converter_sha256": "61103e2c2c16abdccdf0b53fb78cee71bfb8db1686885d485f68c91707ffbd11",
+    "bytes": 2413488
+  },
+  "asr_model_files": [
+    {
+      "file": "adapter.ort",
+      "sha256": "c665f742364febad597cc9ac1e0b341ffbee0e24a1466e2f3bde95e6e4771762"
+    },
+    {
+      "file": "cross_kv.ort",
+      "sha256": "e2d3417144e9514055ebfefe8dcc4c0a55a55adcb8530435844c75c53e352bf6"
+    },
+    {
+      "file": "decoder_kv.ort",
+      "sha256": "1a05465b1dd955858dfcbee039c0020fb5dd982b0f5094c34e61735d518d771b"
+    },
+    {
+      "file": "encoder.ort",
+      "sha256": "2d4d973e91e8aca08c51e7e7efa28a46ab265b63d809d5294d18b86bcd85b993"
+    },
+    {
+      "file": "frontend.model.ort",
+      "sha256": "09b1210ae30dc5f0f3e45f0ebab914c254741323114f53fbbe5ae62cca35058f"
+    },
+    {
+      "file": "frontend.weights.ort",
+      "sha256": "7ef97521bd4bad3928f5bb6808586f4fcc6e92bd5990394112eed7d4052ec338"
+    },
+    {
+      "file": "streaming_config.json",
+      "sha256": "26f02b6afb22d60871a5efd85c3d38e569cc0ddb6c5eb6e93d3260152ae8a47a"
+    },
+    {
+      "file": "tokenizer.bin",
+      "sha256": "6884b35fd6377d4c4d32336a0bc152f36b64d1e45b6503683cdc238250a8472d"
+    }
+  ],
+  "controller_permission_and_readiness": "SYNTHETIC",
+  "network_acceptance": "NOT_RUN"
+}

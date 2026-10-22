@@ -12,7 +12,7 @@ data class PackManifest(val packId: String, val revision: Long, val runtimeRevis
         internal fun validFilename(name:String,role:String):Boolean =
             name.matches(Regex("[a-z0-9][a-z0-9_-]{0,95}\\.(gguf|onnx|json|txt)")) ||
             (role=="asr" && name in listOf("adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort")) ||
-            (role=="tokenizer" && name=="tokenizer.bin")
+            (role=="tokenizer" && name=="tokenizer.bin") || (role=="vad" && name=="silero_vad_v5.ort")
         private val header = setOf("schema", "packId", "revision", "runtimeRevision", "minAndroid", "minIos", "artifacts")
         private val fields = setOf("id", "filename", "role", "url", "sha256", "bytes", "license", "licenseEvidence")
         private fun keys(o: JSONObject) = o.keys().asSequence().toSet()
