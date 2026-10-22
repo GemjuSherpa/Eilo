@@ -12,11 +12,11 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SpeechPackLeaseTest {
-    private class Fixture:AutoCloseable {
+    private class Fixture(val vadName:String="silero.onnx"):AutoCloseable {
         val root=Files.createTempDirectory("speech-pack-test").toFile()
         val key=KeyPairGenerator.getInstance("EC").apply{initialize(ECGenParameterSpec("secp256r1"))}.generateKeyPair()
         val runtime="a".repeat(40);val evidence="c".repeat(64)
-        val names=listOf("adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort","streaming_config.json","tokenizer.bin").sorted()+"silero.onnx"
+        val names=listOf("adapter.ort","cross_kv.ort","decoder_kv.ort","encoder.ort","frontend.model.ort","frontend.weights.ort","streaming_config.json","tokenizer.bin").sorted()+vadName
         val sources=names.mapIndexed{i,name->File(root,name).apply{writeBytes(byteArrayOf(i.toByte(),2,3,4))}}
         val pins=names.mapIndexed{i,name->SpeechArtifactPin("asset-$i",name,sha(sources[i]),4,evidence)}
         val store=PackStore(File(root,"store"),mapOf("test-key" to key.public.encoded),runtime,setOf(evidence))
@@ -24,7 +24,7 @@ class SpeechPackLeaseTest {
         fun activate(revision:Int=1,wrongRole:Boolean=false,wrongLicense:Boolean=false,wrongAsrRole:Boolean=false) {
             val artifacts=JSONArray()
             for(pin in pins.reversed()) {
-                val role=if(pin.filename=="silero.onnx"){if(wrongRole)"asr" else "vad"}else if(pin.filename=="tokenizer.bin")"tokenizer" else if(wrongAsrRole && pin.filename=="streaming_config.json")"wake" else "asr"
+                val role=if(pin.filename==vadName){if(wrongRole)"asr" else "vad"}else if(pin.filename=="tokenizer.bin")"tokenizer" else if(wrongAsrRole && pin.filename=="streaming_config.json")"wake" else "asr"
                 artifacts.put(JSONObject().put("id",pin.id).put("filename",pin.filename).put("role",role).put("url","https://models.example.test/"+pin.filename).put("sha256",pin.sha256).put("bytes",pin.bytes).put("license",if(wrongLicense)"Apache-2.0" else "MIT").put("licenseEvidence",evidence))
             }
             val data=JSONObject().put("schema",1).put("packId","test-pack").put("revision",revision).put("runtimeRevision",runtime).put("minAndroid",35).put("minIos",18).put("artifacts",artifacts).toString().toByteArray()
@@ -218,5 +218,15 @@ class SpeechPackLeaseTest {
             callbacks[0](OfflineSpeechEvent.STARTED);callbacks[0](OfflineSpeechEvent.FINISHED);assertEquals(ControllerState.STANDBY,h.c.state())}
         h.slot.close();h.run()
     }}}
+
+    @Test fun ortVadFilenameIsExactAndRoleBound(){
+        assertTrue(PackManifest.validFilename("silero_vad_v5.ort","vad"))
+        for(role in listOf("asr","llm","wake","tokenizer"))assertFalse(PackManifest.validFilename("silero_vad_v5.ort",role))
+        for(name in listOf("other.ort","silero_vad_v5.ORT","../silero_vad_v5.ort","silero_vad_v5.ort.bak"))assertFalse(PackManifest.validFilename(name,"vad"))
+    }
+    @Test fun signedOrtVadLeaseRetainsRoleHashAndRevocationChecks(){
+        Fixture("silero_vad_v5.ort").use{f->f.activate();val lease=f.lease(SpeechPackKind.VAD);assertTrue(lease.verified());lease.close();assertFalse(lease.verified())}
+        Fixture("silero_vad_v5.ort").use{f->assertThrows(IllegalArgumentException::class.java){f.activate(wrongRole=true)}}
+    }
 
 }

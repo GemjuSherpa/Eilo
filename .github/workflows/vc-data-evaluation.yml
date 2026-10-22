@@ -40,6 +40,10 @@ jobs:
           python3 -O -m unittest discover -s ../vad-runtime -p test_installer_validation.py -v
           python3 ../vad-runtime/check_installer_evidence.py
           python3 -O ../vad-runtime/check_installer_evidence.py
+          python3 -m unittest discover -s ../vad-runtime -p test_android_installer.py -v
+          python3 -O -m unittest discover -s ../vad-runtime -p test_android_installer.py -v
+          python3 ../vad-runtime/check_android_installer_evidence.py
+          python3 -O ../vad-runtime/check_android_installer_evidence.py
           python3 -m unittest discover -s ../conversation-integration -p 'test_capture*.py' -v
           python3 -O -m unittest discover -s ../conversation-integration -p 'test_capture*.py' -v
           python3 ../conversation-integration/check_capture_evidence.py
