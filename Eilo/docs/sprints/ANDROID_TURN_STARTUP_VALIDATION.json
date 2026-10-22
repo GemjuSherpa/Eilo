@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "task": "VC-JOIN-04_ANDROID_STARTUP_FAILURE_FOLLOWUP",
+  "base_main": "7eadd34f54eac078858313f1be79c93b3fa4b2ef",
+  "regression_reproduced_before_fix": [
+    "THROWING_STARTER_ESCAPED",
+    "REJECTED_STARTER_RETAINED_REQUEST"
+  ],
+  "tests": {
+    "android_native": 378,
+    "new_regressions": 5,
+    "android_failures": 0,
+    "android_errors": 0,
+    "android_skipped": 0,
+    "android_lint": "PASS",
+    "android_debug_build": "PASS",
+    "android_release_kotlin": "PASS",
+    "swift": 320,
+    "mobile": 58,
+    "contracts": 33,
+    "search_protocol": 27,
+    "workspace_lint": "PASS",
+    "workspace_typecheck": "PASS",
+    "simulator_build_install": "PASS",
+    "fresh_ten_second_launches": 3,
+    "simulator_run_label": "android-turn-startup-safety",
+    "signed_installer_jvm_cases": 8,
+    "signed_installer_ios_simulator_cases": 8,
+    "installer_regressions_normal": 4,
+    "installer_regressions_optimized": 4
+  },
+  "physical_tests": "NOT_RUN",
+  "production_readiness": "UNCHANGED_DEFAULT_DENIED",
+  "s08_decision": "HOLD",
+  "persistent_memory_allowed": false,
+  "source_sha256": {
+    "apps/mobile/android/app/src/main/java/com/eilo/foundation/GenericSpokenTurn.kt": "2ad7c12048ee9d0c8629de30f86dc40d715e10bc089c3e8223a811f7c15b32a2",
+    "apps/mobile/android/app/src/test/java/com/eilo/foundation/GenericSpokenTurnTest.kt": "fe31a4e504aaf97d666dc3890726a3a3e92160a55d3902016ab1a7492bb567a9",
+    "packages/vad-runtime/tests/signed-installer-evidence.json": "b38774fa5836f659147eadf35cf1b8f25c0a0e6c6e10d7e3e871b6bc1d7a68ac",
+    "packages/vad-runtime/tests/signed-installer-ios-results.json": "56dd02528df1b1457c749b26221ff331047f3c4d194fe442c3965b3af62a46a8",
+    "packages/vad-runtime/tests/signed-installer-jvm-results.json": "011c3ea172d152aea98cf551e5759c364346119b04e8ca322ac34db5db523cf4"
+  }
+}
