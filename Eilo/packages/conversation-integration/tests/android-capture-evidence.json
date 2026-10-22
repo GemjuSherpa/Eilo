@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "report_sha256": "0af62f81a2e890e2dfe8c51b8b859c40cdbc5573cb9885498b665765631f2b52",
+  "report_sha256": "0a509718852547f1a84ed01ec5c2cb04b64a5fd278305b16df080c982b56d821",
   "inputs": [
     {
       "path": "apps/mobile/android/app/src/main/java/com/eilo/CaptureService.kt",
@@ -280,11 +280,15 @@
     },
     {
       "path": "packages/conversation-integration/check_capture_android.py",
-      "sha256": "d71ac4c5c4e4d230ff7dbff5b4dab7535cc348a5aedff136312f62e51734cefb"
+      "sha256": "8da299d205152a73e16e4bd2cfdd2d61296093e4ac729214127db744a8cabb43"
     },
     {
       "path": "packages/conversation-integration/tests/android-device/CaptureReplyInstrumentation.kt",
       "sha256": "77775ace9b14043b12583ae75f7b475b4bc341dfdaef2f6295ff9572abf79e4e"
+    },
+    {
+      "path": "packages/conversation-integration/tests/android-joined-speech/CaptureSdkReplyInstrumentation.kt",
+      "sha256": "e2c2b2e3d0427f7ac9bdccb3d16d730d451327f22a8e2e4d1a43dc62e9494717"
     },
     {
       "path": "packages/llm-runtime/check_android.py",

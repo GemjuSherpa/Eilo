@@ -50,6 +50,10 @@ jobs:
           python3 -O ../conversation-integration/check_capture_evidence.py
           python3 ../conversation-integration/check_capture_android_evidence.py
           python3 -O ../conversation-integration/check_capture_android_evidence.py
+          python3 -m unittest discover -s ../conversation-integration -p test_speech_android.py -v
+          python3 -O -m unittest discover -s ../conversation-integration -p test_speech_android.py -v
+          python3 ../conversation-integration/check_speech_android_evidence.py
+          python3 -O ../conversation-integration/check_speech_android_evidence.py
           python3 -m unittest discover -s ../physical-ios-trial -p test_report.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_model_quality_report.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_model_quality_report.py -v
