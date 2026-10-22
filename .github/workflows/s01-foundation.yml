@@ -33,6 +33,11 @@ jobs:
         run: |
           python3 scripts/test_verify_ios_launch.py
           python3 -O scripts/test_verify_ios_launch.py
+      - name: Pending requirement closure fixtures (offline, no release acceptance)
+        run: |
+          python3 -m unittest discover -s packages/release-evidence -p 'test_*.py'
+          python3 -O -m unittest discover -s packages/release-evidence -p 'test_*.py'
+          python3 packages/release-evidence/closure.py
       - name: Outside-app acceptance inventory fixtures (synthetic, no device access)
         run: |
           python3 -m unittest discover -s packages/surface-acceptance -p 'test_*.py'

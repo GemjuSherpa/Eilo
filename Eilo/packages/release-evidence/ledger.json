@@ -1,0 +1,1587 @@
+{
+  "schema": 1,
+  "sprint": "S17",
+  "reviewed_main": "f666a7ca8af75b21401e94e777843e83d77f76bb",
+  "release_decision": "HOLD",
+  "s08_decision": "HOLD",
+  "persistent_memory_allowed": false,
+  "supported_configurations": [],
+  "sources": {
+    "plan": {
+      "path": "planning/sprint-issues.json",
+      "sha256": "af7028be54a5db1003fbe2a9b464601252bf23282823f1cc5f458798d47327d4",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "audit": {
+      "path": "Eilo/docs/sprints/S17_PRIVACY_AUDIT.md",
+      "sha256": "3b161a357aaae78a0ba9728a8c357fa79aa806319255115a90f1b1015e6e1200",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "s08": {
+      "path": "Eilo/docs/sprints/S08_FEASIBILITY_DECISION.json",
+      "sha256": "7d1165a5e8320c4aaa180648cbe2515988141e19cf77b5e39e10e91f96c81494",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "s09": {
+      "path": "Eilo/docs/sprints/S09_VALIDATION.json",
+      "sha256": "0f0230c98dcfea19f527e53cbe2ff2a11e396c9a890fe0e3ed384771dbe7a64d",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "s10": {
+      "path": "Eilo/docs/sprints/S10_READINESS_AUDIT.json",
+      "sha256": "6acbd8d3864ae376d38e342372945467133fff0ccd363986611292d392d8fe22",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "s14": {
+      "path": "Eilo/docs/sprints/S14_VALIDATION.json",
+      "sha256": "baee63d5502745b398805c25f440739b7938905947e86a220e644cfe52aa1df7",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "s15": {
+      "path": "Eilo/docs/sprints/S15_VALIDATION.json",
+      "sha256": "c4e3eb4868277a3c5b562a7d58f8fea0a827a220b0353c8831f8de50d752bfb5",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "s16": {
+      "path": "Eilo/docs/sprints/S16_PREFLIGHT.json",
+      "sha256": "e354de4efa7c486eb6bb7b5d93ef27d6c0fbb6ac7adad663f7e95c1431b8daf1",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "network": {
+      "path": "Eilo/docs/sprints/IOS_NETWORK_RETEST_REVIEW.md",
+      "sha256": "a399e54428008e76fa26651647418edf24c7b724466d4f0702bf442e5851c528",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    },
+    "workload": {
+      "path": "Eilo/docs/verification/DEVICE_WORKLOAD_MATRIX.md",
+      "sha256": "b461e0dac6ce4d59ee6aa707942f076139a968369ba0936af119644121941dad",
+      "kind": "SUPPORTING_CONTEXT_NOT_ACCEPTANCE"
+    }
+  },
+  "requirements": [
+    {
+      "id": "A01",
+      "tasks": [
+        "VC-SET-04",
+        "VC-SET-05",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A02",
+      "tasks": [
+        "VC-TURN-02",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A03",
+      "tasks": [
+        "VC-JOIN-02",
+        "VC-TURN-03",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A04",
+      "tasks": [
+        "VC-JOIN-04",
+        "VC-MEM-06",
+        "VC-SET-07",
+        "VC-STORE-09",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A05",
+      "tasks": [
+        "VC-CTRL-03",
+        "VC-JOIN-03",
+        "VC-STORE-03",
+        "VC-TURN-07",
+        "VC-TURN-08",
+        "VC-VERIFY-03",
+        "VC-VERIFY-10",
+        "VC-VOICE-05"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A06",
+      "tasks": [
+        "VC-AUDIO-03",
+        "VC-AUDIO-04",
+        "VC-AUDIO-06",
+        "VC-AUDIO-07",
+        "VC-CTRL-02",
+        "VC-CTRL-05",
+        "VC-SET-03",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A07",
+      "tasks": [
+        "VC-JOIN-01",
+        "VC-VERIFY-07",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A08",
+      "tasks": [
+        "VC-VERIFY-08",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A09",
+      "tasks": [
+        "VC-LOCK-05",
+        "VC-LOCK-06",
+        "VC-STORE-10",
+        "VC-VERIFY-08",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A10",
+      "tasks": [
+        "VC-BASE-01",
+        "VC-BASE-02",
+        "VC-SET-01",
+        "VC-VERIFY-07",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A11",
+      "tasks": [
+        "VC-AUDIO-08",
+        "VC-PACK-09",
+        "VC-VERIFY-10",
+        "VC-VOICE-01"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A12",
+      "tasks": [
+        "VC-BEHAV-05",
+        "VC-GATE-01",
+        "VC-GATE-04",
+        "VC-LLM-06",
+        "VC-MEM-06",
+        "VC-TURN-09",
+        "VC-TURN-10",
+        "VC-VERIFY-01",
+        "VC-VERIFY-02",
+        "VC-VERIFY-03",
+        "VC-VERIFY-04",
+        "VC-VERIFY-10",
+        "VC-VOICE-06"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A13",
+      "tasks": [
+        "VC-AUDIO-09",
+        "VC-AUDIO-10",
+        "VC-GATE-02",
+        "VC-GATE-03",
+        "VC-GATE-04",
+        "VC-JOIN-05",
+        "VC-LOCK-01",
+        "VC-VERIFY-05",
+        "VC-VERIFY-06",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A14",
+      "tasks": [
+        "VC-AUDIO-09",
+        "VC-AUDIO-10",
+        "VC-CTRL-08",
+        "VC-GATE-03",
+        "VC-VERIFY-06",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A15",
+      "tasks": [
+        "VC-AUDIO-02",
+        "VC-CTRL-07",
+        "VC-JOIN-05",
+        "VC-LOCK-02",
+        "VC-MEM-05",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A16",
+      "tasks": [
+        "VC-VERIFY-07",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A17",
+      "tasks": [
+        "VC-AUTH-12"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A18",
+      "tasks": [
+        "VC-AUTH-05",
+        "VC-AUTH-06",
+        "VC-AUTH-12"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A19",
+      "tasks": [
+        "VC-AUTH-08",
+        "VC-AUTH-09",
+        "VC-AUTH-10",
+        "VC-AUTH-12"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A20",
+      "tasks": [
+        "VC-AUTH-13",
+        "VC-AUTH-14",
+        "VC-AUTH-17"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "A21",
+      "tasks": [
+        "VC-AUTH-15",
+        "VC-AUTH-16",
+        "VC-AUTH-17"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "DP01",
+      "tasks": [
+        "VC-DEVOPS-01"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "DP02",
+      "tasks": [
+        "VC-DEVOPS-02"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "DP03",
+      "tasks": [
+        "VC-DEVOPS-03"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "DP04",
+      "tasks": [
+        "VC-DEVOPS-04"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "F01",
+      "tasks": [
+        "VC-AUDIO-01",
+        "VC-AUDIO-05",
+        "VC-SET-04",
+        "VC-SET-05",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F02",
+      "tasks": [
+        "VC-AUDIO-02",
+        "VC-BASE-03",
+        "VC-CTRL-01",
+        "VC-SET-06",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F03",
+      "tasks": [
+        "VC-TURN-01",
+        "VC-TURN-02",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F04",
+      "tasks": [
+        "VC-CTRL-05",
+        "VC-CTRL-06",
+        "VC-JOIN-02",
+        "VC-LLM-03",
+        "VC-MEM-02",
+        "VC-TURN-03",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F05",
+      "tasks": [
+        "VC-JOIN-01",
+        "VC-LLM-05",
+        "VC-SET-06",
+        "VC-SET-08",
+        "VC-TURN-05",
+        "VC-VERIFY-10",
+        "VC-VOICE-02",
+        "VC-VOICE-03",
+        "VC-VOICE-04",
+        "VC-VOICE-06"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F06",
+      "tasks": [
+        "VC-BEHAV-01",
+        "VC-BEHAV-02",
+        "VC-BEHAV-04",
+        "VC-JOIN-01",
+        "VC-LLM-01",
+        "VC-LLM-02",
+        "VC-LLM-04",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F07",
+      "tasks": [
+        "VC-BEHAV-01",
+        "VC-BEHAV-03",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F08",
+      "tasks": [
+        "VC-TURN-04",
+        "VC-TURN-05",
+        "VC-TURN-06",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F09",
+      "tasks": [
+        "VC-CTRL-03",
+        "VC-JOIN-03",
+        "VC-TURN-08",
+        "VC-VERIFY-10",
+        "VC-VOICE-04"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F10",
+      "tasks": [
+        "VC-JOIN-03",
+        "VC-TURN-07",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F11",
+      "tasks": [
+        "VC-LLM-03",
+        "VC-MEM-01",
+        "VC-MEM-02",
+        "VC-MEM-06",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F12",
+      "tasks": [
+        "VC-AUDIO-02",
+        "VC-AUDIO-04",
+        "VC-AUDIO-07",
+        "VC-AUDIO-08",
+        "VC-CTRL-01",
+        "VC-CTRL-02",
+        "VC-CTRL-05",
+        "VC-CTRL-06",
+        "VC-CTRL-07",
+        "VC-VERIFY-09",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F13",
+      "tasks": [
+        "VC-AUTH-07",
+        "VC-BASE-01",
+        "VC-BASE-02",
+        "VC-BASE-04",
+        "VC-JOIN-01",
+        "VC-LLM-01",
+        "VC-SET-01",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F14",
+      "tasks": [
+        "VC-BEHAV-02",
+        "VC-PACK-07",
+        "VC-PACK-08",
+        "VC-PACK-09",
+        "VC-VERIFY-09",
+        "VC-VERIFY-10",
+        "VC-VOICE-01"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F15",
+      "tasks": [
+        "VC-BEHAV-02",
+        "VC-CTRL-02",
+        "VC-CTRL-08",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F16",
+      "tasks": [
+        "VC-INBOX-02",
+        "VC-INBOX-03",
+        "VC-INBOX-04",
+        "VC-JOIN-04",
+        "VC-MEM-01",
+        "VC-MEM-03",
+        "VC-MEM-04",
+        "VC-MEM-05",
+        "VC-SET-02",
+        "VC-SET-07",
+        "VC-STORE-01",
+        "VC-STORE-02",
+        "VC-STORE-03",
+        "VC-STORE-04",
+        "VC-STORE-05",
+        "VC-STORE-06",
+        "VC-STORE-07",
+        "VC-STORE-08",
+        "VC-STORE-09",
+        "VC-STORE-10",
+        "VC-VERIFY-10",
+        "VC-VOICE-05"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F17",
+      "tasks": [
+        "VC-AUDIO-01",
+        "VC-AUDIO-03",
+        "VC-AUDIO-05",
+        "VC-AUDIO-06",
+        "VC-AUDIO-09",
+        "VC-AUDIO-10",
+        "VC-GATE-04",
+        "VC-SET-03",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F18",
+      "tasks": [
+        "VC-INBOX-01",
+        "VC-INBOX-02",
+        "VC-JOIN-05",
+        "VC-KEY-01",
+        "VC-KEY-02",
+        "VC-KEY-03",
+        "VC-KEY-04",
+        "VC-LOCK-01",
+        "VC-LOCK-02",
+        "VC-LOCK-03",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F19",
+      "tasks": [
+        "VC-LOCK-05",
+        "VC-LOCK-06",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F21",
+      "tasks": [
+        "VC-AUTH-01",
+        "VC-AUTH-02",
+        "VC-AUTH-11",
+        "VC-AUTH-15"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F22",
+      "tasks": [
+        "VC-AUTH-01",
+        "VC-AUTH-03",
+        "VC-AUTH-04",
+        "VC-AUTH-05",
+        "VC-AUTH-15"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F23",
+      "tasks": [
+        "VC-AUTH-06",
+        "VC-AUTH-07",
+        "VC-AUTH-08"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F24",
+      "tasks": [
+        "VC-AUTH-09",
+        "VC-AUTH-10",
+        "VC-AUTH-16"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "F25",
+      "tasks": [
+        "VC-AUTH-13",
+        "VC-AUTH-14"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "INTEGRATED_PHYSICAL_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "workload"
+      ]
+    },
+    {
+      "id": "N01",
+      "tasks": [
+        "VC-GATE-04",
+        "VC-VERIFY-01",
+        "VC-VERIFY-02"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N02",
+      "tasks": [
+        "VC-GATE-04",
+        "VC-TURN-08",
+        "VC-VERIFY-01",
+        "VC-VERIFY-03"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N03",
+      "tasks": [
+        "VC-GATE-03",
+        "VC-GATE-04",
+        "VC-TURN-09",
+        "VC-VERIFY-01",
+        "VC-VERIFY-06"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N04",
+      "tasks": [
+        "VC-GATE-04",
+        "VC-TURN-10",
+        "VC-VERIFY-01"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N05",
+      "tasks": [
+        "VC-BEHAV-05",
+        "VC-GATE-04",
+        "VC-LLM-06",
+        "VC-VERIFY-01"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N06",
+      "tasks": [
+        "VC-GATE-01",
+        "VC-GATE-02",
+        "VC-GATE-04",
+        "VC-VERIFY-01",
+        "VC-VERIFY-04",
+        "VC-VERIFY-05"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N07",
+      "tasks": [
+        "VC-GATE-03",
+        "VC-GATE-04",
+        "VC-VERIFY-01",
+        "VC-VERIFY-06"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N08",
+      "tasks": [
+        "VC-GATE-01",
+        "VC-GATE-02",
+        "VC-GATE-03",
+        "VC-GATE-04",
+        "VC-LLM-06",
+        "VC-VERIFY-01",
+        "VC-VERIFY-04",
+        "VC-VERIFY-05",
+        "VC-VERIFY-06",
+        "VC-VERIFY-09"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N09",
+      "tasks": [
+        "VC-LLM-03",
+        "VC-LLM-05"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "N10",
+      "tasks": [
+        "VC-INBOX-04",
+        "VC-STORE-05",
+        "VC-STORE-06",
+        "VC-STORE-07",
+        "VC-STORE-08"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PERFORMANCE_BACKGROUND_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "workload"
+      ]
+    },
+    {
+      "id": "OR01",
+      "tasks": [
+        "VC-SURFACE-01"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "OR02",
+      "tasks": [
+        "VC-SURFACE-02"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "OR03",
+      "tasks": [
+        "VC-SURFACE-03"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "OR04",
+      "tasks": [
+        "VC-SURFACE-04"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "OR05",
+      "tasks": [
+        "VC-SURFACE-05"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "OR06",
+      "tasks": [
+        "VC-SURFACE-06"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "S01",
+      "tasks": [
+        "VC-BASE-04",
+        "VC-LLM-01",
+        "VC-PACK-05",
+        "VC-PACK-10",
+        "VC-TURN-05",
+        "VC-VERIFY-07",
+        "VC-VERIFY-10",
+        "VC-VOICE-01",
+        "VC-VOICE-02",
+        "VC-VOICE-03"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S02",
+      "tasks": [
+        "VC-CTRL-04",
+        "VC-LOCK-05",
+        "VC-LOCK-06",
+        "VC-LOCK-07",
+        "VC-STORE-01",
+        "VC-STORE-06",
+        "VC-TURN-01",
+        "VC-VERIFY-08",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S03",
+      "tasks": [
+        "VC-LOCK-07",
+        "VC-VERIFY-08",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S04",
+      "tasks": [
+        "VC-BASE-03",
+        "VC-CTRL-03",
+        "VC-CTRL-04",
+        "VC-LOCK-01",
+        "VC-LOCK-04",
+        "VC-MEM-04",
+        "VC-STORE-04",
+        "VC-VERIFY-08",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S05",
+      "tasks": [
+        "VC-PACK-01",
+        "VC-PACK-02",
+        "VC-PACK-03",
+        "VC-PACK-04",
+        "VC-PACK-06",
+        "VC-PACK-07",
+        "VC-PACK-08",
+        "VC-VERIFY-10",
+        "VC-VERIFY-11"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S06",
+      "tasks": [
+        "VC-KEY-01",
+        "VC-KEY-02",
+        "VC-PACK-03",
+        "VC-PACK-04",
+        "VC-PACK-05",
+        "VC-PACK-06",
+        "VC-PACK-10",
+        "VC-VERIFY-10",
+        "VC-VERIFY-11"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S07",
+      "tasks": [
+        "VC-KEY-03",
+        "VC-LOCK-02",
+        "VC-PACK-05",
+        "VC-SET-01",
+        "VC-SET-02",
+        "VC-VERIFY-07",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S08",
+      "tasks": [
+        "VC-PACK-10",
+        "VC-VERIFY-07",
+        "VC-VERIFY-08",
+        "VC-VERIFY-10",
+        "VC-VERIFY-11"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S09",
+      "tasks": [
+        "VC-INBOX-01",
+        "VC-INBOX-02",
+        "VC-INBOX-03",
+        "VC-KEY-01",
+        "VC-KEY-02",
+        "VC-KEY-04",
+        "VC-STORE-01",
+        "VC-STORE-10",
+        "VC-VERIFY-08",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S10",
+      "tasks": [
+        "VC-BEHAV-04",
+        "VC-CTRL-04",
+        "VC-INBOX-04",
+        "VC-LLM-04",
+        "VC-MEM-01",
+        "VC-MEM-02",
+        "VC-MEM-03",
+        "VC-STORE-05",
+        "VC-STORE-09",
+        "VC-VERIFY-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S11",
+      "tasks": [
+        "VC-AUTH-03",
+        "VC-AUTH-04",
+        "VC-AUTH-05",
+        "VC-AUTH-06",
+        "VC-AUTH-10",
+        "VC-AUTH-11"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "S12",
+      "tasks": [
+        "VC-AUTH-14",
+        "VC-AUTH-16",
+        "VC-AUTH-17"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PRIVACY_STORE_IDENTITY_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s08",
+        "s09",
+        "s10",
+        "network"
+      ]
+    },
+    {
+      "id": "SR01",
+      "tasks": [
+        "VC-SEARCH-01"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PROVIDER_NATIVE_SEARCH_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s15"
+      ]
+    },
+    {
+      "id": "SR02",
+      "tasks": [
+        "VC-SEARCH-02"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PROVIDER_NATIVE_SEARCH_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s15"
+      ]
+    },
+    {
+      "id": "SR03",
+      "tasks": [
+        "VC-SEARCH-03"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PROVIDER_NATIVE_SEARCH_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s15"
+      ]
+    },
+    {
+      "id": "SR04",
+      "tasks": [
+        "VC-SEARCH-04"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PROVIDER_NATIVE_SEARCH_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s15"
+      ]
+    },
+    {
+      "id": "SR05",
+      "tasks": [
+        "VC-SEARCH-05"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PROVIDER_NATIVE_SEARCH_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s15"
+      ]
+    },
+    {
+      "id": "SR06",
+      "tasks": [
+        "VC-SEARCH-06"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "PROVIDER_NATIVE_SEARCH_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s15"
+      ]
+    },
+    {
+      "id": "VR01",
+      "tasks": [
+        "VC-VIS-01"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR02",
+      "tasks": [
+        "VC-VIS-02"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR03",
+      "tasks": [
+        "VC-VIS-03"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR04",
+      "tasks": [
+        "VC-VIS-04"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR05",
+      "tasks": [
+        "VC-VIS-05"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR06",
+      "tasks": [
+        "VC-VIS-06"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR07",
+      "tasks": [
+        "VC-VIS-07"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR08",
+      "tasks": [
+        "VC-VIS-08"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR09",
+      "tasks": [
+        "VC-VIS-09"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    },
+    {
+      "id": "VR10",
+      "tasks": [
+        "VC-VIS-10"
+      ],
+      "full_app_acceptance": "BLOCKED",
+      "blocker": "NATIVE_VISUAL_SURFACE_ACCEPTANCE",
+      "supporting_sources": [
+        "audit",
+        "s14",
+        "s15",
+        "s16"
+      ]
+    }
+  ]
+}

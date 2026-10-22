@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "sprint": "S17",
+  "base_main": "f666a7ca8af75b21401e94e777843e83d77f76bb",
+  "scope": "INDEPENDENT_AUDIT_TRACEABILITY_AND_RELEASE_PREPARATION",
+  "sprint_acceptance": "INCOMPLETE_DEPENDENCY_BLOCKED",
+  "physical_tests": "NOT_RUN_FOR_S17",
+  "release_decision": "HOLD",
+  "s08_decision": "HOLD",
+  "persistent_memory_allowed": false,
+  "tests": {
+    "closure_normal": 8,
+    "closure_optimized": 8,
+    "feasibility_normal": 47,
+    "feasibility_optimized": 47,
+    "physical_trial_tooling_normal": 48,
+    "physical_trial_tooling_optimized": 48,
+    "actual_pending_closure_cli": "PASS_HOLD",
+    "actual_s08_decision_cli": "PASS_PENDING",
+    "mobile": 58,
+    "contracts": 33,
+    "search_protocol": 27,
+    "swift": 320,
+    "workspace_lint": "PASS",
+    "workspace_typecheck": "PASS",
+    "simulator_build_install": "PASS",
+    "fresh_ten_second_launches": 3,
+    "simulator_run_label": "s17-requirement-closure",
+    "android_native": "HOSTED_CI_REQUIRED_NO_NATIVE_SOURCE_CHANGE"
+  },
+  "source_sha256": {
+    "packages/release-evidence/README.md": "c9817588c19d15ba4791ee6cc475ca66104e68ceee9bb7c44b8c685b1805e565",
+    "packages/release-evidence/closure.py": "06022919eed9bc853ccde15b16fd6e74fdaad987be97eb9e74739cae6dd389f5",
+    "packages/release-evidence/ledger.json": "7c549de2ff99e966677f8e006ac47237ca47456c9dafb3c5d034443c61adeafc",
+    "packages/release-evidence/test_closure.py": "452ab3a34e7c6cd8c9af8443bafbdacd38f3c5bd73e8ea470eaf3a108e5d5ed7",
+    "docs/sprints/S17_PRIVACY_AUDIT.md": "3b161a357aaae78a0ba9728a8c357fa79aa806319255115a90f1b1015e6e1200",
+    "docs/sprints/S17_PREFLIGHT.json": "a8ee00580a2fb7a4b6ff96b75e71aba034821331e4b86615105c487d74af17eb",
+    "docs/sprints/S17_REVIEW.md": "8ee897051da2ac12e966e8e41e34da59c00711caf7628f725f93bb5abbe11f7b",
+    "docs/sprints/S17_RELEASE_PREPARATION.md": "33c46d508c5207faf7dc3068b55e2ab18c25d4a8b6c98e2c5c8e2fb2ca24bb58"
+  }
+}
