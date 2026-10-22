@@ -1,0 +1,374 @@
+{
+  "schema_version": 1,
+  "report_sha256": "0a509718852547f1a84ed01ec5c2cb04b64a5fd278305b16df080c982b56d821",
+  "inputs": [
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/CaptureService.kt",
+      "sha256": "4df01344d1679b97bfaac95be8652422b2705a40bbbdff33cb1626259f3c7aeb"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/EiloControlModule.kt",
+      "sha256": "7dbc60e60e2de64c0f8cf616dda5d4d486fb598b5cc0e89fd3746a940e8c0c94"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/MainActivity.kt",
+      "sha256": "2f1f55e1b9304a41df774836882a1b5b02f7eb67adfc87cbdd4efb1ca79543e9"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/MainApplication.kt",
+      "sha256": "e85739d6dc0b8c2d662e687781846ef1782db19425e74d8d23060c3248d4f242"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/AndroidAudioFocus.kt",
+      "sha256": "d043e209fe53e6600159190ddfec10f868b830d47ef479cfe944141aea8a9bef"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/AndroidCaptureDevice.kt",
+      "sha256": "2f03b76c1cbf55c41a79a8ca03cb9e50ff77f862873d331652911059d0902ab6"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/AndroidConsentPersistence.kt",
+      "sha256": "4617347a336295bf7766696041384a07ec0ee10f99a01c3df0a21238f8ab7ad4"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/AndroidMicrophonePermission.kt",
+      "sha256": "7baf60170acb440be18ac08cbdf1d078ed8a66d2b487a126777ec229e57bbb07"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/AndroidOfflineSpeech.kt",
+      "sha256": "ccb9c01d5e482c33904b989c01e8b9822a445bb94d91f97140262430ea0c6421"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/AudioInterruption.kt",
+      "sha256": "d65c83a2ac73c8e36ee18a46185de1822b882cc55dd7fd8fd34f46b76203c720"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/BackgroundCapturePolicy.kt",
+      "sha256": "b0f97259ce167741f2cf4ed1fc8d3d69d7ce4a1256d36f6a45eb165138791936"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/BoundedContinuation.kt",
+      "sha256": "37adae2920e52968c6344d5ec961536eb38c349e3d4e630ab0d7a7f2a1313a13"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/CapabilityPolicy.kt",
+      "sha256": "6bab56090c220cdec2c874be68907cc6f1f97f8ddb5b674fd3928c6a882fe7c4"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/ConfirmedSpeechInterruption.kt",
+      "sha256": "fe737bac4d34f9d28cce51a1336c87d19c0d7e8668d8d6fd10a0284691d331f9"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/DangerPolicy.kt",
+      "sha256": "b362ebacce0a7e891758781f99de6e84a828439fd85d94171b84e2861b19bfe3"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/EndpointDetector.kt",
+      "sha256": "f197a7dfd9643b2f175db491b00548c70028d35f4c1c657f24fd0991cf0357d3"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/ForegroundCapture.kt",
+      "sha256": "a96e468ff3e52632a6ea5c2277e17c857c051be29fb37bde5ff5e812122003e2"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/GenericSpokenTurn.kt",
+      "sha256": "2ad7c12048ee9d0c8629de30f86dc40d715e10bc089c3e8223a811f7c15b32a2"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/LlmControllerJob.kt",
+      "sha256": "28a0cee78e45ec8e1d3f8ef04c1b9b6ac5fb89a3fe9886207aaf26afa0e4fdbf"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/LlmPackLease.kt",
+      "sha256": "50e33b1692c3f9031a2693c9a62715db0a13a2b811b3988ed1306f08bcaaa809"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeAsrStream.kt",
+      "sha256": "f3b0d8a07ab677abba108eae88880cd81bf9bf3322cecfb5986d02a72d1a7588"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeClauseQueue.kt",
+      "sha256": "0f54cdfafa4878911aaa721c0daed99f3676dfe5959ac953c2a540be2c918edd"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeConsentPolicy.kt",
+      "sha256": "0040401c122c6d931843b635b7708ac8e928440a21645f19bfe4243e6fecdf71"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeController.kt",
+      "sha256": "cad2f4a04292138b81184437730ed8f99b033b543161792ac704e023669e499a"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeIdleTimer.kt",
+      "sha256": "d983927663d8b9e4d99f85ad5d4fc494b831e58cc172d6a10bc5453bcb3a7bb7"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeLlmRuntime.kt",
+      "sha256": "aa9c6bd6db91c6f9b46900c6c0d4c60ea392ce25b7fe7181f25dbe1edf185cfd"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeLlmStream.kt",
+      "sha256": "19691362ff62b00be3408d76e0e3f63fba16441aa68387749343b58368afdfc8"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativePermission.kt",
+      "sha256": "eafcdfa4a5a31f66d800a645add19896e1ac123e6b2c5aebe56f1bc2ed5b318b"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeSpeechPolicy.kt",
+      "sha256": "69e0d2c46c3247e7a5f0e42355ffb52498173ee2e73b4f574b1ced1bf6f9d9ec"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeVadStream.kt",
+      "sha256": "572f474ebf4649b164bd339ea56da8dfafa3e5c2c4508be018acacbbb2e166b0"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeWakeRuntime.kt",
+      "sha256": "e2cc6c06245b8793726fe423b5d7ac5fb9e3358bbd493a72ea797bdfbde433c0"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/NativeWakeStream.kt",
+      "sha256": "fbe2d3048cc9fa3ebbe1d4f6c3f6b437ca94dd1c01a1faab22f7f9f648c4f682"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/OfflineVoiceRegistry.kt",
+      "sha256": "59c8ba66a393b0a6e7458fb1593b29b27d61e7ccb4151ebe33c204e46e710008"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PackIntegrity.kt",
+      "sha256": "56313b345e2a957f43442b80638c68efc86e07d76c7e6840dd145a829404ff46"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PackManifest.kt",
+      "sha256": "ed6595049869ba63b2a7e1e98a0896bf74bddfb7d687514d3dfbe0a32f54115d"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PackReadiness.kt",
+      "sha256": "ec7c269daf56a1c22ee254fea20afb28d1b44819f6adf392e333b0d9da0579e3"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PackRecovery.kt",
+      "sha256": "6b72895253bb5ab67109abdeb5c1d27deae24e979deb531b160cb11b1ec494c8"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PackSignature.kt",
+      "sha256": "c586ad1a145e453c210cf045a3fd48bc271458a406d9ff536a4705c594acb555"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PackStore.kt",
+      "sha256": "b943809db9f6f00970913c5a37cf11e906fef66162ceee28159616a573ef3b93"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PackTransport.kt",
+      "sha256": "a2fd565ae2ed4421dc4bfbf37970fbafa2abe3e04976dac34f1ab3eb7ca3dd05"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PersonaPolicy.kt",
+      "sha256": "2ec3cf90ac179f1d8e57c513249d6ed022c6837e89473c258f6717ce306eeb5c"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PlaybackProgress.kt",
+      "sha256": "e6091341f2576fea58c0aa301c3a88ece822337008883a4b387191e7f9fcafd3"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PlaybackRejection.kt",
+      "sha256": "797dc891f2f4b95aef4ef7f220bb8d00d72d7111f383df3749aba1bc5d54525b"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/PromptBudget.kt",
+      "sha256": "10153318e02ba070aa69142ee86f1fa6c8e6abf87af2f1ec4585c487166d98ac"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/ProtectedKey.kt",
+      "sha256": "46efa902ff7336434eb68649b32739aabafc418f468bc1a1bb0d3a4dcf9cebf3"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/QwenTemplate.kt",
+      "sha256": "299c1f12984e7d03333df3ee87ba7bda465f9815b2a9caa29cc8a9411fd18cf1"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/RecognitionPolicy.kt",
+      "sha256": "47b7310c03d3c5c2066d8f1ce1ea93c23eeb590e13a6b913e3f7d60cdc7a12a5"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/SafeDiagnostics.kt",
+      "sha256": "9829af1eff4cb9b7cc1253aed6073b95ea7e1d9abb6868c3eb3f6d835383a7c9"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/SpeechPackLease.kt",
+      "sha256": "be254c0ee3f9c72c483ac9db314eceaf5f4669f4c89cf9d50a30ae677439f373"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/StandbyAudioBuffer.kt",
+      "sha256": "a1843a17ac3b6856aa7cfa335b87d49f3568dc8d08305b206b4916194d6f0265"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/StreamingAsr.kt",
+      "sha256": "f3f7a4d6f6d84f97fed90d085fa2ccf7de854100155552a85d739019079bebb3"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/StreamingRateConverter.kt",
+      "sha256": "5af05e012bd05d931fc02db3a89764f90b18857fa25f04a60edf2ddbefa409cb"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/TurnTestSeam.kt",
+      "sha256": "97994f1af7451775eb5bec080a4a4a9483fc9314d472eff97bbef8bddfecbbe2"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/UntrustedMemory.kt",
+      "sha256": "5da71616408242e499fc7ca40e0d0e5c0712c4f90894f6d70dae6659af85199b"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadAsrHandoff.kt",
+      "sha256": "923e601b069d63f32a7c680bb764deba585c68144eee527ed2927ab21f664678"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureSlot.kt",
+      "sha256": "f685ae4be122ea0b577c4103a5b701015a0f1ad7e3f14254747e3e28b1ab1dea"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadCaptureTransport.kt",
+      "sha256": "6a1f491e58e34db8d3d00d7a2d76f448152d7705bc2a25586dd8bcd0f1e2dd14"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/VadWindowDelivery.kt",
+      "sha256": "fa41b75c0cb9c17607ef68218db12137b927b521c31406a52003ecc13ae6b3ea"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/WakeCaptureInstaller.kt",
+      "sha256": "a7e4a8392e98503494fb341ebfa1007a45ada37dce67855e0fdbb71f16d2972e"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/WakeDetector.kt",
+      "sha256": "79aa29102c006d9633263288f0ad8e21380879507cd80b8c093a14540ed4cbbc"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/WakeFrameDelivery.kt",
+      "sha256": "623fcdde32a3e5cf806ead75a24986a45a7df19c4e17fb8c0380e6b9975ef83c"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/WakePackLease.kt",
+      "sha256": "084fa3dfd13ad471312e0428548777ff0416bba1ec0b5067de630f93f1e793eb"
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/WakeQuestionHandoff.kt",
+      "sha256": "8310e96869b5f784c024e87c3ac3730e32407564abafc4e831e1c7e351bd20a7"
+    },
+    {
+      "path": "packages/asr-runtime/eilo_asr.cc",
+      "sha256": "1b5dd4274b93f8c972f2c1a27406377330e65d3e4290f26f2bc51a919ea02833"
+    },
+    {
+      "path": "packages/asr-runtime/eilo_asr_jni.cc",
+      "sha256": "410ade5c60daa2c46d81fca0374d4ffa18807db26e06bfba3f659a35efe14f6d"
+    },
+    {
+      "path": "packages/asr-runtime/include/eilo_asr.h",
+      "sha256": "416a71220bc5ea2e9c01df19e93dbd1ccaf2b3c38ccff4a55257cb658b2e6c30"
+    },
+    {
+      "path": "packages/asr-runtime/include/module.modulemap",
+      "sha256": "0353badadab3e558428877d07a1c2e74b68ce0715d94beaa69cef3fb4afe775e"
+    },
+    {
+      "path": "packages/asr-runtime/provenance.json",
+      "sha256": "3db28e00acafb37ffaae433f3f9696fd56a0b5678b45edf50a1401f2400a37dd"
+    },
+    {
+      "path": "packages/asr-runtime/tests/fixtures.json",
+      "sha256": "5f310e91b7cb36d33ab09252cc44f1dd045178cb172e65827a98eebe9ca78102"
+    },
+    {
+      "path": "packages/conversation-integration/check_capture_android.py",
+      "sha256": "8da299d205152a73e16e4bd2cfdd2d61296093e4ac729214127db744a8cabb43"
+    },
+    {
+      "path": "packages/conversation-integration/tests/android-device/CaptureReplyInstrumentation.kt",
+      "sha256": "77775ace9b14043b12583ae75f7b475b4bc341dfdaef2f6295ff9572abf79e4e"
+    },
+    {
+      "path": "packages/conversation-integration/tests/android-joined-speech/CaptureSdkReplyInstrumentation.kt",
+      "sha256": "e2c2b2e3d0427f7ac9bdccb3d16d730d451327f22a8e2e4d1a43dc62e9494717"
+    },
+    {
+      "path": "packages/llm-runtime/check_android.py",
+      "sha256": "7e38f0c29f1b3dd4291dc27db330304bd8c9d1a9c563d7ec8d03b14cb4a3a2e2"
+    },
+    {
+      "path": "packages/llm-runtime/check_host.py",
+      "sha256": "e567fa2e5f2796459dab194894c3cffa969eba490c7e63495b224afaaea8e82f"
+    },
+    {
+      "path": "packages/llm-runtime/eilo_llm.cc",
+      "sha256": "caca29fa8706736a0af5e25a3b36b0343093cc2857bcd66ff135e8571f039eb9"
+    },
+    {
+      "path": "packages/llm-runtime/eilo_llm_jni.cc",
+      "sha256": "931be917d6eaf657bcad40f316e9ae8b4b28a6a102a305d1df7d888a530c0b8c"
+    },
+    {
+      "path": "packages/llm-runtime/include/eilo_llm.h",
+      "sha256": "9b21bed896237ea6070c88f02765cbd9e6148b7f60f0a1f9d5df241c42ef6ed4"
+    },
+    {
+      "path": "packages/llm-runtime/include/module.modulemap",
+      "sha256": "eb5661ef25e18846ee4c38c669077a38aefaa539caf0dd1602c8723835ba8a86"
+    },
+    {
+      "path": "packages/llm-runtime/provenance.json",
+      "sha256": "87ec4d03e2da09373edf9b3c5d0c8af56d0de6bd069a9aa276e9e5e9a0a6d6ce"
+    },
+    {
+      "path": "packages/vad-runtime/android-ort-header-provenance.json",
+      "sha256": "4854cfb0170764f61db9672ee08ae929da752b7c9d83e1fd5c5db3e3fb0406f9"
+    },
+    {
+      "path": "packages/vad-runtime/check_installer.py",
+      "sha256": "13f14c8353df008e1cf394a9c25ff31946af88554d16a42c6da98ccbd49811f7"
+    },
+    {
+      "path": "packages/vad-runtime/check_installer_android.py",
+      "sha256": "a5c7239beea86985deb5d1f4b528f9a963b354b14c5f72c7f117335f53c2c4ac"
+    },
+    {
+      "path": "packages/vad-runtime/check_native.py",
+      "sha256": "00ad3243e99e29164dffe84e4d25259da8371e2c432ec0418b77a7066efdfc26"
+    },
+    {
+      "path": "packages/vad-runtime/eilo_vad.cc",
+      "sha256": "18402a67ee703d446c5bd44c59e018981b181afd3288afccf2c4a1dc10f9f118"
+    },
+    {
+      "path": "packages/vad-runtime/eilo_vad_jni.cc",
+      "sha256": "6d2b6b94d3a18878211bf9a6783f7efe9ae7a72d9d3b4d2aa7cae626160232ad"
+    },
+    {
+      "path": "packages/vad-runtime/eilo_vad_onnx.cc",
+      "sha256": "c0962a35f9a5ca28da00fcafc050c201971dc7a82ef3bcd1556d1ace55a40051"
+    },
+    {
+      "path": "packages/vad-runtime/include/eilo_vad.h",
+      "sha256": "0d08a66e8c8ee39f82fc1344832de2b2afe80f09a6508e78433829a102acf517"
+    },
+    {
+      "path": "packages/vad-runtime/include/module.modulemap",
+      "sha256": "e15ea0239ea1606ae9ae6abe4758ff11efab74cf5e1a1043399b568630dd80e3"
+    },
+    {
+      "path": "packages/vad-runtime/provenance.json",
+      "sha256": "e472e2e39fa2a273b9d02e879c6926b138cd0c8cfc5473b3125f04ebbbf207ac"
+    },
+    {
+      "path": "packages/vad-runtime/tests/android-device/convert_vad_model.cc",
+      "sha256": "61103e2c2c16abdccdf0b53fb78cee71bfb8db1686885d485f68c91707ffbd11"
+    },
+    {
+      "path": "packages/vad-runtime/tests/android-device/vad_model_probe.cc",
+      "sha256": "50348e14dcd697bac90b2e8c70507c98a2222ce5214d41fd74574d621ff7f551"
+    },
+    {
+      "path": "packages/vad-runtime/vad_backend.h",
+      "sha256": "5d0e66824c12538a16b083a5049e5f2e18edfff8145def02229c97d6bc481658"
+    }
+  ]
+}

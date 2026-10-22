@@ -14,7 +14,7 @@ The first static joined link failed on 118 duplicated vendor symbols. The evalua
 
 The current evaluator executes three completed generated spoken turns, including a replacement of one SDK-started scripted generic reply. Interruption VAD/separation evidence is synthetic. It exercises follow-up with one initial wake, a scripted suffix boundary and completed volatile context; it verifies explicit end closes the session. Context is capped at four pairs/8192 bytes and clears on end/idle/Stop/privacy.
 
-Swift XCTest and Android JUnit cover final-once, low-confidence clarification, fixed danger/capability routing without inference, unavailable/default gates and stale output after Stop. Android joined native-model execution and physical airplane-mode acceptance are not yet established.
+Swift XCTest and Android JUnit cover final-once, low-confidence clarification, fixed danger/capability routing without inference, unavailable/default gates and stale output after Stop. The original evaluator establishes iOS simulator execution. Android ART execution is recorded separately below; physical airplane-mode acceptance remains open.
 
 ## Signed VAD/ASR capture to generated spoken follow-up
 
@@ -51,3 +51,52 @@ the Android tests use scripted native APIs and a scripted clause sink.
 `tests/ios-capture-results.json` and `tests/capture-evidence.json` pin aggregate results and the
 evaluated input sources. `check_capture_evidence.py` and `test_capture*.py` run without SDKs/models
 in synthetic CI, in normal and optimized Python. They validate evidence, not native re-execution.
+
+## Android ART capture/reply and existing offline SDK
+
+The Android runner uses only verified existing caches, API 35 ARM64, NDK
+27.1.12297006, and an explicitly selected existing emulator. It runs the real
+signed VAD/ASR installer, signed Qwen3-1.7B local CPU generation, output screening,
+speech policy and native clause queue. No microphone or ordinary app caller is
+activated. The evaluation APK removes both Internet and microphone permissions;
+its normal replacement APK is inspected and reinstalled in a `finally` block.
+
+```sh
+python3 packages/conversation-integration/check_capture_android.py \
+  --serial "$EMULATOR_SERIAL" --asr-cache "$ASR_CACHE" --vad-cache "$VAD_CACHE" \
+  --vad-model "$VAD_MODEL" --ort-headers "$ORT_HEADERS" \
+  --llm-cache "$LLM_CACHE" --llm-model "$LLM_MODEL" --cmake "$CMAKE" \
+  --ndk "$ANDROID_NDK" --java-home "$JAVA_HOME" --android-sdk "$ANDROID_HOME" \
+  --output "$NEW_OUTPUT" --speech-sdk
+```
+
+`--speech-sdk` selects a currently installed offline English voice through the
+real Android adapter. Output gain is zero; SDK completion is not audible-output,
+intelligibility or acoustic acceptance. Omitting that flag uses an asynchronous
+synthetic clause sink. Each mode has its own actual three-case report: initial
+16 kHz reply, sample-repeated 48 kHz follow-up with completed volatile context,
+and quiet input that starts no reply. The two completed replies each produce two
+clauses in the recorded runs. Duplicate final submission is denied.
+
+For the independent model-free voice/SDK prerequisite check:
+
+```sh
+python3 packages/conversation-integration/check_speech_android.py \
+  --serial "$EMULATOR_SERIAL" --java-home "$JAVA_HOME" \
+  --android-sdk "$ANDROID_HOME" --output "$NEW_OUTPUT"
+```
+
+That check reports either fixed-clause SDK start/finish callbacks or an explicit
+missing-offline-voice blocker. It never requests a package or voice download.
+Neither app permission removal nor a voice's offline flag isolates the speech
+engine's separate process; network acceptance remains NOT_RUN.
+
+`tests/android-capture-*.json`, `tests/android-sdk-capture-*.json`, and
+`tests/android-speech-*.json` bind redacted aggregates to evaluated sources.
+The Android evidence checkers and tests run offline in CI under normal and
+optimized Python; they do not rerun native models or SDKs. The original ONNX
+model, converter, options and runtime are fixed, but local ORT serialization may
+vary in digest/size; each signed evaluation pack records its own derived bytes.
+Controller readiness, permission state and ASR confidence are synthetic. Physical
+microphone/speaker, wake alignment, echo separation, latency, network and release
+acceptance remain open. Production trust and ordinary app activation are unchanged.
