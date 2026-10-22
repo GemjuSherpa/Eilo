@@ -1,0 +1,23 @@
+{
+  "scope": "ANDROID_EMULATOR_SPEECH_SDK",
+  "physical": "NOT_RUN",
+  "network_acceptance": "NOT_RUN",
+  "acoustic_acceptance": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "microphone": "NOT_USED",
+  "eligible_voice": true,
+  "download_requested": false,
+  "sdk_completed": true,
+  "sdk_started": 1,
+  "sdk_finished": 1,
+  "status": "SDK_CALLBACKS_COMPLETED",
+  "schema_version": 1,
+  "android_api": 35,
+  "abi": "arm64-v8a",
+  "internet_permission": "ABSENT",
+  "microphone_permission": "ABSENT",
+  "temporary_files_removed": true,
+  "normal_app_restored": true,
+  "evaluation_apk_sha256": "c779cc4cce8651fd8b64fa3e931effb0b60d1a1435620283312dd3aa76e1ace0",
+  "normal_apk_sha256": "fc25ab104d3ebcd5d6156792ae38a839e98cb0e43d429aa1e50f0128b78e9658"
+}

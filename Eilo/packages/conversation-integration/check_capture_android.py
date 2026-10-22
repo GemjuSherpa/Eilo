@@ -1,4 +1,4 @@
-"""Explicit cached-model Android ART signed VAD/ASR evaluation. Restores normal APK.
+"""Explicit cached-model Android ART capture/reply evaluation. Restores normal APK.
 No microphone, downloads, production activation, physical trial or network observer.
 """
 import argparse
@@ -13,7 +13,7 @@ import zipfile
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1] / "vad-runtime"))
 
-from check_installer import ASR, HERE, verify, verified_asr, verify_fixture, sha256, require, validate_result
+from check_installer import ASR, HERE, verify, verified_asr, verify_fixture, sha256, require
 
 VAD = HERE
 HERE = Path(__file__).resolve().parent
@@ -31,7 +31,7 @@ def serial(value):
     return value
 
 
-def inspect_apk(apk, aapt, evaluation):
+def inspect_apk(apk, aapt, evaluation, probe="CaptureReplyInstrumentation"):
     permissions = run([aapt, 'dump', 'permissions', apk])
     for permission in ('INTERNET', 'RECORD_AUDIO'):
         present = 'android.permission.' + permission in permissions
@@ -42,7 +42,7 @@ def inspect_apk(apk, aapt, evaluation):
             present = 'lib/arm64-v8a/' + name in names
             require(present is evaluation, 'APK native package profile mismatch')
     manifest = run([aapt, 'dump', 'xmltree', apk, '--file', 'AndroidManifest.xml'])
-    require(('CaptureReplyInstrumentation' in manifest) is evaluation, 'APK instrumentation profile mismatch')
+    require((probe in manifest) is evaluation, 'APK instrumentation profile mismatch')
 
 
 def require_ort_symbols(moonshine_versions, runtime_symbols):
@@ -92,9 +92,9 @@ def build_llm(args, output, libs):
     return {'runtime_commit':record['runtime']['commit'],'model':record['model'], 'cpu_options':values,'archive_network_clients':'ABSENT'}
 
 
-def validate_joined(result):
-    require(result['scope'] == SCOPE and result['physical'] == 'NOT_RUN' and result['production'] == 'NOT_ENABLED'
-            and result['confidence'] == 'SYNTHETIC_0_95' and result['speech_sink'] == 'SYNTHETIC_NO_SDK', 'joined scope changed')
+def validate_joined(result, sdk=False):
+    require(result['scope'] == ('ANDROID_ART_SIGNED_CAPTURE_SDK_REPLY' if sdk else SCOPE) and result['physical'] == 'NOT_RUN' and result['production'] == 'NOT_ENABLED'
+            and result['confidence'] == 'SYNTHETIC_0_95' and result['speech_sink'] == ('NATIVE_OFFLINE_SDK_MUTED' if sdk else 'SYNTHETIC_NO_SDK'), 'joined scope changed')
     require([r['case'] for r in result['cases']] == ['speech16','followup48','quiet'], 'joined cases changed')
     for index,row in enumerate(result['cases']):
         require(row['metadata'] == 1 and row['worker_verified'] is True, 'capture did not complete on worker')
@@ -111,9 +111,12 @@ def main():
     for name in ('asr-cache', 'vad-cache', 'vad-model', 'output', 'ndk', 'java-home', 'android-sdk', 'ort-headers', 'llm-cache', 'llm-model', 'cmake'):
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--serial', required=True, type=serial)
+    parser.add_argument('--speech-sdk', action='store_true', help='Use the existing installed offline SDK voice, muted; no download')
     args = parser.parse_args()
     asr, vad, model, output, ndk, java, sdk = [p.resolve() for p in
         (args.asr_cache, args.vad_cache, args.vad_model, args.output, args.ndk, args.java_home, args.android_sdk)]
+    probe = 'CaptureSdkReplyInstrumentation' if args.speech_sdk else 'CaptureReplyInstrumentation'
+    probe_directory = 'android-joined-speech' if args.speech_sdk else 'android-device'
     header_record = verify_headers(args.ort_headers.resolve())
     require(not output.exists(), 'refusing to overwrite evaluation evidence')
     verify(vad, model)
@@ -175,11 +178,11 @@ def main():
     manifest.write_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">'
         '<uses-permission android:name="android.permission.INTERNET" tools:node="remove" />'
         '<uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />'
-        '<instrumentation android:name="com.eilo.foundation.CaptureReplyInstrumentation" android:targetPackage="com.eilo" '
+        '<instrumentation android:name="com.eilo.foundation.' + probe + '" android:targetPackage="com.eilo" '
         'android:label="Eilo file-fed signed speech evaluation" /></manifest>')
     init = output / 'evaluation.init.gradle'
     init.write_text('gradle.afterProject { p ->\n if(p.path == ":app") {\n'
-        'p.android.sourceSets.debug.java.srcDir(' + json.dumps(str(HERE / 'tests/android-device')) + ')\n'
+        'p.android.sourceSets.debug.java.srcDir(' + json.dumps(str(HERE / 'tests' / probe_directory)) + ')\n'
         'p.android.sourceSets.debug.jniLibs.srcDir(' + json.dumps(str(libs.parent)) + ')\n'
         'p.android.sourceSets.debug.manifest.srcFile(' + json.dumps(str(manifest)) + ')\n'
         'p.android.packagingOptions.jniLibs.useLegacyPackaging = true\n'
@@ -200,7 +203,7 @@ def main():
         require(completed.returncode == 0, 'APK build failed; inspect ignored build log')
     try:
         gradle(['-I', init], 'evaluation-build.log')
-        inspect_apk(apk, aapt, True)
+        inspect_apk(apk, aapt, True, probe)
         with zipfile.ZipFile(apk) as archive:
             for name in LIBRARIES:
                 with archive.open('lib/arm64-v8a/' + name) as stream:
@@ -226,11 +229,11 @@ def main():
                 subprocess.run([str(adb), '-s', args.serial, 'exec-in', 'run-as', 'com.eilo', 'dd',
                                 'of=' + work + '/' + name, 'bs=65536'], stdin=stream, capture_output=True, check=True, timeout=180)
         instrumentation = device('shell', 'am', 'instrument', '-w',
-                                 'com.eilo/com.eilo.foundation.CaptureReplyInstrumentation', timeout=900)
+                                 'com.eilo/com.eilo.foundation.' + probe, timeout=900)
         (output / 'instrumentation.log').write_text(instrumentation)
         require('eilo_capture_reply_art=PASS' in instrumentation and 'INSTRUMENTATION_CODE: -1' in instrumentation, 'Android ART evaluator failed')
         result = json.loads(device('exec-out', 'run-as', 'com.eilo', 'cat', result_path))
-        validate_joined(result)
+        validate_joined(result, args.speech_sdk)
         device('shell', 'run-as', 'com.eilo', 'test', '!', '-e', work)
     finally:
         try:
@@ -240,7 +243,7 @@ def main():
                 device('shell', 'run-as', 'com.eilo', 'test', '!', '-e', work)
         finally:
             gradle([], 'normal-restore-build.log')
-            inspect_apk(apk, aapt, False)
+            inspect_apk(apk, aapt, False, probe)
             device('install', '-r', apk, timeout=180)
     require(result is not None, 'no native result')
     result.update(schema_version=1, runtime_profile='SINGLE_PINNED_MOONSHINE_ORT_1_23_2',
@@ -252,7 +255,7 @@ def main():
         vad_conversion={'runtime':'1.23.0','format':'ORT','optimization':'DISABLED','converter_sha256':sha256(converter_source),'bytes':vad_for_android.stat().st_size}, asr_model_files=[dict(file=r['file'], sha256=r['local_sha256']) for r in record['model']['files']],
         controller_permission_and_readiness='SYNTHETIC', network_acceptance='NOT_RUN', llm=llm_record)
     (output / 'results.json').write_text(json.dumps(result, indent=2) + '\n')
-    print('Android ART signed capture/reply PASS; sink synthetic, physical/TTS NOT_RUN; normal APK restored.')
+    print('Android ART capture/reply PASS; sink=' + result['speech_sink'] + '; acoustic/physical/network NOT_RUN; normal APK restored.')
 
 
 if __name__ == '__main__':
