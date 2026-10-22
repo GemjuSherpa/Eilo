@@ -56,7 +56,7 @@
     },
     {
       "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/GenericSpokenTurn.kt",
-      "sha256": "c638bb29998c8d68b2150765317d2b607ed8672f993b73abc61e6b2c5984c1e5"
+      "sha256": "2ad7c12048ee9d0c8629de30f86dc40d715e10bc089c3e8223a811f7c15b32a2"
     },
     {
       "path": "apps/mobile/android/app/src/main/java/com/eilo/foundation/LlmControllerJob.kt",
@@ -518,7 +518,7 @@
     },
     {
       "path": "packages/vad-runtime/tests/signed-installer-jvm-results.json",
-      "sha256": "caa85e31ed7918b2a4bb87d9a9403414d340127ea48c890a071c345ee96a11fd"
+      "sha256": "011c3ea172d152aea98cf551e5759c364346119b04e8ca322ac34db5db523cf4"
     }
   ],
   "physical_gates": "NOT_RUN",

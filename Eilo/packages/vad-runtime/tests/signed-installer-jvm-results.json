@@ -175,7 +175,7 @@
   "runtime_sha256": "3567d114f7299d559993e536d605a6f46d7bc9d2542004accc80ee9bf5457f0b",
   "vad_jni_sha256": "4b37693400610da3e5ad21fe498f1d48090c2977a2882fe84970f1d5d06bfe7e",
   "asr_core_sha256": "531ce1bbb3db6e6b91c06edd7da312fe6bfd8c02010a5a93cad31bd0c4ef246b",
-  "asr_jni_sha256": "66a0d8fe4dbcc474ac7c5a5ea437b940227eb55709ffbc043dd1f6ad608fa58c",
+  "asr_jni_sha256": "83a18588f0c6525a22b95c6fe0847929e0ef9a012461ed9e27900112057005b0",
   "android_execution": "NOT_RUN",
   "physical_gates": "NOT_RUN",
   "source_sha256": {
