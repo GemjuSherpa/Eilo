@@ -33,6 +33,11 @@ jobs:
         run: |
           python3 scripts/test_verify_ios_launch.py
           python3 -O scripts/test_verify_ios_launch.py
+      - name: Outside-app acceptance inventory fixtures (synthetic, no device access)
+        run: |
+          python3 -m unittest discover -s packages/surface-acceptance -p 'test_*.py'
+          python3 -O -m unittest discover -s packages/surface-acceptance -p 'test_*.py'
+          python3 packages/surface-acceptance/acceptance.py packages/surface-acceptance/matrix.json
       - name: Wake fixture validation (synthetic, no model downloads)
         run: |
           python3 packages/wake-runtime/test_fixture_validation.py
