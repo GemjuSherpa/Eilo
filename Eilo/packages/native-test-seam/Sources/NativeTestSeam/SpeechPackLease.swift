@@ -8,7 +8,7 @@ struct SpeechArtifactPin {
   init(id:String,filename:String,sha256:String,bytes:Int64,licenseEvidence:String)throws {
     func matches(_ text:String,_ pattern:String)->Bool{text.range(of:"^(?:"+pattern+")$",options:.regularExpression) == text.startIndex..<text.endIndex}
     guard matches(id,"[a-z0-9][a-z0-9-]{0,63}"),matches(sha256,"[a-f0-9]{64}"),matches(licenseEvidence,"[a-f0-9]{64}"),
-      (1...8_000_000_000).contains(bytes),PackManifest.validFilename(filename,role:"asr") || PackManifest.validFilename(filename,role:"tokenizer") else{throw SpeechPackFailure.unavailable}
+      (1...8_000_000_000).contains(bytes),PackManifest.validFilename(filename,role:"asr") || PackManifest.validFilename(filename,role:"tokenizer") || PackManifest.validFilename(filename,role:"vad") else{throw SpeechPackFailure.unavailable}
     self.id=id;self.filename=filename;self.sha256=sha256;self.bytes=bytes;self.licenseEvidence=licenseEvidence
   }
 }
@@ -22,7 +22,7 @@ struct SpeechPackSelection {
       runtimeRevision.range(of:"^[a-f0-9]{40}$",options:.regularExpression) == runtimeRevision.startIndex..<runtimeRevision.endIndex,
       Set(pins.map(\.id)).count==pins.count,Set(pins.map(\.filename)).count==pins.count else{throw SpeechPackFailure.unavailable}
     switch kind {
-    case .vad:guard pins.count==1,pins[0].filename.hasSuffix(".onnx") else{throw SpeechPackFailure.unavailable}
+    case .vad:guard pins.count==1,(pins[0].filename.hasSuffix(".onnx") || pins[0].filename=="silero_vad_v5.ort") else{throw SpeechPackFailure.unavailable}
     case .asr:guard Set(pins.map(\.filename))==Self.asrNames else{throw SpeechPackFailure.unavailable}
     }
     self.packID=packID;self.runtimeRevision=runtimeRevision;self.kind=kind;self.pins=pins
