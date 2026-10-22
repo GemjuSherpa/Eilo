@@ -1,0 +1,11 @@
+# iOS native reply request lifetime
+
+Base main `4f3ceb57eb5e2c27e1a03df849b92453e5cbafca`. This VC-JOIN-01/04 follow-up applies the request-ownership safeguard from Android PR90 to Swift. The Swift starter interface cannot throw; no exception-catching path is added.
+
+Three focused regressions first reproduced retained input after rejected startup, ordinary completion and Stop before an adapter callback. GenericSpokenTurn now owns the pending GenericReplyRequest and clears its input/history on rejection, completion or clause-queue revocation. Rejected/stopped late callbacks cannot speak. A successful reply still completes and returns to standby. This closes request lifetime at the native turn boundary even when a supplied adapter retains the object; it does not certify erasure of immutable Strings, vendor buffers or adapter-made copies.
+
+Local checks: 323 Swift tests (three new regressions), 378 normal Android tests restored after the temporary host-JNI evaluator, 58 mobile/33 contract/27 search tests, workspace lint/types, normal simulator build/install and three fresh ten-second launches (ios-reply-request-lifetime) pass.
+
+Actual signed VAD/ASR installer evaluations pass eight cases each on the existing iOS simulator and macOS JVM/JNI. The file-fed joined capture evaluation was also rebuilt from verified cached model/runtime sources and passed two VAD/ASR→local model→SDK speech replies plus a quiet-input case. Its actual binary/library/source provenance and paired installer evidence were refreshed from these runs. Four joined and four installer evidence regressions pass in normal/optimized Python. SDK completion is not proof of hearing; confidence and exact voice/OS offline evidence remain synthetic. No microphone, phone, new package/model download, production trust or ordinary app readiness was enabled.
+
+Task branch `task/ios-reply-request-lifetime` consolidates into `sprint/native-request-lifetime` for one final PR. Normal merge requires all applicable exact-head checks to pass without review/merge block. Original personal edits are preserved. S08/release remain HOLD, memory disabled and physical acceptance NOT_RUN. Further work continues against existing implementation prerequisites rather than inventing a numbered sprint.
