@@ -9,4 +9,25 @@ final class GenericSpokenTurnTests:XCTestCase {
   func testUncertainAndDangerNeverStartModel(){for (text,confidence,expected) in [("Name one colour.",nil as Float?,RecognitionPolicy.clarification),("I will kill myself now.",0.95,DangerPolicy.response),("Take a photo.",0.95,CapabilityPolicy.action)]{let c=capturing(),s=NativeClauseQueueTests.Sink();let turn=GenericSpokenTurn(controller:c,token:c.token!,sink:s,configured:true,starter:{_,_,_,_ in XCTFail("fixed routing must not generate");return false});XCTAssertTrue(turn.submit(AsrText(text:text,final:true),confidence:confidence));XCTAssertEqual(s.texts,[expected])}}
   func testDefaultDeniedAndUnavailableBecomeTruthfulFailure(){let c=capturing(),s=NativeClauseQueueTests.Sink();XCTAssertFalse(GenericSpokenTurn(controller:c,token:c.token!,sink:s).submit(AsrText(text:"Hello",final:true),confidence:1));let turn=GenericSpokenTurn(controller:c,token:c.token!,sink:s,configured:true);XCTAssertFalse(turn.submit(AsrText(text:"Hello",final:true),confidence:1));XCTAssertEqual(c.state,.error);XCTAssertTrue(s.texts.isEmpty)}
   func testLateOutputAfterStopCannotSpeak(){let c=capturing(),s=NativeClauseQueueTests.Sink();var receive:((UnsafeBufferPointer<UInt8>)throws->Void)?,finish:((LlmJobResult)->Void)?;let turn=GenericSpokenTurn(controller:c,token:c.token!,sink:s,configured:true,starter:{_,_,r,f in receive=r;finish=f;return true});XCTAssertTrue(turn.submit(AsrText(text:"Hello",final:true),confidence:1));c.stop();XCTAssertThrowsError(try Array("Late.".utf8).withUnsafeBufferPointer{try receive!($0)});finish?(.completed);XCTAssertTrue(s.texts.isEmpty);XCTAssertEqual(c.state,.stopped)}
+  func testRejectedStarterReleasesRequestAndRejectsLateOutput()throws{
+    let c=capturing(),sink=NativeClauseQueueTests.Sink();var request:GenericReplyRequest?,receive:((UnsafeBufferPointer<UInt8>)throws->Void)?,finish:((LlmJobResult)->Void)?
+    let turn=GenericSpokenTurn(controller:c,token:c.token!,sink:sink,configured:true,starter:{_,r,p,f in request=r;receive=p;finish=f;return false})
+    XCTAssertFalse(turn.submit(AsrText(text:"Name one colour.",final:true),confidence:0.95));XCTAssertEqual(request?.latest,"");XCTAssertTrue(request!.history.isEmpty)
+    XCTAssertThrowsError(try Array("Late answer.".utf8).withUnsafeBufferPointer{try receive!($0)});finish?(.completed)
+    XCTAssertEqual(c.state,.error);XCTAssertTrue(sink.texts.isEmpty)
+  }
+  func testStopReleasesRequestBeforeAdapterCompletion(){
+    let c=capturing(),sink=NativeClauseQueueTests.Sink();var request:GenericReplyRequest?,finish:((LlmJobResult)->Void)?
+    let turn=GenericSpokenTurn(controller:c,token:c.token!,sink:sink,configured:true,starter:{_,r,_,f in request=r;finish=f;return true})
+    XCTAssertTrue(turn.submit(AsrText(text:"Name one colour.",final:true),confidence:0.95));XCTAssertEqual(request?.latest,"Name one colour.")
+    c.stop();XCTAssertEqual(request?.latest,"");XCTAssertTrue(request!.history.isEmpty);finish?(.completed)
+    XCTAssertEqual(c.state,.stopped);XCTAssertTrue(sink.texts.isEmpty)
+  }
+  func testCompletedStarterReleasesRequestAndKeepsSuccessfulSpeech(){
+    let c=capturing(),sink=NativeClauseQueueTests.Sink();var request:GenericReplyRequest?
+    let turn=GenericSpokenTurn(controller:c,token:c.token!,sink:sink,configured:true,starter:{_,r,p,f in request=r;try! Array("Blue is one colour.".utf8).withUnsafeBufferPointer{try p($0)};f(.completed);return true})
+    XCTAssertTrue(turn.submit(AsrText(text:"Name one colour.",final:true),confidence:0.95));XCTAssertEqual(request?.latest,"")
+    XCTAssertEqual(sink.texts,["Blue is one colour."]);sink.callbacks[0](.started);sink.callbacks[0](.finished);XCTAssertEqual(c.state,.standby)
+  }
+
 }

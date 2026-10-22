@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "task": "VC-JOIN-04_IOS_REQUEST_LIFETIME_FOLLOWUP",
+  "base_main": "4f3ceb57eb5e2c27e1a03df849b92453e5cbafca",
+  "reproduced_before_fix": [
+    "REJECTED_STARTER_RETAINED_REQUEST",
+    "COMPLETION_RETAINED_REQUEST",
+    "STOP_RETAINED_REQUEST"
+  ],
+  "tests": {
+    "swift": 323,
+    "new_regressions": 3,
+    "android_native": 378,
+    "mobile": 58,
+    "contracts": 33,
+    "search_protocol": 27,
+    "workspace_lint": "PASS",
+    "workspace_typecheck": "PASS",
+    "simulator_build_install": "PASS",
+    "fresh_ten_second_launches": 3,
+    "simulator_run_label": "ios-reply-request-lifetime",
+    "signed_installer_simulator_cases": 8,
+    "signed_installer_jvm_cases": 8,
+    "joined_generated_replies": 2,
+    "joined_quiet_cases": 1,
+    "joined_evidence_regressions_normal": 4,
+    "joined_evidence_regressions_optimized": 4,
+    "installer_evidence_regressions_normal": 4,
+    "installer_evidence_regressions_optimized": 4
+  },
+  "physical_tests": "NOT_RUN",
+  "production_readiness": "UNCHANGED_DEFAULT_DENIED",
+  "s08_decision": "HOLD",
+  "persistent_memory_allowed": false,
+  "source_sha256": {
+    "packages/native-test-seam/Sources/NativeTestSeam/GenericSpokenTurn.swift": "0c9059f198e4a6a15cdaff2f7fdf259210055beb3e38ab8d4c3d0b117c667f86",
+    "packages/native-test-seam/Tests/NativeTestSeamTests/GenericSpokenTurnTests.swift": "322ff3e14846a2ca0acc28ece197a46df39c3153c9e52db454b9d21e2b858a3a",
+    "packages/conversation-integration/tests/capture-evidence.json": "4fa7e002407460f4161e9b4fe2dd415fb0081866bb40ad6f1dfccbd395361eb6",
+    "packages/conversation-integration/tests/ios-capture-results.json": "3144dc62acab4602580dcd27e37d135689d5aeb94ef09f39718cc7848873dc11",
+    "packages/vad-runtime/tests/signed-installer-evidence.json": "d3f4b209c405d7361b6981c5a000022af41541cfaa4aee1a6476a5b621c5f9a4",
+    "packages/vad-runtime/tests/signed-installer-ios-results.json": "12f0f0357c58b0b6696de315908aa80b1ae7fad6f901351fbe5b41320935594d",
+    "packages/vad-runtime/tests/signed-installer-jvm-results.json": "e3deed4022251845430cdf111b60c1a42a901c131fc725acfe3cc168a92a01ef"
+  }
+}

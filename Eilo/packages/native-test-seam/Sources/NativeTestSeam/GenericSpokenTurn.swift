@@ -16,6 +16,7 @@ final class GenericSpokenTurn {
   private let controller:NativeController,token:GenerationToken,sink:any NativeClauseSink,starter:GenericReplyStarter,configured:Bool
   private var user="",reply=""
   private var submitted=false,queue:NativeClauseQueue?,output:NonThinkingOutput?
+  private var pendingRequest:GenericReplyRequest?
   init(controller:NativeController,token:GenerationToken,sink:any NativeClauseSink,configured:Bool=false,starter:@escaping GenericReplyStarter={_,_,_,_ in false}){self.controller=controller;self.token=token;self.sink=sink;self.configured=configured;self.starter=starter}
   /// Final text from the bounded native ASR worker only; never ambient or JS text.
   /// Unknown confidence asks for clarification, never invents a runtime confidence.
@@ -29,18 +30,21 @@ final class GenericSpokenTurn {
     user=request==RecognitionPolicy.clarification ? "":request
     guard controller.dispatch(.endpoint,token:token) else{return false}
     let policy=NativeSpeechPolicy(controller:controller,token:token,configured:true)
-    guard let q=NativeClauseQueue.create(controller:controller,token:token,sink:sink,completed:{[weak self] t in if let self{self.controller.recordGenericTurn(t,user:self.user,reply:self.reply);self.user="";self.reply=""}},cleared:{[weak self] in self?.user="";self?.reply="";self?.output?.cancel()},authorized:policy.allows) else{return false};queue=q
+    guard let q=NativeClauseQueue.create(controller:controller,token:token,sink:sink,completed:{[weak self] t in if let self{self.controller.recordGenericTurn(t,user:self.user,reply:self.reply);self.user="";self.reply=""}},cleared:{[weak self] in self?.user="";self?.reply="";self?.output?.cancel();self?.pendingRequest?.cancel();self?.pendingRequest=nil},authorized:policy.allows) else{return false};queue=q
     let fixed = request==RecognitionPolicy.clarification ? request : (DangerPolicy.recognizes(request) ? DangerPolicy.response:CapabilityPolicy.response(request))
     if let fixed{reply=fixed;return q.enqueue(fixed) && q.seal()}
     let guardOutput=NonThinkingOutput(current:{[weak self] in self.map{!$0.token.cancelled} ?? false},emit:{[weak self] text in guard let self,self.reply.utf8.count+text.utf8.count<=4096 else{throw LlmFailure.unavailable};self.reply+=text;if !q.append(text){throw LlmFailure.unavailable}});output=guardOutput
-    let accepted=starter(token,GenericReplyRequest(latest:request,history:history),{try guardOutput.append($0)},{[weak self] result in
+    let ownedRequest=GenericReplyRequest(latest:request,history:history);pendingRequest=ownedRequest
+    let accepted=starter(token,ownedRequest,{try guardOutput.append($0)},{[weak self] result in
+      ownedRequest.cancel()
       guard let self else{return};self.controller.lock.lock();defer{self.controller.lock.unlock()}
+      if self.pendingRequest === ownedRequest{self.pendingRequest=nil}
       guard !self.token.cancelled else{guardOutput.cancel();return}
       do {guard result == .completed else{throw LlmFailure.unavailable};try guardOutput.finish();guard q.seal() else{throw LlmFailure.unavailable}}
       catch{guardOutput.cancel();_ = self.controller.dispatch(.failure,failure:.unavailable,token:self.token)}
       self.output=nil
     })
-    if !accepted{guardOutput.cancel();_ = controller.dispatch(.failure,failure:.unavailable,token:token)}
+    if !accepted{ownedRequest.cancel();if pendingRequest === ownedRequest{pendingRequest=nil};guardOutput.cancel();output=nil;_ = controller.dispatch(.failure,failure:.unavailable,token:token)}
     return accepted
   }
   /// Only confirmed native user speech plus a still-valid separation lease can replace.
