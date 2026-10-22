@@ -1,0 +1,14 @@
+# S17 release package inventory: blocked draft
+
+Status: NOT_RELEASE_READY. No store submission, upload, deployment, identity enrollment, signing-key generation, package/model download or distribution is performed or authorized by this checklist. Repository CI success is not release acceptance. The normal simulator build is not a signed distribution package.
+
+| Package element | Existing material | Remaining acceptance |
+| --- | --- | --- |
+| Supported-device/route/build list | DEVICE_WORKLOAD_MATRIX.md; S08 decision and S16 empty matrix | Owner-approved physical matrix, RAM/OS/model/voice/route eligibility and all applicable performance/privacy results. No configuration is certified. |
+| License and provenance inventory | `docs/models/licenses` Qwen3/llama.cpp notices; wake/VAD runtime/model notices; dataset registries; root/mobile lockfile | Exact shipped artifact hashes, all transitive dependency/native/model/voice notices, permitted redistribution and attribution review of actual release binary/resources. Existing notices are partial, not a complete SBOM or legal approval. No datasets/raw audio are shipped. |
+| Signing/build provenance | Existing lab/model build evidence and locked source/dependency versions | Reproducible release archive, exact embedded resources, provisioning/entitlements/team/channel/expiry, artifact hash and verified signature. Lab signing provenance cannot certify a later distribution build. Do not create/access credentials without scope approval. |
+| Privacy disclosures | S09 metadata/key policies, S14 volatile visual audit, S15 provider assessment, S16 surface assessment and S17 source audit | Current actual binary/SDK inventory, native packet/log/storage/backup evidence, declared platform privacy forms/required-reason API review, accepted provider/identity retention/region contracts. Never claim zero collection from a source search. |
+| Pilot and rollback | This blocked checklist | Owner-approved limited cohort/channel/support limits; explicit opt-in and stop conditions; preserve failed evidence; rollback verified signed build without enabling history or losing committed ciphertext. Retention/deletion/backup migration handling needs actual encrypted-store acceptance. No silent downgrade or destructive reset. |
+| Final requirement closure | `packages/release-evidence/ledger.json` with 93 explicit BLOCKED entries | Integrated native/physical evidence, independent privacy review, owner decisions and requirement prose reconciliation. No unresolved privacy failure can be waived by aggregate scores or merged PRs. |
+
+Before any release: resolve VC-VERIFY-07/-08 and VC-AUTH-12, accept VC-PACK-10 and the final signed inventory, reconcile every requirement with actual full-app evidence, obtain the owner's distribution authorization, then prepare a concrete channel-specific package for review. S08 and persistent-memory gates remain unchanged.

@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "sprint": "S17",
+  "reviewed_base_main": "f666a7ca8af75b21401e94e777843e83d77f76bb",
+  "scope": "INDEPENDENT_AUDIT_TRACEABILITY_AND_RELEASE_PREPARATION",
+  "sprint_acceptance": "INCOMPLETE_DEPENDENCY_BLOCKED",
+  "tasks": [
+    {
+      "task": "VC-VERIFY-04",
+      "depends_on": [
+        "VC-VERIFY-01",
+        "VC-JOIN-02"
+      ],
+      "preparation": "EXISTING_FOREGROUND60MIN_PROTOCOL_REVIEWED",
+      "execution": "DEPENDENCY_BLOCKED",
+      "full_app_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VERIFY-06",
+      "depends_on": [
+        "VC-VERIFY-01",
+        "VC-TURN-02",
+        "VC-AUDIO-09",
+        "VC-AUDIO-10"
+      ],
+      "preparation": "EXISTING_STANDBY8H_PROTOCOL_REVIEWED",
+      "execution": "DEPENDENCY_BLOCKED",
+      "full_app_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VERIFY-09",
+      "depends_on": [
+        "VC-JOIN-04",
+        "VC-STORE-08"
+      ],
+      "preparation": "SOURCE_REVIEW_AND_FAILURE_ACCEPTANCE_GAPS_RECORDED",
+      "execution": "DEPENDENCY_BLOCKED",
+      "full_app_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VERIFY-05",
+      "depends_on": [
+        "VC-VERIFY-01",
+        "VC-JOIN-05",
+        "VC-AUDIO-09",
+        "VC-AUDIO-10"
+      ],
+      "preparation": "EXISTING_SCREENOFF60MIN_PROTOCOL_REVIEWED",
+      "execution": "DEPENDENCY_BLOCKED",
+      "full_app_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VERIFY-07",
+      "depends_on": [
+        "VC-JOIN-04",
+        "VC-JOIN-05",
+        "VC-PACK-05"
+      ],
+      "preparation": "SOURCE_AND_HISTORICAL_OBSERVER_AUDIT_ONLY",
+      "execution": "DEPENDENCY_BLOCKED",
+      "full_app_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VERIFY-08",
+      "depends_on": [
+        "VC-JOIN-05",
+        "VC-LOCK-04",
+        "VC-LOCK-05",
+        "VC-LOCK-06",
+        "VC-LOCK-07"
+      ],
+      "preparation": "SOURCE_AND_PERSISTENCE_PREREQUISITE_AUDIT_ONLY",
+      "execution": "DEPENDENCY_BLOCKED",
+      "full_app_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VERIFY-10",
+      "depends_on": [
+        "VC-VERIFY-07",
+        "VC-VERIFY-08",
+        "VC-AUTH-12"
+      ],
+      "preparation": "93_REQUIREMENT_PENDING_LEDGER_AND_OFFLINE_CHECKER",
+      "execution": "DEPENDENCY_BLOCKED",
+      "full_app_acceptance": "NOT_RUN"
+    },
+    {
+      "task": "VC-VERIFY-11",
+      "depends_on": [
+        "VC-VERIFY-10",
+        "VC-PACK-10"
+      ],
+      "preparation": "BLOCKED_RELEASE_PACKAGE_INVENTORY_DRAFT",
+      "execution": "DEPENDENCY_BLOCKED",
+      "full_app_acceptance": "NOT_RUN"
+    }
+  ],
+  "physical_tests": "NOT_RUN_FOR_S17",
+  "release_decision": "HOLD",
+  "s08_decision": "HOLD",
+  "persistent_memory_allowed": false,
+  "supported_configurations": [],
+  "permission_changes": []
+}
