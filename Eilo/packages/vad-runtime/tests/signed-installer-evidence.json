@@ -292,7 +292,7 @@
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/GenericSpokenTurn.swift",
-      "sha256": "e76fc078a381a0515ad21633b7004dfcd136a2eb9fd56a2461538d893a2c1295"
+      "sha256": "0c9059f198e4a6a15cdaff2f7fdf259210055beb3e38ab8d4c3d0b117c667f86"
     },
     {
       "path": "packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift",
@@ -514,11 +514,11 @@
   "reports": [
     {
       "path": "packages/vad-runtime/tests/signed-installer-ios-results.json",
-      "sha256": "56dd02528df1b1457c749b26221ff331047f3c4d194fe442c3965b3af62a46a8"
+      "sha256": "12f0f0357c58b0b6696de315908aa80b1ae7fad6f901351fbe5b41320935594d"
     },
     {
       "path": "packages/vad-runtime/tests/signed-installer-jvm-results.json",
-      "sha256": "011c3ea172d152aea98cf551e5759c364346119b04e8ca322ac34db5db523cf4"
+      "sha256": "e3deed4022251845430cdf111b60c1a42a901c131fc725acfe3cc168a92a01ef"
     }
   ],
   "physical_gates": "NOT_RUN",
