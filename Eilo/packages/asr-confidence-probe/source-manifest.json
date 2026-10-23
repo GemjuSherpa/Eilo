@@ -1,0 +1,3490 @@
+{
+  "commit": "234f60faa0eb388b01cdf7e60aca232af37aefda",
+  "source_bytes": 30224667,
+  "file_count": 696,
+  "maximum_additional_source_bytes": 36700160,
+  "embedded_sdk_vad_source_bytes": 15335389,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 14180,
+      "git_blob_sha1": "53cade1c30a4daf00dc0eebc92319027fd3f81d4"
+    },
+    {
+      "path": "core/CMakeLists.txt",
+      "bytes": 51589,
+      "git_blob_sha1": "30c472029b6f219afff9df11faa03d413064834b"
+    },
+    {
+      "path": "core/STYLE_GUIDE.md",
+      "bytes": 6093,
+      "git_blob_sha1": "7179f8eb9a02e12f86eb21dba5e7d4f6e249b088"
+    },
+    {
+      "path": "core/benchmark.cpp",
+      "bytes": 9148,
+      "git_blob_sha1": "65df729d9bf19c60df9ff0d0562bec838e177391"
+    },
+    {
+      "path": "core/bin-tokenizer/CMakeLists.txt",
+      "bytes": 1023,
+      "git_blob_sha1": "55c1dc34f03a136a8243b589b9d03b1c8c6efb77"
+    },
+    {
+      "path": "core/bin-tokenizer/bin-tokenizer-test.cpp",
+      "bytes": 6911,
+      "git_blob_sha1": "cbe0458344c7bdb12110418a4365630c9e2c7901"
+    },
+    {
+      "path": "core/bin-tokenizer/bin-tokenizer.cpp",
+      "bytes": 15866,
+      "git_blob_sha1": "2a40eedc867840a0bcdcdd2dde47208f5492d659"
+    },
+    {
+      "path": "core/bin-tokenizer/bin-tokenizer.h",
+      "bytes": 3942,
+      "git_blob_sha1": "d8cd8be585abc11480c79f91c0be86254b050675"
+    },
+    {
+      "path": "core/clone-clip-eval.cpp",
+      "bytes": 11425,
+      "git_blob_sha1": "ac04a17e31e05221c45adb099c8e4b308a015703"
+    },
+    {
+      "path": "core/clone-clip-test.cpp",
+      "bytes": 3180,
+      "git_blob_sha1": "c959b6c3545313be957a33eb9a821d75db8b978d"
+    },
+    {
+      "path": "core/clone-clip.cpp",
+      "bytes": 4368,
+      "git_blob_sha1": "b1174d255d46cf022886e97c9e44a33c30d76955"
+    },
+    {
+      "path": "core/clone-clip.h",
+      "bytes": 1394,
+      "git_blob_sha1": "3dbfc94f05e53fa8dcbf06752af27ae68567111e"
+    },
+    {
+      "path": "core/context-biaser-test.cpp",
+      "bytes": 6111,
+      "git_blob_sha1": "9c6b629663bf938b00bee873cf43ba0d8c6aeb96"
+    },
+    {
+      "path": "core/context-biaser.cpp",
+      "bytes": 5605,
+      "git_blob_sha1": "953b0d3d173346441bb66e39a848b708dfc4edf2"
+    },
+    {
+      "path": "core/context-biaser.h",
+      "bytes": 4784,
+      "git_blob_sha1": "9ddcbb2fd0a17e3b47742b0843b5082b19ef12e7"
+    },
+    {
+      "path": "core/context-extractor-test.cpp",
+      "bytes": 8707,
+      "git_blob_sha1": "fd5f2bd59efcb312c5dc39ec4219d832a6818997"
+    },
+    {
+      "path": "core/context-extractor.cpp",
+      "bytes": 8690,
+      "git_blob_sha1": "7bb14347093da4cca440b20a95ec563f9df212a0"
+    },
+    {
+      "path": "core/context-extractor.h",
+      "bytes": 4100,
+      "git_blob_sha1": "4dee47849600dbca3389c64a125a2456eb95b6ce"
+    },
+    {
+      "path": "core/cosine-distance-test.cpp",
+      "bytes": 2009,
+      "git_blob_sha1": "8304a169c72cb34d704f42c044ccbe1d1d2448d4"
+    },
+    {
+      "path": "core/cosine-distance.cpp",
+      "bytes": 780,
+      "git_blob_sha1": "0702fb3ac7919a88fe6a97b6312e5ed8daf5245b"
+    },
+    {
+      "path": "core/cosine-distance.h",
+      "bytes": 386,
+      "git_blob_sha1": "e1d0c8e6cb9200cf444393b7324a25032fad01fc"
+    },
+    {
+      "path": "core/cpp-annote/LICENSE",
+      "bytes": 1095,
+      "git_blob_sha1": "63148e08d3b99e9249e37d398260329b7ca979a9"
+    },
+    {
+      "path": "core/cpp-annote/README.md",
+      "bytes": 2001,
+      "git_blob_sha1": "b32ab4acb6a55d6b288e03c6a4ccc52496490fbd"
+    },
+    {
+      "path": "core/cpp-annote/src/annotation_support.h",
+      "bytes": 3310,
+      "git_blob_sha1": "99ab3c40d72e98a6b5895b1fd95749d38e85f9be"
+    },
+    {
+      "path": "core/cpp-annote/src/clustering_vbx.cpp",
+      "bytes": 12160,
+      "git_blob_sha1": "757f9a5132281144caa6b5722b80900a8ddbeb63"
+    },
+    {
+      "path": "core/cpp-annote/src/clustering_vbx.h",
+      "bytes": 1336,
+      "git_blob_sha1": "463a62f554a8b73cd2961c02c9529fd736fb5355"
+    },
+    {
+      "path": "core/cpp-annote/src/community1_cpp_annote_embedded.cpp",
+      "bytes": 132,
+      "git_blob_sha1": "2e772cfd9db22aff0a948b6ce2894614ecd010ce"
+    },
+    {
+      "path": "core/cpp-annote/src/community1_cpp_annote_embedded.h",
+      "bytes": 1297,
+      "git_blob_sha1": "9fcc7bf58821284a48425b2ee2e8f1d74995de33"
+    },
+    {
+      "path": "core/cpp-annote/src/compute_fbank.cpp",
+      "bytes": 2661,
+      "git_blob_sha1": "6a2ff9b9ca6b2cb37c24881076c51cf1be5b4b4c"
+    },
+    {
+      "path": "core/cpp-annote/src/compute_fbank.h",
+      "bytes": 831,
+      "git_blob_sha1": "e438fa434d8779e8667463022cb181b574f45ea9"
+    },
+    {
+      "path": "core/cpp-annote/src/cpp-annote-engine.h",
+      "bytes": 4906,
+      "git_blob_sha1": "1bc1bfa711cf32d78c53ed605fe0c42df536ee75"
+    },
+    {
+      "path": "core/cpp-annote/src/cpp-annote-streaming.cpp",
+      "bytes": 21994,
+      "git_blob_sha1": "5c549f9d51c751f348875c95de11d645a89c50da"
+    },
+    {
+      "path": "core/cpp-annote/src/cpp-annote-streaming.h",
+      "bytes": 6073,
+      "git_blob_sha1": "3470151606e46576cdc8da197456531981c129f8"
+    },
+    {
+      "path": "core/cpp-annote/src/cpp-annote.cpp",
+      "bytes": 39489,
+      "git_blob_sha1": "feba455f305b18f37313339136deb37f4e90bd15"
+    },
+    {
+      "path": "core/cpp-annote/src/cpp-annote.h",
+      "bytes": 4094,
+      "git_blob_sha1": "bdea58b3a4c3095f901756a39eb2cf108efd7f6a"
+    },
+    {
+      "path": "core/cpp-annote/src/embedding_ort_infer.cpp",
+      "bytes": 5210,
+      "git_blob_sha1": "8a63109714da0b02493e210ab9e665d7a813d369"
+    },
+    {
+      "path": "core/cpp-annote/src/embedding_ort_infer.h",
+      "bytes": 1392,
+      "git_blob_sha1": "ef490d4c03ebd265522b1955af506750af9c29ab"
+    },
+    {
+      "path": "core/cpp-annote/src/filter_train.cpp",
+      "bytes": 1969,
+      "git_blob_sha1": "4baeef05a871e897ecdc698c105cb9bff8464024"
+    },
+    {
+      "path": "core/cpp-annote/src/filter_train.h",
+      "bytes": 824,
+      "git_blob_sha1": "31f34392bd86d543b0f0594ca44020c41aa5b10d"
+    },
+    {
+      "path": "core/cpp-annote/src/hungarian.h",
+      "bytes": 2999,
+      "git_blob_sha1": "d3a446723e7ddeb805300e8c1c91ee03595c19f9"
+    },
+    {
+      "path": "core/cpp-annote/src/parity_log.cpp",
+      "bytes": 2147,
+      "git_blob_sha1": "6064786f6272cfbb8d276d757c8966b2d58f1559"
+    },
+    {
+      "path": "core/cpp-annote/src/parity_log.h",
+      "bytes": 1330,
+      "git_blob_sha1": "58ea369e8521f2a9495f4aecacb102b29f38a15d"
+    },
+    {
+      "path": "core/cpp-annote/src/plda_vbx.cpp",
+      "bytes": 17057,
+      "git_blob_sha1": "2d7ec0660a5b1d6a591075962e79f15c8099146d"
+    },
+    {
+      "path": "core/cpp-annote/src/plda_vbx.h",
+      "bytes": 2674,
+      "git_blob_sha1": "3ec7cf25d3be0a92dbc67a88d4b3927cdc5efa38"
+    },
+    {
+      "path": "core/cpp-annote/src/scipy_linkage.cpp",
+      "bytes": 8356,
+      "git_blob_sha1": "8d7e3d6e706823de162ddd3fde8dffd2191c0b95"
+    },
+    {
+      "path": "core/cpp-annote/src/scipy_linkage.h",
+      "bytes": 1635,
+      "git_blob_sha1": "bba6bde6b8029ee520ad41238cba45dc12c4e470"
+    },
+    {
+      "path": "core/cpp-annote/src/wav_pcm_float32.h",
+      "bytes": 5350,
+      "git_blob_sha1": "cd372c7f37e42dd7f8c7825c5611dce4cddb7bda"
+    },
+    {
+      "path": "core/embedding-model.h",
+      "bytes": 2702,
+      "git_blob_sha1": "6d71934bbacef01c4d5a79b82cc5fc6231522223"
+    },
+    {
+      "path": "core/gemma-embedding-model-test.cpp",
+      "bytes": 5224,
+      "git_blob_sha1": "3cd2e647a744c16d64601ccedb8d4098c4e244e2"
+    },
+    {
+      "path": "core/gemma-embedding-model.cpp",
+      "bytes": 11619,
+      "git_blob_sha1": "f94543fa89c46d13519ea7a8dcc25f839401a46e"
+    },
+    {
+      "path": "core/gemma-embedding-model.h",
+      "bytes": 5951,
+      "git_blob_sha1": "ca79bc80fbf4374ca3d2c693552b4b4b86561f44"
+    },
+    {
+      "path": "core/moonshine-c-api-memory-test.cpp",
+      "bytes": 10609,
+      "git_blob_sha1": "0bdd20a55f5e1f8a46b253fb02986967d7c33433"
+    },
+    {
+      "path": "core/moonshine-c-api-test.cpp",
+      "bytes": 95751,
+      "git_blob_sha1": "df6bc169f7ee3348afdb19fef015b23108665b76"
+    },
+    {
+      "path": "core/moonshine-c-api.cpp",
+      "bytes": 114894,
+      "git_blob_sha1": "b5effa3a8bb5aa6e735961d777ea6e3109eb784c"
+    },
+    {
+      "path": "core/moonshine-c-api.h",
+      "bytes": 73384,
+      "git_blob_sha1": "0547c1a97e16ddeb9346bfb3c8ef2d2af255b6aa"
+    },
+    {
+      "path": "core/moonshine-cpp-test.cpp",
+      "bytes": 22458,
+      "git_blob_sha1": "9e8bce0c3b79de1dbe5ec399a7828a0acddf49c2"
+    },
+    {
+      "path": "core/moonshine-cpp.h",
+      "bytes": 87633,
+      "git_blob_sha1": "cb37a22bcd07f952dbf38b5aa819cd7a576a413c"
+    },
+    {
+      "path": "core/moonshine-download-smoke.cpp",
+      "bytes": 18406,
+      "git_blob_sha1": "75fa1dbf894f2d7ef49108f3030a83caf42a9c45"
+    },
+    {
+      "path": "core/moonshine-model-catalog-test.cpp",
+      "bytes": 2512,
+      "git_blob_sha1": "e55b89aefe23d6cb4f30230400897b2e1e7c4eaf"
+    },
+    {
+      "path": "core/moonshine-model-catalog.cpp",
+      "bytes": 20535,
+      "git_blob_sha1": "4756c679b9848f735af4f6d70efb4ef75b8fe71b"
+    },
+    {
+      "path": "core/moonshine-model-catalog.h",
+      "bytes": 6996,
+      "git_blob_sha1": "d49e92d9bf24f3537dfbbbd8f1816172a1498aba"
+    },
+    {
+      "path": "core/moonshine-model-file-metadata.generated.cpp",
+      "bytes": 21723,
+      "git_blob_sha1": "d9e6daa41194888e35aee371ccb2ad7e16a98f8e"
+    },
+    {
+      "path": "core/moonshine-model-file-metadata.h",
+      "bytes": 1175,
+      "git_blob_sha1": "ee4f044e0dc4a31c4b732621c8a67af37be1df07"
+    },
+    {
+      "path": "core/moonshine-model.cpp",
+      "bytes": 32124,
+      "git_blob_sha1": "191e099b20289d6fcc49331b58459be243e1923c"
+    },
+    {
+      "path": "core/moonshine-model.h",
+      "bytes": 3977,
+      "git_blob_sha1": "83b4606a9898ad90038be19f2da16f1a734e049d"
+    },
+    {
+      "path": "core/moonshine-streaming-model.cpp",
+      "bytes": 58566,
+      "git_blob_sha1": "4257df6a924380429b2b56f6226b9848d9aaa73f"
+    },
+    {
+      "path": "core/moonshine-streaming-model.h",
+      "bytes": 9394,
+      "git_blob_sha1": "c31d40d6b82cdd97f7521dddc0060575d71d6fcc"
+    },
+    {
+      "path": "core/moonshine-tts/CMakeLists.txt",
+      "bytes": 13228,
+      "git_blob_sha1": "af834942deba237ec3e6d46cca1be4983a839fe1"
+    },
+    {
+      "path": "core/moonshine-tts/cmake/moonshine-tts-onnxruntime.cmake",
+      "bytes": 4060,
+      "git_blob_sha1": "b37d1e6844912110d24bebb5e1783545827f5a21"
+    },
+    {
+      "path": "core/moonshine-tts/data/README.md",
+      "bytes": 6840,
+      "git_blob_sha1": "191ea0ee315c4cdaef072da16cfb10124453811d"
+    },
+    {
+      "path": "core/moonshine-tts/data/ar_msa/README.md",
+      "bytes": 3365,
+      "git_blob_sha1": "6eef1f9f122e4b57211c7f97248b13695f3a1450"
+    },
+    {
+      "path": "core/moonshine-tts/data/de/README.md",
+      "bytes": 892,
+      "git_blob_sha1": "f2fc00f1826ab2bc2fb5591cf9f8d649bb3c2e08"
+    },
+    {
+      "path": "core/moonshine-tts/data/en_us/README.md",
+      "bytes": 2773,
+      "git_blob_sha1": "1cd6eb8440afca83bdeb79fea73942d3c8292a27"
+    },
+    {
+      "path": "core/moonshine-tts/data/fr/README.md",
+      "bytes": 1618,
+      "git_blob_sha1": "3595fc74dc2839feabf4ce44ced266ff22ea449b"
+    },
+    {
+      "path": "core/moonshine-tts/data/hi/README.md",
+      "bytes": 2471,
+      "git_blob_sha1": "e6a93a60d9257f7a3866e498596fdf90bdc34906"
+    },
+    {
+      "path": "core/moonshine-tts/data/it/README.md",
+      "bytes": 640,
+      "git_blob_sha1": "65d9485c11c70b2704818c91b973fccd7023fa8e"
+    },
+    {
+      "path": "core/moonshine-tts/data/ja/README.md",
+      "bytes": 1977,
+      "git_blob_sha1": "eafe411c448e9b215128376c6d14a337d3091744"
+    },
+    {
+      "path": "core/moonshine-tts/data/ko/README.md",
+      "bytes": 3357,
+      "git_blob_sha1": "e39e6b28350fc6f3438ec3fa7f3c5276c552c2f3"
+    },
+    {
+      "path": "core/moonshine-tts/data/kokoro/README.md",
+      "bytes": 10436,
+      "git_blob_sha1": "91c0d8a2f6af68afd30e0e7c2d81c66a48094793"
+    },
+    {
+      "path": "core/moonshine-tts/data/nl/README.md",
+      "bytes": 636,
+      "git_blob_sha1": "ee6262e22e72c97484f39e77c494db213ed26589"
+    },
+    {
+      "path": "core/moonshine-tts/data/pt_br/README.md",
+      "bytes": 581,
+      "git_blob_sha1": "37910e7b1eaec6e18c4f605eb2edac1232683817"
+    },
+    {
+      "path": "core/moonshine-tts/data/pt_pt/README.md",
+      "bytes": 557,
+      "git_blob_sha1": "00857b81bcf968a46d2be0cdebdeb5f095c5fa8f"
+    },
+    {
+      "path": "core/moonshine-tts/data/ru/README.md",
+      "bytes": 621,
+      "git_blob_sha1": "1ad8fa4f851c6e312ca1c5b9f240c1ca2a587d26"
+    },
+    {
+      "path": "core/moonshine-tts/data/vi/README.md",
+      "bytes": 561,
+      "git_blob_sha1": "f01de5f498400288c51c35ade72313d372b7c0e6"
+    },
+    {
+      "path": "core/moonshine-tts/data/zh_hans/README.md",
+      "bytes": 2466,
+      "git_blob_sha1": "f57d08daba7f8acb8c5460e481111b27deabf13a"
+    },
+    {
+      "path": "core/moonshine-tts/data/zipvoice/README.md",
+      "bytes": 3208,
+      "git_blob_sha1": "c69bc09abfb263e01bea1750a2beb47eb760f37a"
+    },
+    {
+      "path": "core/moonshine-tts/src/chunk-policy.cpp",
+      "bytes": 8965,
+      "git_blob_sha1": "dbaf62a63ac91e1766bd0a17882527f1862f6c2a"
+    },
+    {
+      "path": "core/moonshine-tts/src/chunk-policy.h",
+      "bytes": 5097,
+      "git_blob_sha1": "1cd661bdc676fe7e75ff1ca7be0d86cd77fd9bbd"
+    },
+    {
+      "path": "core/moonshine-tts/src/constants.h",
+      "bytes": 646,
+      "git_blob_sha1": "0e1727d3cddb9382f68caf6d354bd5c309dbf783"
+    },
+    {
+      "path": "core/moonshine-tts/src/g2p-path.h",
+      "bytes": 1612,
+      "git_blob_sha1": "7618e1dd767ac34aeb4a7c0c9314cfa4923e2074"
+    },
+    {
+      "path": "core/moonshine-tts/src/g2p-word-log.cpp",
+      "bytes": 1399,
+      "git_blob_sha1": "b1a5d1d8dc77333bba5f02e08dde3328d47128a9"
+    },
+    {
+      "path": "core/moonshine-tts/src/g2p-word-log.h",
+      "bytes": 1574,
+      "git_blob_sha1": "81f256050c58a5e28258037a023a064eb839a487"
+    },
+    {
+      "path": "core/moonshine-tts/src/ipa-postprocess.cpp",
+      "bytes": 31409,
+      "git_blob_sha1": "3ddaa2c1291c5cdb7e3d9a58286d84f7268abfc2"
+    },
+    {
+      "path": "core/moonshine-tts/src/ipa-postprocess.h",
+      "bytes": 3859,
+      "git_blob_sha1": "4f14f0f194f9947af258788487ea6d9290c9445b"
+    },
+    {
+      "path": "core/moonshine-tts/src/json-config.cpp",
+      "bytes": 3282,
+      "git_blob_sha1": "3721afc88173b006dce3fd5e31a877b995e1423b"
+    },
+    {
+      "path": "core/moonshine-tts/src/json-config.h",
+      "bytes": 964,
+      "git_blob_sha1": "0dce9fa9c3450c9048ab234dc851cf5e2d68cf3c"
+    },
+    {
+      "path": "core/moonshine-tts/src/kokoro-voice-levels-data.h",
+      "bytes": 1956,
+      "git_blob_sha1": "51a3e9a5fd209c24f4b9fa9a7d2d7a43b1ee5031"
+    },
+    {
+      "path": "core/moonshine-tts/src/kokoro-voice-levels.cpp",
+      "bytes": 1512,
+      "git_blob_sha1": "6cc2602bdbec0dde2ea201727cb29a1e3ea2311b"
+    },
+    {
+      "path": "core/moonshine-tts/src/kokoro-voice-levels.h",
+      "bytes": 2640,
+      "git_blob_sha1": "0670cec66cd6072da7812a839cc9aac9a97fb0f1"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/arabic-diac-onnx.cpp",
+      "bytes": 28957,
+      "git_blob_sha1": "d0002e7f0f270fbfdac8195a7446a20c8ccb4f4b"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/arabic-diac-onnx.h",
+      "bytes": 2109,
+      "git_blob_sha1": "a39c4e56ad53d8c54b6918d57cefaede301d29b9"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/arabic-ipa.cpp",
+      "bytes": 11036,
+      "git_blob_sha1": "ef95abd8503ad95bf7d6bd5d1c47cbe9fa675f01"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/arabic-ipa.h",
+      "bytes": 813,
+      "git_blob_sha1": "4e9eee6cca889e6915eca425b772d8cfacb58d72"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/arabic.cpp",
+      "bytes": 6277,
+      "git_blob_sha1": "926763c6fdf51e52be9bf215d1fae205a2689396"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/arabic.h",
+      "bytes": 2051,
+      "git_blob_sha1": "1e8e06ce200ac8aa8eacfad4724c4162cb3a98df"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/chinese-numbers.cpp",
+      "bytes": 6717,
+      "git_blob_sha1": "3a83a44405a22032bcc247d81336b5c5acf1a539"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/chinese-numbers.h",
+      "bytes": 615,
+      "git_blob_sha1": "97e970787c84c7e572c9fae6cc847318e845c28c"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/chinese-onnx-g2p.cpp",
+      "bytes": 4003,
+      "git_blob_sha1": "ca3f6ecbde93ed0eb562ae53c7a21479484122b9"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/chinese-onnx-g2p.h",
+      "bytes": 2450,
+      "git_blob_sha1": "245515833630233dad60d832e5ffe5b0268558e0"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/chinese-tok-pos-onnx.cpp",
+      "bytes": 28168,
+      "git_blob_sha1": "8ab944442d53d10daae36dfa411a3e83e88e732d"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/chinese-tok-pos-onnx.h",
+      "bytes": 2446,
+      "git_blob_sha1": "7523f0adab0a9ddc3476a99e5fd319657780e908"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/chinese.cpp",
+      "bytes": 15326,
+      "git_blob_sha1": "5016ef6e4ad6521a02e3c32ecec3dbb9273fc12a"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/chinese.h",
+      "bytes": 2540,
+      "git_blob_sha1": "c31c2f64c5f13490fa701ea16fce45e1ff2ea2fd"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/cmudict-tsv.cpp",
+      "bytes": 2127,
+      "git_blob_sha1": "fda451287d5cfb0e3711cef72afe91d26a3d628e"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/cmudict-tsv.h",
+      "bytes": 665,
+      "git_blob_sha1": "db585b0cd4707c38ec486478e0ffc6f1f2e0a293"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/dutch.cpp",
+      "bytes": 45142,
+      "git_blob_sha1": "28753d6d1fb06d796d140271eed0fe629b421587"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/dutch.h",
+      "bytes": 2307,
+      "git_blob_sha1": "a5679884cadc80a3a923090f64ef0ddf87c01081"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/english-hand-oov.cpp",
+      "bytes": 11438,
+      "git_blob_sha1": "98a01957f7a82ab132e40fe5024f8ca36d9e8c85"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/english-hand-oov.h",
+      "bytes": 443,
+      "git_blob_sha1": "7457405877f4462318144c359fedbacb9d672305"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/english-numbers.cpp",
+      "bytes": 5449,
+      "git_blob_sha1": "cb6e89a0846f8903a578f5768e30ec49c5e9b5f4"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/english-numbers.h",
+      "bytes": 478,
+      "git_blob_sha1": "5f85d62fcd5c58bb002f8febaef24b9dce6c9b1e"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/english.cpp",
+      "bytes": 8509,
+      "git_blob_sha1": "90792c5d5e07ded3f771a16233157cdb32200c5a"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/english.h",
+      "bytes": 2555,
+      "git_blob_sha1": "fbe83c198c3ebda6aff1247f54cd52b789d95b06"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/french-compound-map.cpp",
+      "bytes": 4237,
+      "git_blob_sha1": "95fef3073684b19ed6991566987fb7db1376a374"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/french-compound-map.h",
+      "bytes": 408,
+      "git_blob_sha1": "1f4802028c0aa61a424b937c4f09764d1a464e17"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/french-internal.h",
+      "bytes": 417,
+      "git_blob_sha1": "122f53e738842694477a6f680bdd7c03c972e079"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/french-oov.cpp",
+      "bytes": 17527,
+      "git_blob_sha1": "46c464364ecea67f9e67fc450f98f083aadce2c0"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/french.cpp",
+      "bytes": 38571,
+      "git_blob_sha1": "1c1bff7a232202b094e459cf392b49810c5ae5e1"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/french.h",
+      "bytes": 2820,
+      "git_blob_sha1": "d4f863fd0bf13a09adab969794051c3f3f123486"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/g2p-transformer-model.cpp",
+      "bytes": 5073,
+      "git_blob_sha1": "d7c557ae34954bf9a42d47d99533e69f7eff6fd7"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/g2p-transformer-model.h",
+      "bytes": 1811,
+      "git_blob_sha1": "07861f6384350c028a0363b2cc02bdf1ca37bf3f"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/german.cpp",
+      "bytes": 34231,
+      "git_blob_sha1": "a9339853c03e70d6379a15b5ccc995d06d0d923c"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/german.h",
+      "bytes": 2371,
+      "git_blob_sha1": "f8d99e4a0d2e0f3957e948ac0726d32ba40f2dc0"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/heteronym-context.cpp",
+      "bytes": 2222,
+      "git_blob_sha1": "6f3fd3a250eae75aedaa694ade3e48a2196490a5"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/heteronym-context.h",
+      "bytes": 756,
+      "git_blob_sha1": "42d5e8abf1a8d9fd21846feb2f0b960f38195383"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/hindi-numbers.cpp",
+      "bytes": 7127,
+      "git_blob_sha1": "d756a7fe0459d4ef1c3ac9e92519f2f9e9cc1523"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/hindi-numbers.h",
+      "bytes": 768,
+      "git_blob_sha1": "18b2e432c2e759a3e68e7025e3f850a4fd0b296b"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/hindi.cpp",
+      "bytes": 17283,
+      "git_blob_sha1": "c068822b154c400a24fa77cc7fcf9964aaf06d58"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/hindi.h",
+      "bytes": 2267,
+      "git_blob_sha1": "1ad10266a5997c5a6b1691fd88352b779cf0b678"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/ipa-symbols.h",
+      "bytes": 442,
+      "git_blob_sha1": "b13ffac8e8abc39a557af7c796b2c66153be3b70"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/italian.cpp",
+      "bytes": 36516,
+      "git_blob_sha1": "89f9a2b10250f14f4ad6361b16e75a3c7e32c10d"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/italian.h",
+      "bytes": 2165,
+      "git_blob_sha1": "c2fc471c751190202e51d09924298f253cfb0820"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/japanese-kana-to-ipa.cpp",
+      "bytes": 9514,
+      "git_blob_sha1": "637e3bf607efefa699b3b738a63cc3e98bb9199d"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/japanese-kana-to-ipa.h",
+      "bytes": 469,
+      "git_blob_sha1": "968fc2aa783970149670970cf6ff9411f551da0f"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/japanese-onnx-g2p.cpp",
+      "bytes": 10828,
+      "git_blob_sha1": "5a19a0ad7d7de53226a0fa5affeff522fa8f08cd"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/japanese-onnx-g2p.h",
+      "bytes": 1507,
+      "git_blob_sha1": "60d990e2087652f234543b505aa57a2cab5a1fb6"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/japanese-tok-pos-onnx.cpp",
+      "bytes": 29522,
+      "git_blob_sha1": "26760b2f6aa62e5c4b9ca0bac70f90cd171f7920"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/japanese-tok-pos-onnx.h",
+      "bytes": 2133,
+      "git_blob_sha1": "73809a0c9aba4c1cb5273fb5bedecf6d57352921"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/japanese.cpp",
+      "bytes": 3194,
+      "git_blob_sha1": "90696b7ffa0cb602575c9ce985d2c76bacca2886"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/japanese.h",
+      "bytes": 2208,
+      "git_blob_sha1": "2a8b840f8e50072e34767c5432b055aa82846203"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/korean-numbers.cpp",
+      "bytes": 6907,
+      "git_blob_sha1": "c9a18a93b7c06dbc9c73ea1f3085f27d5246c01f"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/korean-numbers.h",
+      "bytes": 870,
+      "git_blob_sha1": "d3897a96740aa3eeef8c767438ac0ae72303a45b"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/korean-tok-pos-onnx.cpp",
+      "bytes": 29452,
+      "git_blob_sha1": "f264cdb990922afe7f624f633ebb84c4984e2a00"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/korean-tok-pos-onnx.h",
+      "bytes": 2097,
+      "git_blob_sha1": "5e9404e4a256cf6f51c01d9498b5968c31708a32"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/korean.cpp",
+      "bytes": 34488,
+      "git_blob_sha1": "705c50504dc1ffcc2971d631b7908eccbd648706"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/korean.h",
+      "bytes": 2325,
+      "git_blob_sha1": "10ad66c13912171c1250aef71bc4f7efdc89c8b3"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/onnx-g2p-models.cpp",
+      "bytes": 6810,
+      "git_blob_sha1": "01faa4b2ce953f49ce93cf5ba5360e06d3ac1936"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/onnx-g2p-models.h",
+      "bytes": 1054,
+      "git_blob_sha1": "2ebf9a9b437afcd1bf1cb6f33844ad68999829c2"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/portuguese-rules.cpp",
+      "bytes": 34068,
+      "git_blob_sha1": "bf66c510cfdabc229ad2a4a1bb3fe668adbf2657"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/portuguese-rules.h",
+      "bytes": 1012,
+      "git_blob_sha1": "b01c385558635d0ec12d78b71df11a82b2d6f720"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/portuguese.cpp",
+      "bytes": 18049,
+      "git_blob_sha1": "0d6fa22aa007ba28c758b6e6caad781044b729f9"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/portuguese.h",
+      "bytes": 2511,
+      "git_blob_sha1": "82fa592ca166bed3fc5388d71628922f9e8a9eed"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/russian-numbers.cpp",
+      "bytes": 8379,
+      "git_blob_sha1": "a6161752f40e69b0a909873d2a7ee354b6436378"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/russian.cpp",
+      "bytes": 33653,
+      "git_blob_sha1": "74a82ff98278f02c6177e068bdf68b7d7ccde784"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/russian.h",
+      "bytes": 2124,
+      "git_blob_sha1": "6b8acb76d5e72f2c833e11d9785fd12e3cd1e69c"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/spanish-numbers.cpp",
+      "bytes": 5959,
+      "git_blob_sha1": "33e9d4eb67c40f2666bbdef404863a90b5016160"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/spanish-unicode-tables.cpp",
+      "bytes": 1806334,
+      "git_blob_sha1": "2ced5a543d9aad83d5b31da9fc8b8e4f5d1305e2"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/spanish-unicode-tables.h",
+      "bytes": 875,
+      "git_blob_sha1": "483a717cfa8d6b84ba56e892ce56a200d8958918"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/spanish-unicode.cpp",
+      "bytes": 2849,
+      "git_blob_sha1": "9b31058e43809848b349ab8eca0eb2a6fa8b47d9"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/spanish-unicode.h",
+      "bytes": 738,
+      "git_blob_sha1": "a6ebc3e750ff9289b96070cff98228b46fd73676"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/spanish.cpp",
+      "bytes": 31159,
+      "git_blob_sha1": "552b272be830865e485be9e8511b79e1939442cc"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/spanish.h",
+      "bytes": 3094,
+      "git_blob_sha1": "bbf7ca272148835162cffec6756ee85a923f5774"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/turkish.cpp",
+      "bytes": 18411,
+      "git_blob_sha1": "2f5b2d7ffa0281a14c213120d517c8be3dc2ee37"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/turkish.h",
+      "bytes": 1960,
+      "git_blob_sha1": "1e7b20e5b129a965fc413a2e1af5cee65dd12703"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/ukrainian.cpp",
+      "bytes": 24599,
+      "git_blob_sha1": "6317e253260a63d5021d2fae98fc4e303d638b8b"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/ukrainian.h",
+      "bytes": 1798,
+      "git_blob_sha1": "41aa9695e712ac301ff6c4440e3a8b16a2bc902a"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/vietnamese.cpp",
+      "bytes": 26398,
+      "git_blob_sha1": "96e920e071ade0d4038453ecf4cc3b33ccfa3764"
+    },
+    {
+      "path": "core/moonshine-tts/src/lang-specific/vietnamese.h",
+      "bytes": 1434,
+      "git_blob_sha1": "0ce6fa109f32cc443158e7ca32f5ab8f105d7a5a"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-asset-catalog.cpp",
+      "bytes": 8157,
+      "git_blob_sha1": "2a5b06fd6126201306c1f9aa91eb035f3b1b2215"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-asset-catalog.h",
+      "bytes": 1135,
+      "git_blob_sha1": "10d3d629adbcd7a836b096ea3902bdd4c8073d5f"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-g2p-options.cpp",
+      "bytes": 11708,
+      "git_blob_sha1": "a0d5e1236415269d6248dbfbffb0f5bdcb377ed4"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-g2p-options.h",
+      "bytes": 9718,
+      "git_blob_sha1": "a560c5d033700a1339d6ae062a434beeeb612e0f"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-g2p.cpp",
+      "bytes": 6912,
+      "git_blob_sha1": "73a4f9083457d884d2ca308984d3b90c8d464b8c"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-g2p.h",
+      "bytes": 3775,
+      "git_blob_sha1": "e23c1636786b5932248d803bdfffabed53f5920a"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-tts-options.cpp",
+      "bytes": 9206,
+      "git_blob_sha1": "165e5829d714667f312281abf73158439c0213ea"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-tts-options.h",
+      "bytes": 9728,
+      "git_blob_sha1": "707215e07f1b277299ecdce013c1bc96b74136f2"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-tts.cpp",
+      "bytes": 88458,
+      "git_blob_sha1": "19f44b5a613837118e286e0afde4ebf67488ec2c"
+    },
+    {
+      "path": "core/moonshine-tts/src/moonshine-tts.h",
+      "bytes": 6611,
+      "git_blob_sha1": "375006cf7f4eb13b84e9d1d484993f02123ad52d"
+    },
+    {
+      "path": "core/moonshine-tts/src/ort-model-format.h",
+      "bytes": 2202,
+      "git_blob_sha1": "99b7f262037ffd1199ca245f3157ccecd679119e"
+    },
+    {
+      "path": "core/moonshine-tts/src/ort-session-options.cpp",
+      "bytes": 1067,
+      "git_blob_sha1": "912231137d53e3d6525865a180b7364d6a83d715"
+    },
+    {
+      "path": "core/moonshine-tts/src/ort-session-options.h",
+      "bytes": 724,
+      "git_blob_sha1": "7122e43ccfab0d2a06e837924536e8b8da591cd4"
+    },
+    {
+      "path": "core/moonshine-tts/src/piper-tts.cpp",
+      "bytes": 55662,
+      "git_blob_sha1": "3314380d4bd06d72746bcb06e7665ece8c2d84a6"
+    },
+    {
+      "path": "core/moonshine-tts/src/piper-tts.h",
+      "bytes": 6933,
+      "git_blob_sha1": "d8eadbfff6ace0cfdd9d549e07ddcad28a4babc9"
+    },
+    {
+      "path": "core/moonshine-tts/src/piper-voice-catalog.cpp",
+      "bytes": 6095,
+      "git_blob_sha1": "5821120b8b238aa296251fc96421f29cfd31bd54"
+    },
+    {
+      "path": "core/moonshine-tts/src/piper-voice-catalog.h",
+      "bytes": 1201,
+      "git_blob_sha1": "364ab5317ec1afb3c63defe113e742f3387e1f27"
+    },
+    {
+      "path": "core/moonshine-tts/src/piper-voice-levels-data.h",
+      "bytes": 4036,
+      "git_blob_sha1": "76dcc2e453a979db7bdad1045279afb0d73f702e"
+    },
+    {
+      "path": "core/moonshine-tts/src/piper-voice-levels.cpp",
+      "bytes": 1462,
+      "git_blob_sha1": "3025606209b74b9ecd802333058116d47bb70b16"
+    },
+    {
+      "path": "core/moonshine-tts/src/piper-voice-levels.h",
+      "bytes": 2089,
+      "git_blob_sha1": "920e36bed1e4500564e5a3effe5773a0ca7343a8"
+    },
+    {
+      "path": "core/moonshine-tts/src/rule-based-g2p-factory.cpp",
+      "bytes": 32922,
+      "git_blob_sha1": "15b31e7d7da43ad675f668f58e372f4defcba0d2"
+    },
+    {
+      "path": "core/moonshine-tts/src/rule-based-g2p-factory.h",
+      "bytes": 1302,
+      "git_blob_sha1": "aea43d058e5ac56c7d8a2f6ce03c4380240c6ec6"
+    },
+    {
+      "path": "core/moonshine-tts/src/rule-based-g2p.h",
+      "bytes": 501,
+      "git_blob_sha1": "69b515afa198ffb999f7efa4aabe0a61b6d52712"
+    },
+    {
+      "path": "core/moonshine-tts/src/sentence-splitter.cpp",
+      "bytes": 12639,
+      "git_blob_sha1": "ff55a4a0b6633004491d9da33929956b014ab692"
+    },
+    {
+      "path": "core/moonshine-tts/src/sentence-splitter.h",
+      "bytes": 1990,
+      "git_blob_sha1": "c925d5485048252a50596d127f9d8838ba71f681"
+    },
+    {
+      "path": "core/moonshine-tts/src/split-weights.cpp",
+      "bytes": 2934,
+      "git_blob_sha1": "eb2af140915aed571fc30110de8f344fd906acd1"
+    },
+    {
+      "path": "core/moonshine-tts/src/split-weights.h",
+      "bytes": 3030,
+      "git_blob_sha1": "c01471ec69b22d6ea1407640752cd0014cdd0424"
+    },
+    {
+      "path": "core/moonshine-tts/src/text-normalize.cpp",
+      "bytes": 2459,
+      "git_blob_sha1": "6501b1cc3b3fe27b03f454ee2d31cf55706202e7"
+    },
+    {
+      "path": "core/moonshine-tts/src/text-normalize.h",
+      "bytes": 713,
+      "git_blob_sha1": "775aca9bbbddde598197d2664c38f95eb9f05794"
+    },
+    {
+      "path": "core/moonshine-tts/src/tts-stream.cpp",
+      "bytes": 8604,
+      "git_blob_sha1": "d23c4570b014526e00f510b4529c8dccb8c9da97"
+    },
+    {
+      "path": "core/moonshine-tts/src/tts-stream.h",
+      "bytes": 10136,
+      "git_blob_sha1": "99e4f6626292e99fa05b60648bcdc78df91c4fe0"
+    },
+    {
+      "path": "core/moonshine-tts/src/utf8-utils.cpp",
+      "bytes": 8409,
+      "git_blob_sha1": "fde0a598feac289c1823f7b991e3a9e4f7633320"
+    },
+    {
+      "path": "core/moonshine-tts/src/utf8-utils.h",
+      "bytes": 3593,
+      "git_blob_sha1": "a7d87102b0c9e43572c537cbcecad30e68134a7f"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-custom-ops.cpp",
+      "bytes": 16006,
+      "git_blob_sha1": "add89e425e9715e4d31d72a875d8286e8ccfc8ba"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-custom-ops.h",
+      "bytes": 789,
+      "git_blob_sha1": "8998bd1945aa14ddaa6ca403641e8d4fd51010d8"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-mel.cpp",
+      "bytes": 6565,
+      "git_blob_sha1": "ced872df493b47bacf6b4ee29a9fb9a2f98cfa3d"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-mel.h",
+      "bytes": 1418,
+      "git_blob_sha1": "5fc141f193ccf0294844c1f67ca9058e44e0518e"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-tts.cpp",
+      "bytes": 32354,
+      "git_blob_sha1": "8f53a4ae6b5a03401b3073e4038e1d7bba6db18a"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-tts.h",
+      "bytes": 4166,
+      "git_blob_sha1": "4aaa1d8f49c8e9e9608d6fbfdacf9b5766dffe39"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-voices-data.cpp",
+      "bytes": 133,
+      "git_blob_sha1": "c5ab07b26ee8e6ac6de03e9fe6d25ad447171bfd"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-voices.cpp",
+      "bytes": 676,
+      "git_blob_sha1": "a5ab170e995bfc5707ce1988876464e4b7cbeb7c"
+    },
+    {
+      "path": "core/moonshine-tts/src/zipvoice-voices.h",
+      "bytes": 1470,
+      "git_blob_sha1": "860fb8693e5bde2d2c48e14e11e1e60e0b513784"
+    },
+    {
+      "path": "core/moonshine-tts/tests/arabic-diac-onnx-test.cpp",
+      "bytes": 2416,
+      "git_blob_sha1": "01b2c563a9954f3f4468fdf2e11c2fd539225e20"
+    },
+    {
+      "path": "core/moonshine-tts/tests/arabic-rule-g2p-test.cpp",
+      "bytes": 1340,
+      "git_blob_sha1": "deef206b0500973d355cb17879422858bb741d42"
+    },
+    {
+      "path": "core/moonshine-tts/tests/chinese-rule-g2p-test.cpp",
+      "bytes": 2668,
+      "git_blob_sha1": "51bf2a5cf5a8adb3204cac5cdfcb2a8d75755601"
+    },
+    {
+      "path": "core/moonshine-tts/tests/chinese-tok-pos-onnx-test.cpp",
+      "bytes": 2681,
+      "git_blob_sha1": "f92b9f99f106d82fec4a2167d87efdf60e6f1633"
+    },
+    {
+      "path": "core/moonshine-tts/tests/chunk-policy-test.cpp",
+      "bytes": 9991,
+      "git_blob_sha1": "1201595c7be6aa2b0da4daac678a84a43888ca78"
+    },
+    {
+      "path": "core/moonshine-tts/tests/cmudict-tsv-test.cpp",
+      "bytes": 657,
+      "git_blob_sha1": "e9ffc53118488d0c2b1509b7c2cfd71af1c90d5d"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ar/diac_onnx_samples.txt",
+      "bytes": 293,
+      "git_blob_sha1": "fa3aca9b2ee5d4905d52ea236d70ce3dd02fbb47"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ar/rule_g2p_wiki_100.txt",
+      "bytes": 19560,
+      "git_blob_sha1": "cc8822aacbcb86eea3aa4b0e653495d0276969ac"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/de/rule_g2p_im_jahr_1891.txt",
+      "bytes": 75,
+      "git_blob_sha1": "411d0bf38b4a98866f4297ac2aaeb5f732046345"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/de/rule_g2p_wiki_100.txt",
+      "bytes": 17735,
+      "git_blob_sha1": "90c343f851355516f3d7b6ce031ede5348d791fa"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/en_us/rule_g2p_wiki_100.txt",
+      "bytes": 20180,
+      "git_blob_sha1": "de2b77481423673307d181935ce6cd011acc600b"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/es_es/rule_g2p_wiki_100.txt",
+      "bytes": 20544,
+      "git_blob_sha1": "9f58409b81985eb85551a57b2613e5865a8c1cd2"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/es_mx/rule_g2p_en_1891.txt",
+      "bytes": 46,
+      "git_blob_sha1": "009186c6c88258e315369b00799bbb908ebfe7bd"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/es_mx/rule_g2p_wiki_100.txt",
+      "bytes": 18234,
+      "git_blob_sha1": "8aee9564849a35a59ff4c152b96d670376351f93"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/fr/rule_g2p_wiki_100.txt",
+      "bytes": 18012,
+      "git_blob_sha1": "6de7fdb5d44f6b9865f485d40fd70524f29a5ae7"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/hi/rule_g2p_sample.txt",
+      "bytes": 20,
+      "git_blob_sha1": "70cd3e42357a2deedf341d82cf239b253a90e467"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/hi/rule_g2p_wiki_100.txt",
+      "bytes": 23678,
+      "git_blob_sha1": "7d24e999c8f8f812dcca182d20ddf892dcecbddf"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/it/rule_g2p_ce_ascii.txt",
+      "bytes": 10,
+      "git_blob_sha1": "fd1d33f5896c35cc461e0a1ead06bed5a35d1d2f"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/it/rule_g2p_ce_curly.txt",
+      "bytes": 10,
+      "git_blob_sha1": "fd1d33f5896c35cc461e0a1ead06bed5a35d1d2f"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/it/rule_g2p_wiki_100.txt",
+      "bytes": 20894,
+      "git_blob_sha1": "7d69e2eec668f4bb713348b3ca80429bcf90485f"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ja/onnx_g2p_wiki_100.txt",
+      "bytes": 13199,
+      "git_blob_sha1": "474045d81ae727793a090f604234b2297ae758d2"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ja/tok_pos_sample.txt",
+      "bytes": 130,
+      "git_blob_sha1": "a2b53b96700bc047d16ed6756bbecd318cc58a60"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ja/tok_pos_wiki_100.txt",
+      "bytes": 30954,
+      "git_blob_sha1": "1afc9910c86aa08c19ec59f1670abe939c485810"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ko/tok_pos_sample.txt",
+      "bytes": 62,
+      "git_blob_sha1": "c9747ab7346a5e0f2f526cd3c03f9cd1c0fb7897"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ko/tok_pos_wiki_100.txt",
+      "bytes": 22810,
+      "git_blob_sha1": "e14e4f5a348fe082d4d2610ece3b73c6b49b2f42"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/nl/rule_g2p_wiki_100.txt",
+      "bytes": 22189,
+      "git_blob_sha1": "ae19ec0b777f11cc897b9129fa8a7cde878ce3b1"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/pt_br/rule_g2p_casa.txt",
+      "bytes": 7,
+      "git_blob_sha1": "ab94700b3239c8d24ea0448917c9523e85b89849"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/pt_br/rule_g2p_wiki_100.txt",
+      "bytes": 21316,
+      "git_blob_sha1": "c497a5652c75b1ea88be26c16db240ebf2836933"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/pt_pt/rule_g2p_wiki_100.txt",
+      "bytes": 19278,
+      "git_blob_sha1": "30352d4df1914f1727ed3190b1dbb3b5b0e76950"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ru/rule_g2p_litva_word.txt",
+      "bytes": 8,
+      "git_blob_sha1": "739bd001ed7e8e5df89b9e9ebb73bdf77ae94231"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ru/rule_g2p_v_1891_line.txt",
+      "bytes": 52,
+      "git_blob_sha1": "4f8be20a1ab42c6698a52172468ddc3dc7ad0048"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/ru/rule_g2p_wiki_100.txt",
+      "bytes": 16341,
+      "git_blob_sha1": "08764204dcc004069a0710de76504ac5d086eb95"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/tr/rule_g2p_sample.txt",
+      "bytes": 16,
+      "git_blob_sha1": "96542cb5e77462ebcfe96187dd9b01699fce3214"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/tr/rule_g2p_wiki_100.txt",
+      "bytes": 18514,
+      "git_blob_sha1": "2b67f990b4a053cf4a586669b479f5fe01e8cbb2"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/uk/rule_g2p_sample.txt",
+      "bytes": 18,
+      "git_blob_sha1": "dee81753d7b9012b5808614ea998f8e4e6e3f4f9"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/uk/rule_g2p_wiki_100.txt",
+      "bytes": 12866,
+      "git_blob_sha1": "4e51672e0a610c26c41b0f8c8404ce9e96be5222"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/zh_hans/tok_pos_sample.txt",
+      "bytes": 61,
+      "git_blob_sha1": "6a3b3576ea02cabc01c7e0380f9be24b6fe41a65"
+    },
+    {
+      "path": "core/moonshine-tts/tests/data/zh_hans/tok_pos_wiki_filtered.txt",
+      "bytes": 26124,
+      "git_blob_sha1": "1a18a1102aee0ef05758338611620cdb4c003895"
+    },
+    {
+      "path": "core/moonshine-tts/tests/dutch-rule-g2p-test.cpp",
+      "bytes": 3903,
+      "git_blob_sha1": "04a4727c0d6af31f106f30b53b9ff113313ca572"
+    },
+    {
+      "path": "core/moonshine-tts/tests/english-hand-oov-test.cpp",
+      "bytes": 659,
+      "git_blob_sha1": "6c23d0fcd4a1acd078e190405c2c2bd5c9cfa63a"
+    },
+    {
+      "path": "core/moonshine-tts/tests/english-rule-g2p-test.cpp",
+      "bytes": 2771,
+      "git_blob_sha1": "c4ac1e1d0efbab6ad0c8b6a41f8076b5918eb8ed"
+    },
+    {
+      "path": "core/moonshine-tts/tests/french-rule-g2p-test.cpp",
+      "bytes": 5017,
+      "git_blob_sha1": "7d1a9c26ff26b1768b93153592c3be8d546bf247"
+    },
+    {
+      "path": "core/moonshine-tts/tests/german-rule-g2p-test.cpp",
+      "bytes": 4601,
+      "git_blob_sha1": "b308ca4af7f288b1342e0e768226147461a1f950"
+    },
+    {
+      "path": "core/moonshine-tts/tests/heteronym-context-test.cpp",
+      "bytes": 962,
+      "git_blob_sha1": "52836f99ff5f3af50bdba6310c4b56a3de1d217d"
+    },
+    {
+      "path": "core/moonshine-tts/tests/hindi-rule-g2p-test.cpp",
+      "bytes": 2740,
+      "git_blob_sha1": "340ab27578fcd3f0f905f8bf59d2b06011c3a59a"
+    },
+    {
+      "path": "core/moonshine-tts/tests/ipa-postprocess-test.cpp",
+      "bytes": 15415,
+      "git_blob_sha1": "48ffa51b8a3d3b1a4350b89c6be9e66bd5c38947"
+    },
+    {
+      "path": "core/moonshine-tts/tests/italian-rule-g2p-test.cpp",
+      "bytes": 3498,
+      "git_blob_sha1": "2f9798dc2f1fb434e527dc9d458d414ee4e53acc"
+    },
+    {
+      "path": "core/moonshine-tts/tests/japanese-onnx-g2p-test.cpp",
+      "bytes": 1380,
+      "git_blob_sha1": "fc2df1dba836bf08b77cb5e5a01b7eafa564f688"
+    },
+    {
+      "path": "core/moonshine-tts/tests/japanese-tok-pos-onnx-test.cpp",
+      "bytes": 2783,
+      "git_blob_sha1": "222f1c5c4148691ff7c7362e894695690d181d93"
+    },
+    {
+      "path": "core/moonshine-tts/tests/json-config-test.cpp",
+      "bytes": 951,
+      "git_blob_sha1": "aa499557da125d3a396f9e3047d65db0273439db"
+    },
+    {
+      "path": "core/moonshine-tts/tests/kokoro-voice-levels-test.cpp",
+      "bytes": 1917,
+      "git_blob_sha1": "fcf905f0546da7cf7b6dd5c4d82d1cbe126a35ca"
+    },
+    {
+      "path": "core/moonshine-tts/tests/korean-rule-g2p-test.cpp",
+      "bytes": 5781,
+      "git_blob_sha1": "3855735b944dee5a04e0506d4549c4be0a60affa"
+    },
+    {
+      "path": "core/moonshine-tts/tests/korean-tok-pos-onnx-test.cpp",
+      "bytes": 2065,
+      "git_blob_sha1": "f4989861b577d4cf789836ff3bd2cba8978cfb29"
+    },
+    {
+      "path": "core/moonshine-tts/tests/moonshine-g2p-options-test.cpp",
+      "bytes": 6160,
+      "git_blob_sha1": "a8c85a90dd82e6d7d26fbf17c2ac5a3e140fcd7b"
+    },
+    {
+      "path": "core/moonshine-tts/tests/moonshine-tts-options-test.cpp",
+      "bytes": 656,
+      "git_blob_sha1": "7e54a956d01d401a6aaa6929dc30412ca5639fcb"
+    },
+    {
+      "path": "core/moonshine-tts/tests/moonshine-tts-speed-test.cpp",
+      "bytes": 2937,
+      "git_blob_sha1": "ec8c96c18ac49503c38ce315b341bffb4df1cd89"
+    },
+    {
+      "path": "core/moonshine-tts/tests/onnx-g2p-smoke-test.cpp",
+      "bytes": 1739,
+      "git_blob_sha1": "c004fc98d480855369ac4ab15899ab2512d007e4"
+    },
+    {
+      "path": "core/moonshine-tts/tests/piper-stream-test.cpp",
+      "bytes": 9537,
+      "git_blob_sha1": "987838185248ef87a5d7ebf054f8807ce28f938a"
+    },
+    {
+      "path": "core/moonshine-tts/tests/piper-voice-form-test.cpp",
+      "bytes": 3612,
+      "git_blob_sha1": "f9f410083069c19f6e71750b36407c612d5a8a01"
+    },
+    {
+      "path": "core/moonshine-tts/tests/piper-voice-levels-test.cpp",
+      "bytes": 2239,
+      "git_blob_sha1": "6d37efc80996864bfcd37e5e6bdeeeb232b2d7e1"
+    },
+    {
+      "path": "core/moonshine-tts/tests/portuguese-rule-g2p-test.cpp",
+      "bytes": 4611,
+      "git_blob_sha1": "373544a1d553c1c540b7551fedb01e4f4454acdf"
+    },
+    {
+      "path": "core/moonshine-tts/tests/rule-g2p-test-support.h",
+      "bytes": 4895,
+      "git_blob_sha1": "de98e217d0d908a5326a3d14fb3ab34bf97ef133"
+    },
+    {
+      "path": "core/moonshine-tts/tests/russian-rule-g2p-test.cpp",
+      "bytes": 4552,
+      "git_blob_sha1": "13c6cf5880062fbb66f165b1341ca6a952f7093e"
+    },
+    {
+      "path": "core/moonshine-tts/tests/sentence-splitter-test.cpp",
+      "bytes": 5948,
+      "git_blob_sha1": "ede95a603e03dd62904005c4f2de57834ccf20c8"
+    },
+    {
+      "path": "core/moonshine-tts/tests/spanish-rule-g2p-test.cpp",
+      "bytes": 2801,
+      "git_blob_sha1": "f6230f72fd6ae1459a821e59769168f04bf4956f"
+    },
+    {
+      "path": "core/moonshine-tts/tests/text-normalize-test.cpp",
+      "bytes": 637,
+      "git_blob_sha1": "c515b2a86ca583088c7de3e8af4797499eec86d0"
+    },
+    {
+      "path": "core/moonshine-tts/tests/tts-stream-test.cpp",
+      "bytes": 18414,
+      "git_blob_sha1": "f66ebe4648d3d11749b24373767a1f88815d0a12"
+    },
+    {
+      "path": "core/moonshine-tts/tests/turkish-rule-g2p-test.cpp",
+      "bytes": 2038,
+      "git_blob_sha1": "dcb592e3b18d2218facee52e8022db0c1593dfc7"
+    },
+    {
+      "path": "core/moonshine-tts/tests/ukrainian-rule-g2p-test.cpp",
+      "bytes": 2065,
+      "git_blob_sha1": "08a0b9257783d2d11e51947df20c8cd9f025ad0d"
+    },
+    {
+      "path": "core/moonshine-tts/tests/utf8-utils-test.cpp",
+      "bytes": 1205,
+      "git_blob_sha1": "ca851526d9f3eb8c462f5bcea3d04804f570fde3"
+    },
+    {
+      "path": "core/moonshine-tts/tests/vietnamese-rule-g2p-test.cpp",
+      "bytes": 2323,
+      "git_blob_sha1": "14a7785c0ceab2a8ced566d123150dd07b629ce2"
+    },
+    {
+      "path": "core/moonshine-tts/tests/zipvoice-tts-test.cpp",
+      "bytes": 3655,
+      "git_blob_sha1": "3e6e80ceedceb3530b8b4a457d21a384be750ef9"
+    },
+    {
+      "path": "core/moonshine-tts/tools/arabic-rule-g2p-cli.cpp",
+      "bytes": 1930,
+      "git_blob_sha1": "0b4ec7fe7d51485a85dcda2c2d940436147c092a"
+    },
+    {
+      "path": "core/moonshine-tts/tools/chinese-rule-g2p-cli.cpp",
+      "bytes": 1958,
+      "git_blob_sha1": "ca7439b0fbcdd481ce18aab671f9da775e1c5476"
+    },
+    {
+      "path": "core/moonshine-tts/tools/dutch-g2p-batch-cli.cpp",
+      "bytes": 3159,
+      "git_blob_sha1": "4cd98229a36051345a6bfa147c463376789013a4"
+    },
+    {
+      "path": "core/moonshine-tts/tools/dutch-rule-g2p-cli.cpp",
+      "bytes": 1921,
+      "git_blob_sha1": "d7f1ab72d179752a4a5faa6a73db08d128e798d8"
+    },
+    {
+      "path": "core/moonshine-tts/tools/french-g2p-batch-cli.cpp",
+      "bytes": 3564,
+      "git_blob_sha1": "2751f3f4f47d4113c9813a07ac3fafed1443c3de"
+    },
+    {
+      "path": "core/moonshine-tts/tools/german-rule-g2p-cli.cpp",
+      "bytes": 1841,
+      "git_blob_sha1": "10933a6c0e5330b841003775d00e88896e22619b"
+    },
+    {
+      "path": "core/moonshine-tts/tools/hindi-rule-g2p-cli.cpp",
+      "bytes": 1949,
+      "git_blob_sha1": "4daade4cb2414b656ea2d690f301b7787548f9eb"
+    },
+    {
+      "path": "core/moonshine-tts/tools/italian-rule-g2p-cli.cpp",
+      "bytes": 1931,
+      "git_blob_sha1": "cac58ec8406da56233141fb897ea49d163d53726"
+    },
+    {
+      "path": "core/moonshine-tts/tools/japanese-onnx-g2p-cli.cpp",
+      "bytes": 1716,
+      "git_blob_sha1": "6ec2755d973586250ede0a302ab87cb76d1410fc"
+    },
+    {
+      "path": "core/moonshine-tts/tools/korean-rule-g2p-cli.cpp",
+      "bytes": 1945,
+      "git_blob_sha1": "0f56397cdc680293af9845f46801f90eaa1376a8"
+    },
+    {
+      "path": "core/moonshine-tts/tools/moonshine-g2p-cli.cpp",
+      "bytes": 12765,
+      "git_blob_sha1": "3cc2f132d22cf4a0bf556f51278329bd19e5e066"
+    },
+    {
+      "path": "core/moonshine-tts/tools/moonshine-tts-cli.cpp",
+      "bytes": 5663,
+      "git_blob_sha1": "60c39a8de71755d792afda43b86421b628dd55d1"
+    },
+    {
+      "path": "core/moonshine-tts/tools/piper-ipa-normalize-cli.cpp",
+      "bytes": 2198,
+      "git_blob_sha1": "1bb382c70093e8fec8af94c169afccf3b39ad242"
+    },
+    {
+      "path": "core/moonshine-tts/tools/piper-phoneme-infer-cli.cpp",
+      "bytes": 4301,
+      "git_blob_sha1": "752142d5f270d1c0071ef230ebc0df3e383d0181"
+    },
+    {
+      "path": "core/moonshine-tts/tools/portuguese-rule-g2p-cli.cpp",
+      "bytes": 2291,
+      "git_blob_sha1": "6185dc59e741ea5bbb7e56cf1ce76635f8cec7f7"
+    },
+    {
+      "path": "core/moonshine-tts/tools/vietnamese-rule-g2p-cli.cpp",
+      "bytes": 1546,
+      "git_blob_sha1": "cf1eb34fd145e3f084deec0f3b281804ed7cc3e4"
+    },
+    {
+      "path": "core/moonshine-utils/CMakeLists.txt",
+      "bytes": 3396,
+      "git_blob_sha1": "0cb5437bbf5259f150a7c2c70dc7bbd5e23d2e0e"
+    },
+    {
+      "path": "core/moonshine-utils/debug-utils-test.cpp",
+      "bytes": 5143,
+      "git_blob_sha1": "e0ea258d77c0544dce3805e9030943e6d816338f"
+    },
+    {
+      "path": "core/moonshine-utils/debug-utils.cpp",
+      "bytes": 10126,
+      "git_blob_sha1": "8759bdac6c677bcbddd4ef662553986e14c6bd8e"
+    },
+    {
+      "path": "core/moonshine-utils/debug-utils.h",
+      "bytes": 10054,
+      "git_blob_sha1": "9ae7654f3c5e079ee2fb83b6a2412a737423bacd"
+    },
+    {
+      "path": "core/moonshine-utils/file-information-test.cpp",
+      "bytes": 8075,
+      "git_blob_sha1": "97fd192c44082d01e3e154f0e9ea162733504fb8"
+    },
+    {
+      "path": "core/moonshine-utils/file-information.cpp",
+      "bytes": 4438,
+      "git_blob_sha1": "8c37e301ca69d86e2112a0e9d6541aab4ab16a5b"
+    },
+    {
+      "path": "core/moonshine-utils/file-information.h",
+      "bytes": 4003,
+      "git_blob_sha1": "c76cbf185079d484b15515edc4281991260d5d3c"
+    },
+    {
+      "path": "core/moonshine-utils/file-utils-test.cpp",
+      "bytes": 3776,
+      "git_blob_sha1": "07491ed2dd10a8d0311664f89683381321362296"
+    },
+    {
+      "path": "core/moonshine-utils/file-utils.cpp",
+      "bytes": 898,
+      "git_blob_sha1": "a2acdbfd05540d98c685aa600363f9f4fd01c82a"
+    },
+    {
+      "path": "core/moonshine-utils/file-utils.h",
+      "bytes": 600,
+      "git_blob_sha1": "fbe890123911004fbfbed7445232083d84d28d17"
+    },
+    {
+      "path": "core/moonshine-utils/string-utils-test.cpp",
+      "bytes": 2930,
+      "git_blob_sha1": "2d94067e366e66db5c78e8dbb6018fe1d6650ace"
+    },
+    {
+      "path": "core/moonshine-utils/string-utils.cpp",
+      "bytes": 4901,
+      "git_blob_sha1": "e663d08e3618611413ce7bea4efe28b84e5235af"
+    },
+    {
+      "path": "core/moonshine-utils/string-utils.h",
+      "bytes": 1233,
+      "git_blob_sha1": "f67647d17c7534ab595c2e1e54a386c6262a112c"
+    },
+    {
+      "path": "core/moonshine-utils/test-utils.h",
+      "bytes": 1225,
+      "git_blob_sha1": "ca1a8e1fec3b884a93d9696f78327d71ffffb342"
+    },
+    {
+      "path": "core/ort-load-sweep-test.cpp",
+      "bytes": 9741,
+      "git_blob_sha1": "8e86bd5c0f533d1722c7f22292fce08f6af1d83d"
+    },
+    {
+      "path": "core/ort-utils/CMakeLists.txt",
+      "bytes": 3286,
+      "git_blob_sha1": "dddcabd53385365dfdef9592395498616f95dc7f"
+    },
+    {
+      "path": "core/ort-utils/moonshine-ort-allocator.cpp",
+      "bytes": 4095,
+      "git_blob_sha1": "b1b3853becb29b5176af971cc94b5b0d708c964c"
+    },
+    {
+      "path": "core/ort-utils/moonshine-ort-allocator.h",
+      "bytes": 541,
+      "git_blob_sha1": "06b0b43298ebd1cd478dcfafece16f17b1a917eb"
+    },
+    {
+      "path": "core/ort-utils/moonshine-tensor-view.cpp",
+      "bytes": 15172,
+      "git_blob_sha1": "611d70f80c101933ab92c664a95d47932e815be8"
+    },
+    {
+      "path": "core/ort-utils/moonshine-tensor-view.h",
+      "bytes": 5712,
+      "git_blob_sha1": "e18c2cec349b49a74cec489205401afffb4b7ca5"
+    },
+    {
+      "path": "core/ort-utils/moonshine-tensor.cpp",
+      "bytes": 900,
+      "git_blob_sha1": "b1a72f8fe55cdbd0466989d68f56cf952487c814"
+    },
+    {
+      "path": "core/ort-utils/moonshine-tensor.h",
+      "bytes": 1015,
+      "git_blob_sha1": "a84c216874caba522e393becea468851a181e561"
+    },
+    {
+      "path": "core/ort-utils/ort-utils-cxx.h",
+      "bytes": 1064,
+      "git_blob_sha1": "41284d2ad455fed70ef6a3667e76953228564cd6"
+    },
+    {
+      "path": "core/ort-utils/ort-utils-ep-test.cpp",
+      "bytes": 5353,
+      "git_blob_sha1": "d88faefb848b198191e7b06f82d0833387c81ddc"
+    },
+    {
+      "path": "core/ort-utils/ort-utils-ep.cpp",
+      "bytes": 5832,
+      "git_blob_sha1": "f941688dc302ad181d5dade199c864c71e6f4a32"
+    },
+    {
+      "path": "core/ort-utils/ort-utils-test.cpp",
+      "bytes": 483,
+      "git_blob_sha1": "d53f17bb11651f219098cd59489597ca5bea9976"
+    },
+    {
+      "path": "core/ort-utils/ort-utils.cpp",
+      "bytes": 12306,
+      "git_blob_sha1": "ceabd6d0f23d5684a115d2a1c02ea8c6134c9da6"
+    },
+    {
+      "path": "core/ort-utils/ort-utils.h",
+      "bytes": 6896,
+      "git_blob_sha1": "6c94cead08536f27e43d0fa1248528775557f5ad"
+    },
+    {
+      "path": "core/reliability/CMakeLists.txt",
+      "bytes": 3485,
+      "git_blob_sha1": "4606314babce521547c98b1cbacc4b1f48190ae3"
+    },
+    {
+      "path": "core/reliability/fuzz-bin-tokenizer.cpp",
+      "bytes": 1306,
+      "git_blob_sha1": "423e752be91d0430decd28db5fd14bfded33a990"
+    },
+    {
+      "path": "core/reliability/fuzz-resampler.cpp",
+      "bytes": 1415,
+      "git_blob_sha1": "9351cb9c17a8d1416b973d9e87ca7a133a336861"
+    },
+    {
+      "path": "core/reliability/fuzz-string-utils.cpp",
+      "bytes": 1012,
+      "git_blob_sha1": "f5b7f010bb311c1579ba5ad5840c5937124b9812"
+    },
+    {
+      "path": "core/reliability/fuzz-tensor-view.cpp",
+      "bytes": 3204,
+      "git_blob_sha1": "3358190f956683269535fc5b8c09472065a9e284"
+    },
+    {
+      "path": "core/reliability/fuzz-wav-pcm.cpp",
+      "bytes": 1514,
+      "git_blob_sha1": "fee3998cb4b19feb9b8aa4c2c72f135343fecf83"
+    },
+    {
+      "path": "core/reliability/sanitizer-ignorelist.txt",
+      "bytes": 540,
+      "git_blob_sha1": "d31d4e681648d0898030183d82305c5593e020d4"
+    },
+    {
+      "path": "core/reliability/tsan-suppressions.txt",
+      "bytes": 1117,
+      "git_blob_sha1": "8f16b2a2632a97e7234918248e225dc3e2e7bd36"
+    },
+    {
+      "path": "core/resampler-test.cpp",
+      "bytes": 2385,
+      "git_blob_sha1": "5e7e24bfec5185382809a74ee4db929a13a3e4bb"
+    },
+    {
+      "path": "core/resampler.cpp",
+      "bytes": 2919,
+      "git_blob_sha1": "fef9ebddfffc00dff743d2d9437fc7ff478426a4"
+    },
+    {
+      "path": "core/resampler.h",
+      "bytes": 689,
+      "git_blob_sha1": "eabf066e9a77c1c5520ed3aca8424ef4dd10e9a0"
+    },
+    {
+      "path": "core/silero-vad-model-data.h",
+      "bytes": 15335389,
+      "git_blob_sha1": "18cfd6320b45103aa3e0b8448c09398778e330ab"
+    },
+    {
+      "path": "core/silero-vad.cpp",
+      "bytes": 6965,
+      "git_blob_sha1": "f397d39428f4f30e57d01bd3146e7343c8d97c6a"
+    },
+    {
+      "path": "core/silero-vad.h",
+      "bytes": 2635,
+      "git_blob_sha1": "41aa82925c6a78e02a1d6f2d17689a6c226092e0"
+    },
+    {
+      "path": "core/speaker-diarizer.cpp",
+      "bytes": 10082,
+      "git_blob_sha1": "7bb7f2ab6b53ed5bbae4455a781f7673f5db2fe3"
+    },
+    {
+      "path": "core/speaker-diarizer.h",
+      "bytes": 4065,
+      "git_blob_sha1": "82dfdd15950a23e6ee29d5e9a9fb82fae091a08c"
+    },
+    {
+      "path": "core/speculative-decode-bench.cpp",
+      "bytes": 16670,
+      "git_blob_sha1": "437f1db4477b63eec1be0759522e813c33dde6d1"
+    },
+    {
+      "path": "core/speculative-mismatch-investigate.cpp",
+      "bytes": 15033,
+      "git_blob_sha1": "2790cdf10293d8381dda716aec6e8dd8ec37df9e"
+    },
+    {
+      "path": "core/speech-clip-test.cpp",
+      "bytes": 3656,
+      "git_blob_sha1": "f56ceb061fd7b505ae7c08db25d8102b66624b82"
+    },
+    {
+      "path": "core/speech-clip.cpp",
+      "bytes": 3640,
+      "git_blob_sha1": "478c2fc9d471aa081aff1e8b9e7230c721cf84c5"
+    },
+    {
+      "path": "core/speech-clip.h",
+      "bytes": 3035,
+      "git_blob_sha1": "11c538b564c60257580d6286eb94ead890e9f241"
+    },
+    {
+      "path": "core/spelling-fusion-data.cpp",
+      "bytes": 10431,
+      "git_blob_sha1": "dcc2cf946f936746cc744f2cdf57923a7659b424"
+    },
+    {
+      "path": "core/spelling-fusion-data.h",
+      "bytes": 2751,
+      "git_blob_sha1": "703b6493ee959bde6621cd622bfada2d424cb8a2"
+    },
+    {
+      "path": "core/spelling-fusion-test.cpp",
+      "bytes": 12754,
+      "git_blob_sha1": "1f535b5148b6ac43c0efba32fcf3977affb8bb90"
+    },
+    {
+      "path": "core/spelling-fusion.cpp",
+      "bytes": 15624,
+      "git_blob_sha1": "ed9cbb125b33c125be8597a920c61e8da42d8561"
+    },
+    {
+      "path": "core/spelling-fusion.h",
+      "bytes": 4709,
+      "git_blob_sha1": "9fd3a3b710d072d42839a3eead71d0c78c51173d"
+    },
+    {
+      "path": "core/spelling-model-test.cpp",
+      "bytes": 4757,
+      "git_blob_sha1": "05902a79623c4d32f9ed5444bb6b73634b626e9f"
+    },
+    {
+      "path": "core/spelling-model.cpp",
+      "bytes": 11220,
+      "git_blob_sha1": "f4ef83b815e1e0b25c0a73c3f55985ea5d16dce8"
+    },
+    {
+      "path": "core/spelling-model.h",
+      "bytes": 3139,
+      "git_blob_sha1": "09273df954a2044b78eec0641f22cf08256a71af"
+    },
+    {
+      "path": "core/streaming-language-smoke-test.cpp",
+      "bytes": 5731,
+      "git_blob_sha1": "5b86dd3cb3a627bc0d639e95db4b952203ce02da"
+    },
+    {
+      "path": "core/text-embedder-test.cpp",
+      "bytes": 22763,
+      "git_blob_sha1": "e84b8be42358517b7c48400d317854695ae051d1"
+    },
+    {
+      "path": "core/text-embedder.cpp",
+      "bytes": 2168,
+      "git_blob_sha1": "4d54e9780bd19f24c4fa658a6f2a73044e375935"
+    },
+    {
+      "path": "core/text-embedder.h",
+      "bytes": 2875,
+      "git_blob_sha1": "587be66e738112c2840be953d2333d6749e600bb"
+    },
+    {
+      "path": "core/third-party/Eigen/COPYING.MPL2",
+      "bytes": 16726,
+      "git_blob_sha1": "14e2f777f6c395e7e04ab4aa306bbcc4b0c1120e"
+    },
+    {
+      "path": "core/third-party/Eigen/README.md",
+      "bytes": 715,
+      "git_blob_sha1": "b0ccd8eec86862e6363072437c58576985cad170"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Cholesky/LDLT.h",
+      "bytes": 24934,
+      "git_blob_sha1": "1013ca045df62921d5c89054e13855649741ec86"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Cholesky/LLT.h",
+      "bytes": 18760,
+      "git_blob_sha1": "8c9b2b398791d24f3d3abc6d5d0704c47fb3637a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Cholesky/LLT_LAPACKE.h",
+      "bytes": 3974,
+      "git_blob_sha1": "bc6489e69a98328e016d4cc7e0d36a147744d337"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/ArithmeticSequence.h",
+      "bytes": 19214,
+      "git_blob_sha1": "b6200fac1b0bef2c60a098f69646fec378e5b646"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Array.h",
+      "bytes": 16782,
+      "git_blob_sha1": "20c789b10c760d814516c65f539cfefc9e352f0e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/ArrayBase.h",
+      "bytes": 8217,
+      "git_blob_sha1": "ea3dd1c3b38c989ee1e1a5fe3a43b10aa8ee9b70"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/ArrayWrapper.h",
+      "bytes": 7018,
+      "git_blob_sha1": "2e9555b5374dc723aa181d30194056c05bc96e18"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Assign.h",
+      "bytes": 2738,
+      "git_blob_sha1": "655412efd7f26d616b002b3d584ec7fc8a5d9ea4"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/AssignEvaluator.h",
+      "bytes": 41673,
+      "git_blob_sha1": "7d76f0c256fd6207819921680217b30697e81ca3"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Assign_MKL.h",
+      "bytes": 12488,
+      "git_blob_sha1": "c6140d185ba07aabfc930cb76f0834ce6231a710"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/BandMatrix.h",
+      "bytes": 14075,
+      "git_blob_sha1": "878c0240ac1699abd0b05e2d34cea9fa4929fe72"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Block.h",
+      "bytes": 18648,
+      "git_blob_sha1": "3206d6633e62c29f4466155f47725511a34ba640"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/BooleanRedux.h",
+      "bytes": 4429,
+      "git_blob_sha1": "852de8b90a565b534a70ff61493ca2684a9d1638"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/CommaInitializer.h",
+      "bytes": 5981,
+      "git_blob_sha1": "c0e29c75c223666d37e6bb25f03af09b8ba65e01"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/ConditionEstimator.h",
+      "bytes": 6990,
+      "git_blob_sha1": "51a2e5f1b6f9587ad54fbc889e03c1d11e02d4f4"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/CoreEvaluators.h",
+      "bytes": 63841,
+      "git_blob_sha1": "0ff8c8deb820deb7bbaa2f762afc5e4366f29616"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/CoreIterators.h",
+      "bytes": 4745,
+      "git_blob_sha1": "b967196813b21194a0119ecf2eb721fa32ce07e8"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/CwiseBinaryOp.h",
+      "bytes": 7909,
+      "git_blob_sha1": "2202b1cc6b78c19de49e23ab81fd6e0982372996"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/CwiseNullaryOp.h",
+      "bytes": 36282,
+      "git_blob_sha1": "289ec510a8ac733646e6f5915fd35fb8812ef559"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/CwiseTernaryOp.h",
+      "bytes": 8256,
+      "git_blob_sha1": "9f3576fecefb90fc91cd37e9eb3328fcdcf8cf17"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/CwiseUnaryOp.h",
+      "bytes": 3937,
+      "git_blob_sha1": "e68c4f7480824e51d0ab360a393b520af6665199"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/CwiseUnaryView.h",
+      "bytes": 5551,
+      "git_blob_sha1": "a06d7621ec143a3c3354bf4079ae7bd25c6f03b4"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/DenseBase.h",
+      "bytes": 31529,
+      "git_blob_sha1": "9b16db68d48d2bfbf7e5c076ef2ba1504074f3f3"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/DenseCoeffsBase.h",
+      "bytes": 24484,
+      "git_blob_sha1": "37fcdb59119ff83758ce004d7526b69a73dbb275"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/DenseStorage.h",
+      "bytes": 25360,
+      "git_blob_sha1": "08ef6c530617401094344790e64a7ac21addb2ad"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Diagonal.h",
+      "bytes": 9870,
+      "git_blob_sha1": "3112d2c16a9b715d3f96f1bc658ccc12f8d62dd7"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/DiagonalMatrix.h",
+      "bytes": 14670,
+      "git_blob_sha1": "542685c65948acef3858ae1857ac87f443440179"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/DiagonalProduct.h",
+      "bytes": 988,
+      "git_blob_sha1": "7911d1cd174a3b59195b81169ed7ec9546342464"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Dot.h",
+      "bytes": 11654,
+      "git_blob_sha1": "5c3441b9266a4e1929a29f373e5c509f77c5e0ef"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/EigenBase.h",
+      "bytes": 5841,
+      "git_blob_sha1": "6b3c7d3745e2ae96233789208c8dd2d586a3baa3"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/ForceAlignedAccess.h",
+      "bytes": 4909,
+      "git_blob_sha1": "817a43afced3a74477485099d821dc2bcf4f4e79"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Fuzzy.h",
+      "bytes": 5759,
+      "git_blob_sha1": "43aa49b2bc2f4636b08ecac59d3d2bf3217815b5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/GeneralProduct.h",
+      "bytes": 21679,
+      "git_blob_sha1": "6906aa75d106c4b2ccb12e0848d4d42b5ecc9e9f"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/GenericPacketMath.h",
+      "bytes": 38812,
+      "git_blob_sha1": "cf677a1905f1e80697eb6c0daccb48f745c605e3"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/GlobalFunctions.h",
+      "bytes": 11543,
+      "git_blob_sha1": "629af94b9940f3b474b399dd6646cb2b1f1ad29a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/IO.h",
+      "bytes": 8238,
+      "git_blob_sha1": "e81c3152168ba3a3e806ca262a0d2046d729f9d4"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/IndexedView.h",
+      "bytes": 9620,
+      "git_blob_sha1": "08476251d32234dfdd2e9b0cba788c58484bc458"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Inverse.h",
+      "bytes": 3503,
+      "git_blob_sha1": "c514438c45e64863e1eb93071c4374d0d29ef969"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Map.h",
+      "bytes": 7256,
+      "git_blob_sha1": "218cc157f386924cae44ca6741d6aaba9fc96f74"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/MapBase.h",
+      "bytes": 11281,
+      "git_blob_sha1": "d856447f03e57a749ec250456c0e00e539d7e700"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/MathFunctions.h",
+      "bytes": 60784,
+      "git_blob_sha1": "61b78f4f20a6a3820b168796db9aeb79d712bb11"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/MathFunctionsImpl.h",
+      "bytes": 7156,
+      "git_blob_sha1": "4eaaaa78449031830cea7446210226afcd2467d0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Matrix.h",
+      "bytes": 24343,
+      "git_blob_sha1": "f0e59a911d27602d3194daa1e3fe23c929f9670e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/MatrixBase.h",
+      "bytes": 23856,
+      "git_blob_sha1": "45c3a596ecb09d5e55f4eaf3c742d0badb624373"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/NestByValue.h",
+      "bytes": 2520,
+      "git_blob_sha1": "b4275768a01df3b8e2a06424010bd8d33cffea30"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/NoAlias.h",
+      "bytes": 3620,
+      "git_blob_sha1": "570283d90f1c5fba2b3cae629421b624128283c2"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/NumTraits.h",
+      "bytes": 12884,
+      "git_blob_sha1": "72eac5a93c09ab5f8bc4ccc50fc8a22ae3f2e0c1"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/PartialReduxEvaluator.h",
+      "bytes": 9207,
+      "git_blob_sha1": "29abf35b99b06032c35b5366f003d415026e35aa"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/PermutationMatrix.h",
+      "bytes": 20748,
+      "git_blob_sha1": "69401bf41e5296d421fb2e024aec558e8a684e3f"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/PlainObjectBase.h",
+      "bytes": 49193,
+      "git_blob_sha1": "e2ddbd1d522a283a5992a504f023eebc48a05670"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Product.h",
+      "bytes": 7336,
+      "git_blob_sha1": "70a6c10639695fd5c50c833707ed6aacfe1f1b1e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/ProductEvaluators.h",
+      "bytes": 53832,
+      "git_blob_sha1": "8cf294b287bc9a458cd9b5f0bb4c03e4a5b51126"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Random.h",
+      "bytes": 7756,
+      "git_blob_sha1": "dab2ac8e9e84e564aa90465089d15188be8cda1c"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Redux.h",
+      "bytes": 19195,
+      "git_blob_sha1": "b6790d11050bb340c83acaa72197eba395c80222"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Ref.h",
+      "bytes": 17821,
+      "git_blob_sha1": "c2a37eadbb6321211a4ddfd52363760eee44ea18"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Replicate.h",
+      "bytes": 5656,
+      "git_blob_sha1": "ab5be7e64bc2b464760d1f6b9e2998b18fa416cb"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Reshaped.h",
+      "bytes": 17033,
+      "git_blob_sha1": "52de73b6fc371b8cbd45e13599d7c49b790903f7"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/ReturnByValue.h",
+      "bytes": 4284,
+      "git_blob_sha1": "4dad13ea11872682099c8d41438a87a5ef9726ec"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Reverse.h",
+      "bytes": 7522,
+      "git_blob_sha1": "28cdd76acaa83e93e2d9775e3e3fc1c851c2279a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Select.h",
+      "bytes": 6143,
+      "git_blob_sha1": "7c86bf87c170163f04b4fda8a4210526b16e3bbd"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/SelfAdjointView.h",
+      "bytes": 14999,
+      "git_blob_sha1": "8ce3b372a0ff792b98b8b1b00f1dd55742779bd0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/SelfCwiseBinaryOp.h",
+      "bytes": 1697,
+      "git_blob_sha1": "7c89c2e23c6f333297cc8b1ef8c2403337b13e36"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Solve.h",
+      "bytes": 6837,
+      "git_blob_sha1": "23d5cb70728f0f2e52d3f01d94bdc86e37fd9292"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/SolveTriangular.h",
+      "bytes": 9368,
+      "git_blob_sha1": "dfbf99523a9c9cb5328a20e7d0f80574a4ad2cbf"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/SolverBase.h",
+      "bytes": 6170,
+      "git_blob_sha1": "5014610420f3e8cea48f0b3fef0a345f1a920f8d"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/StableNorm.h",
+      "bytes": 8700,
+      "git_blob_sha1": "4a3f0cca8c4e0d325e4584c41abf90ecc0133fb6"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/StlIterators.h",
+      "bytes": 21641,
+      "git_blob_sha1": "09041db1d550df161c6da292d39e94827868cdb4"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Stride.h",
+      "bytes": 4212,
+      "git_blob_sha1": "6494d51420a9b3eb195218434ace8b9f9c83d8eb"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Swap.h",
+      "bytes": 2765,
+      "git_blob_sha1": "180a4e5adff9132036aa81e25beb39d7799aff45"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Transpose.h",
+      "bytes": 17606,
+      "git_blob_sha1": "2bc658f40b88bd588d39457dc9b8f19deb0c14cf"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Transpositions.h",
+      "bytes": 13567,
+      "git_blob_sha1": "38a7b01cb51dc0a789c9b02732657ad3c4ae0a6e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/TriangularMatrix.h",
+      "bytes": 38277,
+      "git_blob_sha1": "fdb8bc15a5b2c9ea0c133b26856a0cd091e3127a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/VectorBlock.h",
+      "bytes": 3488,
+      "git_blob_sha1": "71c5b95eec1114baa295c53122099e2a150dd69f"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/VectorwiseOp.h",
+      "bytes": 35168,
+      "git_blob_sha1": "870f4f1e40bfc870a03cc1feb8a5ac9f2b7cb486"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/Visitor.h",
+      "bytes": 11997,
+      "git_blob_sha1": "00bcca87768eba2f48d31759a14a3c42beb3f6b1"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AVX/Complex.h",
+      "bytes": 15223,
+      "git_blob_sha1": "ab7bd6c651f05f99e5173937d7624bcc731ca5ed"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AVX/MathFunctions.h",
+      "bytes": 8102,
+      "git_blob_sha1": "67041c812c3afe841ed0cac3dbd03825d6a880b2"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AVX/PacketMath.h",
+      "bytes": 64608,
+      "git_blob_sha1": "7fc32fd7192a0caff2e12079187041bbebb627df"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AVX/TypeCasting.h",
+      "bytes": 2564,
+      "git_blob_sha1": "d507fb67b21d1379b7eacc444bdfbcd8d7058ba5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AVX512/Complex.h",
+      "bytes": 17160,
+      "git_blob_sha1": "49c72b3f1c626564482500066d90fdcc2da406ef"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AVX512/MathFunctions.h",
+      "bytes": 13344,
+      "git_blob_sha1": "6fd726d29cffeb66926b3ebb1f337065ed8e51f4"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AVX512/PacketMath.h",
+      "bytes": 87891,
+      "git_blob_sha1": "34d49ab660c3670061c670ca6210ecafed39f7f1"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AVX512/TypeCasting.h",
+      "bytes": 2134,
+      "git_blob_sha1": "330412729ea630bd2036b293369246b213facdd4"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AltiVec/Complex.h",
+      "bytes": 16540,
+      "git_blob_sha1": "f424f11cf7d9d652d1cc2e443931171c308600c1"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AltiVec/MathFunctions.h",
+      "bytes": 2323,
+      "git_blob_sha1": "3a7a329361eea0cd6ba25b81d663a8409ed70384"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AltiVec/MatrixProduct.h",
+      "bytes": 119355,
+      "git_blob_sha1": "3f79b97dfe51ec9cacb558cdee8d2edb8d6d202a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AltiVec/MatrixProductCommon.h",
+      "bytes": 9490,
+      "git_blob_sha1": "33d543494b26769c51a7783f67f9cbab9c4e1bef"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AltiVec/MatrixProductMMA.h",
+      "bytes": 24820,
+      "git_blob_sha1": "6540c6fa6f86602b642ab77286a185d6187d7685"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/AltiVec/PacketMath.h",
+      "bytes": 102394,
+      "git_blob_sha1": "2a440545b20c79fbce327a4083f25274d03d553a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/CUDA/Complex.h",
+      "bytes": 17317,
+      "git_blob_sha1": "deb4c8694f8581fd6e8f485ef6ec9a74ecf64712"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/Default/BFloat16.h",
+      "bytes": 26903,
+      "git_blob_sha1": "1c28f4f95e42f86265803b922a81bd89a8e8659b"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/Default/ConjHelper.h",
+      "bytes": 5251,
+      "git_blob_sha1": "53830b5a274c72546315eaea5d1fb4fb737e3a8b"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h",
+      "bytes": 67696,
+      "git_blob_sha1": "c9fbaf68b49f6fccddd2e9014e736e450b2b2291"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h",
+      "bytes": 3770,
+      "git_blob_sha1": "177a04e93e646cf735e1816857ea16de1cd8a4da"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/Default/Half.h",
+      "bytes": 35534,
+      "git_blob_sha1": "9f8e8cc1e7a614cf86b4d4e7065df97fb06404c3"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/Default/Settings.h",
+      "bytes": 1746,
+      "git_blob_sha1": "a5c3ada4c7fc54fd250a020c7d4fe3487cd1b1c5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/Default/TypeCasting.h",
+      "bytes": 3746,
+      "git_blob_sha1": "fb8183b78ec47248a96851174672c948fca1ff3e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/GPU/MathFunctions.h",
+      "bytes": 2695,
+      "git_blob_sha1": "d2b3a25684a8e8dc852a360e0517e91165e3a471"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/GPU/PacketMath.h",
+      "bytes": 57047,
+      "git_blob_sha1": "689110dede13d0e26eb181e4de03cf3a8bc011c1"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/GPU/TypeCasting.h",
+      "bytes": 2256,
+      "git_blob_sha1": "75454622559cece4eed6303bed8fdb37ab2aecd8"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/HIP/hcc/math_constants.h",
+      "bytes": 691,
+      "git_blob_sha1": "25375a0a420aaee8d7dd9fb6ebc88eca4ee42adc"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/MSA/Complex.h",
+      "bytes": 17541,
+      "git_blob_sha1": "53dacfa43d8932e31c2ba1cf5dac9a09bef3237e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/MSA/MathFunctions.h",
+      "bytes": 16159,
+      "git_blob_sha1": "f5181b90ec5537e44acf94d32d7fca805599d1bd"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/MSA/PacketMath.h",
+      "bytes": 33615,
+      "git_blob_sha1": "afe8f3375ba9bcfcaf208222ac3fd52ab03433d8"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/NEON/Complex.h",
+      "bytes": 22503,
+      "git_blob_sha1": "f40af7f87f2f77217775309568030c5ddf7facfc"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/NEON/GeneralBlockPanelKernel.h",
+      "bytes": 6815,
+      "git_blob_sha1": "3481f337e374c1fc3eb0b9e780ddb02da963a9e5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/NEON/MathFunctions.h",
+      "bytes": 3083,
+      "git_blob_sha1": "fa6615a85194f72887a41867f5e586fb8c2a62de"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/NEON/PacketMath.h",
+      "bytes": 189525,
+      "git_blob_sha1": "d2aeef4308b60def3670274e81c1380ccb52b91c"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/NEON/TypeCasting.h",
+      "bytes": 51286,
+      "git_blob_sha1": "54f97336e03414097ebc4e5eaaa0e5545fed7276"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SSE/Complex.h",
+      "bytes": 14251,
+      "git_blob_sha1": "8fe22da46c78b423bb5daf76b64ae24069bd04e7"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SSE/MathFunctions.h",
+      "bytes": 6765,
+      "git_blob_sha1": "8736d0d6b50a1b7711ccbfb31e38987fd7bb312d"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SSE/PacketMath.h",
+      "bytes": 64465,
+      "git_blob_sha1": "db102c73a2376887332d2b25f6894bfa86284653"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SSE/TypeCasting.h",
+      "bytes": 3650,
+      "git_blob_sha1": "d2a0037e0147cb3d8cdd5b934f79728a62108c32"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SVE/MathFunctions.h",
+      "bytes": 1194,
+      "git_blob_sha1": "b139ea2e4e10b4521d6e97c6f96f4dbc3f38186e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SVE/PacketMath.h",
+      "bytes": 21200,
+      "git_blob_sha1": "9060b372ff57ec80bce35b9a763715a1ba79b60a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SVE/TypeCasting.h",
+      "bytes": 1351,
+      "git_blob_sha1": "7ba5d9cd1191e893a545c5fa30861aea840c3262"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SYCL/InteropHeaders.h",
+      "bytes": 7428,
+      "git_blob_sha1": "10856ff5e5d3fc63bf79a112b2baac4c4d8ef2f8"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SYCL/MathFunctions.h",
+      "bytes": 12539,
+      "git_blob_sha1": "2ab0f2a76b7a1a2c4c4d9ad5073fd30ee970128b"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SYCL/PacketMath.h",
+      "bytes": 27786,
+      "git_blob_sha1": "87badc07662010e612ef9a7f3c91e39bac17534d"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SYCL/SyclMemoryModel.h",
+      "bytes": 21856,
+      "git_blob_sha1": "f81e59db5837cd14de887946bece2a1f1a84a306"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/SYCL/TypeCasting.h",
+      "bytes": 2626,
+      "git_blob_sha1": "9208ab21d94bab05674d198a6db670329804e6be"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/ZVector/Complex.h",
+      "bytes": 16728,
+      "git_blob_sha1": "0b9b33d99dd9c03296521e33eb2fb7986ff003ce"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/ZVector/MathFunctions.h",
+      "bytes": 8024,
+      "git_blob_sha1": "1635e128c816ee27d5f4a15a31e74d1c7411a53f"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/arch/ZVector/PacketMath.h",
+      "bytes": 36894,
+      "git_blob_sha1": "1f55a90a5cd83da1a5c2e90e9da4ff3ff6246757"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/functors/AssignmentFunctors.h",
+      "bytes": 6686,
+      "git_blob_sha1": "bf64ef4ede6d605ad95412ccb71654ce00f6cc21"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/functors/BinaryFunctors.h",
+      "bytes": 20921,
+      "git_blob_sha1": "63f09ab9317e31d26525916d8ca0a031fa7c1247"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/functors/NullaryFunctors.h",
+      "bytes": 8334,
+      "git_blob_sha1": "192f225ddafda2e867cf80adb396fac940eeeec0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/functors/StlFunctors.h",
+      "bytes": 4998,
+      "git_blob_sha1": "4570c9b634bd920753aa4d9ab063c4ab49ab4ecd"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/functors/TernaryFunctors.h",
+      "bytes": 607,
+      "git_blob_sha1": "b254e96c6adf427d19b7c766d9535841f96c183c"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/functors/UnaryFunctors.h",
+      "bytes": 40146,
+      "git_blob_sha1": "16136d185aa3c16cd7b7cff1fa97ca07c405ddf0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/GeneralBlockPanelKernel.h",
+      "bytes": 108448,
+      "git_blob_sha1": "f35b760c1df804cd66bfe43c6493df33a90f84f6"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/GeneralMatrixMatrix.h",
+      "bytes": 20104,
+      "git_blob_sha1": "caa65fcccf56cfbc0de60ae65c98e6975fbb89ea"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/GeneralMatrixMatrixTriangular.h",
+      "bytes": 15948,
+      "git_blob_sha1": "6ba0d9bdb8d1752af714b5c7e326af6bb5e9a8d8"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/GeneralMatrixMatrixTriangular_BLAS.h",
+      "bytes": 6936,
+      "git_blob_sha1": "9a650ec23d5404aff0aefcfbff176c86de9c82d7"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/GeneralMatrixMatrix_BLAS.h",
+      "bytes": 5106,
+      "git_blob_sha1": "71abf4013d115f8c0827f7db4b476e7060551ac0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/GeneralMatrixVector.h",
+      "bytes": 21724,
+      "git_blob_sha1": "dfb6aebced46a246820c6f68efd15a400bfd30e2"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/GeneralMatrixVector_BLAS.h",
+      "bytes": 6368,
+      "git_blob_sha1": "6e36c2b3c32d465281250debf1ab0eed77b3fd9e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/Parallelizer.h",
+      "bytes": 5582,
+      "git_blob_sha1": "8f91879e45f87796bf9113a574d5f89747413edc"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/SelfadjointMatrixMatrix.h",
+      "bytes": 21354,
+      "git_blob_sha1": "33ecf10f610d4515edee6402360a34927d8abf2e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/SelfadjointMatrixMatrix_BLAS.h",
+      "bytes": 11570,
+      "git_blob_sha1": "61396dbdf6f95b500860a2a3ee427f88591d03da"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/SelfadjointMatrixVector.h",
+      "bytes": 9958,
+      "git_blob_sha1": "d38fd72b22710e84f049273ac2e024bfa9b77930"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/SelfadjointMatrixVector_BLAS.h",
+      "bytes": 5209,
+      "git_blob_sha1": "1238345e3fa24974576865db091701ccf2973eb7"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/SelfadjointProduct.h",
+      "bytes": 6164,
+      "git_blob_sha1": "a21be80504f4f9412d003e3ead615feac56c0099"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/SelfadjointRank2Update.h",
+      "bytes": 4126,
+      "git_blob_sha1": "f752a0bf093598a602abee2645a9dc34c4883470"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/TriangularMatrixMatrix.h",
+      "bytes": 20987,
+      "git_blob_sha1": "f0c60507ab10100e02933e253d25a03ff99256d7"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/TriangularMatrixMatrix_BLAS.h",
+      "bytes": 13867,
+      "git_blob_sha1": "a98d12e4ae10c281d6f44fb1c8c8ca0f7ad04c0d"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/TriangularMatrixVector.h",
+      "bytes": 14722,
+      "git_blob_sha1": "76bfa159cedc5db03aafe8c798024a762b483c47"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/TriangularMatrixVector_BLAS.h",
+      "bytes": 10571,
+      "git_blob_sha1": "3d47a2b94cbc22de5a5295c38e9ec5bdbf353930"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/TriangularSolverMatrix.h",
+      "bytes": 14678,
+      "git_blob_sha1": "6d879ba00fd72eed240e4f2cb50b6023f8c0e0af"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/TriangularSolverMatrix_BLAS.h",
+      "bytes": 6707,
+      "git_blob_sha1": "621194ce6ca46612247de32b0d57b8e1daf05881"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/products/TriangularSolverVector.h",
+      "bytes": 5882,
+      "git_blob_sha1": "6473170169372e912f192b46c8962e9718ab3cc6"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/BlasUtil.h",
+      "bytes": 23156,
+      "git_blob_sha1": "e16a564980726ca200dcaf51e15adc72f89876d5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/ConfigureVectorization.h",
+      "bytes": 19876,
+      "git_blob_sha1": "af4e69623830aece11ec266155ce0a878cdb204e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/Constants.h",
+      "bytes": 21931,
+      "git_blob_sha1": "35dcaa7b38630b856703f86cc91a58054b1a3d8a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/DisableStupidWarnings.h",
+      "bytes": 4892,
+      "git_blob_sha1": "fe0cfec0bc2461ac44abca8f3d05b468d3c60fd9"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/ForwardDeclarations.h",
+      "bytes": 15555,
+      "git_blob_sha1": "2f9cc449176fb2ea3cbe83d9c8dc2441153fdfc4"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/IndexedViewHelper.h",
+      "bytes": 6696,
+      "git_blob_sha1": "f85de305f21f44ad139fcca264a5b0ed9fe4a60d"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/IntegralConstant.h",
+      "bytes": 10949,
+      "git_blob_sha1": "945d426ea804c4788ff19a5c0507799f87edf381"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/MKL_support.h",
+      "bytes": 4268,
+      "git_blob_sha1": "17963fad4d42c979c928b053b45fcb3b099b30f0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/Macros.h",
+      "bytes": 52909,
+      "git_blob_sha1": "986c3d44db94c8ba339792b6738c47cdd2c5acbc"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/Memory.h",
+      "bytes": 46661,
+      "git_blob_sha1": "875318cdb1ce2e9716a5a744ecd2485848ce5065"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/Meta.h",
+      "bytes": 29336,
+      "git_blob_sha1": "81ae2a32d1d290e3173fb27ed9088a41fcf685de"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/ReenableStupidWarnings.h",
+      "bytes": 1024,
+      "git_blob_sha1": "1ce6fd1b00979ad42bbee67372981a23a05ab8d2"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/ReshapedHelper.h",
+      "bytes": 1432,
+      "git_blob_sha1": "412432132ca92f684a8cea561a5a0b24390903ee"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/StaticAssert.h",
+      "bytes": 10676,
+      "git_blob_sha1": "c45de59016e1aa0ea37424595b8c7286b2e7d18c"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/SymbolicIndex.h",
+      "bytes": 12003,
+      "git_blob_sha1": "354dd9add3b5e05e71381d885181c846a2547cf3"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Core/util/XprHelper.h",
+      "bytes": 35762,
+      "git_blob_sha1": "71c32b8a116ba86bf04a00e8c260ef912154a01a"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/ComplexEigenSolver.h",
+      "bytes": 12559,
+      "git_blob_sha1": "081e918f1329b162604fc5bf9a36302feaa479b0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/ComplexSchur.h",
+      "bytes": 17274,
+      "git_blob_sha1": "fc71468f8dfcb9316c5ded0ea2c569094eedf22c"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/ComplexSchur_LAPACKE.h",
+      "bytes": 4178,
+      "git_blob_sha1": "4980a3ede0ad4d159bf87cbdc1b5abfc003f32e2"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/EigenSolver.h",
+      "bytes": 22970,
+      "git_blob_sha1": "572b29e4e983aba8e87bf2f262d6bb28a5bec3d9"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h",
+      "bytes": 17176,
+      "git_blob_sha1": "87d789b3f4a815c113c1cbcdaeef1ac7b8c74f29"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h",
+      "bytes": 9716,
+      "git_blob_sha1": "d0f9091bebef445bcf6ac5c1cb3aa559281ced98"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/HessenbergDecomposition.h",
+      "bytes": 14349,
+      "git_blob_sha1": "1f21139346e7394b6c522dba3a4368125232fa99"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h",
+      "bytes": 5575,
+      "git_blob_sha1": "66e5a3dbb047cb7365fe8eae7cd2547f2293b5a0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/RealQZ.h",
+      "bytes": 23640,
+      "git_blob_sha1": "509130184b9e5424d229c2b9f99f4529fd52ebee"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/RealSchur.h",
+      "bytes": 21078,
+      "git_blob_sha1": "7304ef3449e1e6a2d983dcb97da02af13497f813"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/RealSchur_LAPACKE.h",
+      "bytes": 3650,
+      "git_blob_sha1": "2c22517155e701eb5848ea099fa20b016b33ee20"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h",
+      "bytes": 35182,
+      "git_blob_sha1": "14692365ffbf3a53eb67c0d64a961e098d14578b"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_LAPACKE.h",
+      "bytes": 4104,
+      "git_blob_sha1": "b0c947dc07b6362b7a91f1a90275f4d969f7e4d0"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Eigenvalues/Tridiagonalization.h",
+      "bytes": 22764,
+      "git_blob_sha1": "674c92a39bd63e03a57841b66a7f6478d28e02e5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/AlignedBox.h",
+      "bytes": 18939,
+      "git_blob_sha1": "55a9d0ae134a6ab2a9f5a6ede2dad5843ceda518"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/AngleAxis.h",
+      "bytes": 8403,
+      "git_blob_sha1": "78328b6b572c69447a59b42d6aa2a1f07afcdc2b"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/EulerAngles.h",
+      "bytes": 3624,
+      "git_blob_sha1": "19b734ca7e002da98e829e666340bf847245ef53"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/Homogeneous.h",
+      "bytes": 20726,
+      "git_blob_sha1": "94083ac5413a183bb8c0f4fa7b7f41e6d13ba891"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/Hyperplane.h",
+      "bytes": 11962,
+      "git_blob_sha1": "cebe0355702f2d6ec0313fa6010605da0e025a06"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/OrthoMethods.h",
+      "bytes": 8955,
+      "git_blob_sha1": "524aebe1b96a53a5fac41cffd09a7efb9281f63e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/ParametrizedLine.h",
+      "bytes": 9812,
+      "git_blob_sha1": "584f50087bdf79be820dd7bb30bf2f75a0697955"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/Quaternion.h",
+      "bytes": 34367,
+      "git_blob_sha1": "3259e592df85afa2cc1a1e3518776f2ada1474c1"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/Rotation2D.h",
+      "bytes": 6862,
+      "git_blob_sha1": "d0bd57569f2e24fb9438909a11fb552f52f95d89"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/RotationBase.h",
+      "bytes": 8063,
+      "git_blob_sha1": "f0ee0bd03c58e60daa9d34c3b5110614303a886f"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/Scaling.h",
+      "bytes": 6724,
+      "git_blob_sha1": "d352f1f2b8abcbf23c5a184b1e09f22fa16af89b"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/Transform.h",
+      "bytes": 61930,
+      "git_blob_sha1": "52b8c2a4eb8e57f9ebd7ca27ee6412a89908314b"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/Translation.h",
+      "bytes": 7664,
+      "git_blob_sha1": "8c22901219002fc071c2dbc3d0c3788b904239b8"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/Umeyama.h",
+      "bytes": 6190,
+      "git_blob_sha1": "6b755008fdc5a4e68eec9abfd5752e28b8b56282"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Geometry/arch/Geometry_SIMD.h",
+      "bytes": 5945,
+      "git_blob_sha1": "9af6a9af720d8177759139b33f8f7db80e39f6fa"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Householder/BlockHouseholder.h",
+      "bytes": 4784,
+      "git_blob_sha1": "39ce1c2a0efa24f1a86866dd699c4a7216728f47"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Householder/Householder.h",
+      "bytes": 5365,
+      "git_blob_sha1": "5bc037f00d18c992606fed9fef11f989fec373d5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Householder/HouseholderSequence.h",
+      "bytes": 23611,
+      "git_blob_sha1": "022f6c3dba8e45e97f68753809eef1708daf5537"
+    },
+    {
+      "path": "core/third-party/Eigen/src/Jacobi/Jacobi.h",
+      "bytes": 16383,
+      "git_blob_sha1": "76668a574aee62f2a52e434fd4b7ebc7d5a952ee"
+    },
+    {
+      "path": "core/third-party/Eigen/src/LU/Determinant.h",
+      "bytes": 3439,
+      "git_blob_sha1": "3a41e6fcba3b4e47c429c774579d02202c68db88"
+    },
+    {
+      "path": "core/third-party/Eigen/src/LU/FullPivLU.h",
+      "bytes": 32383,
+      "git_blob_sha1": "ba1749fa69c6a93afd16c2c7325c1dbc2fe0f4aa"
+    },
+    {
+      "path": "core/third-party/Eigen/src/LU/InverseImpl.h",
+      "bytes": 15727,
+      "git_blob_sha1": "a40cefa9e7dcd4cbcc5e42dcb8d8e5fe79be6e97"
+    },
+    {
+      "path": "core/third-party/Eigen/src/LU/PartialPivLU.h",
+      "bytes": 22069,
+      "git_blob_sha1": "34aed72494d4315d7ba22950445c26fc27b2fbae"
+    },
+    {
+      "path": "core/third-party/Eigen/src/LU/PartialPivLU_LAPACKE.h",
+      "bytes": 3555,
+      "git_blob_sha1": "755168a9460a898b70a7aed7932a388a2c13b306"
+    },
+    {
+      "path": "core/third-party/Eigen/src/LU/arch/InverseSize4.h",
+      "bytes": 13693,
+      "git_blob_sha1": "a232ffc0aaded63fec6b52e87a527d6c17dd3ed3"
+    },
+    {
+      "path": "core/third-party/Eigen/src/QR/ColPivHouseholderQR.h",
+      "bytes": 25498,
+      "git_blob_sha1": "9b677e9bf45d8ba1ced1d9705d8353c69e857224"
+    },
+    {
+      "path": "core/third-party/Eigen/src/QR/ColPivHouseholderQR_LAPACKE.h",
+      "bytes": 4662,
+      "git_blob_sha1": "4e9651f83d517269d73d5fff307c3a55a887728b"
+    },
+    {
+      "path": "core/third-party/Eigen/src/QR/CompleteOrthogonalDecomposition.h",
+      "bytes": 23429,
+      "git_blob_sha1": "486d3373af5e5068abddbaa11801487175cd3d79"
+    },
+    {
+      "path": "core/third-party/Eigen/src/QR/FullPivHouseholderQR.h",
+      "bytes": 26768,
+      "git_blob_sha1": "d0664a1d8c76338d6ef56b0afb438817fceff862"
+    },
+    {
+      "path": "core/third-party/Eigen/src/QR/HouseholderQR.h",
+      "bytes": 14641,
+      "git_blob_sha1": "801739fbd810575c3743939341b34568230a82d8"
+    },
+    {
+      "path": "core/third-party/Eigen/src/QR/HouseholderQR_LAPACKE.h",
+      "bytes": 2993,
+      "git_blob_sha1": "1dc7d5363f19e1d81c2041e3211d3e65d3b9a3be"
+    },
+    {
+      "path": "core/third-party/Eigen/src/SVD/BDCSVD.h",
+      "bytes": 54214,
+      "git_blob_sha1": "17f8e44364ddeb2ddcf41ede841868f10595504c"
+    },
+    {
+      "path": "core/third-party/Eigen/src/SVD/JacobiSVD.h",
+      "bytes": 32988,
+      "git_blob_sha1": "9d95acdf67816edcefeb07e20114168dcef6db54"
+    },
+    {
+      "path": "core/third-party/Eigen/src/SVD/JacobiSVD_LAPACKE.h",
+      "bytes": 5099,
+      "git_blob_sha1": "ff0516f6116cd1f414388aefc8c14eaa7591100d"
+    },
+    {
+      "path": "core/third-party/Eigen/src/SVD/SVDBase.h",
+      "bytes": 14743,
+      "git_blob_sha1": "bc7ab88b4cffd36f126c224c1ea2d209cc5dd1c5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/SVD/UpperBidiagonalization.h",
+      "bytes": 15957,
+      "git_blob_sha1": "997defc474419f5428529010054cfbed9b93bb96"
+    },
+    {
+      "path": "core/third-party/Eigen/src/StlSupport/StdDeque.h",
+      "bytes": 4730,
+      "git_blob_sha1": "6d47e7572206c781864286c4836312ad920c1e53"
+    },
+    {
+      "path": "core/third-party/Eigen/src/StlSupport/StdList.h",
+      "bytes": 4155,
+      "git_blob_sha1": "8ba3fada0a50534e4dd6ea14818c997faa8f32ed"
+    },
+    {
+      "path": "core/third-party/Eigen/src/StlSupport/StdVector.h",
+      "bytes": 5338,
+      "git_blob_sha1": "9fcf19bce8584bd5508c0bd96836c359b03f0e75"
+    },
+    {
+      "path": "core/third-party/Eigen/src/StlSupport/details.h",
+      "bytes": 2809,
+      "git_blob_sha1": "2cfd13e03aa97322511bc626da7b670d2554a182"
+    },
+    {
+      "path": "core/third-party/Eigen/src/misc/Image.h",
+      "bytes": 2913,
+      "git_blob_sha1": "b8b8a045529ab8848b5a8e9f3eb7c7a017b68d54"
+    },
+    {
+      "path": "core/third-party/Eigen/src/misc/Kernel.h",
+      "bytes": 2742,
+      "git_blob_sha1": "bef5d6ff5830cf28ff2c88d5fe09dc3b3b4bbff7"
+    },
+    {
+      "path": "core/third-party/Eigen/src/misc/RealSvd2x2.h",
+      "bytes": 1748,
+      "git_blob_sha1": "abb4d3c2fc72641d46e5852bc114cb3b0cab8215"
+    },
+    {
+      "path": "core/third-party/Eigen/src/misc/blas.h",
+      "bytes": 30560,
+      "git_blob_sha1": "25215b15e8af7db305449ec36d54e226d1e8a4d6"
+    },
+    {
+      "path": "core/third-party/Eigen/src/misc/lapack.h",
+      "bytes": 7834,
+      "git_blob_sha1": "249f3575c6dd912ac9a52a932d2e68010e523a63"
+    },
+    {
+      "path": "core/third-party/Eigen/src/misc/lapacke.h",
+      "bytes": 1058369,
+      "git_blob_sha1": "3d8e24f5a2ea640658a65f70f21f656c40185fea"
+    },
+    {
+      "path": "core/third-party/Eigen/src/misc/lapacke_mangling.h",
+      "bytes": 474,
+      "git_blob_sha1": "6211fd144d361701309e3d39ace6b5b9e14d188e"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/ArrayCwiseBinaryOps.h",
+      "bytes": 14060,
+      "git_blob_sha1": "0e5d5445b18fcda01a43e33e958a9a964b8d1354"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/ArrayCwiseUnaryOps.h",
+      "bytes": 21431,
+      "git_blob_sha1": "13c55f4b115880c0becb6246bdc1fb86c9f404fa"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/BlockMethods.h",
+      "bytes": 59020,
+      "git_blob_sha1": "63a52a6ffaa9bcadef7961d05fabe353f52aadc2"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/CommonCwiseBinaryOps.h",
+      "bytes": 4828,
+      "git_blob_sha1": "8b6730ede025dd4c9600baf29a7fe6fafc4f79bc"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/CommonCwiseUnaryOps.h",
+      "bytes": 6089,
+      "git_blob_sha1": "5418dc4154f2b078e964383d6bb5acebe0bf3210"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/IndexedViewMethods.h",
+      "bytes": 12283,
+      "git_blob_sha1": "5bfb19ac6cdfd5a66fdf15f001d72f7efc2a8300"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/MatrixCwiseBinaryOps.h",
+      "bytes": 6387,
+      "git_blob_sha1": "a0feef8716a4911e2da8011177a38c7dd051b6ae"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/MatrixCwiseUnaryOps.h",
+      "bytes": 3350,
+      "git_blob_sha1": "0514d8f78b5ff44ed659113f85e5aa0e512cc6c5"
+    },
+    {
+      "path": "core/third-party/Eigen/src/plugins/ReshapedMethods.h",
+      "bytes": 6915,
+      "git_blob_sha1": "482a6b045ef5a530517f55785b2ce27b448595d8"
+    },
+    {
+      "path": "core/third-party/doctest/CMakeLists.txt",
+      "bytes": 112,
+      "git_blob_sha1": "ebcf7496a5e41984a549860345a74928f4151a0f"
+    },
+    {
+      "path": "core/third-party/doctest/LICENSE.txt",
+      "bytes": 1086,
+      "git_blob_sha1": "5ae0eb1052c28da584bcf2fdcc6b7ef45c30952c"
+    },
+    {
+      "path": "core/third-party/doctest/README.md",
+      "bytes": 39,
+      "git_blob_sha1": "08f6973d780016415ed62a61c22a233e602b3fab"
+    },
+    {
+      "path": "core/third-party/doctest/doctest.h",
+      "bytes": 307174,
+      "git_blob_sha1": "aa3da2318092ad774dc80e5c24ec3c72e16dbdcb"
+    },
+    {
+      "path": "core/third-party/doctest/doctest/doctest.h",
+      "bytes": 120,
+      "git_blob_sha1": "7294263c2e899da3db49abc5692923e4addc3665"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/LICENSE",
+      "bytes": 11358,
+      "git_blob_sha1": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/README.md",
+      "bytes": 453,
+      "git_blob_sha1": "1a76fc0cbb0672ff11520fdce38d81f5d2717732"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-fbank.cc",
+      "bytes": 3965,
+      "git_blob_sha1": "b73aa80728427d1fe57c4a3d11527a6b54e61532"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-fbank.h",
+      "bytes": 4608,
+      "git_blob_sha1": "84005e0d20426795fd79302f9a7f048b3d0f5990"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-functions.cc",
+      "bytes": 1604,
+      "git_blob_sha1": "00ae4c798fecc588f2a1f3634962880893eb750a"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-functions.h",
+      "bytes": 1533,
+      "git_blob_sha1": "b2216224c336ed95ed481e9593754689c889165c"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-mfcc.cc",
+      "bytes": 5713,
+      "git_blob_sha1": "3f38f2fc251b4170c6c0d662f26f0f4618e8bc16"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-mfcc.h",
+      "bytes": 5156,
+      "git_blob_sha1": "32dc772ef315beefb1b97c641734d79672df93ae"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-raw-audio-samples.cc",
+      "bytes": 1288,
+      "git_blob_sha1": "f1ab58ee393f72a7de16a779c631f86bb4b233cf"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-raw-audio-samples.h",
+      "bytes": 2297,
+      "git_blob_sha1": "5cf5e45f705958ee3a7ea18281bcf24296c17aca"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-window.cc",
+      "bytes": 9386,
+      "git_blob_sha1": "047abaf26d2b37af56b83c0085c1e54e3d957933"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/feature-window.h",
+      "bytes": 7367,
+      "git_blob_sha1": "b8d1d44c8a6dc0ffae5618af00f997d49ae6e208"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/istft.cc",
+      "bytes": 4489,
+      "git_blob_sha1": "e779ac74653b24a09325f86148878a89e748375c"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/istft.h",
+      "bytes": 1197,
+      "git_blob_sha1": "e5eba1b97d4af17cdb9295d5222a8582c1e9b8ff"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/kaldi-math.cc",
+      "bytes": 1554,
+      "git_blob_sha1": "bcc0dcc3f8e50c77e77cd6e477bf806248211849"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/kaldi-math.h",
+      "bytes": 1342,
+      "git_blob_sha1": "4db3f8316a25fa1e5f6d80e9bf41f0ade200fbfd"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/log.cc",
+      "bytes": 4507,
+      "git_blob_sha1": "7223337bd31cc54c5b79627abf0be8a69a14eaa7"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/log.h",
+      "bytes": 11282,
+      "git_blob_sha1": "bd21cc35fe6db3dab1fb9e6a66283a6979bf9852"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/mel-computations.cc",
+      "bytes": 16421,
+      "git_blob_sha1": "cb858dc79830a9106e840bd67934853739c4afaa"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/mel-computations.h",
+      "bytes": 6581,
+      "git_blob_sha1": "499cc391b804a41073dd58df036b5f70883369d1"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/online-feature.cc",
+      "bytes": 5627,
+      "git_blob_sha1": "5f96ea43103f576f72306ba219d4c18e89472f6e"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/online-feature.h",
+      "bytes": 5854,
+      "git_blob_sha1": "114567cf493091b24f79153d15d1abe38ff8faba"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/rfft.cc",
+      "bytes": 2648,
+      "git_blob_sha1": "64ed83c93ce3c248e584a48c7848c532f048a204"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/rfft.h",
+      "bytes": 1624,
+      "git_blob_sha1": "c6fab6d998ed9c34c4b3a8603b87f6f28e839874"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/stft.cc",
+      "bytes": 4284,
+      "git_blob_sha1": "2cdb637f6c854b78ba40428535237022a8295411"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/stft.h",
+      "bytes": 1634,
+      "git_blob_sha1": "6c5d2f7be003819e66df10ca6635e2f8de6a55c0"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/whisper-feature.cc",
+      "bytes": 4667,
+      "git_blob_sha1": "1b699846ffc51083c6d3c21d4bb7870e3d52708c"
+    },
+    {
+      "path": "core/third-party/kaldi-native-fbank/csrc/whisper-feature.h",
+      "bytes": 2064,
+      "git_blob_sha1": "57b9cc384acdb1c99d705691e98af0b8609bdbd4"
+    },
+    {
+      "path": "core/third-party/kissfft/COPYING",
+      "bytes": 246,
+      "git_blob_sha1": "6b4b622e7bd7053be8531deaf4242603bca4c85b"
+    },
+    {
+      "path": "core/third-party/kissfft/README.md",
+      "bytes": 375,
+      "git_blob_sha1": "fadb0ecb856ca4586994a2b18c141dc8cb03bf07"
+    },
+    {
+      "path": "core/third-party/kissfft/_kiss_fft_guts.h",
+      "bytes": 4763,
+      "git_blob_sha1": "4bd8d1c102ad343326ebd94d7b0ecc2dba5ed62f"
+    },
+    {
+      "path": "core/third-party/kissfft/kiss_fft.c",
+      "bytes": 11786,
+      "git_blob_sha1": "58c24a062d5500ee42a3469456d64ceb423b330e"
+    },
+    {
+      "path": "core/third-party/kissfft/kiss_fft.h",
+      "bytes": 4330,
+      "git_blob_sha1": "dce1034a7852602d0c889cf38e8930314dfbc434"
+    },
+    {
+      "path": "core/third-party/kissfft/kiss_fft_log.h",
+      "bytes": 971,
+      "git_blob_sha1": "5012474f2e6d1de3698868409a18332434e276f9"
+    },
+    {
+      "path": "core/third-party/kissfft/kiss_fftr.c",
+      "bytes": 4799,
+      "git_blob_sha1": "778a9a627b37f929c0a41b43a523cd68b427afe8"
+    },
+    {
+      "path": "core/third-party/kissfft/kiss_fftr.h",
+      "bytes": 1144,
+      "git_blob_sha1": "7fd73d2d04f75e7d32616bf5de57c651b8a3c56d"
+    },
+    {
+      "path": "core/third-party/nlohmann/LICENSE.MIT",
+      "bytes": 1076,
+      "git_blob_sha1": "1c1f7a690d815db3a79ea3d4c9138a497e2e7702"
+    },
+    {
+      "path": "core/third-party/nlohmann/README.md",
+      "bytes": 272,
+      "git_blob_sha1": "f02f6b51d471b936bcb560d88fca6b81b8dc3b9a"
+    },
+    {
+      "path": "core/third-party/nlohmann/json.h",
+      "bytes": 919975,
+      "git_blob_sha1": "8b72ea6539f40e4e3f7762d17e30c67f2a8308ed"
+    },
+    {
+      "path": "core/third-party/onnxruntime/CMakeLists.txt",
+      "bytes": 2864,
+      "git_blob_sha1": "a07e58a6b793771046da1fd9a93fde4dc8bc77e2"
+    },
+    {
+      "path": "core/third-party/onnxruntime/LICENSE.txt",
+      "bytes": 1073,
+      "git_blob_sha1": "48bc6bb4996ac924359e8e28b9ae88970e5ed3fc"
+    },
+    {
+      "path": "core/third-party/onnxruntime/README.md",
+      "bytes": 45,
+      "git_blob_sha1": "c49c8b7148d5eea18e7f5c3570efb59eb4a6d282"
+    },
+    {
+      "path": "core/third-party/onnxruntime/find-ort-library-path.cmake",
+      "bytes": 3562,
+      "git_blob_sha1": "9699d99ca60471963e1d0e12017048b62087c24d"
+    },
+    {
+      "path": "core/third-party/onnxruntime/include/cpu_provider_factory.h",
+      "bytes": 412,
+      "git_blob_sha1": "835f76fb6f74d52dcea46ce4a7c766e77e9db23b"
+    },
+    {
+      "path": "core/third-party/onnxruntime/include/nnapi_provider_factory.h",
+      "bytes": 2715,
+      "git_blob_sha1": "112c78fc0f4c5d6c7d228985d1e0e95ff5acf090"
+    },
+    {
+      "path": "core/third-party/onnxruntime/include/onnxruntime_c_api.h",
+      "bytes": 342123,
+      "git_blob_sha1": "ec8dfda8baa1cfdd103d6e2a7e8265b21b543d82"
+    },
+    {
+      "path": "core/third-party/onnxruntime/include/onnxruntime_cxx_api.h",
+      "bytes": 144113,
+      "git_blob_sha1": "879c2328dfdb7e6986bd80dd3a19eb4e5bfc27e4"
+    },
+    {
+      "path": "core/third-party/onnxruntime/include/onnxruntime_cxx_inline.h",
+      "bytes": 130952,
+      "git_blob_sha1": "cb6448ad12a818bc6627d89e6bc361f8a18b9af8"
+    },
+    {
+      "path": "core/third-party/onnxruntime/include/onnxruntime_ep_c_api.h",
+      "bytes": 44964,
+      "git_blob_sha1": "c2555587dc7e9e800e686ed8947ba881ef986e22"
+    },
+    {
+      "path": "core/third-party/onnxruntime/include/onnxruntime_float16.h",
+      "bytes": 17860,
+      "git_blob_sha1": "408d3ccfb2416ccac13c0a66c041bbb7b4b0417c"
+    },
+    {
+      "path": "core/third-party/onnxruntime/onnxruntime-test.cpp",
+      "bytes": 1277,
+      "git_blob_sha1": "f3721b668c0178accd221f1c0fc7d841f1df1018"
+    },
+    {
+      "path": "core/third-party/utf-8/LICENSE.txt",
+      "bytes": 1338,
+      "git_blob_sha1": "36b7cd93cdfbac762f5be4c6ce276df2ea6305c2"
+    },
+    {
+      "path": "core/third-party/utf-8/README.md",
+      "bytes": 38,
+      "git_blob_sha1": "e6f12dc639e9fc0df2a27098264f8e619519ee9c"
+    },
+    {
+      "path": "core/third-party/utf-8/utf8.h",
+      "bytes": 1988,
+      "git_blob_sha1": "c8856f5d546697ae43d50adda863cbaaddc5edf0"
+    },
+    {
+      "path": "core/third-party/utf-8/utf8/checked.h",
+      "bytes": 11437,
+      "git_blob_sha1": "444c84c6f6f3ad1ac1f37989927a81e813c3c106"
+    },
+    {
+      "path": "core/third-party/utf-8/utf8/core.h",
+      "bytes": 16256,
+      "git_blob_sha1": "264c646b41c107197d1dc422e3daa86cfcb2a328"
+    },
+    {
+      "path": "core/third-party/utf-8/utf8/cpp11.h",
+      "bytes": 2260,
+      "git_blob_sha1": "e74ec4f8f46627bddf75156eab100c956eb52b52"
+    },
+    {
+      "path": "core/third-party/utf-8/utf8/cpp17.h",
+      "bytes": 2972,
+      "git_blob_sha1": "952ab298e873d7a459f81cd6a808de4346f20bd3"
+    },
+    {
+      "path": "core/third-party/utf-8/utf8/cpp20.h",
+      "bytes": 3721,
+      "git_blob_sha1": "aea6aeefce37291838a56fbf228aa8af30df17c0"
+    },
+    {
+      "path": "core/third-party/utf-8/utf8/unchecked.h",
+      "bytes": 8805,
+      "git_blob_sha1": "79901267576ac57f7204213203868a305cfdce01"
+    },
+    {
+      "path": "core/third-party/utf8proc/LICENSE.md",
+      "bytes": 5125,
+      "git_blob_sha1": "f18b1f3abdcb55e82ecdd84f476e7f366b00183b"
+    },
+    {
+      "path": "core/third-party/utf8proc/README.md",
+      "bytes": 359,
+      "git_blob_sha1": "39a9924585d58d341b05a0311a91178c0c61c145"
+    },
+    {
+      "path": "core/third-party/utf8proc/utf8proc.c",
+      "bytes": 32466,
+      "git_blob_sha1": "a7644247b44a564920cb889b35f35cb61c924ce3"
+    },
+    {
+      "path": "core/third-party/utf8proc/utf8proc.h",
+      "bytes": 31485,
+      "git_blob_sha1": "a39874a389604fec206dedaadb5b1bcb5419a20a"
+    },
+    {
+      "path": "core/third-party/utf8proc/utf8proc_data.c",
+      "bytes": 2236840,
+      "git_blob_sha1": "b26bcb3b6fc6e7b82c26551c36adbadb56dce631"
+    },
+    {
+      "path": "core/transcriber-concurrency-test.cpp",
+      "bytes": 6107,
+      "git_blob_sha1": "5f3a899f26a220019687fe3afaadcccd6c413e16"
+    },
+    {
+      "path": "core/transcriber-memory-files-test.cpp",
+      "bytes": 15670,
+      "git_blob_sha1": "559109d9eecc0b474b71815591e25126ff6f49ce"
+    },
+    {
+      "path": "core/transcriber-reload-memory-test.cpp",
+      "bytes": 8314,
+      "git_blob_sha1": "95578211e4aae004798d85d89e99b798c1176179"
+    },
+    {
+      "path": "core/transcriber-streaming-memory-test.cpp",
+      "bytes": 10721,
+      "git_blob_sha1": "ad23f6b508318f65155fcc9e6e8f83ecc3fc7596"
+    },
+    {
+      "path": "core/transcriber-test.cpp",
+      "bytes": 69893,
+      "git_blob_sha1": "fff71377f7bdddb5b79fc4a3c9a683edc6a94f68"
+    },
+    {
+      "path": "core/transcriber.cpp",
+      "bytes": 76492,
+      "git_blob_sha1": "35c7c093e0b41348df276eea749b6d3dd1812787"
+    },
+    {
+      "path": "core/transcriber.h",
+      "bytes": 16879,
+      "git_blob_sha1": "58e1c30c2d3003c3a785583bad49e6bf646bd3bd"
+    },
+    {
+      "path": "core/tts-repeated-memory-test.cpp",
+      "bytes": 18091,
+      "git_blob_sha1": "fddfe446d52048337acdcc2963610f2bedb5638f"
+    },
+    {
+      "path": "core/tts-voice-level-calibrate.cpp",
+      "bytes": 30370,
+      "git_blob_sha1": "ab8f3cf31d4180eb29c79186b032e3c976894203"
+    },
+    {
+      "path": "core/voice-activity-detector-test.cpp",
+      "bytes": 7962,
+      "git_blob_sha1": "b9bd6d712df34dd95c55571ed83e9994fc911c32"
+    },
+    {
+      "path": "core/voice-activity-detector.cpp",
+      "bytes": 9692,
+      "git_blob_sha1": "dcb96d675166eb34d751de1393008e3e79e389a6"
+    },
+    {
+      "path": "core/voice-activity-detector.h",
+      "bytes": 2546,
+      "git_blob_sha1": "8b266420812d9435e284473d967609cb5c1a317d"
+    },
+    {
+      "path": "core/word-alignment-benchmark.cpp",
+      "bytes": 4902,
+      "git_blob_sha1": "400b982f61212394497e32c3018a3e5d3cd6c07c"
+    },
+    {
+      "path": "core/word-alignment-test.cpp",
+      "bytes": 2222,
+      "git_blob_sha1": "057b28860f1f3e21b3cf84c505c9da38d056b17d"
+    },
+    {
+      "path": "core/word-alignment.cpp",
+      "bytes": 13043,
+      "git_blob_sha1": "f29630ab0d306567426eb8bcef4b6cf0332d6f7a"
+    },
+    {
+      "path": "core/word-alignment.h",
+      "bytes": 1786,
+      "git_blob_sha1": "879c91a9da20ad6449bb4007e7d4937251591897"
+    },
+    {
+      "path": "language-bindings/android/moonshine-jni/CMakeLists.txt",
+      "bytes": 352,
+      "git_blob_sha1": "f69deff9b3a0840ecdb332511b89752dea3bc84c"
+    },
+    {
+      "path": "language-bindings/android/moonshine-jni/moonshine-jni.cpp",
+      "bytes": 67857,
+      "git_blob_sha1": "f247757ca7cb119049ec97b8511e9d425acfd5bd"
+    }
+  ],
+  "approved_inventory_sha256": "7ee834f51d32e3d7b709595e21b84ca6df2807e27d56b9b5ddf70678fa5c3dec"
+}
