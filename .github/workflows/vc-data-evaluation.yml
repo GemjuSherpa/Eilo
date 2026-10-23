@@ -1,10 +1,10 @@
 name: VC-DATA synthetic evaluation
 on:
   pull_request:
-    paths: ['Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
   push:
     branches: ['sprint/**', 'task/vc-data-**', 'task/vc-turn-04-**']
-    paths: ['Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
 permissions:
   contents: read
 concurrency:
@@ -32,6 +32,12 @@ jobs:
           python3 -m unittest discover -s ../../tools/model-pack -p test_fetch_comparison_source.py -v
           python3 -O -m unittest discover -s ../../tools/model-pack -p test_fetch_comparison_source.py -v
           python3 -O -m unittest discover -s tests -v
+      - name: Native ASR probability math and pinned synthetic evidence (no downloads)
+        run: |
+          python3 -m unittest discover -s ../asr-confidence-probe -p 'test_*.py' -v
+          python3 -O -m unittest discover -s ../asr-confidence-probe -p 'test_*.py' -v
+          python3 ../asr-confidence-probe/report.py
+          python3 -O ../asr-confidence-probe/report.py
       - name: Native VAD sanitizer contracts (no models or capture)
         run: |
           python3 -m compileall -q ../vad-runtime
