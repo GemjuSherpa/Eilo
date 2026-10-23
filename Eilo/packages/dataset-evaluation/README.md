@@ -247,3 +247,54 @@ same-manifest regression PASS/FAIL; use baseline.py for that separate purpose. D
 includes adapter startup/provenance verification and is not device latency. The selected MUSAN
 category pool does not establish reviewed VAD ground truth. No model, threshold, production
 readiness or physical gate is changed by this task.
+
+
+### ASR confidence diagnostics
+
+`confidence.py` evaluates a bounded score/label file without loading audio or models. It reports
+Brier score, ten-bin equal-width expected calibration error, tie-aware correctness AUROC, and
+coverage/error risk at a fixed 0.00–1.00 threshold grid. Scores equal to a threshold are accepted;
+1.0 belongs to the last reliability bin. AUROC is unavailable for one-class labels, and risk is
+undefined when no cases are accepted. Equal-score cases are never sorted by their truth label.
+The 0.85 row is descriptive; the runner does not fit, select or authorize a policy threshold.
+
+```sh
+python3 confidence.py --scores /local/heldout-scores.json --output /local/new-confidence-summary
+```
+
+Input schema version 1 has exactly `signal_kind` (`MODEL_PROBABILITY`, `PLACEHOLDER` or
+`SYNTHETIC`), `partition` (`DECLARED_HELD_OUT`), `provenance` and `cases`, plus `schema_version`.
+Provenance has four lowercase SHA-256 values: `dataset_manifest_sha256`, `asr_report_sha256`,
+`runtime_sha256` and `model_sha256`. Each case has only `case_sha256` (unique opaque lowercase
+SHA-256), `confidence` (finite number in [0,1], never a boolean) and `exact_match` (boolean).
+The label means exact normalized transcript correctness, not word accuracy or command intent.
+No raw transcript, speaker identity, audio or file path is accepted. Inputs are capped at 4 MiB
+and 10,000 cases. Duplicate JSON keys, unknown fields, malformed identifiers and nonfinite scores
+are rejected. An existing output directory is never overwritten.
+
+JSON/HTML exports contain aggregate metrics and provenance digests, without case identifiers or
+per-case scores/labels. Reports explicitly do not authenticate the input's scores, labels,
+provenance or held-out declaration. No existing benchmark adapter currently supplies meaningful
+native confidence; a caller must first produce reviewed score/label evidence. The runner cannot
+turn arbitrary JSON or an adapter's claim into native calibration or quality acceptance.
+
+Synthetic/placeholder signals are marked unusable. Constant scores (including all-ones confidence)
+are flagged uninformative even when their aggregate error happens to be low. Mixed-class,
+nonconstant declared probabilities still produce only `DIAGNOSTIC_ONLY`, not a quality PASS.
+Native calibration and physical gates remain NOT_RUN; production is NOT_ENABLED and threshold
+authorization NOT_GRANTED. The Moonshine v0.1.5 word-alignment source assigns constant confidence
+1.0; the optional attention decoder does not by itself solve this signal gap. See
+[the pinned implementation](https://github.com/moonshine-ai/moonshine/blob/v0.1.5/core/word-alignment.cpp#L338).
+No new model/runtime/package download or ordinary app change is part of this tool.
+
+
+Add `--manifest /local/frozen/manifest.json --asr-report /local/asr-results.json` together to
+consistency-check labels against an existing complete benchmark. Both source files use canonical
+JSON digests for the two source provenance values; runtime/model pins must equal the report's
+adapter binary/model SHA-256 values. Case identifiers are `canonical_digest({"manifest_sha256":
+<canonical manifest digest>, "case_id": <original manifest case id>})`. The score set must cover
+all source cases, each must be task `asr` with split `test`, and labels must equal zero word and
+character errors in the validated benchmark. Synthetic adapters require `signal_kind=SYNTHETIC`.
+The report distinguishes consistency-bound labels from declaration-only inputs, while neither
+mode authenticates native probabilities, annotation truth, absence from model training data,
+independence, or actual held-out status. It remains diagnostic and cannot authorize policy.
