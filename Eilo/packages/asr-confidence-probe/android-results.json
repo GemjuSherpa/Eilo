@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "status": "SYNTHETIC_DIAGNOSTIC_ONLY",
+  "platform": "Android API35 ARM64 emulator",
+  "calibrated": false,
+  "policy_authorized": false,
+  "physical": "NOT_RUN",
+  "source_commit": "234f60faa0eb388b01cdf7e60aca232af37aefda",
+  "source_pins": {
+    "main.cpp": "416ea371a0dd8d3d3d0fb1ba13836b440dbe552eabf6193c3e058c7dca595ecc",
+    "probability.h": "7b819d20f8bb7b77d91839537cf0305a1d75e56146982a63846eadef5a3f1bb8",
+    "CMakeLists.txt": "6821b212ea3edbdd0b9d6553929e3fd4efc7064b88370fb0c42be8f1bfeff755",
+    "check_android.py": "debe313d94648b53eb7b71536d6f1d908ace5e9e9e7aeed8d300ebd978b8111b",
+    "source-manifest.json": "2de8d1b98818c30b3bb073a48d53a05835a50b926b2b3bdb13f267dc9b28ee4b"
+  },
+  "binary_sha256": "cae10c0e000962fec98a3e54a8236577a107906bbad6cf5e3af80e8064d836f1",
+  "ort_sha256": "86e85022fc539963177e478c8e9a8a8219bc3b0d7515bf5297a62986dbc45e7a",
+  "cxx_sha256": "e69496a4aeb51ebe61d0775ae9fefc76eee640f12317aa5174da67e5d4ec8fd6",
+  "model_provenance_sha256": "3db28e00acafb37ffaae433f3f9696fd56a0b5678b45edf50a1401f2400a37dd",
+  "fixtures_sha256": "5f310e91b7cb36d33ab09252cc44f1dd045178cb172e65827a98eebe9ca78102",
+  "rejected_inputs": [
+    "empty",
+    "unaligned",
+    "nan",
+    "out_of_range"
+  ],
+  "cases": [
+    {
+      "status": "DIAGNOSTIC_ONLY",
+      "tokens": 5,
+      "mean_probability": 0.943735709,
+      "geometric_mean": 0.941357854,
+      "minimum": 0.860749029,
+      "maximum": 0.998713644,
+      "draft_verified": true,
+      "draft_mean_probability": 0.952665125,
+      "max_probability_delta": 0.0233126441,
+      "corrupted_draft_rejected": true,
+      "calibrated": false,
+      "case": "question"
+    },
+    {
+      "status": "DIAGNOSTIC_ONLY",
+      "tokens": 10,
+      "mean_probability": 0.733225856,
+      "geometric_mean": 0.673276691,
+      "minimum": 0.244710241,
+      "maximum": 0.998339304,
+      "draft_verified": true,
+      "draft_mean_probability": 0.734392162,
+      "max_probability_delta": 0.041401907,
+      "corrupted_draft_rejected": true,
+      "calibrated": false,
+      "case": "name"
+    },
+    {
+      "status": "DIAGNOSTIC_ONLY",
+      "tokens": 16,
+      "mean_probability": 0.947017548,
+      "geometric_mean": 0.941453465,
+      "minimum": 0.678618503,
+      "maximum": 0.999716462,
+      "draft_verified": true,
+      "draft_mean_probability": 0.945925093,
+      "max_probability_delta": 0.145611985,
+      "corrupted_draft_rejected": true,
+      "calibrated": false,
+      "case": "numbers"
+    },
+    {
+      "status": "DIAGNOSTIC_ONLY",
+      "tokens": 9,
+      "mean_probability": 0.936650918,
+      "geometric_mean": 0.920859397,
+      "minimum": 0.525064743,
+      "maximum": 0.999302834,
+      "draft_verified": true,
+      "draft_mean_probability": 0.939299947,
+      "max_probability_delta": 0.016726583,
+      "corrupted_draft_rejected": true,
+      "calibrated": false,
+      "case": "quiet"
+    },
+    {
+      "status": "DIAGNOSTIC_ONLY",
+      "tokens": 8,
+      "mean_probability": 0.96644662,
+      "geometric_mean": 0.965119745,
+      "minimum": 0.848664055,
+      "maximum": 0.999020959,
+      "draft_verified": true,
+      "draft_mean_probability": 0.969334828,
+      "max_probability_delta": 0.0309062193,
+      "corrupted_draft_rejected": true,
+      "calibrated": false,
+      "case": "pause"
+    },
+    {
+      "status": "DIAGNOSTIC_ONLY",
+      "tokens": 7,
+      "mean_probability": 0.937046499,
+      "geometric_mean": 0.926013499,
+      "minimum": 0.623155242,
+      "maximum": 0.999117684,
+      "draft_verified": true,
+      "draft_mean_probability": 0.934102634,
+      "max_probability_delta": 0.0181953067,
+      "corrupted_draft_rejected": true,
+      "calibrated": false,
+      "case": "noise"
+    }
+  ]
+}
