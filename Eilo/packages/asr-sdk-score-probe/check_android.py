@@ -109,9 +109,9 @@ def main():
                 (args.build/'failed-case.json').write_text(json.dumps({'case':case['id'],'completed_paths':partial,'stage':stage},indent=2)+'\n')
                 raise RuntimeError('native fixture failed: ' + case['id'])
             lines = [line for line in result.stdout.splitlines() if line.startswith('{')]
-            if len(lines) != 6:
+            if len(lines) != 7:
                 raise ValueError('missing native aggregate')
-            record = {'case':case['id'],'paths':[json.loads(line) for line in lines[:5]],'faults':json.loads(lines[5])}
+            record = {'case':case['id'],'paths':[json.loads(line) for line in lines[:5]],'shape_comparison':json.loads(lines[5]),'faults':json.loads(lines[6])}
             results.append(record)
             print('Verified fixture:', case['id'], flush=True)
         rejected = []

@@ -27,6 +27,33 @@ static void check_path(MoonshineStreamingModel& model,MoonshineStreamingState* s
  std::printf("{\"mode\":\"%s\",\"tokens\":%zu,\"accepted_draft\":%d,\"redecoded\":%d,\"mean_probability\":%.9g,\"minimum\":%.9g,\"oracle_max_error\":%.9g,\"baseline_tokens_equal\":true,\"biased_choices\":%d}\n",
  bias?"biased":(draft.empty()?"greedy":(divergence?(expected_draft?"late_divergence":"early_divergence"):"accepted_draft")),scored.size(),accepted,redecoded,sum/scored.size(),minimum,trace.max_oracle_error,trace.biased_choices);
 }
+static int accepted_prefix(MoonshineStreamingModel& model,MoonshineStreamingState* state,const std::vector<int>& draft){
+ model.decoder_reset(state);std::vector<int> input{model.config.bos_id};input.insert(input.end(),draft.begin(),draft.end());
+ std::vector<float> rows(input.size()*model.config.vocab_size);require(model.decode_tokens(state,input.data(),int(input.size()),rows.data())==0);
+ int accepted=0;
+ for(size_t i=0;i<draft.size();++i){auto begin=rows.begin()+i*model.config.vocab_size;if(int(std::max_element(begin,begin+model.config.vocab_size)-begin)!=draft[i])break;++accepted;}
+ return accepted;
+}
+static void compare_shapes(MoonshineStreamingModel& model,MoonshineStreamingState* state,const std::vector<int>& tokens){
+ const int vocab=model.config.vocab_size;std::vector<int> input{model.config.bos_id};input.insert(input.end(),tokens.begin(),tokens.end());
+ auto batch=[&](const std::vector<int>& prefix){model.decoder_reset(state);std::vector<float> rows(prefix.size()*vocab);require(model.decode_tokens(state,prefix.data(),int(prefix.size()),rows.data())==0);return rows;};
+ auto full=batch(input),repeat=batch(input);EiloScoreTrace oracle;
+ double same_shape=0,step_delta=0,prefix_delta=0,repeat_prefix=0;
+ std::vector<double> steps;model.decoder_reset(state);
+ for(size_t t=0;t<tokens.size();++t){std::vector<float> row(vocab);require(model.decode_step(state,input[t],row.data())==0);steps.push_back(oracle.measure(row,tokens[t],EiloScoreTrace::GREEDY).probability);}
+ for(size_t t=0;t<tokens.size();++t){
+  std::vector<float> row(full.begin()+t*vocab,full.begin()+(t+1)*vocab),again(repeat.begin()+t*vocab,repeat.begin()+(t+1)*vocab);
+  const double p=oracle.measure(row,tokens[t],EiloScoreTrace::DRAFT).probability;
+  same_shape=std::max(same_shape,std::abs(p-oracle.measure(again,tokens[t],EiloScoreTrace::DRAFT).probability));
+  step_delta=std::max(step_delta,std::abs(p-steps[t]));
+  std::vector<int> prefix(input.begin(),input.begin()+t+1);auto a=batch(prefix),b=batch(prefix);
+  std::vector<float> last(a.end()-vocab,a.end()),last_repeat(b.end()-vocab,b.end());
+  const double q=oracle.measure(last,tokens[t],EiloScoreTrace::DRAFT).probability;
+  prefix_delta=std::max(prefix_delta,std::abs(p-q));repeat_prefix=std::max(repeat_prefix,std::abs(q-oracle.measure(last_repeat,tokens[t],EiloScoreTrace::DRAFT).probability));
+ }
+ require(same_shape<1e-10 && repeat_prefix<1e-10);
+ std::printf("{\"same_shape_repeat_delta\":%.9g,\"prefix_repeat_delta\":%.9g,\"batch_vs_step_delta\":%.9g,\"full_vs_prefix_delta\":%.9g,\"cause\":\"NOT_ESTABLISHED\"}\n",same_shape,repeat_prefix,step_delta,prefix_delta);
+}
 int main(int argc,char** argv){
  const char* stage="input";
  try{
@@ -42,7 +69,12 @@ int main(int argc,char** argv){
   auto corrupted=greedy;
   auto corrupt=[&](int token){int t=(token+1)%model.config.vocab_size;while(t==model.config.bos_id || t==model.config.eos_id)t=(t+1)%model.config.vocab_size;return t;};
   corrupted[0]=corrupt(corrupted[0]);stage="early_divergence";check_path(model,state.get(),corrupted,0,true);
-  corrupted=greedy;corrupted.back()=corrupt(corrupted.back());stage="late_divergence";check_path(model,state.get(),corrupted,int(greedy.size()-1),true);
+  stage="late_divergence";bool found=false;
+  for(int attempt=1;attempt<=32;++attempt){
+    corrupted=greedy;int token=corrupted.back();for(int i=0;i<attempt;++i)token=corrupt(token);corrupted.back()=token;
+    if(accepted_prefix(model,state.get(),corrupted)==int(greedy.size()-1)){found=true;break;}
+  }
+  require(found);check_path(model,state.get(),corrupted,int(greedy.size()-1),true);
   // A genuine SDK ContextBiaser changes the first selection. Score verification
   // still uses each exact unmodified row captured before ContextBiaser::apply.
   model.decoder_reset(state.get());std::vector<float> row(model.config.vocab_size);require(model.decode_step(state.get(),model.config.bos_id,row.data())==0);
@@ -50,6 +82,7 @@ int main(int argc,char** argv){
   for(int i=0;i<int(row.size());++i)if(i!=first && i!=model.config.bos_id && i!=model.config.eos_id && (second<0 || row[i]>row[second]))second=i;
   require(second>=0);ContextBiaser bias;bias.add_token_sequence({second});bias.set_boost(row[first]-row[second]+0.05f);
   stage="biased";check_path(model,state.get(),{},0,false,&bias);
+  stage="shape_comparison";compare_shapes(model,state.get(),greedy);
   stage="faults";const int original_memory=state->memory_len;state->memory_len=0;EiloScoreTrace empty;require(decode(model,state.get(),{},&empty).empty() && !empty.available);state->memory_len=original_memory;
   int unavailable=1;
   for(int mode=0;mode<6;++mode){
