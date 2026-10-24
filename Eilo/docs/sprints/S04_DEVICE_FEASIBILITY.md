@@ -37,3 +37,11 @@ Enabling background audio requires evidence that the final native pipeline obeys
 ## Deferred acceptance
 
 VC-AUDIO-06, VC-AUDIO-09 and VC-AUDIO-10 remain blocked for their background/physical acceptance. Neither locked speech nor sustained background feasibility is delivered by S04. All extended screen-off/standby gates in later sprints remain pending. Device evidence and review are required before treating these tasks as verified.
+
+## 24 October 2026 scoped lab follow-up
+
+The historical NOT RUN matrix above predates the connected iPhone trial. Six dedicated lab
+lifecycle cases now have controller/SDK observations, including Home and requested lock with
+active playback and quiet capture. See [S04_PHYSICAL_LIFECYCLE_REVIEW.md](S04_PHYSICAL_LIFECYCLE_REVIEW.md)
+for exact scope, retained failures and provenance. This does not promote entire production
+matrix rows or physical release gates; the remaining feasibility constraints still apply.
