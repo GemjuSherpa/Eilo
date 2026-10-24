@@ -390,3 +390,22 @@ Lock trials accept either scene resignation or protected-data unavailability as 
 callback, because iOS may deliver either first. Both preserve the actual event and require a
 foreground return plus the delayed no-resumption snapshot. Protected-data unavailability alone
 does not satisfy a Home or Stop-button case, and does not imply support for locked capture.
+
+### OS permission boundary follow-up
+
+The permission check uses the real iOS permission adapter and native controller with a lab
+effects adapter that cannot open hardware. Prepare models, disable only Eilo's microphone
+permission in Settings, reopen/prepare if iOS restarted it, then tap Permission boundary check.
+It attempts Start while denied and requires permission_required with zero capture-effect calls
+and no pending capture after two foreground seconds. Export before restoring permission.
+
+Restore Eilo's microphone permission in Settings, return/prepare if needed, and tap the same
+check. This branch never dispatches Start. An earlier observed denial is required in the
+bounded append-only permission-check-results.json ledger. Each row retains its process session
+and whether the prior denial used the same in-memory controller. No live hardware capture,
+permission prompt, ASR, model generation or speaker is attached to the probe. A cross-process
+row is a fresh-launch no-start observation, not survival of the previous controller.
+
+This does not establish permission revocation during active hardware capture: entering Settings
+already resigns the scene and stops capture. Failures remain in the ledger (maximum eight rows),
+unknown content blocks writes, and no physical release gate is promoted.
