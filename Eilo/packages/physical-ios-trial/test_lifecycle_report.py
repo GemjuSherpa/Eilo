@@ -58,12 +58,21 @@ class LifecycleTests(unittest.TestCase):
         r=full();r["cases"][1]["stop_event"]="PROTECTED_DATA_UNAVAILABLE"
         with self.assertRaises(ValueError):validate(r)
 
-    def test_actual_device_report_when_present(self):
+    def test_actual_device_reports_and_provenance(self):
         import json
         from pathlib import Path
         path=Path(__file__).parent/'tests/ios-lifecycle-device-results.json'
-        if not path.exists():self.skipTest('physical collection pending')
-        validate(json.loads(path.read_text()))
+        import hashlib
+        provenance=json.loads((path.parent/'ios-lifecycle-device-provenance.json').read_text())
+        for entry in provenance['evidence']:
+            evidence=path.parent/entry['filename']
+            self.assertEqual(hashlib.sha256(evidence.read_bytes()).hexdigest(),entry['sha256'])
+            validate(json.loads(evidence.read_text()))
+        report=json.loads(path.read_text())
+        self.assertEqual(validate(report)['observed_cases'],6)
+        self.assertEqual(validate(report)['failed_attempts'],1)
+        self.assertEqual(report['phase'],'COMPLETED')
+        self.assertEqual(report['process_session'],'FB6E0FCA-8D45-45A1-A016-C4D3E6BC42A6')
 
 
 if __name__=='__main__':unittest.main()
