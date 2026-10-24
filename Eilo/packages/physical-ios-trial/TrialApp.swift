@@ -17,6 +17,8 @@ import CryptoKit
   private var modelQualityRunning=false
   private let lifecycleButton=UIButton(type:.system),lifecycleNote=UILabel()
   private let lifecycle=TrialLifecycle()
+  private let permissionCheckButton=UIButton(type:.system)
+  private var permissionCheck:TrialPermissionCheck?
   private var lifecycleUtterance:AVSpeechUtterance?,lifecycleTimer:Timer?,lifecycleOperation:UUID?
   private let lifecycleSession=UUID().uuidString
   private var lifecycleEvidenceWritable=true,lifecyclePriorArchived=false
@@ -97,7 +99,7 @@ import CryptoKit
     phaseDiagnostic.isHidden = !TrialPhaseDiagnostic.available
     button(residentDiagnostic,"11. Run alternating resident-model comparison (no audio)",#selector(runResidentDiagnostic))
     residentDiagnostic.isHidden = !TrialResidentDiagnostic.available
-    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic,residentDiagnostic,lifecycleNote,lifecycleButton,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
+    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic,residentDiagnostic,lifecycleNote,lifecycleButton,permissionCheckButton,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
     if TrialResidentDiagnostic.available{
       let otherControls:[UIView]=[transcript,permissionButton,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic]
       for view in otherControls{view.isHidden=true}
@@ -106,6 +108,7 @@ import CryptoKit
     NSLayoutConstraint.activate([scroll.leadingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.leadingAnchor),scroll.trailingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.trailingAnchor),scroll.topAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.topAnchor),scroll.bottomAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.bottomAnchor),stack.leadingAnchor.constraint(equalTo:scroll.contentLayoutGuide.leadingAnchor,constant:20),stack.trailingAnchor.constraint(equalTo:scroll.contentLayoutGuide.trailingAnchor,constant:-20),stack.topAnchor.constraint(equalTo:scroll.contentLayoutGuide.topAnchor,constant:16),stack.bottomAnchor.constraint(equalTo:scroll.contentLayoutGuide.bottomAnchor,constant:-20),stack.widthAnchor.constraint(equalTo:scroll.frameLayoutGuide.widthAnchor,constant:-40)])
     button(permissionButton,"Grant microphone permission (no capture)",#selector(grantPermission));button(prepare,"1. Prepare models",#selector(prepareModels));button(probe,"2. Play offline voice probe",#selector(playProbe));button(heard,"3. I heard the complete probe",#selector(confirmHeard));button(microphone,"4. Check microphone → clarification",#selector(startMic));button(model,"5. Speak fixed synthetic model reply",#selector(startModel));button(stopButton,"Stop and clear",#selector(operatorStop))
     button(lifecycleButton,"12. Start next lifecycle check",#selector(startLifecycle))
+    button(permissionCheckButton,"Permission boundary check (no hardware capture)",#selector(checkPermissionBoundary))
     lifecycleNote.numberOfLines=0
     lifecycleNote.text="Six bounded Stop/background/lock checks. No background listening or acoustic latency acceptance."
     #if EILO_LIFECYCLE_TRIAL
@@ -148,6 +151,7 @@ import CryptoKit
       else{lifecycleNote.text=prefix+"Start the next lifecycle check. Do not swipe away the app during a Home/lock check."}
     }
     lifecycleButton.isEnabled=lifecycleEvidenceWritable && ready && audible && operatorAttested && idle && lifecycle.next != nil
+    permissionCheckButton.isEnabled=ready && idle && eligibility.allowed
     prepare.isEnabled = !ready && idle;probe.isEnabled=ready && operatorAttested && idle;heard.isEnabled=probeDone && !audible && idle
     microphone.isEnabled=ready && audible && idle;model.isEnabled=ready && audible && idle
     modelQuality.isEnabled=ready && idle && modelQualitySession.canBegin
@@ -512,6 +516,27 @@ import CryptoKit
       let verify=lifecycle.stoppedBy(event,stopped:lifecycleStopped())
       lifecycleNote.text=lifecycle.waitingForReturn ? "Stopped. Return to Eilo for the no-resume check." : lifecycleInstruction()
       saveLifecycle();updateButtons();if verify || lifecycle.verifying{verifyLifecycleAfterDelay()}
+    }
+  }
+  @objc private func checkPermissionBoundary(){
+    guard ready,!active,lifecycle.current == nil,eligibility.allowed else{return}
+    let current=permission.status()
+    guard current == .denied || current == .granted else{status.text="Set Eilo microphone permission in Settings first; no hardware capture is used.";return}
+    if permissionCheck == nil{permissionCheck=TrialPermissionCheck(permission:permission,models:Readiness(available:{[weak self] in self?.ready==true}))}
+    guard let check=permissionCheck else{return}
+    let kind=current == .denied ? "DENIED_START":"RESTORED_NO_START"
+    let accepted=current == .denied ? check.deny():false
+    check.refresh();active=true;let ticket=audioEpoch.begin();updateButtons()
+    status.text="Checking permission boundary for two seconds. No hardware capture adapter is attached."
+    DispatchQueue.main.asyncAfter(deadline:.now()+2){[weak self] in
+      guard let self,self.audioEpoch.current(ticket),self.eligibility.allowed else{return}
+      let permission=self.permission.status()
+      let label=permission == .denied ? "DENIED":(permission == .granted ? "GRANTED":"UNAVAILABLE")
+      let sample=check.sample(kind:kind,permission:label,accepted:accepted)
+      let file=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("permission-check-results.json")
+      do{try TrialPermissionCheck.append(sample,to:file,session:self.lifecycleSession);self.status.text=kind+": "+(sample["outcome"] as? String ?? "FAILED")+". No hardware capture. Leave app open for export."}
+      catch{self.status.text="Permission result could not be preserved. Leave app open; no success inferred."}
+      self.active=false;self.audioEpoch.cancel();self.updateButtons()
     }
   }
   @objc private func operatorStop(){stopLifecycle("STOP_BUTTON")}
