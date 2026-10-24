@@ -147,7 +147,7 @@ def main():
     (output/'Info.plist').write_bytes(plistlib.dumps(info))
     framework=vad/'ios/onnxruntime.xcframework/ios-arm64'
     flags=['$(inherited)',*map(str,objects),*map(str,libs),str(dynamic),'-framework','onnxruntime','-framework','Accelerate','-framework','CoreML','-lc++']
-    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift',HERE/'TrialAsrScore.swift',HERE/'TrialFileAsr.swift',HERE/'TrialModelDiagnostic.swift',HERE/'TrialModelQualitySession.swift',HERE/'TrialModelQualityText.swift',HERE/'TrialModelQuality.swift',HERE/'TrialPhaseDiagnostic.swift',HERE/'TrialResidentSchedule.swift',HERE/'TrialResidentDiagnostic.swift']
+    sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialLifecycle.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift',HERE/'TrialAsrScore.swift',HERE/'TrialFileAsr.swift',HERE/'TrialModelDiagnostic.swift',HERE/'TrialModelQualitySession.swift',HERE/'TrialModelQualityText.swift',HERE/'TrialModelQuality.swift',HERE/'TrialPhaseDiagnostic.swift',HERE/'TrialResidentSchedule.swift',HERE/'TrialResidentDiagnostic.swift']
     proj=project(output,sources,assets,flags,framework,a.phase_measurements,a.resident_comparison)
     command=['xcodebuild','-project',str(proj),'-scheme','EiloForegroundTrial','-configuration','Release','-sdk','iphoneos','-destination','generic/platform=iOS','-derivedDataPath',str(output/'DerivedData'),'CODE_SIGNING_ALLOWED=NO','-jobs','3','build']
     with (output/'app-build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=600)

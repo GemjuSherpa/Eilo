@@ -15,6 +15,10 @@ import CryptoKit
   private let modelQualitySession=TrialModelQualitySession(),modelQualitySessionID=UUID().uuidString
   private var modelQualityCancellation:TrialModelCancellation?
   private var modelQualityRunning=false
+  private let lifecycleButton=UIButton(type:.system),lifecycleNote=UILabel()
+  private let lifecycle=TrialLifecycle()
+  private var lifecycleUtterance:AVSpeechUtterance?,lifecycleTimer:Timer?,lifecycleOperation:UUID?
+  private let lifecycleSession=UUID().uuidString
   private let residentDiagnostic=UIButton(type:.system)
   private var residentAutoRun=false,residentRunning=false,residentUsed=false
   private var residentRows=[[String:Any]](),comparisonLlm:LlmPackSelection?
@@ -92,14 +96,17 @@ import CryptoKit
     phaseDiagnostic.isHidden = !TrialPhaseDiagnostic.available
     button(residentDiagnostic,"11. Run alternating resident-model comparison (no audio)",#selector(runResidentDiagnostic))
     residentDiagnostic.isHidden = !TrialResidentDiagnostic.available
-    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic,residentDiagnostic,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
+    let stack=UIStackView(arrangedSubviews:[title,note,status,transcript,permissionButton,prepare,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic,residentDiagnostic,lifecycleNote,lifecycleButton,stopButton]);stack.axis = .vertical;stack.spacing=12;stack.translatesAutoresizingMaskIntoConstraints=false
     if TrialResidentDiagnostic.available{
       let otherControls:[UIView]=[transcript,permissionButton,probe,heard,microphone,model,qualityNote,quality,scoreRow,fileAsr,modelDiagnostic,modelQualityNote,modelQuality,modelQualityAnswer,modelScoreRow,phaseDiagnostic]
       for view in otherControls{view.isHidden=true}
     }
     let scroll=UIScrollView();scroll.translatesAutoresizingMaskIntoConstraints=false;vc.view.addSubview(scroll);scroll.addSubview(stack)
     NSLayoutConstraint.activate([scroll.leadingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.leadingAnchor),scroll.trailingAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.trailingAnchor),scroll.topAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.topAnchor),scroll.bottomAnchor.constraint(equalTo:vc.view.safeAreaLayoutGuide.bottomAnchor),stack.leadingAnchor.constraint(equalTo:scroll.contentLayoutGuide.leadingAnchor,constant:20),stack.trailingAnchor.constraint(equalTo:scroll.contentLayoutGuide.trailingAnchor,constant:-20),stack.topAnchor.constraint(equalTo:scroll.contentLayoutGuide.topAnchor,constant:16),stack.bottomAnchor.constraint(equalTo:scroll.contentLayoutGuide.bottomAnchor,constant:-20),stack.widthAnchor.constraint(equalTo:scroll.frameLayoutGuide.widthAnchor,constant:-40)])
-    button(permissionButton,"Grant microphone permission (no capture)",#selector(grantPermission));button(prepare,"1. Prepare models",#selector(prepareModels));button(probe,"2. Play offline voice probe",#selector(playProbe));button(heard,"3. I heard the complete probe",#selector(confirmHeard));button(microphone,"4. Check microphone → clarification",#selector(startMic));button(model,"5. Speak fixed synthetic model reply",#selector(startModel));button(stopButton,"Stop and clear",#selector(stop))
+    button(permissionButton,"Grant microphone permission (no capture)",#selector(grantPermission));button(prepare,"1. Prepare models",#selector(prepareModels));button(probe,"2. Play offline voice probe",#selector(playProbe));button(heard,"3. I heard the complete probe",#selector(confirmHeard));button(microphone,"4. Check microphone → clarification",#selector(startMic));button(model,"5. Speak fixed synthetic model reply",#selector(startModel));button(stopButton,"Stop and clear",#selector(operatorStop))
+    button(lifecycleButton,"12. Start next lifecycle check",#selector(startLifecycle))
+    lifecycleNote.numberOfLines=0
+    lifecycleNote.text="Six bounded Stop/background/lock checks. No background listening or acoustic latency acceptance."
     synth.delegate=self
     let readiness=Readiness(available:{[weak self] in self?.ready==true})
     micController=NativeController(effects:effects,permission:permission,models:readiness)
@@ -108,7 +115,7 @@ import CryptoKit
     window=UIWindow(windowScene:scene);window?.rootViewController=vc;window?.makeKeyAndVisible()
     eligibility.visible=true;eligibility.protectedData(app.isProtectedDataAvailable)
     report["os_build"]=ProcessInfo.processInfo.operatingSystemVersionString;report["physical_memory_bytes"]=ProcessInfo.processInfo.physicalMemory
-    report["phase"]="LAUNCHED_NO_CAPTURE";save();updateButtons()
+    report["phase"]="LAUNCHED_NO_CAPTURE";save();saveLifecycle();updateButtons()
     if CommandLine.arguments.contains("--run-resident-model-comparison"),TrialResidentDiagnostic.available{residentAutoRun=true;prepareModels()}
     else if CommandLine.arguments.contains("--run-native-phase-diagnostic"),TrialPhaseDiagnostic.available{phaseAutoRun=true;prepareModels()}
     else if CommandLine.arguments.contains("--run-cpu-model-diagnostic"){modelDiagnosticAutoRun=true;prepareModels()}
@@ -120,7 +127,9 @@ import CryptoKit
   }
   private func button(_ b:UIButton,_ title:String,_ action:Selector){b.setTitle(title,for:.normal);b.titleLabel?.font = .preferredFont(forTextStyle:.headline);b.addTarget(self,action:action,for:.touchUpInside)}
   private func updateButtons(){
-    let idle = !active && !survey.awaitingRating && !modelQualitySession.awaitingRating
+    let idle = !active && lifecycle.current == nil && !survey.awaitingRating && !modelQualitySession.awaitingRating
+    lifecycleButton.setTitle("12. Lifecycle: "+(lifecycle.next ?? "finished"),for:.normal)
+    lifecycleButton.isEnabled=ready && audible && operatorAttested && idle && lifecycle.next != nil
     prepare.isEnabled = !ready && idle;probe.isEnabled=ready && operatorAttested && idle;heard.isEnabled=probeDone && !audible && idle
     microphone.isEnabled=ready && audible && idle;model.isEnabled=ready && audible && idle
     modelQuality.isEnabled=ready && idle && modelQualitySession.canBegin
@@ -336,7 +345,7 @@ import CryptoKit
     report["updated_utc"]=ISO8601DateFormatter().string(from:Date())
     if let bytes=try? JSONSerialization.data(withJSONObject:report,options:[.sortedKeys]){try? bytes.write(to:dir.appendingPathComponent("trial-results.json"),options:.atomic)}
   }
-  private func fail(_ code:String){stop();report["phase"]=code;status.text="Trial stopped: "+code;save()}
+  private func fail(_ code:String){if lifecycle.current != nil{lifecycle.failed();saveLifecycle()};lifecycleUtterance=nil;lifecycleTimer?.invalidate();stop();report["phase"]=code;status.text="Trial stopped: "+code;save()}
   @objc private func grantPermission(){permission.request{[weak self] _ in DispatchQueue.main.async{guard let self else{return};self.status.text="Permission request finished. No microphone was started.";self.report["microphone_permission_granted"]=self.permission.status() == .granted;self.save()}}}
   @objc private func prepareModels(){
     let preparation=modelEpoch.begin(),cancel=PackCancellation();modelCancel=cancel
@@ -387,6 +396,7 @@ import CryptoKit
     status.text="Listen for the complete test phrase.";report["probe_route"]=AVAudioSession.sharedInstance().currentRoute.outputs.map{$0.portType.rawValue};report["voice_id"]=voice.identifier;report["phase"]="VOICE_PROBE_PLAYING";save()
   }
   func speechSynthesizer(_ synthesizer:AVSpeechSynthesizer,didFinish utterance:AVSpeechUtterance){
+    if utterance===lifecycleUtterance { lifecycle.failed();lifecycleUtterance=nil;stop();saveLifecycle();return }
     if utterance===surveyUtterance{
       guard eligibility.allowed,let ticket=surveyTicket,survey.finish(ticket) else{return}
       surveyUtterance=nil;surveyTicket=nil;timer?.invalidate();timer=nil;active=false
@@ -420,6 +430,7 @@ import CryptoKit
       if !self.attached,self.controller.state == .standby{self.attach(operation)}
       if self.attached,self.controller.state == .standby{
         let key=self.synthetic ? "synthetic_model_completed":"clarification_completed";self.report[key]=(self.report[key] as? Int ?? 0)+1
+        if self.lifecycle.current != nil{self.lifecycle.failed();self.saveLifecycle()}
         self.stop();self.report["phase"]="SINGLE_TURN_SDK_COMPLETED";self.status.text="Turn completed at the SDK boundary. No acoustic timing or hearing score is inferred.";self.save()
       }else if ProcessInfo.processInfo.systemUptime>deadline{self.fail("TRIAL_TIMEOUT")}
     }
@@ -448,11 +459,81 @@ import CryptoKit
     report["input_kind"]=synthetic ? "FIXED_SYNTHETIC_PROMPT":"PHYSICAL_MICROPHONE_UNCALIBRATED"
     guard turn.submit(final,confidence:confidence) else{fail("REPLY_SUBMIT_FAILED");return};report["phase"]="REPLY_SUBMITTED";save()
   }
-  @objc private func stop(){let qualityPending=modelQualityRunning || modelQualitySession.awaitingRating;modelQualityCancellation?.cancel();modelQualityCancellation=nil;modelQualityRunning=false;modelQualitySession.cancel();modelQualityAnswer.text=nil;if qualityPending{modelQualityNote.text=modelQualitySession.canBegin ? "Review stopped. Pending answer/rating cleared; prior scores retained. Replay to rate." : "Review stopped or attempt limit reached. Prior scores retained; keep the app open for export."};saveModelQuality();restoreDiagnosticIdleTimer();residentAutoRun=false;if residentRunning{saveResidentDiagnostic("CANCELLED");residentRunning=false};phaseAutoRun=false;if phaseRunning{savePhaseDiagnostic("CANCELLED");phaseRunning=false};modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
-  private func invalidateAudio(){stop();audible=false;probeDone=false;updateButtons()}
-  func applicationWillResignActive(_ application:UIApplication){eligibility.visible=false;report["foreground"]=false;invalidateAudio()}
-  func applicationDidBecomeActive(_ application:UIApplication){eligibility.visible=true;eligibility.protectedData(application.isProtectedDataAvailable);controller.permissionChanged();report["foreground"]=true;save()}
-  func applicationProtectedDataWillBecomeUnavailable(_ application:UIApplication){eligibility.protectedData(false);invalidateAudio();_ = controller.privacyTransition(.lock)}
+  private func lifecycleInstruction()->String {
+    guard let id=lifecycle.current else{return lifecycle.complete ? "Six lifecycle cases observed. Leave the app open for export." : "Lifecycle attempt retained. Replay/confirm the offline probe if needed, then start the next check."}
+    if id.hasSuffix("_stop"){return "Audio active: tap Stop and clear now. Then wait for verification."}
+    if id.hasSuffix("_lock"){return "Audio active: lock with the side button, wait 5 seconds, unlock and reopen Eilo. No audio should resume."}
+    return "Audio active: go to the Home Screen, wait 5 seconds, then reopen Eilo. No audio should resume."
+  }
+  private func saveLifecycle(){
+    var r=lifecycle.aggregate
+    r["process_session"]=lifecycleSession;r["os_build"]=ProcessInfo.processInfo.operatingSystemVersionString
+    r["physical_memory_bytes"]=ProcessInfo.processInfo.physicalMemory
+    r["updated_utc"]=ISO8601DateFormatter().string(from:Date())
+    let url=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("lifecycle-results.json")
+    do{try JSONSerialization.data(withJSONObject:r,options:[.sortedKeys]).write(to:url,options:.atomic)}
+    catch{lifecycleNote.text="Lifecycle export failed. Keep the app open; no success is inferred."}
+  }
+  private func lifecycleStopped()->Bool {
+    !active && speech == nil && turn == nil && transcript.text == nil && lifecycleUtterance == nil && !synth.isSpeaking && !synth.isPaused && !micController.captureIsPending && !modelController.captureIsPending && micController.state == .stopped && modelController.state == .stopped && (report["audio_session_deactivated"] as? Bool == true) && (lifecycleOperation.map{!audioEpoch.current($0)} ?? true)
+  }
+  private func verifyLifecycleAfterDelay(){
+    lifecycleTimer?.invalidate()
+    lifecycleTimer=Timer.scheduledTimer(withTimeInterval:2,repeats:false){[weak self]_ in
+      guard let self,self.lifecycle.verifying else{return}
+      self.lifecycle.verified(stillStopped:self.lifecycleStopped());self.lifecycleOperation=nil
+      self.lifecycleNote.text=self.lifecycleInstruction();self.saveLifecycle();self.updateButtons()
+    }
+  }
+  private func stopLifecycle(_ event:String){
+    let pending=lifecycle.current != nil
+    lifecycleUtterance=nil;lifecycleTimer?.invalidate();lifecycleTimer=nil
+    stop()
+    if pending {
+      let verify=lifecycle.stoppedBy(event,stopped:lifecycleStopped())
+      lifecycleNote.text=lifecycle.waitingForReturn ? "Stopped. Return to Eilo for the no-resume check." : lifecycleInstruction()
+      saveLifecycle();updateButtons();if verify || lifecycle.verifying{verifyLifecycleAfterDelay()}
+    }
+  }
+  @objc private func operatorStop(){stopLifecycle("STOP_BUTTON")}
+  @objc private func startLifecycle(){
+    guard ready,audible,operatorAttested,!active,eligibility.allowed,let voice=selectedVoice,let id=lifecycle.begin() else{return}
+    lifecycleNote.text="Starting lifecycle check. Wait until audio is active.";saveLifecycle()
+    lifecycleOperation=audioEpoch.begin();let lifecycleTicket=lifecycleOperation;active=true;updateButtons()
+    if id.hasPrefix("capture_") {
+      controller=micController
+      guard controller.dispatch(.start) else{fail("CAPTURE_START_DENIED");return}
+      report["phase"]="CAPTURE_START_REQUESTED";save()
+      let deadline=ProcessInfo.processInfo.systemUptime+35
+      lifecycleTimer=Timer.scheduledTimer(withTimeInterval:0.1,repeats:true){[weak self]_ in
+        guard let self,self.lifecycleOperation == lifecycleTicket,self.lifecycle.current?.hasPrefix("capture_") == true else{return}
+        if self.controller.state == .error || (self.controller.state == .stopped && !self.controller.captureIsPending){self.fail("CAPTURE_OR_REPLY_FAILED");return}
+        if self.controller.state == .standby,self.lifecycle.observedActive(){
+          self.lifecycleNote.text=self.lifecycleInstruction();self.status.text="Microphone active. Remain quiet and perform the lifecycle action. No recognition or recording is attached."
+          self.report["phase"]="MICROPHONE_SPEAK_NOW";self.report["microphone_permission_granted"]=self.permission.status() == .granted;self.save();self.saveLifecycle()
+        }
+        if ProcessInfo.processInfo.systemUptime>deadline{self.fail("TRIAL_TIMEOUT")}
+      }
+      return
+    }
+    do{try AVAudioSession.sharedInstance().setCategory(.playback,mode:.default);try AVAudioSession.sharedInstance().setActive(true)}
+    catch{lifecycle.failed();stop();saveLifecycle();return}
+    let phrase="This is a fixed offline Eilo lifecycle test. Use the requested action to stop this test. "
+    let u=AVSpeechUtterance(string:String(repeating:phrase,count:8));u.voice=voice;u.volume=0.4;lifecycleUtterance=u;synth.speak(u)
+    lifecycleTimer=Timer.scheduledTimer(withTimeInterval:0.1,repeats:true){[weak self]_ in
+      guard let self,self.lifecycleOperation == lifecycleTicket,self.lifecycle.current != nil else{return}
+      if self.synth.isSpeaking,self.lifecycle.observedActive(){self.lifecycleNote.text=self.lifecycleInstruction();self.saveLifecycle()}
+    }
+    DispatchQueue.main.asyncAfter(deadline:.now()+35){[weak self,weak u] in
+      guard let self,let u,self.lifecycleUtterance===u else{return}
+      self.lifecycle.failed();self.lifecycleUtterance=nil;self.stop();self.saveLifecycle()
+    }
+  }
+  @objc private func stop(){lifecycleTimer?.invalidate();lifecycleTimer=nil;lifecycleUtterance=nil;let qualityPending=modelQualityRunning || modelQualitySession.awaitingRating;modelQualityCancellation?.cancel();modelQualityCancellation=nil;modelQualityRunning=false;modelQualitySession.cancel();modelQualityAnswer.text=nil;if qualityPending{modelQualityNote.text=modelQualitySession.canBegin ? "Review stopped. Pending answer/rating cleared; prior scores retained. Replay to rate." : "Review stopped or attempt limit reached. Prior scores retained; keep the app open for export."};saveModelQuality();restoreDiagnosticIdleTimer();residentAutoRun=false;if residentRunning{saveResidentDiagnostic("CANCELLED");residentRunning=false};phaseAutoRun=false;if phaseRunning{savePhaseDiagnostic("CANCELLED");phaseRunning=false};modelDiagnosticAutoRun=false;diagnosticCancellation?.cancel();diagnosticCancellation=nil;if modelDiagnosticRunning{saveModelDiagnostic("CANCELLED",[]);modelDiagnosticRunning=false};fileAsrAutoRun=false;if fileAsrRunning{saveFileAsr("CANCELLED",[]);fileAsrRunning=false};if survey.awaitingRating || surveyUtterance != nil{qualityNote.text="Listening survey stopped. Pending rating revoked; replay the phrase to rate it. Attempts are retained."};survey.cancel();surveyUtterance=nil;surveyTicket=nil;saveSurvey();audioEpoch.cancel();modelEpoch.cancel();modelCancel?.cancel();modelCancel=nil;probeUtterance=nil;timer?.invalidate();timer=nil;_ = micController?.stop();_ = modelController?.stop();speech?.close();speech=nil;turn=nil;_ = synth.stopSpeaking(at:.immediate);active=false;attached=false;transcript.text=nil;do{try AVAudioSession.sharedInstance().setActive(false,options:.notifyOthersOnDeactivation);report["audio_session_deactivated"]=true}catch{report["audio_session_deactivated"]=false};report["phase"]="STOPPED_CONTENT_CLEARED";save();updateButtons()}
+  private func invalidateAudio(_ event:String="AUDIO_INTERRUPTION_OR_ROUTE"){stopLifecycle(event);audible=false;probeDone=false;updateButtons()}
+  func applicationWillResignActive(_ application:UIApplication){eligibility.visible=false;report["foreground"]=false;invalidateAudio("SCENE_RESIGNED")}
+  func applicationDidBecomeActive(_ application:UIApplication){eligibility.visible=true;eligibility.protectedData(application.isProtectedDataAvailable);controller.permissionChanged();report["foreground"]=true;save();if lifecycle.returned(){saveLifecycle();verifyLifecycleAfterDelay()}}
+  func applicationProtectedDataWillBecomeUnavailable(_ application:UIApplication){eligibility.protectedData(false);invalidateAudio("PROTECTED_DATA_UNAVAILABLE");_ = controller.privacyTransition(.lock)}
   func applicationProtectedDataDidBecomeAvailable(_ application:UIApplication){eligibility.protectedData(true);_ = controller.privacyTransition(.unlock)}
 }
 
