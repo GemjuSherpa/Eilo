@@ -19,6 +19,7 @@ import CryptoKit
   private let lifecycle=TrialLifecycle()
   private var lifecycleUtterance:AVSpeechUtterance?,lifecycleTimer:Timer?,lifecycleOperation:UUID?
   private let lifecycleSession=UUID().uuidString
+  private var lifecycleEvidenceWritable=true,lifecyclePriorArchived=false
   private let residentDiagnostic=UIButton(type:.system)
   private var residentAutoRun=false,residentRunning=false,residentUsed=false
   private var residentRows=[[String:Any]](),comparisonLlm:LlmPackSelection?
@@ -107,6 +108,11 @@ import CryptoKit
     button(lifecycleButton,"12. Start next lifecycle check",#selector(startLifecycle))
     lifecycleNote.numberOfLines=0
     lifecycleNote.text="Six bounded Stop/background/lock checks. No background listening or acoustic latency acceptance."
+    #if EILO_LIFECYCLE_TRIAL
+    for view in [microphone,model,quality,qualityNote,fileAsr,modelDiagnostic,modelQuality,modelQualityNote,modelQualityAnswer,phaseDiagnostic,residentDiagnostic,transcript]{view.isHidden=true}
+    for view in ratings+modelQualityRatings{view.isHidden=true}
+    title.text="Eilo lifecycle checks"
+    #endif
     synth.delegate=self
     let readiness=Readiness(available:{[weak self] in self?.ready==true})
     micController=NativeController(effects:effects,permission:permission,models:readiness)
@@ -115,11 +121,15 @@ import CryptoKit
     window=UIWindow(windowScene:scene);window?.rootViewController=vc;window?.makeKeyAndVisible()
     eligibility.visible=true;eligibility.protectedData(app.isProtectedDataAvailable)
     report["os_build"]=ProcessInfo.processInfo.operatingSystemVersionString;report["physical_memory_bytes"]=ProcessInfo.processInfo.physicalMemory
+    let documents=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
+    do{lifecyclePriorArchived=try TrialLifecycleArchive.preserve(documents:documents,currentSession:lifecycleSession)}catch{lifecycleEvidenceWritable=false}
     report["phase"]="LAUNCHED_NO_CAPTURE";save();saveLifecycle();updateButtons()
+    #if !EILO_LIFECYCLE_TRIAL
     if CommandLine.arguments.contains("--run-resident-model-comparison"),TrialResidentDiagnostic.available{residentAutoRun=true;prepareModels()}
     else if CommandLine.arguments.contains("--run-native-phase-diagnostic"),TrialPhaseDiagnostic.available{phaseAutoRun=true;prepareModels()}
     else if CommandLine.arguments.contains("--run-cpu-model-diagnostic"){modelDiagnosticAutoRun=true;prepareModels()}
     else if CommandLine.arguments.contains("--run-file-asr-diagnostic"){fileAsrAutoRun=true;prepareModels()}
+    #endif
     NotificationCenter.default.addObserver(forName:AVAudioSession.interruptionNotification,object:nil,queue:.main){[weak self]_ in self?.invalidateAudio()}
     NotificationCenter.default.addObserver(forName:AVAudioSession.routeChangeNotification,object:nil,queue:.main){[weak self] n in
       guard let reason=n.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,[AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue,AVAudioSession.RouteChangeReason.noSuitableRouteForCategory.rawValue,AVAudioSession.RouteChangeReason.override.rawValue].contains(reason) else{return};self?.invalidateAudio()
@@ -128,8 +138,16 @@ import CryptoKit
   private func button(_ b:UIButton,_ title:String,_ action:Selector){b.setTitle(title,for:.normal);b.titleLabel?.font = .preferredFont(forTextStyle:.headline);b.addTarget(self,action:action,for:.touchUpInside)}
   private func updateButtons(){
     let idle = !active && lifecycle.current == nil && !survey.awaitingRating && !modelQualitySession.awaitingRating
-    lifecycleButton.setTitle("12. Lifecycle: "+(lifecycle.next ?? "finished"),for:.normal)
-    lifecycleButton.isEnabled=ready && audible && operatorAttested && idle && lifecycle.next != nil
+    lifecycleButton.setTitle("Lifecycle: "+(lifecycle.next?.replacingOccurrences(of:"_",with:" ") ?? "finished"),for:.normal)
+    if lifecycle.current == nil {
+      let prefix=lifecycle.rows.last.map{($0["case"] as? String ?? "Check").replacingOccurrences(of:"_",with:" ")+": "+($0["outcome"] as? String ?? "retained")+". "} ?? (lifecyclePriorArchived ? "Previous session archived; fresh setup required. " : "")
+      if !lifecycleEvidenceWritable{lifecycleNote.text="Previous lifecycle evidence could not be preserved. Checks disabled; keep this app open for review."}
+      else if lifecycle.complete{lifecycleNote.text="Six lifecycle cases observed. Leave the app open for export."}
+      else if !ready{lifecycleNote.text=prefix+"Tap Prepare models, play the offline probe, then confirm hearing it."}
+      else if !audible{lifecycleNote.text=prefix+"Play the offline probe and confirm hearing it to unlock the next check."}
+      else{lifecycleNote.text=prefix+"Start the next lifecycle check. Do not swipe away the app during a Home/lock check."}
+    }
+    lifecycleButton.isEnabled=lifecycleEvidenceWritable && ready && audible && operatorAttested && idle && lifecycle.next != nil
     prepare.isEnabled = !ready && idle;probe.isEnabled=ready && operatorAttested && idle;heard.isEnabled=probeDone && !audible && idle
     microphone.isEnabled=ready && audible && idle;model.isEnabled=ready && audible && idle
     modelQuality.isEnabled=ready && idle && modelQualitySession.canBegin
@@ -466,6 +484,7 @@ import CryptoKit
     return "Audio active: go to the Home Screen, wait 5 seconds, then reopen Eilo. No audio should resume."
   }
   private func saveLifecycle(){
+    guard lifecycleEvidenceWritable else{return}
     var r=lifecycle.aggregate
     r["process_session"]=lifecycleSession;r["os_build"]=ProcessInfo.processInfo.operatingSystemVersionString
     r["physical_memory_bytes"]=ProcessInfo.processInfo.physicalMemory
@@ -497,7 +516,7 @@ import CryptoKit
   }
   @objc private func operatorStop(){stopLifecycle("STOP_BUTTON")}
   @objc private func startLifecycle(){
-    guard ready,audible,operatorAttested,!active,eligibility.allowed,let voice=selectedVoice,let id=lifecycle.begin() else{return}
+    guard lifecycleEvidenceWritable,ready,audible,operatorAttested,!active,eligibility.allowed,let voice=selectedVoice,let id=lifecycle.begin() else{return}
     lifecycleNote.text="Starting lifecycle check. Wait until audio is active.";saveLifecycle()
     lifecycleOperation=audioEpoch.begin();let lifecycleTicket=lifecycleOperation;active=true;updateButtons()
     if id.hasPrefix("capture_") {

@@ -30,7 +30,7 @@ def identifier(name):
     return hashlib.sha256(name.encode()).hexdigest()[:24].upper()
 
 
-def project(output, sources, assets, flags, framework, phase_measurements=False, resident_comparison=False):
+def project(output, sources, assets, flags, framework, phase_measurements=False, resident_comparison=False, lifecycle_only=False):
     """Generate a local native-only Xcode target; no production project edits or account data."""
     objects = {}
     def add(label, isa, **values):
@@ -51,7 +51,7 @@ def project(output, sources, assets, flags, framework, phase_measurements=False,
     group = add('group', 'PBXGroup', children=[*files, resource, dynamic, product], sourceTree='<group>')
     settings = dict(PRODUCT_BUNDLE_IDENTIFIER=BUNDLE, PRODUCT_NAME='EiloForegroundTrial', INFOPLIST_FILE=str(output / 'Info.plist'),
         IPHONEOS_DEPLOYMENT_TARGET='18.0', SDKROOT='iphoneos', TARGETED_DEVICE_FAMILY='1', SWIFT_VERSION='5.0',
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS='DEBUG EILO_VAD_EVALUATION EILO_ASR_EVALUATION EILO_LLM_EVALUATION'+(' EILO_PHASE_MEASUREMENTS' if phase_measurements else '')+(' EILO_RESIDENT_COMPARISON' if resident_comparison else ''),
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS='DEBUG EILO_VAD_EVALUATION EILO_ASR_EVALUATION EILO_LLM_EVALUATION'+(' EILO_PHASE_MEASUREMENTS' if phase_measurements else '')+(' EILO_RESIDENT_COMPARISON' if resident_comparison else '')+(' EILO_LIFECYCLE_TRIAL' if lifecycle_only else ''),
         SWIFT_TREAT_WARNINGS_AS_ERRORS='YES', SWIFT_OPTIMIZATION_LEVEL='-O', ENABLE_BITCODE='NO',
         SWIFT_INCLUDE_PATHS=['"'+str(HERE.parent / p / 'include')+'"' for p in ['vad-runtime', 'asr-runtime', 'llm-runtime', 'physical-ios-trial']],
         OTHER_LDFLAGS=['"'+f+'"' if f.startswith('/') else f for f in flags], LD_RUNPATH_SEARCH_PATHS=['$(inherited)', '@executable_path/Frameworks'],
@@ -75,6 +75,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ['asr-cache','vad-cache','vad-model','llm-cache','llm-model','output']:
         p.add_argument('--'+name, type=Path, required=True)
+    p.add_argument('--lifecycle-only', action='store_true', help='Lab lifecycle-only controls; suppress unrelated diagnostics and automatic inference arguments.')
     p.add_argument('--resident-comparison', action='store_true', help='Explicit dual-model lab target; requires phase measurements and pinned secondary model.')
     p.add_argument('--secondary-llm-model', type=Path)
     p.add_argument('--phase-measurements', action='store_true', help='Opt in to lab native phase telemetry and repeated fresh-handle runner; no warm-cache acceptance.')
@@ -148,12 +149,12 @@ def main():
     framework=vad/'ios/onnxruntime.xcframework/ios-arm64'
     flags=['$(inherited)',*map(str,objects),*map(str,libs),str(dynamic),'-framework','onnxruntime','-framework','Accelerate','-framework','CoreML','-lc++']
     sources=[*sorted((HERE.parent/'native-test-seam/Sources/NativeTestSeam').glob('*.swift')),HERE/'TrialApp.swift',HERE/'TrialLifecycle.swift',HERE/'TrialEpoch.swift',HERE/'TrialVoiceSurvey.swift',HERE/'TrialAsrScore.swift',HERE/'TrialFileAsr.swift',HERE/'TrialModelDiagnostic.swift',HERE/'TrialModelQualitySession.swift',HERE/'TrialModelQualityText.swift',HERE/'TrialModelQuality.swift',HERE/'TrialPhaseDiagnostic.swift',HERE/'TrialResidentSchedule.swift',HERE/'TrialResidentDiagnostic.swift']
-    proj=project(output,sources,assets,flags,framework,a.phase_measurements,a.resident_comparison)
+    proj=project(output,sources,assets,flags,framework,a.phase_measurements,a.resident_comparison,a.lifecycle_only)
     command=['xcodebuild','-project',str(proj),'-scheme','EiloForegroundTrial','-configuration','Release','-sdk','iphoneos','-destination','generic/platform=iOS','-derivedDataPath',str(output/'DerivedData'),'CODE_SIGNING_ALLOWED=NO','-jobs','3','build']
     with (output/'app-build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=600)
     app=output/'DerivedData/Build/Products/Release-iphoneos/EiloForegroundTrial.app'
     require(app.is_dir(),'unsigned app missing')
-    result=dict(resident_comparison=a.resident_comparison,phase_measurements=a.phase_measurements,llm_wrapper=wrapper_evidence,schema_version=1,scope='UNSIGNED_INTERNAL_PHYSICAL_TRIAL_BUILD',bundle_identifier=BUNDLE,app_binary_sha256=sha256(app/'EiloForegroundTrial'),asr_dynamic_sha256=sha256(dynamic),operator_configuration_sha256=sha256(assets/'operator.json'),model_files=[{k:r[k] for k in ['filename','sha256','bytes']} for r in pins],source_sha256=[dict(path=str(s.relative_to(ROOT)),sha256=sha256(s)) for s in sources],signing='NOT_RUN',installation='NOT_RUN',physical_execution='NOT_RUN',production='NOT_ENABLED')
+    result=dict(lifecycle_only=a.lifecycle_only,resident_comparison=a.resident_comparison,phase_measurements=a.phase_measurements,llm_wrapper=wrapper_evidence,schema_version=1,scope='UNSIGNED_INTERNAL_PHYSICAL_TRIAL_BUILD',bundle_identifier=BUNDLE,app_binary_sha256=sha256(app/'EiloForegroundTrial'),asr_dynamic_sha256=sha256(dynamic),operator_configuration_sha256=sha256(assets/'operator.json'),model_files=[{k:r[k] for k in ['filename','sha256','bytes']} for r in pins],source_sha256=[dict(path=str(s.relative_to(ROOT)),sha256=sha256(s)) for s in sources],signing='NOT_RUN',installation='NOT_RUN',physical_execution='NOT_RUN',production='NOT_ENABLED')
     (output/'build-results.json').write_text(json.dumps(result,indent=2)+'\n')
     print('Unsigned separate physical-trial app build PASS. Signing, installation and physical execution NOT_RUN.')
 
