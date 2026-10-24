@@ -19,12 +19,15 @@ static void check_path(MoonshineStreamingModel& model,MoonshineStreamingState* s
  const std::vector<int>& draft,int expected_draft,bool divergence,ContextBiaser* bias=nullptr){
  const auto baseline=decode(model,state,draft,nullptr,bias);
  EiloScoreTrace trace;const auto scored=decode(model,state,draft,&trace,bias);
+ if(bias && !trace.available){
+  std::printf("{\"mode\":\"biased\",\"status\":\"UNAVAILABLE\",\"usable_partial_scores\":0,\"reason\":\"%s\"}\n",trace.unavailable_reason);return;
+ }
  require(trace.available && baseline==scored && trace.tokens==scored && trace.max_oracle_error<1e-10);
  int accepted=0,redecoded=0;double sum=0,minimum=1;
  for(auto score:trace.scores){accepted+=score.path==EiloScoreTrace::DRAFT;redecoded+=score.path==EiloScoreTrace::REDECODE;sum+=score.probability;minimum=std::min(minimum,score.probability);}
  require(accepted==expected_draft && (redecoded>0)==divergence);
  if(bias)require(trace.biased_choices>0);
- std::printf("{\"mode\":\"%s\",\"tokens\":%zu,\"accepted_draft\":%d,\"redecoded\":%d,\"mean_probability\":%.9g,\"minimum\":%.9g,\"oracle_max_error\":%.9g,\"baseline_tokens_equal\":true,\"biased_choices\":%d}\n",
+ std::printf("{\"mode\":\"%s\",\"status\":\"DIAGNOSTIC_ONLY\",\"tokens\":%zu,\"accepted_draft\":%d,\"redecoded\":%d,\"mean_probability\":%.9g,\"minimum\":%.9g,\"oracle_max_error\":%.9g,\"baseline_tokens_equal\":true,\"biased_choices\":%d}\n",
  bias?"biased":(draft.empty()?"greedy":(divergence?(expected_draft?"late_divergence":"early_divergence"):"accepted_draft")),scored.size(),accepted,redecoded,sum/scored.size(),minimum,trace.max_oracle_error,trace.biased_choices);
 }
 static int accepted_prefix(MoonshineStreamingModel& model,MoonshineStreamingState* state,const std::vector<int>& draft){
@@ -95,6 +98,7 @@ int main(int argc,char** argv){
    if(mode==5)trace.fail_allocation=true;
    require(decode(model,state.get(),{},&trace).empty() && !trace.available);++unavailable;
   }
+  for(int token:{model.config.bos_id,model.config.vocab_size}){EiloScoreTrace trace;require(decode(model,state.get(),{token},&trace).empty() && !trace.available);++unavailable;}
   std::printf("{\"fault_cases_unavailable\":%d,\"usable_partial_scores\":0,\"calibrated\":false,\"policy_authorized\":false}\n",unavailable);
   return 0;
  }catch(const std::exception&){std::fprintf(stderr,"SDK score probe unavailable: %s\n",stage);return 1;}

@@ -13,10 +13,11 @@ struct EiloScoreTrace {
   bool fail_allocation=false;
   int decoder_calls=0, biased_choices=0;
   bool available=false, ended_eos=false;
+  const char* unavailable_reason="NOT_COMPLETED";
   double max_oracle_error=0;
   std::vector<int> tokens;
   std::vector<Score> scores;
-  void begin(){decoder_calls=0;biased_choices=0;available=false;ended_eos=false;max_oracle_error=0;tokens.clear();scores.clear();}
+  void begin(){unavailable_reason="NOT_COMPLETED";decoder_calls=0;biased_choices=0;available=false;ended_eos=false;max_oracle_error=0;tokens.clear();scores.clear();}
   void discard(){available=false;tokens.clear();scores.clear();}
   struct Guard {
     EiloScoreTrace* trace;

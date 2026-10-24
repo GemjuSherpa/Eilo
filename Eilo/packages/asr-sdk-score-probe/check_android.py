@@ -58,6 +58,7 @@ def main():
     args.build.mkdir(parents=True)
     from overlay import generate
     overlay_pins=generate(args.source,args.build/'overlay')
+    if overlay_pins!=json.loads((HERE/'overlay-expected.json').read_text()):raise ValueError('overlay hash mismatch')
     def build_run(command):
         with (args.build / 'build.log').open('a') as log:
             subprocess.run(command, check=True, stdout=log, stderr=subprocess.STDOUT, timeout=300)
@@ -113,6 +114,7 @@ def main():
                 raise ValueError('missing native aggregate')
             record = {'case':case['id'],'paths':[json.loads(line) for line in lines[:5]],'shape_comparison':json.loads(lines[5]),'faults':json.loads(lines[6])}
             results.append(record)
+            (args.build/'progress.json').write_text(json.dumps(results,indent=2)+'\n')
             print('Verified fixture:', case['id'], flush=True)
         rejected = []
         for name, raw in [('empty', b''), ('unaligned', b'x'), ('nan', struct.pack('<f', float('nan'))), ('out_of_range', struct.pack('<f', 2))]:
@@ -123,7 +125,7 @@ def main():
     finally:
         run('shell', 'rm', '-rf', REMOTE)
         (args.build / 'input.f32').unlink(missing_ok=True)
-    pins = {name: digest(HERE / name) for name in ['main.cpp', 'score_trace.h', 'overlay.py', 'CMakeLists.txt', 'check_android.py']}
+    pins = {name: digest(HERE / name) for name in ['main.cpp', 'score_trace.h', 'overlay.py', 'CMakeLists.txt', 'check_android.py','overlay-expected.json']}
     report = {'version': 1, 'status': 'SDK_PATH_DIAGNOSTIC_ONLY', 'platform': 'Android API35 ARM64 emulator',
               'calibrated': False, 'policy_authorized': False, 'physical': 'NOT_RUN',
               'source_commit': '234f60faa0eb388b01cdf7e60aca232af37aefda', 'source_pins': pins,'overlay_pins':overlay_pins,'upstream_inventory_sha256':digest(HERE.parent/'asr-confidence-probe/source-manifest.json'),

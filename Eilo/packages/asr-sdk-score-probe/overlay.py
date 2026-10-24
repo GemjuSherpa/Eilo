@@ -28,6 +28,7 @@ def generate(source,output):
     if(config.vocab_size<=0 || config.vocab_size>100000 || speculative_len<0 || speculative_len>128)throw std::runtime_error("unavailable");
     if(speculative_len && !speculative_tokens)throw std::runtime_error("unavailable");
     for(int i=0;i<speculative_len;++i)if(speculative_tokens[i]<0 || speculative_tokens[i]>=config.vocab_size || speculative_tokens[i]==config.bos_id || speculative_tokens[i]==config.eos_id)throw std::runtime_error("unavailable");
+    max_tokens=std::min(max_tokens,128);
     if(scores->output_cap>0)max_tokens=std::min(max_tokens,scores->output_cap);
   }
   EiloScoreTrace::Score last_score{0,EiloScoreTrace::GREEDY};
@@ -40,12 +41,12 @@ def generate(source,output):
     if(scores){last_score=scores->measure(raw,chosen,score_path);if(argmax(raw.data())!=chosen)++scores->biased_choices;}
     return chosen;''')
     body=once(body,'  auto run_decoder = [this, state]','  auto run_decoder = [this, state, scores]')
-    body=once(body,'    return run_decoder_with_cross_kv(state, tokens, logits);','''    if(scores && ++scores->decoder_calls==scores->fail_decoder_call)return 1;
+    body=once(body,'    return run_decoder_with_cross_kv(state, tokens, logits);','''    if(scores && ++scores->decoder_calls==scores->fail_decoder_call){scores->unavailable_reason="DECODER_ERROR";return 1;}
     int result=run_decoder_with_cross_kv(state, tokens, logits);
     if(scores){
       if(scores->decoder_calls==scores->empty_decoder_call)logits.clear();
       if(scores->decoder_calls==scores->nan_decoder_call && !logits.empty())logits[0]=std::numeric_limits<float>::quiet_NaN();
-      if(result || logits.size()!=tokens.size()*size_t(config.vocab_size))throw std::runtime_error("unavailable");
+      if(result || logits.size()!=tokens.size()*size_t(config.vocab_size)){scores->unavailable_reason="MISSING_LOGITS_OR_DECODER_ERROR";throw std::runtime_error("unavailable");}
     }
     return result;''')
     body=once(body,'    int current_token = start_token;','    int current_token = start_token;\n    auto current_score=last_score;')
@@ -62,8 +63,8 @@ def generate(source,output):
     body=once(body,'      continue_ar_decoding(final_pred);','      if(scores)last_score=prediction_scores[speculative_len];\n      continue_ar_decoding(final_pred);')
     body=once(body,'      int new_pred =','      score_path=EiloScoreTrace::REDECODE;\n      int new_pred =')
     body=once(body,'    if (*tokens_out == nullptr) {','    if (*tokens_out == nullptr) {\n      if(scores)*tokens_len_out=0;')
-    body=once(body,'  // Allocate and copy output','''  if(scores && (!scores->ended_eos || result_tokens.empty() || scores->tokens!=result_tokens || scores->scores.size()!=result_tokens.size()))throw std::runtime_error("unavailable");
-  if(scores && scores->fail_allocation)throw std::bad_alloc();
+    body=once(body,'  // Allocate and copy output','''  if(scores && (!scores->ended_eos || result_tokens.empty() || scores->tokens!=result_tokens || scores->scores.size()!=result_tokens.size())){scores->unavailable_reason="NO_EOS_OR_OUTPUT_CAP";throw std::runtime_error("unavailable");}
+  if(scores && scores->fail_allocation){scores->unavailable_reason="ALLOCATION_FAILURE";throw std::bad_alloc();}
   // Allocate and copy output''')
     body=once(body,'  return 0;\n}', '''  if(scores)scores->available=true;
   return 0;
