@@ -22,6 +22,8 @@ def main():
         subprocess.run(['xcrun', 'swiftc', '-swift-version', '5', '-warnings-as-errors', '-parse-as-library', '-typecheck',
             '-D', 'EILO_PHASE_MEASUREMENTS', '-D', 'EILO_RESIDENT_COMPARISON', '-I', str(trial / 'include'),
             '-target', target, '-sdk', sysroot, *map(str, sources)], check=True, timeout=120)
+        subprocess.run(['xcrun', 'swiftc', '-swift-version', '5', '-warnings-as-errors', '-parse-as-library', '-typecheck',
+            '-D', 'EILO_LIFECYCLE_TRIAL', '-target', target, '-sdk', sysroot, *map(str, sources)], check=True, timeout=120)
         print(sdk + ': all native Swift source typechecks PASS with warnings as errors.', flush=True)
 
 

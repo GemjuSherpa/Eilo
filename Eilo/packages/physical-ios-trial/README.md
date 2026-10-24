@@ -361,3 +361,27 @@ not a forensic memory/storage audit or independent acoustic stop measurement. Th
 snapshot is not a300ms interruption result. These cases do not enable or accept screen-off
 capture, sustained workload, voice barge-in or automatic microphone→model replies. Physical
 S08 gates and network observation remain NOT_RUN; release HOLD and memory disabled are unchanged.
+
+### Dedicated lifecycle UI and restart handling
+
+Use `--lifecycle-only` for the S04 lab build. It shows setup, **Lifecycle** and Stop controls;
+unrelated recognizer/model/survey controls and automatic inference launch arguments are hidden
+or ignored in that build. Normal lab builds retain their other diagnostic controls.
+
+The Lifecycle label reports its disabled reason (prepare models or replay/confirm the probe)
+and the previous case's actual OBSERVED/FAILED outcome. Going Home means returning to the Home
+Screen without swiping away the app card. Swiping the card ends the process and requires fresh
+setup. Reopening never resumes microphone or playback automatically.
+
+Before a new process writes `lifecycle-results.json`, it preserves the prior metadata-only
+report byte-for-byte under the owned `Documents/lifecycle-archive` directory, named by its content
+SHA256. Repeated preservation is idempotent. A prior IN_PROGRESS case stays incomplete; it is
+never converted into a completed return-to-app observation. New processes begin a fresh sequence.
+Reports from separate source builds/processes must retain their separate provenance.
+
+Preservation accepts only the existing bounded, closed aggregate format and public OS metadata,
+rejects unexpected content and symlink files/directories, and never overwrites a different archive.
+If preservation fails, the current primary report is left intact and lifecycle controls stay
+blocked for review. Archive regressions exercise byte equality, repeated startup, same-process
+exclusion, interrupted-case retention, extra-content rejection and symlink containment. No raw
+speech, prompt, generated reply or model asset is persisted by this helper.
