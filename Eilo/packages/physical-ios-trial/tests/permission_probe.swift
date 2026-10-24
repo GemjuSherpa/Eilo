@@ -24,6 +24,10 @@ struct Ready:ModelReadinessAdapter{func status()->ModelStatus{.ready}}
     let file=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString+".json")
     defer{try? FileManager.default.removeItem(at:file)}
     let session=UUID().uuidString
+    // A granted-first check is a missing prerequisite, not proof of a storage failure.
+    var prerequisiteRejected=false
+    do{try TrialPermissionCheck.append(restored,to:file,session:session)}catch{prerequisiteRejected=true}
+    precondition(prerequisiteRejected && !FileManager.default.fileExists(atPath:file.path))
     try TrialPermissionCheck.append(denied,to:file,session:session)
     try TrialPermissionCheck.append(restored,to:file,session:session)
     let saved=try Data(contentsOf:file)
