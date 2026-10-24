@@ -1,0 +1,497 @@
+{
+  "version": 1,
+  "status": "SDK_PATH_DIAGNOSTIC_ONLY",
+  "platform": "Android API35 ARM64 emulator",
+  "calibrated": false,
+  "policy_authorized": false,
+  "physical": "NOT_RUN",
+  "source_commit": "234f60faa0eb388b01cdf7e60aca232af37aefda",
+  "source_pins": {
+    "main.cpp": "ab31cc3367463448d0666af0e0ee44352e984ff1e5a9e54a83b808e46e05cbc4",
+    "score_trace.h": "3d289b3464fd31e5e3522c3a332cae3373f552533869a5bda6159d96c99b6cee",
+    "overlay.py": "102a4ff3288b6420bd4e7ed9ffda3841d5c2e8f242bba6c854e907e8ba8b0e55",
+    "CMakeLists.txt": "024ab005995bb9952852de586f4b3365e8368b76955196f380a05e07fb24bb8b",
+    "check_android.py": "5ca9d2fb6d9fa8f7745e8be8b3102ee2208119c3129b94d81a53616d5ec8a743",
+    "overlay-expected.json": "cdf21e144fa02f6a906e803315ebe8ded8965ba3842998788802684189f485cd"
+  },
+  "overlay_pins": {
+    "moonshine-streaming-model.h": "928b4cf34ae8b56ce3229f30a1697076e06306e4a33d0cbbd7c80c3de20da80b",
+    "moonshine-streaming-model.cpp": "4f4122c648f7f1c1ab9f467a30583bfcc230f23811c350b7c842c236031be26d"
+  },
+  "upstream_inventory_sha256": "2de8d1b98818c30b3bb073a48d53a05835a50b926b2b3bdb13f267dc9b28ee4b",
+  "binary_sha256": "e979af19aae019bbe323a16106aa93f87e0fa4c594a01fe435599392f987d3e8",
+  "ort_sha256": "86e85022fc539963177e478c8e9a8a8219bc3b0d7515bf5297a62986dbc45e7a",
+  "cxx_sha256": "e69496a4aeb51ebe61d0775ae9fefc76eee640f12317aa5174da67e5d4ec8fd6",
+  "model_provenance_sha256": "3db28e00acafb37ffaae433f3f9696fd56a0b5678b45edf50a1401f2400a37dd",
+  "fixtures_sha256": "5f310e91b7cb36d33ab09252cc44f1dd045178cb172e65827a98eebe9ca78102",
+  "rejected_inputs": [
+    "empty",
+    "unaligned",
+    "nan",
+    "out_of_range"
+  ],
+  "cases": [
+    {
+      "case": "question",
+      "paths": [
+        {
+          "mode": "greedy",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 5,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.943735709,
+          "minimum": 0.860749029,
+          "oracle_max_error": 1.40505309e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "accepted_draft",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 5,
+          "accepted_draft": 5,
+          "redecoded": 0,
+          "mean_probability": 0.952665125,
+          "minimum": 0.884061673,
+          "oracle_max_error": 2.03721254e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "early_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 5,
+          "accepted_draft": 0,
+          "redecoded": 1,
+          "mean_probability": 0.943735709,
+          "minimum": 0.860749029,
+          "oracle_max_error": 1.48247005e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "late_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 5,
+          "accepted_draft": 4,
+          "redecoded": 1,
+          "mean_probability": 0.952503142,
+          "minimum": 0.881077386,
+          "oracle_max_error": 1.29461245e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "biased",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 4,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.778047814,
+          "minimum": 0.122061906,
+          "oracle_max_error": 2.14245531e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 1
+        }
+      ],
+      "shape_comparison": {
+        "same_shape_repeat_delta": 0,
+        "prefix_repeat_delta": 0,
+        "batch_vs_step_delta": 0.0233126441,
+        "full_vs_prefix_delta": 0.0209993086,
+        "cause": "NOT_ESTABLISHED"
+      },
+      "faults": {
+        "fault_cases_unavailable": 9,
+        "usable_partial_scores": 0,
+        "calibrated": false,
+        "policy_authorized": false
+      }
+    },
+    {
+      "case": "name",
+      "paths": [
+        {
+          "mode": "greedy",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 10,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.733225856,
+          "minimum": 0.244710241,
+          "oracle_max_error": 1.03820069e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "accepted_draft",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 10,
+          "accepted_draft": 10,
+          "redecoded": 0,
+          "mean_probability": 0.734392162,
+          "minimum": 0.234078704,
+          "oracle_max_error": 1.87272459e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "early_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 10,
+          "accepted_draft": 0,
+          "redecoded": 1,
+          "mean_probability": 0.733225856,
+          "minimum": 0.244710241,
+          "oracle_max_error": 1.14882893e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "late_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 10,
+          "accepted_draft": 9,
+          "redecoded": 1,
+          "mean_probability": 0.733224168,
+          "minimum": 0.2422126,
+          "oracle_max_error": 8.76984121e-15,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "biased",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 8,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.667670205,
+          "minimum": 0.0469411277,
+          "oracle_max_error": 1.39540475e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 1
+        }
+      ],
+      "shape_comparison": {
+        "same_shape_repeat_delta": 0,
+        "prefix_repeat_delta": 0,
+        "batch_vs_step_delta": 0.041401907,
+        "full_vs_prefix_delta": 0.113591978,
+        "cause": "NOT_ESTABLISHED"
+      },
+      "faults": {
+        "fault_cases_unavailable": 9,
+        "usable_partial_scores": 0,
+        "calibrated": false,
+        "policy_authorized": false
+      }
+    },
+    {
+      "case": "numbers",
+      "paths": [
+        {
+          "mode": "greedy",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 16,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.947017548,
+          "minimum": 0.678618503,
+          "oracle_max_error": 2.22696791e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "accepted_draft",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 16,
+          "accepted_draft": 16,
+          "redecoded": 0,
+          "mean_probability": 0.945925093,
+          "minimum": 0.70523955,
+          "oracle_max_error": 2.32633023e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "early_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 16,
+          "accepted_draft": 0,
+          "redecoded": 1,
+          "mean_probability": 0.947017548,
+          "minimum": 0.678618503,
+          "oracle_max_error": 2.22696791e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "late_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 16,
+          "accepted_draft": 15,
+          "redecoded": 1,
+          "mean_probability": 0.950357933,
+          "minimum": 0.760303975,
+          "oracle_max_error": 1.80602707e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "biased",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 15,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.881294854,
+          "minimum": 0.027020731,
+          "oracle_max_error": 9.33850178e-15,
+          "baseline_tokens_equal": true,
+          "biased_choices": 1
+        }
+      ],
+      "shape_comparison": {
+        "same_shape_repeat_delta": 0,
+        "prefix_repeat_delta": 0,
+        "batch_vs_step_delta": 0.145611985,
+        "full_vs_prefix_delta": 0.114998032,
+        "cause": "NOT_ESTABLISHED"
+      },
+      "faults": {
+        "fault_cases_unavailable": 9,
+        "usable_partial_scores": 0,
+        "calibrated": false,
+        "policy_authorized": false
+      }
+    },
+    {
+      "case": "quiet",
+      "paths": [
+        {
+          "mode": "greedy",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 9,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.936650918,
+          "minimum": 0.525064743,
+          "oracle_max_error": 1.53039656e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "accepted_draft",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 9,
+          "accepted_draft": 9,
+          "redecoded": 0,
+          "mean_probability": 0.939299947,
+          "minimum": 0.541791326,
+          "oracle_max_error": 1.4324363e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "early_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 9,
+          "accepted_draft": 0,
+          "redecoded": 1,
+          "mean_probability": 0.936650918,
+          "minimum": 0.525064743,
+          "oracle_max_error": 2.09204042e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "late_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 9,
+          "accepted_draft": 8,
+          "redecoded": 1,
+          "mean_probability": 0.935012554,
+          "minimum": 0.510491506,
+          "oracle_max_error": 1.73365485e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "biased",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 10,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.814575258,
+          "minimum": 0.0245432544,
+          "oracle_max_error": 1.41457444e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 1
+        }
+      ],
+      "shape_comparison": {
+        "same_shape_repeat_delta": 0,
+        "prefix_repeat_delta": 0,
+        "batch_vs_step_delta": 0.016726583,
+        "full_vs_prefix_delta": 0.0312998201,
+        "cause": "NOT_ESTABLISHED"
+      },
+      "faults": {
+        "fault_cases_unavailable": 9,
+        "usable_partial_scores": 0,
+        "calibrated": false,
+        "policy_authorized": false
+      }
+    },
+    {
+      "case": "pause",
+      "paths": [
+        {
+          "mode": "greedy",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 8,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.96644662,
+          "minimum": 0.848664055,
+          "oracle_max_error": 2.05829085e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "accepted_draft",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 8,
+          "accepted_draft": 8,
+          "redecoded": 0,
+          "mean_probability": 0.969334828,
+          "minimum": 0.879570275,
+          "oracle_max_error": 2.94301236e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "early_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 8,
+          "accepted_draft": 0,
+          "redecoded": 1,
+          "mean_probability": 0.96644662,
+          "minimum": 0.848664055,
+          "oracle_max_error": 2.05829085e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "late_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 8,
+          "accepted_draft": 7,
+          "redecoded": 1,
+          "mean_probability": 0.967225796,
+          "minimum": 0.870912794,
+          "oracle_max_error": 1.98237509e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "biased",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 7,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.856331995,
+          "minimum": 0.0384614011,
+          "oracle_max_error": 1.30803594e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 1
+        }
+      ],
+      "shape_comparison": {
+        "same_shape_repeat_delta": 0,
+        "prefix_repeat_delta": 0,
+        "batch_vs_step_delta": 0.0309062193,
+        "full_vs_prefix_delta": 0.0104757732,
+        "cause": "NOT_ESTABLISHED"
+      },
+      "faults": {
+        "fault_cases_unavailable": 9,
+        "usable_partial_scores": 0,
+        "calibrated": false,
+        "policy_authorized": false
+      }
+    },
+    {
+      "case": "noise",
+      "paths": [
+        {
+          "mode": "greedy",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 7,
+          "accepted_draft": 0,
+          "redecoded": 0,
+          "mean_probability": 0.937046499,
+          "minimum": 0.623155242,
+          "oracle_max_error": 1.85877009e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "accepted_draft",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 7,
+          "accepted_draft": 7,
+          "redecoded": 0,
+          "mean_probability": 0.934102634,
+          "minimum": 0.604959935,
+          "oracle_max_error": 1.68231712e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "early_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 7,
+          "accepted_draft": 0,
+          "redecoded": 1,
+          "mean_probability": 0.937046499,
+          "minimum": 0.623155242,
+          "oracle_max_error": 1.85877009e-14,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "late_divergence",
+          "status": "DIAGNOSTIC_ONLY",
+          "tokens": 7,
+          "accepted_draft": 6,
+          "redecoded": 1,
+          "mean_probability": 0.934090401,
+          "minimum": 0.609857097,
+          "oracle_max_error": 7.29443471e-15,
+          "baseline_tokens_equal": true,
+          "biased_choices": 0
+        },
+        {
+          "mode": "biased",
+          "status": "UNAVAILABLE",
+          "usable_partial_scores": 0,
+          "reason": "NO_EOS_OR_OUTPUT_CAP"
+        }
+      ],
+      "shape_comparison": {
+        "same_shape_repeat_delta": 0,
+        "prefix_repeat_delta": 0,
+        "batch_vs_step_delta": 0.0181953067,
+        "full_vs_prefix_delta": 0.00489716137,
+        "cause": "NOT_ESTABLISHED"
+      },
+      "faults": {
+        "fault_cases_unavailable": 9,
+        "usable_partial_scores": 0,
+        "calibrated": false,
+        "policy_authorized": false
+      }
+    }
+  ]
+}
