@@ -32,10 +32,12 @@ final class TrialLifecycle {
   @discardableResult func observedActive() -> Bool { guard current != nil,event == nil,!began else{return false};began=true;return true }
   func stoppedBy(_ cause: String, stopped: Bool) -> Bool {
     guard let id = current, event == nil else { return false }
-    let expected = id.hasSuffix("_stop") ? "STOP_BUTTON" : "SCENE_RESIGNED"
+    // Lock callbacks may precede scene resignation. Both require a foreground return check.
+    let expected = id.hasSuffix("_stop") ? cause == "STOP_BUTTON" :
+      (cause == "SCENE_RESIGNED" || (id.hasSuffix("_lock") && cause == "PROTECTED_DATA_UNAVAILABLE"))
     event = cause; self.stopped = stopped
-    if cause != expected || !began || !stopped { finish("FAILED", resumed: false); return false }
-    waitingForReturn = cause == "SCENE_RESIGNED"
+    if !expected || !began || !stopped { finish("FAILED", resumed: false); return false }
+    waitingForReturn = !id.hasSuffix("_stop")
     verifying = !waitingForReturn
     return verifying
   }

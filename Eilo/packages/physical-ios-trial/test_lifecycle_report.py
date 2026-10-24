@@ -49,6 +49,15 @@ class LifecycleTests(unittest.TestCase):
             r=full();mutation(r)
             with self.assertRaises(ValueError):validate(r)
 
+    def test_lock_callback_order_requires_return_and_is_not_background(self):
+        r=full()
+        for index in [2,5]:r["cases"][index]["stop_event"]="PROTECTED_DATA_UNAVAILABLE"
+        self.assertEqual(validate(r)["observed_cases"],6)
+        r["cases"][2]["return_check_completed"]=False
+        with self.assertRaises(ValueError):validate(r)
+        r=full();r["cases"][1]["stop_event"]="PROTECTED_DATA_UNAVAILABLE"
+        with self.assertRaises(ValueError):validate(r)
+
     def test_actual_device_report_when_present(self):
         import json
         from pathlib import Path

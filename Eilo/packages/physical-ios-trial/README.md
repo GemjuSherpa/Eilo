@@ -385,3 +385,8 @@ If preservation fails, the current primary report is left intact and lifecycle c
 blocked for review. Archive regressions exercise byte equality, repeated startup, same-process
 exclusion, interrupted-case retention, extra-content rejection and symlink containment. No raw
 speech, prompt, generated reply or model asset is persisted by this helper.
+
+Lock trials accept either scene resignation or protected-data unavailability as the first stop
+callback, because iOS may deliver either first. Both preserve the actual event and require a
+foreground return plus the delayed no-resumption snapshot. Protected-data unavailability alone
+does not satisfy a Home or Stop-button case, and does not imply support for locked capture.
