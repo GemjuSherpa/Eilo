@@ -1,0 +1,64 @@
+{
+  "case": "noise",
+  "completed_paths": [
+    {
+      "mode": "greedy",
+      "tokens": 7,
+      "accepted_draft": 0,
+      "redecoded": 0,
+      "mean_probability": 0.937046499,
+      "minimum": 0.623155242,
+      "oracle_max_error": 1.85877009e-14,
+      "baseline_tokens_equal": true,
+      "biased_choices": 0
+    },
+    {
+      "mode": "accepted_draft",
+      "tokens": 7,
+      "accepted_draft": 7,
+      "redecoded": 0,
+      "mean_probability": 0.934102634,
+      "minimum": 0.604959935,
+      "oracle_max_error": 1.68231712e-14,
+      "baseline_tokens_equal": true,
+      "biased_choices": 0
+    },
+    {
+      "mode": "early_divergence",
+      "tokens": 7,
+      "accepted_draft": 0,
+      "redecoded": 1,
+      "mean_probability": 0.937046499,
+      "minimum": 0.623155242,
+      "oracle_max_error": 1.85877009e-14,
+      "baseline_tokens_equal": true,
+      "biased_choices": 0
+    },
+    {
+      "mode": "late_divergence",
+      "tokens": 7,
+      "accepted_draft": 6,
+      "redecoded": 1,
+      "mean_probability": 0.934090401,
+      "minimum": 0.609857097,
+      "oracle_max_error": 7.29443471e-15,
+      "baseline_tokens_equal": true,
+      "biased_choices": 0
+    }
+  ],
+  "stage": [
+    "SDK score probe unavailable: biased"
+  ],
+  "scope": "EXPERIMENT_ASSERTION_FAILURE",
+  "calibrated": false,
+  "policy_authorized": false,
+  "physical": "NOT_RUN",
+  "binary_sha256": "823014a4b27c4f73756577522633e88ef45cb86116fdac59eebd3ab6058b072f",
+  "source_pins": {
+    "main.cpp": "91bc2ba9864ea296ed6e549f5853232dbb7ec57a7ee8509d3637fd026b3e58da",
+    "score_trace.h": "b401ccd008be2e5a4b9c8150af1612b393c1abe5c1d74579c65e61678adabd08",
+    "overlay.py": "e919ade993a75b820963bb694c85dc039f3f7ca6aef3bf2e48a0a407347b8069",
+    "CMakeLists.txt": "024ab005995bb9952852de586f4b3365e8368b76955196f380a05e07fb24bb8b",
+    "check_android.py": "96566af547eeaa3d1e90c35bbde3a44a444b13c0a057e845b4cf7ba026822394"
+  }
+}
