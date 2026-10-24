@@ -322,3 +322,90 @@ Build with `--phase-measurements --resident-comparison --comparison-model Qwen3-
 The foreground worker waits up to five minutes before every sample until the OS reports nominal or fair, and does not start a sample at serious/critical thermal state. Total deadline is one hour, cooperatively cancelled on Stop/background; no background inference or keepalive is added. Idle/battery-monitoring settings are restored and completed aggregate rows are saved after each sample. Thermal limits/failures retain partial evidence rather than inventing completion. `resident_report.py REPORT` validates exact pins, the 36-sample alternating schedule, one actual vendor load/three fresh generations per group, zero warm vendor-load time, thermal policy, per-sample cooldowns, clock/memory consistency and closed content-free fields; it reports per-fixture cold/warm counts and medians. Results stay supporting evidence: independent traffic, new-output quality ratings, Android, energy/endurance and permitted background remain separate acceptance requirements.
 
 The initial schema-1 nominal-only trial stopped at `THERMAL_LIMIT` after six genuine samples because the phone stayed fair through the five-minute nominal wait. Its aggregate and original signed build are retained in `tests/resident-initial-thermal-limit-results.json` and `resident-initial-build.json`, validated by the frozen `resident_report_v1.py`. Schema 2 records the revised below-serious policy and cooldown before every sample, including warm samples while the same generic model remains owned. The original protocol requires thermal observations, not nominal-only execution. This adjustment does not promote any physical acceptance gate.
+
+## S04 bounded physical lifecycle observations
+
+Control12 provides six ordered lab cases: playback and capture, each stopped by the explicit
+Stop button, scene resignation to Home, or an operator-requested lock/unlock. Each case has at
+most three attempts; failed attempts remain in the export. This target has no background audio
+mode. The capture cases use the existing native owner and bounded erased ring only: no wake,
+recognizer, model generation or file recorder is attached. Playback uses a fixed nonpersonal
+phrase at gain0.4. An unattended case times out at35seconds and cannot pass.
+
+After fresh operator radios-off confirmation, install the separate lab build using existing
+approved caches. The pinned0.6B candidate can reduce installation staging; these cases do not
+run the LLM. Local signing success is distinct from iOS trust and successful launch. Preserve
+owned aggregates before updating. Do not remove the lab app or its data without authorization.
+
+1. Grant microphone permission using the no-capture control, prepare models, play the offline
+   probe and confirm hearing it. Keep the phone unlocked and use the built-in route.
+2. Tap control12. Wait for the label to say audio is active, then perform the requested action.
+   For Stop, tap **Stop and clear**. For Home or lock, wait five seconds before returning to the
+   app. Remain quiet during capture; no speech is needed.
+3. Wait for the two-second foreground verification before starting another case. Backgrounding
+   invalidates the earlier heard-probe state: replay/confirm the offline probe when needed.
+4. After six observations, keep the app open. Export only `Documents/lifecycle-results.json`
+   from `com.eilo.ForegroundVoiceTrial`, then validate with `lifecycle_report.py`.
+
+The observations require actual SDK/controller active state before the action; controller Stop,
+no pending capture, cleared volatile UI/request ownership, revoked epoch, SDK no-speech state
+and successful audio-session deactivation; and a later foreground snapshot still stopped. The
+Swift state probe covers early Stop, wrong events, release failure, return requirements,
+resumption, stale/duplicate observations and the retry cap. Python checks reject extra content,
+missing/reordered cases, false gate promotion and unsupported lock/network claims.
+
+`SCENE_RESIGNED` does not identify its cause as a hardware lock. The case ID records the action
+requested of the operator, not independent OS lock proof. The aggregate contains no audio,
+transcript, token/handle, serial, path or external endpoint. It is controller/SDK-boundary evidence,
+not a forensic memory/storage audit or independent acoustic stop measurement. The two-second
+snapshot is not a300ms interruption result. These cases do not enable or accept screen-off
+capture, sustained workload, voice barge-in or automatic microphone→model replies. Physical
+S08 gates and network observation remain NOT_RUN; release HOLD and memory disabled are unchanged.
+
+### Dedicated lifecycle UI and restart handling
+
+Use `--lifecycle-only` for the S04 lab build. It shows setup, **Lifecycle** and Stop controls;
+unrelated recognizer/model/survey controls and automatic inference launch arguments are hidden
+or ignored in that build. Normal lab builds retain their other diagnostic controls.
+
+The Lifecycle label reports its disabled reason (prepare models or replay/confirm the probe)
+and the previous case's actual OBSERVED/FAILED outcome. Going Home means returning to the Home
+Screen without swiping away the app card. Swiping the card ends the process and requires fresh
+setup. Reopening never resumes microphone or playback automatically.
+
+Before a new process writes `lifecycle-results.json`, it preserves the prior metadata-only
+report byte-for-byte under the owned `Documents/lifecycle-archive` directory, named by its content
+SHA256. Repeated preservation is idempotent. A prior IN_PROGRESS case stays incomplete; it is
+never converted into a completed return-to-app observation. New processes begin a fresh sequence.
+Reports from separate source builds/processes must retain their separate provenance.
+
+Preservation accepts only the existing bounded, closed aggregate format and public OS metadata,
+rejects unexpected content and symlink files/directories, and never overwrites a different archive.
+If preservation fails, the current primary report is left intact and lifecycle controls stay
+blocked for review. Archive regressions exercise byte equality, repeated startup, same-process
+exclusion, interrupted-case retention, extra-content rejection and symlink containment. No raw
+speech, prompt, generated reply or model asset is persisted by this helper.
+
+Lock trials accept either scene resignation or protected-data unavailability as the first stop
+callback, because iOS may deliver either first. Both preserve the actual event and require a
+foreground return plus the delayed no-resumption snapshot. Protected-data unavailability alone
+does not satisfy a Home or Stop-button case, and does not imply support for locked capture.
+
+### OS permission boundary follow-up
+
+The permission check uses the real iOS permission adapter and native controller with a lab
+effects adapter that cannot open hardware. Prepare models, disable only Eilo's microphone
+permission in Settings, reopen/prepare if iOS restarted it, then tap Permission boundary check.
+It attempts Start while denied and requires permission_required with zero capture-effect calls
+and no pending capture after two foreground seconds. Export before restoring permission.
+
+Restore Eilo's microphone permission in Settings, return/prepare if needed, and tap the same
+check. This branch never dispatches Start. An earlier observed denial is required in the
+bounded append-only permission-check-results.json ledger. Each row retains its process session
+and whether the prior denial used the same in-memory controller. No live hardware capture,
+permission prompt, ASR, model generation or speaker is attached to the probe. A cross-process
+row is a fresh-launch no-start observation, not survival of the previous controller.
+
+This does not establish permission revocation during active hardware capture: entering Settings
+already resigns the scene and stops capture. Failures remain in the ledger (maximum eight rows),
+unknown content blocks writes, and no physical release gate is promoted.
