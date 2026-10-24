@@ -20,13 +20,13 @@ import Foundation
     precondition(state.rows.count == 3 && state.next == "playback_background")
     for id in TrialLifecycle.cases.dropFirst() {
       precondition(state.begin() == id);state.observedActive()
-      let event=id.hasSuffix("_stop") ? "STOP_BUTTON" : "SCENE_RESIGNED"
+      let event=id.hasSuffix("_stop") ? "STOP_BUTTON" : (id.hasSuffix("_lock") ? "PROTECTED_DATA_UNAVAILABLE" : "SCENE_RESIGNED")
       let verify=state.stoppedBy(event,stopped:true)
-      if event == "SCENE_RESIGNED" {
+      if !id.hasSuffix("_stop") {
         precondition(!verify && state.waitingForReturn)
         state.verified(stillStopped:true)
         precondition(state.current == id)
-        precondition(!state.stoppedBy("PROTECTED_DATA_UNAVAILABLE",stopped:true))
+        precondition(!state.stoppedBy("SCENE_RESIGNED",stopped:true))
         precondition(state.returned() && !state.returned())
       } else { precondition(verify) }
       state.verified(stillStopped:true)
@@ -38,6 +38,10 @@ import Foundation
     let wrong=TrialLifecycle();_ = wrong.begin();wrong.observedActive()
     precondition(!wrong.stoppedBy("SCENE_RESIGNED",stopped:true))
     precondition(wrong.rows[0]["outcome"] as? String == "FAILED")
+    let background=TrialLifecycle();_ = background.begin();background.observedActive();_ = background.stoppedBy("STOP_BUTTON",stopped:true);background.verified(stillStopped:true)
+    _ = background.begin();background.observedActive()
+    precondition(!background.stoppedBy("PROTECTED_DATA_UNAVAILABLE",stopped:true))
+    precondition(background.rows.last?["outcome"] as? String == "FAILED")
     let release=TrialLifecycle();_ = release.begin();release.observedActive()
     precondition(!release.stoppedBy("STOP_BUTTON",stopped:false))
     precondition(release.rows[0]["outcome"] as? String == "FAILED")

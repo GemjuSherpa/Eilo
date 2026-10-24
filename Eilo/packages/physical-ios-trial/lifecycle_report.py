@@ -39,7 +39,9 @@ def validate(r):
         require(row['stop_event'] in ['NONE','STOP_BUTTON','SCENE_RESIGNED','PROTECTED_DATA_UNAVAILABLE','AUDIO_INTERRUPTION_OR_ROUTE'])
         if row['outcome']=='OBSERVED':
             require(row['active_observed'] and row['stopped_after_event'] and row['return_check_completed'] and not row['resumption_observed'])
-            require(row['stop_event']==('STOP_BUTTON' if key.endswith('_stop') else 'SCENE_RESIGNED'))
+            events=['STOP_BUTTON'] if key.endswith('_stop') else ['SCENE_RESIGNED']
+            if key.endswith('_lock'): events.append('PROTECTED_DATA_UNAVAILABLE')
+            require(row['stop_event'] in events)
             observed.add(key);index+=1
     complete=len(observed)==6
     require(r['phase'] in ['PARTIAL','IN_PROGRESS','COMPLETED'])
