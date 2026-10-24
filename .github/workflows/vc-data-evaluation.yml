@@ -98,6 +98,8 @@ jobs:
           python3 ../physical-ios-trial/model_diagnostic_report.py --pair ../physical-ios-trial/tests/cpu-model-device-results.json
           python3 -O ../physical-ios-trial/model_diagnostic_report.py --pair ../physical-ios-trial/tests/cpu-model-device-results.json
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_report.py -v
+          python3 -m unittest discover -s ../physical-ios-trial -p test_lifecycle_report.py -v
+          python3 -O -m unittest discover -s ../physical-ios-trial -p test_lifecycle_report.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_voice_survey.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_voice_survey.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_file_asr_report.py -v

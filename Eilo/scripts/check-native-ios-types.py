@@ -11,7 +11,7 @@ def main():
     if not sources:
         raise ValueError('native Swift sources missing')
     trial = ROOT / 'packages/physical-ios-trial'
-    sources.extend([trial / 'TrialApp.swift', trial / 'TrialEpoch.swift', trial / 'TrialVoiceSurvey.swift', trial / 'TrialAsrScore.swift', trial / 'TrialFileAsr.swift', trial / 'TrialModelDiagnostic.swift', trial / 'TrialModelQualitySession.swift', trial / 'TrialModelQualityText.swift', trial / 'TrialModelQuality.swift', trial / 'TrialPhaseDiagnostic.swift', trial / 'TrialResidentSchedule.swift', trial / 'TrialResidentDiagnostic.swift'])
+    sources.extend([trial / 'TrialApp.swift', trial / 'TrialLifecycle.swift', trial / 'TrialEpoch.swift', trial / 'TrialVoiceSurvey.swift', trial / 'TrialAsrScore.swift', trial / 'TrialFileAsr.swift', trial / 'TrialModelDiagnostic.swift', trial / 'TrialModelQualitySession.swift', trial / 'TrialModelQualityText.swift', trial / 'TrialModelQuality.swift', trial / 'TrialPhaseDiagnostic.swift', trial / 'TrialResidentSchedule.swift', trial / 'TrialResidentDiagnostic.swift'])
     for sdk, target in [('iphonesimulator', 'arm64-apple-ios18.0-simulator'), ('iphoneos', 'arm64-apple-ios18.0')]:
         sysroot = subprocess.check_output(['xcrun', '--sdk', sdk, '--show-sdk-path'], text=True, timeout=30).strip()
         subprocess.run(['xcrun', 'swiftc', '-swift-version', '5', '-warnings-as-errors', '-parse-as-library', '-typecheck',

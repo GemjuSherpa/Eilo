@@ -322,3 +322,42 @@ Build with `--phase-measurements --resident-comparison --comparison-model Qwen3-
 The foreground worker waits up to five minutes before every sample until the OS reports nominal or fair, and does not start a sample at serious/critical thermal state. Total deadline is one hour, cooperatively cancelled on Stop/background; no background inference or keepalive is added. Idle/battery-monitoring settings are restored and completed aggregate rows are saved after each sample. Thermal limits/failures retain partial evidence rather than inventing completion. `resident_report.py REPORT` validates exact pins, the 36-sample alternating schedule, one actual vendor load/three fresh generations per group, zero warm vendor-load time, thermal policy, per-sample cooldowns, clock/memory consistency and closed content-free fields; it reports per-fixture cold/warm counts and medians. Results stay supporting evidence: independent traffic, new-output quality ratings, Android, energy/endurance and permitted background remain separate acceptance requirements.
 
 The initial schema-1 nominal-only trial stopped at `THERMAL_LIMIT` after six genuine samples because the phone stayed fair through the five-minute nominal wait. Its aggregate and original signed build are retained in `tests/resident-initial-thermal-limit-results.json` and `resident-initial-build.json`, validated by the frozen `resident_report_v1.py`. Schema 2 records the revised below-serious policy and cooldown before every sample, including warm samples while the same generic model remains owned. The original protocol requires thermal observations, not nominal-only execution. This adjustment does not promote any physical acceptance gate.
+
+## S04 bounded physical lifecycle observations
+
+Control12 provides six ordered lab cases: playback and capture, each stopped by the explicit
+Stop button, scene resignation to Home, or an operator-requested lock/unlock. Each case has at
+most three attempts; failed attempts remain in the export. This target has no background audio
+mode. The capture cases use the existing native owner and bounded erased ring only: no wake,
+recognizer, model generation or file recorder is attached. Playback uses a fixed nonpersonal
+phrase at gain0.4. An unattended case times out at35seconds and cannot pass.
+
+After fresh operator radios-off confirmation, install the separate lab build using existing
+approved caches. The pinned0.6B candidate can reduce installation staging; these cases do not
+run the LLM. Local signing success is distinct from iOS trust and successful launch. Preserve
+owned aggregates before updating. Do not remove the lab app or its data without authorization.
+
+1. Grant microphone permission using the no-capture control, prepare models, play the offline
+   probe and confirm hearing it. Keep the phone unlocked and use the built-in route.
+2. Tap control12. Wait for the label to say audio is active, then perform the requested action.
+   For Stop, tap **Stop and clear**. For Home or lock, wait five seconds before returning to the
+   app. Remain quiet during capture; no speech is needed.
+3. Wait for the two-second foreground verification before starting another case. Backgrounding
+   invalidates the earlier heard-probe state: replay/confirm the offline probe when needed.
+4. After six observations, keep the app open. Export only `Documents/lifecycle-results.json`
+   from `com.eilo.ForegroundVoiceTrial`, then validate with `lifecycle_report.py`.
+
+The observations require actual SDK/controller active state before the action; controller Stop,
+no pending capture, cleared volatile UI/request ownership, revoked epoch, SDK no-speech state
+and successful audio-session deactivation; and a later foreground snapshot still stopped. The
+Swift state probe covers early Stop, wrong events, release failure, return requirements,
+resumption, stale/duplicate observations and the retry cap. Python checks reject extra content,
+missing/reordered cases, false gate promotion and unsupported lock/network claims.
+
+`SCENE_RESIGNED` does not identify its cause as a hardware lock. The case ID records the action
+requested of the operator, not independent OS lock proof. The aggregate contains no audio,
+transcript, token/handle, serial, path or external endpoint. It is controller/SDK-boundary evidence,
+not a forensic memory/storage audit or independent acoustic stop measurement. The two-second
+snapshot is not a300ms interruption result. These cases do not enable or accept screen-off
+capture, sustained workload, voice barge-in or automatic microphone→model replies. Physical
+S08 gates and network observation remain NOT_RUN; release HOLD and memory disabled are unchanged.
