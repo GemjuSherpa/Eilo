@@ -100,6 +100,8 @@ jobs:
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_report.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_lifecycle_report.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_lifecycle_report.py -v
+          python3 -m unittest discover -s ../physical-ios-trial -p test_permission_report.py -v
+          python3 -O -m unittest discover -s ../physical-ios-trial -p test_permission_report.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_voice_survey.py -v
           python3 -O -m unittest discover -s ../physical-ios-trial -p test_voice_survey.py -v
           python3 -m unittest discover -s ../physical-ios-trial -p test_file_asr_report.py -v
