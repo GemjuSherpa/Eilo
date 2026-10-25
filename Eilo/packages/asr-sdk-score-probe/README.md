@@ -8,12 +8,12 @@ No microphone, speaker, phone, network observation, download or package installa
 
 ## Native observations
 
-All six fixtures exercised greedy, accepted-draft, early-divergence and late-divergence paths.
+All six fixtures exercised greedy, accepted-draft, accepted-prefix continuation, early-divergence and late-divergence paths.
 An independent long-double softmax checks each selected token against its exact captured
 pre-bias full-vocabulary row. ContextBiaser still chooses after applying its bonuses. Five
 biased paths completed; one biased decode did not reach EOS within its bound and remains
-UNAVAILABLE with zero usable partial scores. There are 29 complete diagnostic paths and one
-unavailable path, not thirty successful scores. Maximum row-oracle difference: 2.94301236e-14.
+UNAVAILABLE with zero usable partial scores. There are 35 complete diagnostic paths and one
+unavailable path, not thirty-six successful scores. Maximum row-oracle difference: 2.94301236e-14.
 
 Fifty-four native fault cases (nine per fixture) produce no usable score: empty memory,
 first/continuation decoder errors, missing output, nonfinite logits, output cap, allocation
@@ -66,3 +66,8 @@ MIT notices; see ../asr-confidence-probe/SOURCE_REVIEW.md (context biasing is us
 Held-out reference-labelled corpus calibration, source/caller integration and production safety
 review remain open. The ordinary app still treats missing/unverified confidence as unknown.
 All physical tests remain open as requested. S08/release HOLD and disabled memory are unchanged.
+
+Accepted-prefix cases require a new non-EOS token after a fully verified shorter draft.
+The verification_row_scores count includes that first continuation token, whose score comes
+from the final verification row, plus accepted draft tokens. Later continuation rows are greedy.
+The report validator rejects a missing first-continuation score.

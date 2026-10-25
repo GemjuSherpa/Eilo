@@ -16,7 +16,7 @@ static std::vector<int> decode(MoonshineStreamingModel& model,MoonshineStreaming
  require(err==0 && out && length>0 && length<128);return {out,out+length};
 }
 static void check_path(MoonshineStreamingModel& model,MoonshineStreamingState* state,
- const std::vector<int>& draft,int expected_draft,bool divergence,ContextBiaser* bias=nullptr){
+ const std::vector<int>& draft,int expected_draft,bool divergence,ContextBiaser* bias=nullptr,const char* mode_override=nullptr){
  const auto baseline=decode(model,state,draft,nullptr,bias);
  EiloScoreTrace trace;const auto scored=decode(model,state,draft,&trace,bias);
  if(bias && !trace.available){
@@ -27,8 +27,8 @@ static void check_path(MoonshineStreamingModel& model,MoonshineStreamingState* s
  for(auto score:trace.scores){accepted+=score.path==EiloScoreTrace::DRAFT;redecoded+=score.path==EiloScoreTrace::REDECODE;sum+=score.probability;minimum=std::min(minimum,score.probability);}
  require(accepted==expected_draft && (redecoded>0)==divergence);
  if(bias)require(trace.biased_choices>0);
- std::printf("{\"mode\":\"%s\",\"status\":\"DIAGNOSTIC_ONLY\",\"tokens\":%zu,\"accepted_draft\":%d,\"redecoded\":%d,\"mean_probability\":%.9g,\"minimum\":%.9g,\"oracle_max_error\":%.9g,\"baseline_tokens_equal\":true,\"biased_choices\":%d}\n",
- bias?"biased":(draft.empty()?"greedy":(divergence?(expected_draft?"late_divergence":"early_divergence"):"accepted_draft")),scored.size(),accepted,redecoded,sum/scored.size(),minimum,trace.max_oracle_error,trace.biased_choices);
+ std::printf("{\"mode\":\"%s\",\"status\":\"DIAGNOSTIC_ONLY\",\"tokens\":%zu,\"verification_row_scores\":%d,\"redecoded\":%d,\"mean_probability\":%.9g,\"minimum\":%.9g,\"oracle_max_error\":%.9g,\"baseline_tokens_equal\":true,\"biased_choices\":%d}\n",
+ mode_override?mode_override:(bias?"biased":(draft.empty()?"greedy":(divergence?(expected_draft?"late_divergence":"early_divergence"):"accepted_draft"))),scored.size(),accepted,redecoded,sum/scored.size(),minimum,trace.max_oracle_error,trace.biased_choices);
 }
 static int accepted_prefix(MoonshineStreamingModel& model,MoonshineStreamingState* state,const std::vector<int>& draft){
  model.decoder_reset(state);std::vector<int> input{model.config.bos_id};input.insert(input.end(),draft.begin(),draft.end());
@@ -69,6 +69,12 @@ int main(int argc,char** argv){
   auto greedy=decode(model,state.get(),{});require(greedy.size()>1);
   stage="greedy";check_path(model,state.get(),{},0,false);
   stage="accepted_draft";check_path(model,state.get(),greedy,int(greedy.size()),false);
+  stage="accepted_prefix";std::vector<int> short_draft;bool prefix_found=false;
+  for(size_t n=1;n<greedy.size();++n){
+    short_draft.assign(greedy.begin(),greedy.begin()+n);
+    if(accepted_prefix(model,state.get(),short_draft)==int(n) && decode(model,state.get(),short_draft).size()>n){prefix_found=true;break;}
+  }
+  require(prefix_found);check_path(model,state.get(),short_draft,int(short_draft.size()+1),false,nullptr,"accepted_prefix");
   auto corrupted=greedy;
   auto corrupt=[&](int token){int t=(token+1)%model.config.vocab_size;while(t==model.config.bos_id || t==model.config.eos_id)t=(t+1)%model.config.vocab_size;return t;};
   corrupted[0]=corrupt(corrupted[0]);stage="early_divergence";check_path(model,state.get(),corrupted,0,true);

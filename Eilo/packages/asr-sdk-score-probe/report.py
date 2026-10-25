@@ -32,7 +32,7 @@ def validate(r):
     need(r['rejected_inputs']==['empty','unaligned','nan','out_of_range'])
     need(type(r['cases']) is list and [c['case'] for c in r['cases']]==[c['id'] for c in json.loads(fixtures.read_text())['cases']])
     usable=unavailable=faults=biased=0;step_delta=prefix_delta=oracle=0
-    modes=['greedy','accepted_draft','early_divergence','late_divergence','biased']
+    modes=['greedy','accepted_draft','accepted_prefix','early_divergence','late_divergence','biased']
     for case in r['cases']:
         need(set(case)=={'case','paths','shape_comparison','faults'})
         need(type(case['paths']) is list and [p['mode'] for p in case['paths']]==modes)
@@ -41,18 +41,19 @@ def validate(r):
                 need(set(path)=={'mode','status','usable_partial_scores','reason'} and path['mode']=='biased')
                 need(type(path['usable_partial_scores']) is int and path['usable_partial_scores']==0 and path['reason']=='NO_EOS_OR_OUTPUT_CAP')
                 unavailable+=1;continue
-            need(set(path)=={'mode','status','tokens','accepted_draft','redecoded','mean_probability','minimum','oracle_max_error','baseline_tokens_equal','biased_choices'})
+            need(set(path)=={'mode','status','tokens','verification_row_scores','redecoded','mean_probability','minimum','oracle_max_error','baseline_tokens_equal','biased_choices'})
             need(path['status']=='DIAGNOSTIC_ONLY' and path['baseline_tokens_equal'] is True)
-            for key in ['tokens','accepted_draft','redecoded','biased_choices']:need(type(path[key]) is int and 0<=path[key]<128)
-            need(path['tokens']>0 and path['accepted_draft']<=path['tokens'])
+            for key in ['tokens','verification_row_scores','redecoded','biased_choices']:need(type(path[key]) is int and 0<=path[key]<128)
+            need(path['tokens']>0 and path['verification_row_scores']<=path['tokens'])
             for key in ['mean_probability','minimum']:number(path[key]);need(path[key]>0)
             need(path['minimum']<=path['mean_probability']+1e-8)
             number(path['oracle_max_error'],0,1e-10);oracle=max(oracle,path['oracle_max_error'])
             mode=path['mode']
-            if mode=='accepted_draft':need(path['accepted_draft']==path['tokens'] and path['redecoded']==0)
-            elif mode=='late_divergence':need(0<path['accepted_draft']<path['tokens'] and path['redecoded']==1)
-            elif mode=='early_divergence':need(path['accepted_draft']==0 and path['redecoded']==1)
-            else:need(path['accepted_draft']==0 and path['redecoded']==0)
+            if mode=='accepted_draft':need(path['verification_row_scores']==path['tokens'] and path['redecoded']==0)
+            elif mode=='accepted_prefix':need(1<path['verification_row_scores']<=path['tokens'] and path['redecoded']==0)
+            elif mode=='late_divergence':need(0<path['verification_row_scores']<path['tokens'] and path['redecoded']==1)
+            elif mode=='early_divergence':need(path['verification_row_scores']==0 and path['redecoded']==1)
+            else:need(path['verification_row_scores']==0 and path['redecoded']==0)
             if mode=='biased':need(path['biased_choices']>0);biased+=1
             else:need(path['biased_choices']==0)
             usable+=1
