@@ -73,10 +73,13 @@ class CollectTests(unittest.TestCase):
             path=Path(tmp)/'app.apk'
             with zipfile.ZipFile(path,'w') as z:z.writestr('lib/arm64-v8a/libexample.so',b'\x7fELFsynthetic')
             for badge in ["package: name='com.other' versionCode='1'\n", "package: name='com.eilo' versionCode='1'\napplication-debuggable\n"]:
-                with patch('collect.command',side_effect=['',badge]),self.assertRaises(ValueError):apk_inventory(path,Path('readelf'),Path('aapt'))
+                with patch('collect.command',side_effect=['',badge+"uses-permission: name='android.permission.INTERNET'\n"]),self.assertRaises(ValueError):apk_inventory(path,Path('readelf'),Path('aapt'))
             app=Path(tmp)/'Eilo.app';app.mkdir()
-            (app/'Info.plist').write_bytes(plistlib.dumps(dict(CFBundleIdentifier='org.reactjs.native.example.Eilo',DTPlatformName='iphoneos',CFBundleSupportedPlatforms=['iPhoneOS'])))
-            with self.assertRaises(ValueError):ios_inventory(app,Path('none'))
+            (app/'Eilo').write_bytes(b'\xcf\xfa\xed\xfe'+b'synthetic')
+            (app/'PrivacyInfo.xcprivacy').write_bytes(plistlib.dumps({}))
+            for bundle,platform,supported in [('org.reactjs.native.example.Eilo','iphoneos','iPhoneOS'),('org.example.lab','iphonesimulator','iPhoneSimulator')]:
+                (app/'Info.plist').write_bytes(plistlib.dumps(dict(CFBundleIdentifier=bundle,DTPlatformName=platform,CFBundleSupportedPlatforms=[supported])))
+                with patch('collect.command',return_value=''),self.assertRaises(ValueError):ios_inventory(app,Path('none'))
 
     def test_apk_links_and_duplicate_paths_rejected_before_execution(self):
         with tempfile.TemporaryDirectory() as tmp:
