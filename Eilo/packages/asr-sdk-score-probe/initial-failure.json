@@ -1,0 +1,53 @@
+{
+  "case": "name",
+  "completed_paths": [
+    {
+      "mode": "greedy",
+      "tokens": 10,
+      "accepted_draft": 0,
+      "redecoded": 0,
+      "mean_probability": 0.733225856,
+      "minimum": 0.244710241,
+      "oracle_max_error": 1.03820069e-14,
+      "baseline_tokens_equal": true,
+      "biased_choices": 0
+    },
+    {
+      "mode": "accepted_draft",
+      "tokens": 10,
+      "accepted_draft": 10,
+      "redecoded": 0,
+      "mean_probability": 0.734392162,
+      "minimum": 0.234078704,
+      "oracle_max_error": 1.87272459e-14,
+      "baseline_tokens_equal": true,
+      "biased_choices": 0
+    },
+    {
+      "mode": "early_divergence",
+      "tokens": 10,
+      "accepted_draft": 0,
+      "redecoded": 1,
+      "mean_probability": 0.733225856,
+      "minimum": 0.244710241,
+      "oracle_max_error": 1.14882893e-14,
+      "baseline_tokens_equal": true,
+      "biased_choices": 0
+    }
+  ],
+  "stage": [
+    "SDK score probe unavailable: late_divergence"
+  ],
+  "scope": "EXPERIMENT_ASSERTION_FAILURE",
+  "calibrated": false,
+  "policy_authorized": false,
+  "physical": "NOT_RUN",
+  "binary_sha256": "9cfddac356a470c9175c1dac4a9bbe078b45dfca3c8bc0e0ad7042104976fa3a",
+  "source_pins": {
+    "main.cpp": "91f3c14e8f5b0672e40a5395f97742f2c6e33ca2c26c09d0054a469c1ac5d97c",
+    "score_trace.h": "b401ccd008be2e5a4b9c8150af1612b393c1abe5c1d74579c65e61678adabd08",
+    "overlay.py": "e919ade993a75b820963bb694c85dc039f3f7ca6aef3bf2e48a0a407347b8069",
+    "CMakeLists.txt": "024ab005995bb9952852de586f4b3365e8368b76955196f380a05e07fb24bb8b",
+    "check_android.py": "692faa8e69b36dc110b72c73d5a5b9c8c8128c1013ff04ac3aa08c997e17f173"
+  }
+}
