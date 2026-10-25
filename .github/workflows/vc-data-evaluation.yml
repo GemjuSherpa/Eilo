@@ -1,10 +1,10 @@
 name: VC-DATA synthetic evaluation
 on:
   pull_request:
-    paths: ['Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
   push:
     branches: ['sprint/**', 'task/vc-data-**', 'task/vc-turn-04-**']
-    paths: ['Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
 permissions:
   contents: read
 concurrency:
@@ -52,6 +52,12 @@ jobs:
           python3 -O ../asr-corpus-score/report.py --output "$RUNNER_TEMP/asr-corpus-score"
           python3 ../asr-corpus-score/noise_report.py --output "$RUNNER_TEMP/asr-noise-score"
           python3 -O ../asr-corpus-score/noise_report.py --output "$RUNNER_TEMP/asr-noise-score-optimized"
+      - name: Fresh curator dev/test diagnostics (no corpus download)
+        run: |
+          python3 -m unittest discover -s ../asr-fresh-split -p 'test_*.py' -v
+          python3 -O -m unittest discover -s ../asr-fresh-split -p 'test_*.py' -v
+          python3 ../asr-fresh-split/fresh_report.py --output "$RUNNER_TEMP/asr-fresh-split"
+          python3 -O ../asr-fresh-split/fresh_report.py
       - name: Native VAD sanitizer contracts (no models or capture)
         run: |
           python3 -m compileall -q ../vad-runtime
@@ -167,3 +173,12 @@ jobs:
           path: |
             ${{ runner.temp }}/asr-noise-score/summary.json
             ${{ runner.temp }}/asr-noise-score/summary.html
+      - name: Upload aggregate-only fresh split diagnostics
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: asr-fresh-split-aggregates
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/asr-fresh-split/summary.json
+            ${{ runner.temp }}/asr-fresh-split/summary.html
