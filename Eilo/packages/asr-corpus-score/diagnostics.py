@@ -8,7 +8,7 @@ from benchmark import score_case
 from confidence import auc
 
 SOURCES=('GREEDY_PREBIAS_MEAN_V1','SELF_DRAFT_PREBIAS_MEAN_V1')
-REASONS={'INCOMPLETE_DECODE','GREEDY_UNAVAILABLE','COLLECTOR_ERROR'}
+REASONS={'INCOMPLETE_DECODE','NO_EOS_OR_OUTPUT_CAP','EOS_WITHOUT_USABLE_SCORES','GREEDY_UNAVAILABLE','COLLECTOR_ERROR'}
 
 
 def need(value):
@@ -35,7 +35,9 @@ def validate_response(value):
         number(path['oracle_error'],0,1e-10)
         origins=path['origins'];need(type(origins) is dict and set(origins)=={'greedy','verification','redecode'})
         need(all(type(n) is int and 0<=n<=128 for n in origins.values()) and sum(origins.values())==path['tokens'])
+        need(origins['redecode']<=1)
         if path['source']==SOURCES[0]:need(origins['greedy']==path['tokens'])
+        else:need(origins['verification']>0 or origins['redecode']==1)
     return value['paths']
 
 

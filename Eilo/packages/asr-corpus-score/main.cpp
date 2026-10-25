@@ -16,7 +16,7 @@ static json collect(MoonshineStreamingModel& model,MoonshineStreamingState* stat
  model.decoder_reset(state);EiloScoreTrace trace;int* out=nullptr;int length=0;
  int result=model.decode_full(state,draft.empty()?nullptr:draft.data(),int(draft.size()),&out,&length,nullptr,&trace);
  std::unique_ptr<int,decltype(&std::free)> held(out,&std::free);
- if(result || !trace.available){need(out==nullptr && length==0 && trace.tokens.empty() && trace.scores.empty());return unavailable(source,"INCOMPLETE_DECODE");}
+ if(result || !trace.available){need(out==nullptr && length==0 && trace.tokens.empty() && trace.scores.empty());return unavailable(source,trace.ended_eos?"EOS_WITHOUT_USABLE_SCORES":(std::string(trace.unavailable_reason)=="NO_EOS_OR_OUTPUT_CAP"?"NO_EOS_OR_OUTPUT_CAP":"INCOMPLETE_DECODE"));}
  need(out && length>0 && length<=128 && trace.tokens==std::vector<int>(out,out+length) && trace.scores.size()==size_t(length));
  need(trace.ended_eos && trace.max_oracle_error<=1e-10);
  double sum=0,logs=0,minimum=1;int greedy=0,verified=0,redecoded=0;
