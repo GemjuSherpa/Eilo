@@ -7,7 +7,7 @@
   "physical": "NOT_RUN",
   "memory": "DISABLED",
   "source_pins": {
-    "collect.py": "83f4cccd452279aa80843f6316bfa5337d3500af492e7430325f72055a5047dc"
+    "collect.py": "71febbf69f8abac4d4f9e552e1b1ac735d50bbeaf595d9d92c9d677ad286db9b"
   },
   "repository_pins": {
     "package-lock.json": "98d67e05815fe6868c12b1430ad9c241161c36ff3fa9d69f1e2382adc4e768fe",

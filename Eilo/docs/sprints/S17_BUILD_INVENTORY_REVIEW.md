@@ -24,7 +24,8 @@ redistribution compliance; no legal approval or complete SBOM is inferred. The r
 these gaps, rather than equating metadata presence with acceptance or missing declarations with
 an absence of licensing elsewhere.
 
-The collector validates bounded ZIP paths/duplicates/links, rejects directory symlinks and XML
+The collector requires normal-app IDs, non-debuggable APK metadata and the simulator platform,
+rejecting lab/other/debug/device products. It validates bounded ZIP paths/duplicates/links, rejects directory symlinks and XML
 DTD/entities, requires actual cache-byte matches and retains unknown privacy declarations as null.
 Exports contain relative public artifact paths, hashes and dependency/declaration metadata only,
 without raw binaries, notices, logs, personal paths, provisioning identities or audio. Strict

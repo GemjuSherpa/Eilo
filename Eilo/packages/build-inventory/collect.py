@@ -148,6 +148,7 @@ def apk_inventory(path,readelf,aapt):
             libraries.append(dict(path=item.filename,bytes=len(data),sha256=hashlib.sha256(data).hexdigest(),needed=needed))
         need(archive.testzip() is None)
     badging=command(aapt,'dump','badging',path)
+    need(re.search(r"^package: name='com\.eilo' ",badging,re.M) is not None and 'application-debuggable' not in badging)
     permissions=sorted(set(re.findall(r"uses-permission(?:-sdk-\d+)?: name='([^']+)'",badging)))
     for name in permissions:need(re.fullmatch(r'[A-Za-z0-9_.]+',name))
     need(libraries and permissions)
@@ -157,6 +158,8 @@ def apk_inventory(path,readelf,aapt):
 
 def ios_inventory(root,otool):
     need(root.is_dir() and root.name.endswith('.app'))
+    info=plistlib.loads((root/'Info.plist').read_bytes())
+    need(info.get('CFBundleIdentifier')=='org.reactjs.native.example.Eilo' and info.get('DTPlatformName')=='iphonesimulator' and info.get('CFBundleSupportedPlatforms')==['iPhoneSimulator'])
     entries=list(root.rglob('*'));need(all(not p.is_symlink() for p in entries))
     files=sorted(p for p in entries if p.is_file())
     need(0<len(files)<=50000 and sum(p.stat().st_size for p in files)<=2*1024**3)
