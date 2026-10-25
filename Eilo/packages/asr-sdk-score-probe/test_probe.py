@@ -30,9 +30,15 @@ class SDKScoreTests(unittest.TestCase):
             r=copy.deepcopy(self.data);change(r)
             with self.assertRaises(ValueError):report.validate(r)
     def test_alignment_and_rejected_draft_claims_checked(self):
-        for key,value in [('baseline_tokens_equal',False),('accepted_draft',1),('redecoded',0),('tokens',True),('token_ids',[])]:
-            r=copy.deepcopy(self.data);r['cases'][0]['paths'][2][key]=value
+        for key,value in [('baseline_tokens_equal',False),('verification_row_scores',1),('redecoded',0),('tokens',True),('token_ids',[])]:
+            r=copy.deepcopy(self.data);r['cases'][0]['paths'][3][key]=value
             with self.subTest(key=key),self.assertRaises(ValueError):report.validate(r)
+    def test_accepted_prefix_requires_start_token_verification_score(self):
+        r=copy.deepcopy(self.data);path=r['cases'][0]['paths'][2]
+        self.assertEqual(path['mode'],'accepted_prefix')
+        path['verification_row_scores']=1
+        with self.assertRaises(ValueError):report.validate(r)
+
     def test_invalid_probability_and_oracle_errors(self):
         for value in [float('nan'),float('inf'),-0.01,1.1,True,'0.9']:
             r=copy.deepcopy(self.data);r['cases'][0]['paths'][0]['mean_probability']=value
