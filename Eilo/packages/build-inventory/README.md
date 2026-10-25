@@ -39,7 +39,8 @@ Xcode27.1 toolchain otool. SHA256 pins identify the tools, collector, lockfiles/
 AGP metadata, acknowledgement plist and actual artifact/library bytes. These are local
 observations, not a signed/reproducible-build attestation. Build timestamps/UUIDs may change hashes.
 
-ZIP names, duplicates, links, encryption and declared size limits are checked before inspection;
+The normal app IDs, non-debuggable APK metadata and iOS simulator platform are required before
+export; lab/other/debug/device products are rejected. ZIP names, duplicates, links, encryption and declared size limits are checked before inspection;
 there is no extractall. Only bounded native-library bytes are written to a temporary file for
 readelf, removed automatically. App-directory symlinks are rejected. XML DTD/entities are denied;
 license URLs are metadata only and never fetched. Cache matches require actual SHA256 equality;

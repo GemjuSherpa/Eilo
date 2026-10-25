@@ -63,10 +63,20 @@ class CollectTests(unittest.TestCase):
                 z.writestr('lib/arm64-v8a/libexample.so',b'\x7fELFsynthetic')
                 z.writestr('assets/leaked.wav',b'synthetic')
             def run(tool,*args):
-                return '(NEEDED) Shared library: [libc.so]\n' if str(tool)=='readelf' else "uses-permission: name='android.permission.INTERNET'\n"
+                return '(NEEDED) Shared library: [libc.so]\n' if str(tool)=='readelf' else "package: name='com.eilo' versionCode='1'\nuses-permission: name='android.permission.INTERNET'\n"
             with patch('collect.command',side_effect=run):r=apk_inventory(path,Path('readelf'),Path('aapt'))
             self.assertEqual(r['native_libraries'][0]['needed'],['libc.so']);self.assertEqual(r['prohibited_audio_model_resources'],['assets/leaked.wav'])
             self.assertEqual(r['permissions'],['android.permission.INTERNET'])
+
+    def test_wrong_app_debug_and_device_artifacts_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'app.apk'
+            with zipfile.ZipFile(path,'w') as z:z.writestr('lib/arm64-v8a/libexample.so',b'\x7fELFsynthetic')
+            for badge in ["package: name='com.other' versionCode='1'\n", "package: name='com.eilo' versionCode='1'\napplication-debuggable\n"]:
+                with patch('collect.command',side_effect=['',badge]),self.assertRaises(ValueError):apk_inventory(path,Path('readelf'),Path('aapt'))
+            app=Path(tmp)/'Eilo.app';app.mkdir()
+            (app/'Info.plist').write_bytes(plistlib.dumps(dict(CFBundleIdentifier='org.reactjs.native.example.Eilo',DTPlatformName='iphoneos',CFBundleSupportedPlatforms=['iPhoneOS'])))
+            with self.assertRaises(ValueError):ios_inventory(app,Path('none'))
 
     def test_apk_links_and_duplicate_paths_rejected_before_execution(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -85,6 +95,7 @@ class CollectTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             app=Path(tmp)/'Example.app';app.mkdir();(app/'Example').write_bytes(b'\xcf\xfa\xed\xfe'+b'synthetic')
             (app/'PrivacyInfo.xcprivacy').write_bytes(plistlib.dumps({}))
+            (app/'Info.plist').write_bytes(plistlib.dumps(dict(CFBundleIdentifier='org.reactjs.native.example.Eilo',DTPlatformName='iphonesimulator',CFBundleSupportedPlatforms=['iPhoneSimulator'])))
             with patch('collect.command',return_value='/private/example:\n\t/private/path/System.framework/System (compatibility version 1.0.0, current version 1.0.0)\n'):
                 r=ios_inventory(app,Path('otool'))
             self.assertEqual(r['native_binaries'][0]['linked_basenames'],['System']);self.assertIsNone(r['privacy_declarations'][0]['declared_tracking'])
