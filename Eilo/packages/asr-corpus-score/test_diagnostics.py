@@ -68,5 +68,7 @@ class DiagnosticsTests(unittest.TestCase):
         with self.assertRaises(ValueError):validate_response(r)
         r=response();r['paths'][0]['origins']['greedy']=True
         with self.assertRaises(ValueError):validate_response(r)
+        r=response();r['paths'][1]['origins']=dict(greedy=2,verification=0,redecode=0)
+        with self.assertRaises(ValueError):validate_response(r)
 
 if __name__=='__main__':unittest.main()
