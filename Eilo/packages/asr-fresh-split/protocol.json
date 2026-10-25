@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "purpose": "FRESH_CURATOR_DEV_TEST_DIAGNOSTIC",
+  "dataset": "common_voice",
+  "seed": 20261025,
+  "development_count": 30,
+  "test_count": 30,
+  "max_clips_per_speaker": 2,
+  "selection": "SHA256_SEED_SPLIT_PATH_TWO_ROUND_SPEAKER_CAP",
+  "exclude_prior_speakers": true,
+  "exclude_prior_normalized_utterances": true,
+  "exclude_cross_cohort_speakers": true,
+  "exclude_cross_cohort_normalized_utterances": true,
+  "duplicate_normalization": "nfkc-casefold-alnum-v1",
+  "max_audio_seconds": 30,
+  "max_output_tokens": 128,
+  "diagnostic_threshold": 0.85,
+  "threshold_fitting": "NOT_PERFORMED",
+  "model_training_overlap": "UNKNOWN",
+  "native_calibration": "NOT_ESTABLISHED",
+  "production": "NOT_ENABLED",
+  "physical": "NOT_RUN"
+}
