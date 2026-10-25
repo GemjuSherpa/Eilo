@@ -82,3 +82,19 @@ Model-training overlap remains UNKNOWN, native calibration NOT_ESTABLISHED, thre
 NOT_GRANTED and production NOT_ENABLED. Physical tests remain open as requested; S08/release HOLD
 and disabled memory are unchanged. Wider independent evaluation and reviewed runtime/caller
 integration remain prerequisites for production confidence acceptance.
+
+## Paired noise robustness
+
+`noise_suite.py` validates the existing clean Common Voice, noise-only MUSAN and frozen mixed
+manifests using `--clean`, `--noise` and `--noisy`, then runs the same isolated collector at
+20, 10 and 0 dB. Other required arguments match `run_android.py`; `--build` and `--output`
+must be new directories. It reconstructs all 90 mixes sample-for-sample, requires exactly one
+variant for every parent/SNR, and preserves test references/partitions. It uses no new downloads
+or hardware audio. Builds remain within the previously approved 5 GiB cumulative local budget.
+
+Committed `noise-results/` contains aggregate-only observed reports and a source/provenance
+receipt. `python3 noise_report.py --output /new/report-directory` verifies all three reports
+and the matching clean baseline, then exports JSON/HTML. CI runs this without corpus access.
+See `../../docs/sprints/S05_NOISE_SCORE_REVIEW.md` for measured results and limits. The repeated
+parents and score paths are correlated; changing score availability changes metric populations.
+These reused test data do not establish calibration or permit threshold fitting or activation.

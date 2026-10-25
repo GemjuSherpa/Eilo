@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "purpose": "PAIRED_NOISE_SCORE_DIAGNOSTIC",
+  "clean_manifest_sha256": "179aea3809003783b2b3121767c31922c9760b7ce30e0aa0d2b5e2ff3912e249",
+  "noisy_manifest_sha256": "c0b28f91df3782193de59183e96bee6d93f46d7c4cca262b77b47325d39aab8a",
+  "noise_manifest_sha256": "b6812fcdb073751f18475d9fcf908a599be078d2d0237d0682950809c8670fa9",
+  "source_pins": {
+    "noise_suite.py": "0f09629e9314a7a1618d9913d9c60aa2672aa2d35135b5340e7be51ebc749a25",
+    "run_android.py": "23264aebec3388a87affbc71e71bf7e5a0853041eb2033a9fd51a805b9d554ee",
+    "diagnostics.py": "7d0c0f33378fdda9d50aedd67eaf41247845dd3a0783f8c9770cdeaa38a487f9",
+    "main.cpp": "bc38ba7297af7313a1ba335f3b4fede01ec8f39446a7f2c223d8140420be2016"
+  },
+  "parents": 30,
+  "variants": 90,
+  "snrs": [
+    20,
+    10,
+    0
+  ],
+  "pairing": "SAME_PARENTS_CORRELATED_NOT_INDEPENDENT",
+  "threshold_fitting": "NOT_PERFORMED",
+  "physical": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "reports": {
+    "20": "1ae105d4b8adb1abb55886322fe3204a031c4e4e6e0317a532f0a4553171ef66",
+    "10": "d036bf7ef878635f47e90be5a380ba50fbdfad2a37766ec6fab641c9987fab26",
+    "0": "15debfa021679c409c7ef9b4331f4fa3491dcf94c8508b2bbf75a6990fe171b6"
+  }
+}

@@ -19,6 +19,13 @@ def fixture():
 
 
 class NoiseReportTests(unittest.TestCase):
+    def test_actual_three_noise_levels_remain_diagnostic(self):
+        suite,reports,clean=load(HERE/'noise-results',HERE/'corpus-results.json')
+        self.assertEqual((suite['parents'],suite['variants']),(30,90))
+        self.assertEqual([[r['sources'][i]['metrics']['available'] for i in range(2)] for r in reports.values()],[[27,27],[27,27],[25,25]])
+        self.assertTrue(all(r['status']=='INCOMPLETE_SCORES' for r in reports.values()))
+        self.assertTrue(all(r['threshold_authorization']=='NOT_GRANTED' for r in reports.values()))
+
     def test_closed_scope_and_coverage(self):
         s,r,c=fixture();validate_suite(s,r,c)
         for mutation in [lambda s:s.update(parents=29),lambda s:s.update(variants=89),lambda s:s.update(physical='PASS'),
