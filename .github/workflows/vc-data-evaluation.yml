@@ -50,6 +50,8 @@ jobs:
           python3 -O -m unittest discover -s ../asr-corpus-score -p 'test_*.py' -v
           python3 ../asr-corpus-score/report.py
           python3 -O ../asr-corpus-score/report.py --output "$RUNNER_TEMP/asr-corpus-score"
+          python3 ../asr-corpus-score/noise_report.py --output "$RUNNER_TEMP/asr-noise-score"
+          python3 -O ../asr-corpus-score/noise_report.py --output "$RUNNER_TEMP/asr-noise-score-optimized"
       - name: Native VAD sanitizer contracts (no models or capture)
         run: |
           python3 -m compileall -q ../vad-runtime
@@ -156,3 +158,12 @@ jobs:
           path: |
             ${{ runner.temp }}/asr-corpus-score/summary.json
             ${{ runner.temp }}/asr-corpus-score/summary.html
+      - name: Upload aggregate-only paired noise diagnostics
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: asr-noise-score-aggregates
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/asr-noise-score/summary.json
+            ${{ runner.temp }}/asr-noise-score/summary.html
