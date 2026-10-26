@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "source_pins": {
+    "packages/ios-privacy-audit/audit.py": "af4d990bc3b0b4a41051bc18f7d2f31dd714217f92c8890977d1b2734882c84b",
+    "packages/build-inventory/collect.py": "71febbf69f8abac4d4f9e552e1b1ac735d50bbeaf595d9d92c9d677ad286db9b",
+    "packages/build-inventory/inventory_report.py": "756e966eec653924c3cf9e4e1acb3b11ee78a5841104bae6df325108d1d81174",
+    "packages/build-inventory/observed.json": "cccdcbcf8fc482cfa5440b3662fcf80b24db35c6cb8c68362b1abc0d8e0306de"
+  },
+  "app_tree_sha256": "ac9c5d378a01880a3536753bf6d039c010be3c49d0cd9a8c7b37481a64891d52",
+  "nm_sha256": "fed78f513b80f445acb9183eb48c6c0e3a93847bd4128ddc12f2143a779ddfec",
+  "manifests": [
+    {
+      "path": "Frameworks/React.framework/PrivacyInfo.xcprivacy",
+      "sha256": "677d9a3f1f255ad8e2c918982b385d801fc0fd0d37c2026ab3259c910fde28c4",
+      "tracking": false,
+      "tracking_domains_count": null,
+      "collected_data_count": 0,
+      "accessed_api_list_present": true,
+      "declarations": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "reasons": [
+            "C617.1"
+          ]
+        },
+        {
+          "category": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "reasons": [
+            "35F9.1"
+          ]
+        },
+        {
+          "category": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "reasons": [
+            "CA92.1"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_SocketRocket.bundle/PrivacyInfo.xcprivacy",
+      "sha256": "97e32f473284df703a5fc921076956ef84a765ca9e7ba2e7ba61350652d12727",
+      "tracking": false,
+      "tracking_domains_count": null,
+      "collected_data_count": 0,
+      "accessed_api_list_present": true,
+      "declarations": []
+    },
+    {
+      "path": "Frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_boost.bundle/PrivacyInfo.xcprivacy",
+      "sha256": "d3559c988dff940d4f758f37a0ba1863208304e33ab0b97c0e3dd5d3762f5f1d",
+      "tracking": false,
+      "tracking_domains_count": null,
+      "collected_data_count": 0,
+      "accessed_api_list_present": true,
+      "declarations": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "reasons": [
+            "C617.1"
+          ]
+        },
+        {
+          "category": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "reasons": [
+            "35F9.1"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_folly.bundle/PrivacyInfo.xcprivacy",
+      "sha256": "0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335",
+      "tracking": false,
+      "tracking_domains_count": null,
+      "collected_data_count": 0,
+      "accessed_api_list_present": true,
+      "declarations": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "reasons": [
+            "C617.1"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_glog.bundle/PrivacyInfo.xcprivacy",
+      "sha256": "0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335",
+      "tracking": false,
+      "tracking_domains_count": null,
+      "collected_data_count": 0,
+      "accessed_api_list_present": true,
+      "declarations": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "reasons": [
+            "C617.1"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "PrivacyInfo.xcprivacy",
+      "sha256": "cb309674719f2825c9a4e9d5c8fb671e95a1f8abd53833bef422b1c73cba56de",
+      "tracking": false,
+      "tracking_domains_count": null,
+      "collected_data_count": 0,
+      "accessed_api_list_present": true,
+      "declarations": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "reasons": [
+            "C617.1"
+          ]
+        },
+        {
+          "category": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "reasons": [
+            "35F9.1"
+          ]
+        },
+        {
+          "category": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "reasons": [
+            "CA92.1"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "React-cxxreact_privacy.bundle/PrivacyInfo.xcprivacy",
+      "sha256": "0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335",
+      "tracking": false,
+      "tracking_domains_count": null,
+      "collected_data_count": 0,
+      "accessed_api_list_present": true,
+      "declarations": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "reasons": [
+            "C617.1"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "React-timing_privacy.bundle/PrivacyInfo.xcprivacy",
+      "sha256": "23ddfa062a6d4392e65882d151fdececbd29904a227ad8918c0144ebc777ee61",
+      "tracking": false,
+      "tracking_domains_count": null,
+      "collected_data_count": 0,
+      "accessed_api_list_present": true,
+      "declarations": [
+        {
+          "category": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "reasons": [
+            "35F9.1"
+          ]
+        }
+      ]
+    }
+  ],
+  "binaries": [
+    {
+      "path": "Eilo",
+      "sha256": "76a75cba26ffec3017afe36748308898c99714a44f627983e4d5459ea2b462fd",
+      "selected_imports": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "symbols": [
+            "_fstat"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Frameworks/React.framework/React",
+      "sha256": "a0e2c58102ccd4ed9bebec6c4694123335535191c312acdc34ac736c97eb4cd8",
+      "selected_imports": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "symbols": [
+            "_fstat",
+            "_stat"
+          ]
+        },
+        {
+          "category": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "symbols": [
+            "_mach_absolute_time"
+          ]
+        },
+        {
+          "category": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "symbols": [
+            "_OBJC_CLASS_$_NSUserDefaults"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+      "sha256": "8e58d70fc8f35d8d3ae5c11ec354ec1d2ba7cde624182e33953792ab77f0313f",
+      "selected_imports": [
+        {
+          "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "symbols": [
+            "_fstat",
+            "_stat"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Frameworks/hermesvm.framework/hermesvm",
+      "sha256": "956af81e233d1ec4310a65d87c298d842093d18a053ffc6061ab1d32aa25a1a5",
+      "selected_imports": []
+    }
+  ],
+  "scope": "PINNED_UNSIGNED_SIMULATOR_DECLARATIONS_AND_SELECTED_IMPORTS",
+  "purpose_review": "REQUIRED",
+  "api_coverage": "NOT_ESTABLISHED",
+  "app_store_acceptance": "NOT_ESTABLISHED",
+  "network_privacy": "NOT_ESTABLISHED",
+  "release_acceptance": "BLOCKED",
+  "physical": "NOT_RUN",
+  "memory": "DISABLED"
+}
