@@ -1,10 +1,10 @@
 name: VC-DATA synthetic evaluation
 on:
   pull_request:
-    paths: ['Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
   push:
     branches: ['sprint/**', 'task/vc-data-**', 'task/vc-turn-04-**']
-    paths: ['Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
 permissions:
   contents: read
 concurrency:
@@ -70,6 +70,12 @@ jobs:
           python3 -O -m unittest discover -s ../dependency-notices -p 'test_*.py' -v
           python3 ../dependency-notices/notice_report.py --output "$RUNNER_TEMP/dependency-notices"
           python3 -O ../dependency-notices/notice_report.py
+      - name: Pinned iOS privacy declarations (no artifact or tool downloads)
+        run: |
+          python3 -m unittest discover -s ../ios-privacy-audit -p 'test_*.py' -v
+          python3 -O -m unittest discover -s ../ios-privacy-audit -p 'test_*.py' -v
+          python3 ../ios-privacy-audit/report.py --output "$RUNNER_TEMP/ios-privacy-audit"
+          python3 -O ../ios-privacy-audit/report.py
       - name: Native VAD sanitizer contracts (no models or capture)
         run: |
           python3 -m compileall -q ../vad-runtime
@@ -212,3 +218,12 @@ jobs:
           path: |
             ${{ runner.temp }}/dependency-notices/summary.json
             ${{ runner.temp }}/dependency-notices/summary.html
+      - name: Upload iOS declaration summaries only
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ios-privacy-declarations
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/ios-privacy-audit/summary.json
+            ${{ runner.temp }}/ios-privacy-audit/summary.html
