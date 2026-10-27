@@ -68,6 +68,12 @@ class SelectionTests(unittest.TestCase):
             tables=self.tables();mutate(tables)
             with self.assertRaises(ValueError):s.choose(tables,[dict(cases=[]) for _ in range(3)])
 
+    def test_prior_test_speaker_reuse_is_allowed_but_development_is_not(self):
+        old=[dict(cases=[dict(speaker=s.opaque('s0'),reference='earlier test utterance')]),
+             dict(cases=[dict(speaker=s.opaque('s1'),reference='earlier development utterance')]),dict(cases=[])]
+        chosen=s.choose(self.tables(),old);speakers={r['client_id'] for r in chosen}
+        self.assertIn('s0',speakers);self.assertNotIn('s1',speakers)
+
     def test_independent_verifier_rejects_every_overlap_dimension(self):
         old=[dict(receipt={},cases=[]),dict(receipt={},cases=[dict(speaker='old',source_sha256='old',pcm_sha256='old',reference='old reference')]),dict(receipt={},cases=[])]
         case=dict(split='test',task='asr',samples=16000)
@@ -79,6 +85,15 @@ class SelectionTests(unittest.TestCase):
 
 
 class AggregateTests(unittest.TestCase):
+    def test_commit_guard_rejects_invalid_or_changed_freeze_before_inference(self):
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('calibration_evaluate_guard',c.HERE/'evaluate.py')
+        evaluate=importlib.util.module_from_spec(spec);spec.loader.exec_module(evaluate)
+        with self.assertRaises(ValueError):evaluate.committed_freeze('not-a-commit')
+        with patch.object(evaluate.subprocess,'run') as command,patch.object(evaluate.subprocess,'check_output',return_value=b'changed freeze'),self.assertRaises(ValueError):
+            evaluate.committed_freeze('a'*40)
+        self.assertEqual(command.call_args.args[0][:3],['git','merge-base','--is-ancestor'])
+
     def test_metric_tampering_is_detected(self):
         m=c.fit([(.1,False),(.9,True)]);models={name:m for name in c.SOURCES}
         cases=[dict(paths=[dict(source=name,status='AVAILABLE',confidence=.1,exact_match=False,word_errors=1,reference_words=1,character_errors=1,reference_characters=1) for name in c.SOURCES])]
@@ -100,6 +115,9 @@ class AggregateTests(unittest.TestCase):
         r=c.read(c.HERE/'results.json');report.validate(r)
         for field,value in [('test_use','FIT'),('production','ENABLED'),('native_calibration','ESTABLISHED')]:
             changed=copy.deepcopy(r);changed[field]=value
+            with self.assertRaises(ValueError):report.validate(changed)
+        for field,value in [('development_speaker_overlap',1),('speaker_scope','UNSEEN_SPEAKERS')]:
+            changed=copy.deepcopy(r);changed['selection'][field]=value
             with self.assertRaises(ValueError):report.validate(changed)
         with tempfile.TemporaryDirectory() as folder:
             target=Path(folder)/'out';report.export(r,target)
