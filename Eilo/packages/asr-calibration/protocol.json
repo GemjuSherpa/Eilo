@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "purpose": "OFFLINE_DEVELOPMENT_ISOTONIC_CANDIDATE",
+  "development_cases": 30,
+  "fresh_test_cases": 30,
+  "excluded_prior_cases": 90,
+  "max_clips_per_speaker": 2,
+  "seed": 20261027,
+  "fit": "TIE_GROUPED_WEIGHTED_PAVA_EMPIRICAL_MEAN",
+  "prediction": "RIGHT_CLOSED_UPPER_STEP_ENDPOINT_CLAMP",
+  "label": "NORMALIZED_EXACT_TRANSCRIPTION",
+  "sources": "SEPARATE_GREEDY_AND_SELF_DRAFT",
+  "diagnostic_threshold": 0.85,
+  "threshold_fitting": "NOT_PERFORMED",
+  "test_use": "EVALUATION_ONLY_AFTER_COMMITTED_MODEL_HASH",
+  "model_training_overlap": "UNKNOWN",
+  "native_calibration": "NOT_ESTABLISHED",
+  "threshold_authorization": "NOT_GRANTED",
+  "production": "NOT_ENABLED",
+  "physical": "NOT_RUN",
+  "speaker_holdout": "DEVELOPMENT_SPEAKERS_EXCLUDED_PRIOR_TEST_SPEAKERS_REUSED_AND_REPORTED",
+  "test_freshness": "UTTERANCE_ENCODED_PCM_DISJOINT_FROM_ALL_90_PRIOR_CASES"
+}
