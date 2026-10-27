@@ -17,5 +17,7 @@
   "native_calibration": "NOT_ESTABLISHED",
   "threshold_authorization": "NOT_GRANTED",
   "production": "NOT_ENABLED",
-  "physical": "NOT_RUN"
+  "physical": "NOT_RUN",
+  "speaker_holdout": "DEVELOPMENT_SPEAKERS_EXCLUDED_PRIOR_TEST_SPEAKERS_REUSED_AND_REPORTED",
+  "test_freshness": "UTTERANCE_ENCODED_PCM_DISJOINT_FROM_ALL_90_PRIOR_CASES"
 }

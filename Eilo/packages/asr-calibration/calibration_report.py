@@ -33,13 +33,14 @@ def validate_freeze(f):
 
 
 def validate_selection(s):
-    closed(s,'schema_version source_pins protocol_sha256 excluded_manifest_sha256 excluded_cases test_cases test_speakers manifest_sha256 speaker_overlap utterance_overlap encoded_overlap pcm_overlap model_training_overlap')
+    closed(s,'schema_version source_pins protocol_sha256 excluded_manifest_sha256 excluded_cases test_cases test_speakers manifest_sha256 development_speaker_overlap prior_speaker_overlap speaker_scope utterance_overlap encoded_overlap pcm_overlap model_training_overlap')
     need(type(s['schema_version']) is int and s['schema_version']==1 and s['source_pins']==pins() and s['protocol_sha256']==sha(HERE/'protocol.json'))
     p=read(FRESH/'results.json')['selection'];expected=[p['prior_manifest_sha256']]+[p['partitions'][k]['manifest_sha256'] for k in ('dev','test')]
     need(s['excluded_manifest_sha256']==expected and type(s['excluded_cases']) is int and s['excluded_cases']==90)
     need(type(s['test_cases']) is int and s['test_cases']==30 and type(s['test_speakers']) is int and 15<=s['test_speakers']<=30)
     corpus_report.digest(s['manifest_sha256']);need(s['manifest_sha256'] not in expected)
-    for k in ('speaker_overlap','utterance_overlap','encoded_overlap','pcm_overlap'):need(type(s[k]) is int and s[k]==0)
+    need(s['speaker_scope']==policy()['speaker_holdout']);corpus_report.integer(s['prior_speaker_overlap'],s['test_speakers'])
+    for k in ('development_speaker_overlap','utterance_overlap','encoded_overlap','pcm_overlap'):need(type(s[k]) is int and s[k]==0)
     need(s['model_training_overlap']=='UNKNOWN')
 
 
@@ -60,7 +61,7 @@ def export(r,output):
     summary=validate(r);need(not output.exists());output.mkdir(parents=True)
     (output/'summary.json').write_text(json.dumps(r,indent=2,allow_nan=False)+'\n')
     (output/'summary.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Offline calibrator pilot</title><h1>Frozen development calibrator: held-out pilot</h1>'
-        '<p>Thirty previously examined development clips fit separate isotonic step functions. Thirty new curator-test clips exclude all ninety prior clips. '
+        '<p>Thirty previously examined development clips fit separate isotonic step functions. Thirty new curator-test utterances exclude all ninety prior clips; earlier test speakers are reused and reported, with development speakers excluded. '
         'Small correlated cohorts, exact-transcription proxy labels and unknown model-training overlap prevent qualification. '
         'Fixed 0.85 is descriptive; no test refitting, threshold selection, production activation or physical acceptance.</p><pre>'+html.escape(json.dumps(summary,indent=2))+'</pre></html>\n')
     return summary

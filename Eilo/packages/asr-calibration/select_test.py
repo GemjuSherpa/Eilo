@@ -33,7 +33,8 @@ def choose(tables,old):
         need(all(PurePosixPath(r['path']).name==r['path'] and r['path'].endswith('.mp3') and '\\' not in r['path'] for r in rows))
         speakers[split]={opaque(r['client_id']) for r in rows}
     need(not speakers['train']&speakers['dev'] and not speakers['train']&speakers['test'] and not speakers['dev']&speakers['test'])
-    blocked={c['speaker'] for m in old for c in m['cases']};texts={normalize(c['reference']) for m in old for c in m['cases']}
+    need(len(old)==3)
+    blocked={c['speaker'] for c in old[1]['cases']};texts={normalize(c['reference']) for m in old for c in m['cases']}
     used=Counter();chosen=[]
     rows=sorted(tables['test'],key=lambda r:opaque(str(policy()['seed'])+':test:'+r['path']))
     for round_number in range(1,policy()['max_clips_per_speaker']+1):
@@ -50,7 +51,7 @@ def verify(output,paths):
     need(m['receipt']==old[0]['receipt'] and len(m['cases'])==policy()['fresh_test_cases'])
     need(all(c['split']=='test' and c['task']=='asr' and 0<c['samples']<=480000 for c in m['cases']))
     for key in ('speaker','source_sha256','pcm_sha256'):
-        before={c[key] for p in old for c in p['cases']};after={c[key] for c in m['cases']};need(not before&after)
+        before={c[key] for p in (old[1:2] if key=='speaker' else old) for c in p['cases']};after={c[key] for c in m['cases']};need(not before&after)
         if key!='speaker':need(len(after)==len(m['cases']))
     counts=Counter(c['speaker'] for c in m['cases']);need(max(counts.values())<=policy()['max_clips_per_speaker'])
     before={normalize(c['reference']) for p in old for c in p['cases']};after={normalize(c['reference']) for c in m['cases']}
@@ -82,7 +83,8 @@ def prepare(archive,receipt,paths,output,decoder):
     m=verify(output,paths);need(before==pins())
     evidence=dict(schema_version=1,source_pins=before,protocol_sha256=sha(HERE/'protocol.json'),excluded_manifest_sha256=[canonical_digest(x) for x in old],
         excluded_cases=90,test_cases=len(m['cases']),test_speakers=len({c['speaker'] for c in m['cases']}),manifest_sha256=canonical_digest(m),
-        speaker_overlap=0,utterance_overlap=0,encoded_overlap=0,pcm_overlap=0,model_training_overlap='UNKNOWN')
+        development_speaker_overlap=0,prior_speaker_overlap=len({c['speaker'] for c in m['cases']}&{c['speaker'] for p in old for c in p['cases']}),
+        speaker_scope=policy()['speaker_holdout'],utterance_overlap=0,encoded_overlap=0,pcm_overlap=0,model_training_overlap='UNKNOWN')
     (output/'selection.json').write_text(json.dumps(evidence,indent=2)+'\n');return evidence
 
 

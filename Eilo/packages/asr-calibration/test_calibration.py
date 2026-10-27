@@ -56,7 +56,7 @@ class SelectionTests(unittest.TestCase):
         return dict(train=[dict(client_id='train',sentence='training',path='train.mp3')],dev=[dict(client_id='dev',sentence='development',path='dev.mp3')],test=rows)
 
     def test_selection_excludes_speakers_and_text_with_two_clip_cap(self):
-        tables=self.tables();old=[dict(cases=[dict(speaker=s.opaque('s0'),reference='phrase 1 0')])]
+        tables=self.tables();old=[dict(cases=[]),dict(cases=[dict(speaker=s.opaque('s0'),reference='phrase 1 0')]),dict(cases=[])]
         chosen=s.choose(tables,old)
         self.assertEqual(len(chosen),30);self.assertNotIn('s0',{r['client_id'] for r in chosen})
         self.assertNotIn('phrase 1 0',{r['sentence'] for r in chosen})
@@ -66,19 +66,34 @@ class SelectionTests(unittest.TestCase):
     def test_cross_curator_overlap_unsafe_paths_and_insufficient_data_fail(self):
         for mutate in [lambda t:t['train'][0].update(client_id='s1'),lambda t:t['test'][0].update(path='../clip.mp3'),lambda t:t.update(test=t['test'][:10])]:
             tables=self.tables();mutate(tables)
-            with self.assertRaises(ValueError):s.choose(tables,[])
+            with self.assertRaises(ValueError):s.choose(tables,[dict(cases=[]) for _ in range(3)])
+
+    def test_prior_test_speaker_reuse_is_allowed_but_development_is_not(self):
+        old=[dict(cases=[dict(speaker=s.opaque('s0'),reference='earlier test utterance')]),
+             dict(cases=[dict(speaker=s.opaque('s1'),reference='earlier development utterance')]),dict(cases=[])]
+        chosen=s.choose(self.tables(),old);speakers={r['client_id'] for r in chosen}
+        self.assertIn('s0',speakers);self.assertNotIn('s1',speakers)
 
     def test_independent_verifier_rejects_every_overlap_dimension(self):
-        old=[dict(receipt={},cases=[dict(speaker='old',source_sha256='old',pcm_sha256='old',reference='old reference')])]
+        old=[dict(receipt={},cases=[]),dict(receipt={},cases=[dict(speaker='old',source_sha256='old',pcm_sha256='old',reference='old reference')]),dict(receipt={},cases=[])]
         case=dict(split='test',task='asr',samples=16000)
         manifest=dict(receipt={},cases=[dict(case,speaker='s'+str(i//2),source_sha256='source'+str(i),pcm_sha256='pcm'+str(i),reference='phrase '+str(i)) for i in range(30)])
         with patch.object(s,'exclusions',return_value=old),patch.object(s,'validate_manifest'),patch.object(s,'read',return_value=manifest):s.verify(Path('/fixture'),[])
         for key in ('speaker','source_sha256','pcm_sha256','reference'):
-            changed=copy.deepcopy(manifest);changed['cases'][0][key]=old[0]['cases'][0][key]
+            changed=copy.deepcopy(manifest);changed['cases'][0][key]=old[1]['cases'][0][key]
             with patch.object(s,'exclusions',return_value=old),patch.object(s,'validate_manifest'),patch.object(s,'read',return_value=changed),self.assertRaises(ValueError):s.verify(Path('/fixture'),[])
 
 
 class AggregateTests(unittest.TestCase):
+    def test_commit_guard_rejects_invalid_or_changed_freeze_before_inference(self):
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('calibration_evaluate_guard',c.HERE/'evaluate.py')
+        evaluate=importlib.util.module_from_spec(spec);spec.loader.exec_module(evaluate)
+        with self.assertRaises(ValueError):evaluate.committed_freeze('not-a-commit')
+        with patch.object(evaluate.subprocess,'run') as command,patch.object(evaluate.subprocess,'check_output',return_value=b'changed freeze'),self.assertRaises(ValueError):
+            evaluate.committed_freeze('a'*40)
+        self.assertEqual(command.call_args.args[0][:3],['git','merge-base','--is-ancestor'])
+
     def test_metric_tampering_is_detected(self):
         m=c.fit([(.1,False),(.9,True)]);models={name:m for name in c.SOURCES}
         cases=[dict(paths=[dict(source=name,status='AVAILABLE',confidence=.1,exact_match=False,word_errors=1,reference_words=1,character_errors=1,reference_characters=1) for name in c.SOURCES])]
@@ -100,6 +115,9 @@ class AggregateTests(unittest.TestCase):
         r=c.read(c.HERE/'results.json');report.validate(r)
         for field,value in [('test_use','FIT'),('production','ENABLED'),('native_calibration','ESTABLISHED')]:
             changed=copy.deepcopy(r);changed[field]=value
+            with self.assertRaises(ValueError):report.validate(changed)
+        for field,value in [('development_speaker_overlap',1),('speaker_scope','UNSEEN_SPEAKERS')]:
+            changed=copy.deepcopy(r);changed['selection'][field]=value
             with self.assertRaises(ValueError):report.validate(changed)
         with tempfile.TemporaryDirectory() as folder:
             target=Path(folder)/'out';report.export(r,target)
