@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "purpose": "OFFLINE_DEVELOPMENT_ISOTONIC_CANDIDATE",
-  "protocol_sha256": "34d2b41d7fbe68fc9bb79179c8ddbc1cd7f816441d4042d93d32f2658ad7dc5e",
+  "protocol_sha256": "ff1b1062021db05744aecf4f5772ac97b7db4d6734e18a6d4bdebc7f90a6ed52",
   "source_pins": {
     "asr-fresh-split/shared.py": "8b9cc6de888577946e77a8c56e188d795ff2485a84e7b12c8b17aa529e1dc70d",
     "asr-fresh-split/select_split.py": "ba4989a22997635f799aa834a9458ae0873ac90a1000881fd0e563ef3ba3bcbd",
@@ -23,15 +23,15 @@
     "asr-confidence-probe/source-manifest.json": "2de8d1b98818c30b3bb073a48d53a05835a50b926b2b3bdb13f267dc9b28ee4b",
     "asr-runtime/provenance.json": "3db28e00acafb37ffaae433f3f9696fd56a0b5678b45edf50a1401f2400a37dd",
     "asr-calibration/calibrate.py": "00d4b4a99f805e7c4f71c3d59f94ce5d099198e60abf67492a053ca37589da39",
-    "asr-calibration/select_test.py": "0fba6d7c18852334a0abbb4b3764ccaf6884dbc6fc5a2fad71675bc3e3808c2e",
+    "asr-calibration/select_test.py": "ba345f8369d5d44609ab79f6b9816b85163a52602d938c5bc54f10584f0c4aef",
     "asr-calibration/evaluate.py": "fa785312c5bae501539169d1e4a982971120550bbd1c540cf760170cc783049a",
-    "asr-calibration/protocol.json": "34d2b41d7fbe68fc9bb79179c8ddbc1cd7f816441d4042d93d32f2658ad7dc5e",
+    "asr-calibration/protocol.json": "ff1b1062021db05744aecf4f5772ac97b7db4d6734e18a6d4bdebc7f90a6ed52",
     "asr-corpus-score/run_android.py": "23264aebec3388a87affbc71e71bf7e5a0853041eb2033a9fd51a805b9d554ee"
   },
   "prior_results_sha256": "0bdaecb429473e03b911740d0a757a97eca1d6305e28044399b2522d26677345",
   "development_manifest_sha256": "feabbc90220d7c2dff83e891590daf7b8d5623b0e0a94e9dc6febf73920b1291",
   "development_counts_sha256": "6aae1732a5b01f544a0a57957808b3a22bc03b25c26cdf3649e80987a279d287",
-  "private_model_sha256": "5ae0efd07fbb4481dfa58d726f6a69c7e32f3409732d39d2e01f7ff93f0f75de",
+  "private_model_sha256": "d474087c0635e721f0712e4fed216888bcc562619c53b2998788ffda5ac77656",
   "development_cases": 30,
   "development": [
     {

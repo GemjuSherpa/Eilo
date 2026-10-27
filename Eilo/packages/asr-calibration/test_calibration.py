@@ -56,7 +56,7 @@ class SelectionTests(unittest.TestCase):
         return dict(train=[dict(client_id='train',sentence='training',path='train.mp3')],dev=[dict(client_id='dev',sentence='development',path='dev.mp3')],test=rows)
 
     def test_selection_excludes_speakers_and_text_with_two_clip_cap(self):
-        tables=self.tables();old=[dict(cases=[dict(speaker=s.opaque('s0'),reference='phrase 1 0')])]
+        tables=self.tables();old=[dict(cases=[]),dict(cases=[dict(speaker=s.opaque('s0'),reference='phrase 1 0')]),dict(cases=[])]
         chosen=s.choose(tables,old)
         self.assertEqual(len(chosen),30);self.assertNotIn('s0',{r['client_id'] for r in chosen})
         self.assertNotIn('phrase 1 0',{r['sentence'] for r in chosen})
@@ -66,15 +66,15 @@ class SelectionTests(unittest.TestCase):
     def test_cross_curator_overlap_unsafe_paths_and_insufficient_data_fail(self):
         for mutate in [lambda t:t['train'][0].update(client_id='s1'),lambda t:t['test'][0].update(path='../clip.mp3'),lambda t:t.update(test=t['test'][:10])]:
             tables=self.tables();mutate(tables)
-            with self.assertRaises(ValueError):s.choose(tables,[])
+            with self.assertRaises(ValueError):s.choose(tables,[dict(cases=[]) for _ in range(3)])
 
     def test_independent_verifier_rejects_every_overlap_dimension(self):
-        old=[dict(receipt={},cases=[dict(speaker='old',source_sha256='old',pcm_sha256='old',reference='old reference')])]
+        old=[dict(receipt={},cases=[]),dict(receipt={},cases=[dict(speaker='old',source_sha256='old',pcm_sha256='old',reference='old reference')]),dict(receipt={},cases=[])]
         case=dict(split='test',task='asr',samples=16000)
         manifest=dict(receipt={},cases=[dict(case,speaker='s'+str(i//2),source_sha256='source'+str(i),pcm_sha256='pcm'+str(i),reference='phrase '+str(i)) for i in range(30)])
         with patch.object(s,'exclusions',return_value=old),patch.object(s,'validate_manifest'),patch.object(s,'read',return_value=manifest):s.verify(Path('/fixture'),[])
         for key in ('speaker','source_sha256','pcm_sha256','reference'):
-            changed=copy.deepcopy(manifest);changed['cases'][0][key]=old[0]['cases'][0][key]
+            changed=copy.deepcopy(manifest);changed['cases'][0][key]=old[1]['cases'][0][key]
             with patch.object(s,'exclusions',return_value=old),patch.object(s,'validate_manifest'),patch.object(s,'read',return_value=changed),self.assertRaises(ValueError):s.verify(Path('/fixture'),[])
 
 
