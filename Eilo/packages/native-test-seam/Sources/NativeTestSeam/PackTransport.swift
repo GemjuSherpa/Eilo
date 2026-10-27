@@ -10,17 +10,26 @@ public struct PackHeaders { public let status: Int;public let length: Int64;publ
 public protocol PackHTTPClient { func fetch(_ request: PackRequest,cancel: PackCancellation,response: @escaping (PackHeaders)throws->Void,chunk: @escaping (Data)throws->Void) throws }
 /// Ephemeral session, no cookies, credentials, cache, or automatic redirects; streaming writes are bounded by transport.
 public final class NativePackHTTPClient: PackHTTPClient {
-  public init() {}
-  public func fetch(_ request: PackRequest,cancel: PackCancellation,response: @escaping (PackHeaders)throws->Void,chunk: @escaping (Data)throws->Void) throws {
-    guard !Thread.isMainThread, let url=URL(string:request.url) else { throw PackFailure.transport };try cancel.check()
+  private let protocolClasses:[AnyClass]?
+  public init() { protocolClasses=nil }
+  // Internal interception seam: unit tests exercise URLSession without opening sockets.
+  internal init(protocolClasses:[AnyClass]) { self.protocolClasses=protocolClasses }
+  internal static func configuration(protocolClasses:[AnyClass]?=nil) -> URLSessionConfiguration {
     let config=URLSessionConfiguration.ephemeral;config.urlCache=nil;config.httpCookieStorage=nil;config.urlCredentialStorage=nil;config.httpShouldSetCookies=false
     config.requestCachePolicy = .reloadIgnoringLocalCacheData;config.timeoutIntervalForRequest=15;config.timeoutIntervalForResource=120
     config.tlsMinimumSupportedProtocolVersion = .TLSv12
+    if let protocolClasses { config.protocolClasses=protocolClasses }
+    return config
+  }
+  public func fetch(_ request: PackRequest,cancel: PackCancellation,response: @escaping (PackHeaders)throws->Void,chunk: @escaping (Data)throws->Void) throws {
+    guard !Thread.isMainThread, let url=URL(string:request.url),url.scheme=="https",url.host != nil,url.user==nil,url.password==nil else { throw PackFailure.transport };try cancel.check()
+    let config=Self.configuration(protocolClasses:protocolClasses)
     let delegate=PackStreamDelegate(cancel:cancel,response:response,chunk:chunk)
     let queue=OperationQueue();queue.maxConcurrentOperationCount=1
     let session=URLSession(configuration:config,delegate:delegate,delegateQueue:queue)
     defer { session.invalidateAndCancel() }
-    var r=URLRequest(url:url);r.httpMethod="GET";r.setValue("identity",forHTTPHeaderField:"Accept-Encoding");r.setValue("Eilo-Model-Installer/1",forHTTPHeaderField:"User-Agent")
+    var r=URLRequest(url:url,cachePolicy:.reloadIgnoringLocalCacheData,timeoutInterval:15);r.httpShouldHandleCookies=false
+    r.httpMethod="GET";r.setValue("identity",forHTTPHeaderField:"Accept-Encoding");r.setValue("Eilo-Model-Installer/1",forHTTPHeaderField:"User-Agent")
     if request.offset>0 { r.setValue("bytes=\(request.offset)-",forHTTPHeaderField:"Range");r.setValue(request.etag,forHTTPHeaderField:"If-Range") }
     let task=session.dataTask(with:r);task.resume()
     var wasCancelled=false

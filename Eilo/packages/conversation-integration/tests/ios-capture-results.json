@@ -48,24 +48,24 @@
   "fixture_sha256": "763fa4368b002d09fc0a52b17cc091568ef32346ba30f0cff1cdac226ac962d5",
   "vad_model_sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
   "llm_model_sha256": "c0efea3254c2363a9559e32ac76e9987aff3a68c31b84a3e65c12aa5c01bd120",
-  "binary_sha256": "79c070301533afdbae95f95fc4a96c7a1b6a79ed189b72b7bb65d18a49f812a8",
+  "binary_sha256": "952b1b9da59219f7336c9b1508a2f8f7408d6c0e87d7a92cc50b15c2e98ae1de",
   "source_sha256": "91d2536256e21db441bb27c2ccb57c7986c97b6438866fc16e292aed16572a1d",
   "llm_libraries": [
     {
       "file": "llm-build/src/libllama.a",
-      "sha256": "e3c76a57d7a225e34de004b40f51ebc7b713d065d154582f168365da5c9039e0"
+      "sha256": "d3664e4279620cacbab1fde165e82b77f2fefde8c31c24a349c745beb0bae8f5"
     },
     {
       "file": "llm-build/ggml/src/libggml.a",
-      "sha256": "72b3e15a68eb990d821d641024066a2161661e2bc0ff2b049054e6e86cd3d387"
+      "sha256": "8cc780e1e682ca8883a06997fc075da29576f58bed9db6e05a03d476f6948b6f"
     },
     {
       "file": "llm-build/ggml/src/libggml-cpu.a",
-      "sha256": "9fa30a98683640e3a15c69adb1e5939a8965067208f64fe3f69bceef9d3de5a3"
+      "sha256": "20de133f35775e76d3faac398ee0475ffab75294586cb0b2a6eb716b6fd0aca1"
     },
     {
       "file": "llm-build/ggml/src/libggml-base.a",
-      "sha256": "edad8c3f773064d7afa1b3a3b0226117b03795abad880a9c71275efaaafd5dda"
+      "sha256": "2afb3e11457cdfbf649a9408b35c8e7d96934b413b628594f3afdf08e1336545"
     }
   ]
 }
