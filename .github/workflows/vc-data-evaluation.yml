@@ -64,6 +64,8 @@ jobs:
           python3 -O -m unittest discover -s ../asr-calibration -p 'test_*.py' -v
           python3 ../asr-calibration/calibration_report.py --output "$RUNNER_TEMP/asr-calibration"
           python3 -O ../asr-calibration/calibration_report.py
+          python3 ../asr-calibration/noise_pilot_report.py --output "$RUNNER_TEMP/asr-calibration-noise"
+          python3 -O ../asr-calibration/noise_pilot_report.py
       - name: Normal build inventory contracts (no artifact or dependency downloads)
         run: |
           python3 -m unittest discover -s ../build-inventory -p 'test_*.py' -v
@@ -242,3 +244,12 @@ jobs:
           path: |
             ${{ runner.temp }}/asr-calibration/summary.json
             ${{ runner.temp }}/asr-calibration/summary.html
+      - name: Upload aggregate-only frozen calibrator noise comparison
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: asr-calibration-noise
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/asr-calibration-noise/summary.json
+            ${{ runner.temp }}/asr-calibration-noise/summary.html
