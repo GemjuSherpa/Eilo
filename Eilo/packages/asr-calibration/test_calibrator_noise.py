@@ -36,7 +36,8 @@ class NoisePilotTests(unittest.TestCase):
 
     def test_source_model_baseline_and_native_hash_tamper_denied(self):
         for mutate in [lambda r:r['source_pins'].clear(),lambda r:r.update(private_model_sha256='0'*64),lambda r:r.update(clean_pilot_sha256='0'*64),
-                       lambda r:r['reports']['20'].update(status='other'),lambda r:r['suite']['reports'].update({'0':'0'*64})]:
+                       lambda r:r['reports']['20'].update(status='other'),lambda r:r['suite']['reports'].update({'0':'0'*64}),
+                       lambda r:r['suite'].update(noise_manifest_sha256='0'*64)]:
             changed=fixture();mutate(changed)
             with self.assertRaises(ValueError):report.validate(changed)
 
