@@ -18,6 +18,7 @@ def validate(r):
     need(r['private_model_sha256']==read(HERE/'freeze.json')['private_model_sha256'])
     clean=read(HERE/'results.json');validate_clean(clean)
     suite_report.validate_suite(r['suite'],r['reports'],clean['native'])
+    need(r['suite']['noise_manifest_sha256']==read(HERE.parent/'asr-corpus-score/noise-results/suite.json')['noise_manifest_sha256'])
     need(r['suite']['parents']==config['parents']==30 and r['suite']['variants']==config['variants']==90)
     need(type(r['mapped']) is dict and set(r['mapped'])=={'20','10','0'})
     rows=[]
