@@ -22,7 +22,7 @@ class NegativeTests(unittest.TestCase):
     def test_unavailable_is_not_observed_no_text(self):
         rows=[]
         for group,count in zip(n.GROUPS,(12,3,3)):
-            for _ in range(count):rows.append(dict(group=group,paths=[dict(source=s,status='UNAVAILABLE',reason='INCOMPLETE_DECODE') for s in n.SOURCES]))
+            for _ in range(count):rows.append(dict(group=group,paths=[dict(source=s,status='UNAVAILABLE',reason='INCOMPLETE_DECODE' if s==n.SOURCES[0] else 'GREEDY_UNAVAILABLE') for s in n.SOURCES]))
         for r in n.summarize(rows):
             self.assertEqual(r['available'],0);self.assertEqual(r['unavailable'],r['cases'])
             self.assertEqual(r['observed_word_bearing'],0)
@@ -49,6 +49,10 @@ class NegativeTests(unittest.TestCase):
                        lambda f:f['groups'][0].update(observed_word_bearing_fraction_all_cases=.1),lambda f:f['groups'][0].update(mapped_accepted_word_bearing=13)]:
             f=fixture();mutate(f)
             with self.assertRaises(ValueError):report.validate(f)
+
+    def test_dependent_draft_availability_cannot_exceed_greedy(self):
+        f=fixture();row=f['groups'][1];row.update(available=0,unavailable=12,unavailable_reasons={'GREEDY_UNAVAILABLE':12},observed_word_bearing=0,observed_word_bearing_fraction_all_cases=0,raw_accepted_word_bearing=0,mapped_accepted_word_bearing=0)
+        with self.assertRaises(ValueError):report.validate(f)
 
     def test_native_response_validation_and_word_bearing(self):
         native=dict(source=n.SOURCES[0],status='AVAILABLE',transcript='...',tokens=1,confidence=.9,geometric_mean=.9,minimum=.9,oracle_error=0,origins=dict(greedy=1,verification=0,redecode=0))
