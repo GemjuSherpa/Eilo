@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "purpose": "DIRECT_ASR_NOISE_ONLY_DIAGNOSTIC",
+  "protocol_commit": "29bcbe9f00ef079d6e69e4292ec5eeb4f278f1b5",
+  "source_pins": {
+    "asr-calibration/negative.py": "339cc40289efa5098206e467fd20406b809230d466c2ca42ac159527b4d4ac12",
+    "asr-calibration/negative-protocol.json": "571dbb77bbbbb59306b47789bf989d91c33c89325cfd0d5efc3b579717e42a43",
+    "asr-calibration/calibrate.py": "00d4b4a99f805e7c4f71c3d59f94ce5d099198e60abf67492a053ca37589da39",
+    "asr-calibration/freeze.json": "7ce7ae0da50dd3fcb4facc5510b0280099fcd511f47a66314964d8905045a4c1",
+    "asr-calibration/noise_pilot.py": "2cc226bde1e4767d6a69cac079ee1579ad9e047f1b425eca9c679389779d2430",
+    "asr-calibration/calibration_report.py": "88148c8c97af05c8a28656ef7bfbb673748a2a792afca607116eb534f6a740aa",
+    "asr-corpus-score/run_android.py": "23264aebec3388a87affbc71e71bf7e5a0853041eb2033a9fd51a805b9d554ee",
+    "asr-corpus-score/diagnostics.py": "7d0c0f33378fdda9d50aedd67eaf41247845dd3a0783f8c9770cdeaa38a487f9",
+    "asr-corpus-score/main.cpp": "bc38ba7297af7313a1ba335f3b4fede01ec8f39446a7f2c223d8140420be2016",
+    "asr-corpus-score/CMakeLists.txt": "16252575fda74ae3b06a3cd987085fd8a2fbdc71dc749d0692f611fb35e08971",
+    "asr-sdk-score-probe/overlay.py": "102a4ff3288b6420bd4e7ed9ffda3841d5c2e8f242bba6c854e907e8ba8b0e55",
+    "asr-sdk-score-probe/score_trace.h": "3d289b3464fd31e5e3522c3a332cae3373f552533869a5bda6159d96c99b6cee",
+    "asr-sdk-score-probe/overlay-expected.json": "cdf21e144fa02f6a906e803315ebe8ded8965ba3842998788802684189f485cd",
+    "dataset-evaluation/audio.py": "3e639578623c8345aec516c10c2732ab5a13fd8fd1e3fed1ce83d5ae448d0db4",
+    "dataset-evaluation/benchmark.py": "025da2520d09468d683e05f3823bd77f8175be0a7dee6f048880f1c6ff6e6aab",
+    "dataset-evaluation/manifests.py": "65cdf1411794a786329124551aab24854bb71180b609de8626292cd661d8abdf"
+  },
+  "controls_sha256": "961e970693f78541100e107c94d2b71efdd0d3855040be94b3f819330c699e20",
+  "musan_manifest_sha256": "b6812fcdb073751f18475d9fcf908a599be078d2d0237d0682950809c8670fa9",
+  "private_counts_sha256": "208ffb1d02c11fefaf9e78f5004edb77f1690c2fba12ee66f3d5f0ea4b6836db",
+  "private_model_sha256": "d474087c0635e721f0712e4fed216888bcc562619c53b2998788ffda5ac77656",
+  "model_bundle_sha256": "63534d53df54c74b949569be98a413b6096f583a1e653a6c44024421da02bb71",
+  "model_provenance_sha256": "3db28e00acafb37ffaae433f3f9696fd56a0b5678b45edf50a1401f2400a37dd",
+  "runtime_sha256": "888bc59e8003cce5a1500962f60e47747c13b95658ecc6b2ca5d096c159cf715",
+  "ort_sha256": "86e85022fc539963177e478c8e9a8a8219bc3b0d7515bf5297a62986dbc45e7a",
+  "cxx_sha256": "e69496a4aeb51ebe61d0775ae9fefc76eee640f12317aa5174da67e5d4ec8fd6",
+  "overlay_pins": {
+    "moonshine-streaming-model.h": "928b4cf34ae8b56ce3229f30a1697076e06306e4a33d0cbbd7c80c3de20da80b",
+    "moonshine-streaming-model.cpp": "4f4122c648f7f1c1ab9f467a30583bfcc230f23811c350b7c842c236031be26d"
+  },
+  "groups": [
+    {
+      "group": "musan_weak_noise",
+      "source": "GREEDY_PREBIAS_MEAN_V1",
+      "cases": 12,
+      "available": 0,
+      "unavailable": 12,
+      "unavailable_reasons": {
+        "EOS_WITHOUT_USABLE_SCORES": 12
+      },
+      "observed_word_bearing": 0,
+      "observed_word_bearing_fraction_all_cases": 0.0,
+      "raw_accepted_word_bearing": 0,
+      "mapped_accepted_word_bearing": 0,
+      "outside_development_range": 0
+    },
+    {
+      "group": "musan_weak_noise",
+      "source": "SELF_DRAFT_PREBIAS_MEAN_V1",
+      "cases": 12,
+      "available": 0,
+      "unavailable": 12,
+      "unavailable_reasons": {
+        "GREEDY_UNAVAILABLE": 12
+      },
+      "observed_word_bearing": 0,
+      "observed_word_bearing_fraction_all_cases": 0.0,
+      "raw_accepted_word_bearing": 0,
+      "mapped_accepted_word_bearing": 0,
+      "outside_development_range": 0
+    },
+    {
+      "group": "digital_silence",
+      "source": "GREEDY_PREBIAS_MEAN_V1",
+      "cases": 3,
+      "available": 1,
+      "unavailable": 2,
+      "unavailable_reasons": {
+        "EOS_WITHOUT_USABLE_SCORES": 2
+      },
+      "observed_word_bearing": 1,
+      "observed_word_bearing_fraction_all_cases": 0.3333333333333333,
+      "raw_accepted_word_bearing": 0,
+      "mapped_accepted_word_bearing": 0,
+      "outside_development_range": 1
+    },
+    {
+      "group": "digital_silence",
+      "source": "SELF_DRAFT_PREBIAS_MEAN_V1",
+      "cases": 3,
+      "available": 1,
+      "unavailable": 2,
+      "unavailable_reasons": {
+        "GREEDY_UNAVAILABLE": 2
+      },
+      "observed_word_bearing": 1,
+      "observed_word_bearing_fraction_all_cases": 0.3333333333333333,
+      "raw_accepted_word_bearing": 0,
+      "mapped_accepted_word_bearing": 0,
+      "outside_development_range": 1
+    },
+    {
+      "group": "uniform_noise",
+      "source": "GREEDY_PREBIAS_MEAN_V1",
+      "cases": 3,
+      "available": 0,
+      "unavailable": 3,
+      "unavailable_reasons": {
+        "EOS_WITHOUT_USABLE_SCORES": 3
+      },
+      "observed_word_bearing": 0,
+      "observed_word_bearing_fraction_all_cases": 0.0,
+      "raw_accepted_word_bearing": 0,
+      "mapped_accepted_word_bearing": 0,
+      "outside_development_range": 0
+    },
+    {
+      "group": "uniform_noise",
+      "source": "SELF_DRAFT_PREBIAS_MEAN_V1",
+      "cases": 3,
+      "available": 0,
+      "unavailable": 3,
+      "unavailable_reasons": {
+        "GREEDY_UNAVAILABLE": 3
+      },
+      "observed_word_bearing": 0,
+      "observed_word_bearing_fraction_all_cases": 0.0,
+      "raw_accepted_word_bearing": 0,
+      "mapped_accepted_word_bearing": 0,
+      "outside_development_range": 0
+    }
+  ],
+  "rejected_inputs": [
+    "empty",
+    "unaligned",
+    "nan",
+    "out_of_range"
+  ],
+  "calibrator_refit": "NOT_PERFORMED",
+  "threshold_fitting": "NOT_PERFORMED",
+  "end_to_end_false_activation": "NOT_MEASURED",
+  "vad": "BYPASSED",
+  "native_calibration": "NOT_ESTABLISHED",
+  "threshold_authorization": "NOT_GRANTED",
+  "production": "NOT_ENABLED",
+  "physical": "NOT_RUN"
+}
