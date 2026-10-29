@@ -2,7 +2,7 @@
   "schema_version": 1,
   "purpose": "UNSIGNED_IOS_ASR_FRAMEWORK_EVALUATION",
   "source_pins": {
-    "asr-runtime/framework.py": "bea35db97d89fd9fa0c08c7ee532d9dcd993f5ae98ed387988d365fb9ce19e0e",
+    "asr-runtime/framework.py": "24a6fdbf1575fc29cad19864f97cfa632a9008284ec91a928e56ec039d4ebd34",
     "asr-runtime/framework_probe.swift": "349ce3c4453358f06b423db62363ceec0178b50c8c05416eb7d5e6230a9460b6",
     "asr-runtime/eilo_asr.cc": "1b5dd4274b93f8c972f2c1a27406377330e65d3e4290f26f2bc51a919ea02833",
     "asr-runtime/include/eilo_asr.h": "416a71220bc5ea2e9c01df19e93dbd1ccaf2b3c38ccff4a55257cb658b2e6c30",
@@ -128,6 +128,10 @@
   "xcframework": "TWO_ARM64_SLICES",
   "relocation": "EXECUTED_WITH_ORIGINAL_CLIENT_DIRECTORY_ABSENT",
   "framework_client_sha256": "258a3c83a06973d98e0081848a4ca7af14d6371972ed5cd42b55b438eec6f853",
+  "client_rpaths": [
+    "/usr/lib/swift",
+    "@executable_path/Frameworks"
+  ],
   "fixture_sha256": "763fa4368b002d09fc0a52b17cc091568ef32346ba30f0cff1cdac226ac962d5",
   "execution": {
     "duplicate_final_rejected": true,
@@ -141,19 +145,19 @@
   "llm_static_archives": [
     {
       "name": "libllama.a",
-      "sha256": "ba6a8d75c0e6c2a0c53785ccb0fedabc4f369ddd6668425fbddbca1866978f76"
+      "sha256": "6692bb02789ee7840bb8306e3a22b71299d18884bbef51815f4c95f4878d9446"
     },
     {
       "name": "libggml.a",
-      "sha256": "b57c6a1c4b352687357fe3cec4e3b13fc88a773273f9721ac74097cd7d55e208"
+      "sha256": "4dd2bcf2d74ae1d941698f5a295b8f09df0b83d7dbdbb929057be274ddee9ff8"
     },
     {
       "name": "libggml-cpu.a",
-      "sha256": "b7426302525e6b2ccf34758ec7ecdbd413def0acc3d671df4c2238ba747f8c6c"
+      "sha256": "e1a41b879af9110b07e42198437e946a73b7f8937f4b4357261c94e79ee0c65a"
     },
     {
       "name": "libggml-base.a",
-      "sha256": "8813e927d6f4ca14976df4a4e52b2b68d02549effeb485a741bf27662f0024f3"
+      "sha256": "e015a8006a0e46461ec175ea61c4513fe055cbffc25646df6cd12ea206edf406"
     }
   ],
   "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
