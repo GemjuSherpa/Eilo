@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "purpose": "DIRECT_ASR_NOISE_ONLY_DIAGNOSTIC",
+  "musan_cases": 12,
+  "digital_silence_seconds": [1, 5, 10],
+  "uniform_noise_seconds": 3,
+  "uniform_noise_peak_pcm": [328, 3277, 9830],
+  "seed": 20261029,
+  "cases_total": 18,
+  "threshold": 0.85,
+  "musan_labels": "CORPUS_CATEGORY_WEAK_LABEL_NOT_VERIFIED_SPEECH_ABSENCE",
+  "synthetic_labels": "NO_SPEECH_BY_CONSTRUCTION",
+  "pairing": "UNIFORM_NOISE_LEVELS_SHARE_ONE_DETERMINISTIC_WAVEFORM",
+  "unavailable": "TEXT_OUTCOME_NOT_OBSERVABLE",
+  "calibrator_refit": "NOT_PERFORMED",
+  "threshold_fitting": "NOT_PERFORMED",
+  "end_to_end_false_activation": "NOT_MEASURED",
+  "vad": "BYPASSED",
+  "native_calibration": "NOT_ESTABLISHED",
+  "threshold_authorization": "NOT_GRANTED",
+  "production": "NOT_ENABLED",
+  "physical": "NOT_RUN"
+}
