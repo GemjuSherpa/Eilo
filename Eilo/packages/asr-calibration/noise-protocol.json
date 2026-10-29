@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "purpose": "FROZEN_CALIBRATOR_PAIRED_NOISE_DIAGNOSTIC",
+  "parents": 30,
+  "variants": 90,
+  "snrs": [20, 10, 0],
+  "seed": 20261028,
+  "pairing": "SAME_KNOWN_SPEAKER_PARENTS_CORRELATED_NOT_NEW_HOLDOUT",
+  "calibrator_refit": "NOT_PERFORMED",
+  "threshold_fitting": "NOT_PERFORMED",
+  "diagnostic_threshold": 0.85,
+  "native_calibration": "NOT_ESTABLISHED",
+  "threshold_authorization": "NOT_GRANTED",
+  "production": "NOT_ENABLED",
+  "physical": "NOT_RUN"
+}

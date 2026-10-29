@@ -1,10 +1,10 @@
 name: VC-DATA synthetic evaluation
 on:
   pull_request:
-    paths: ['Eilo/packages/asr-calibration/**', 'Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/scripts/ci-dependencies.py', 'Eilo/scripts/ci-resolve-android.gradle', 'Eilo/scripts/test_ci_dependencies.py', '.github/workflows/s01-foundation.yml', 'Eilo/packages/asr-calibration/**', 'Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
   push:
     branches: ['sprint/**', 'task/vc-data-**', 'task/vc-turn-04-**']
-    paths: ['Eilo/packages/asr-calibration/**', 'Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/scripts/ci-dependencies.py', 'Eilo/scripts/ci-resolve-android.gradle', 'Eilo/scripts/test_ci_dependencies.py', '.github/workflows/s01-foundation.yml', 'Eilo/packages/asr-calibration/**', 'Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
 permissions:
   contents: read
 concurrency:
@@ -64,6 +64,8 @@ jobs:
           python3 -O -m unittest discover -s ../asr-calibration -p 'test_*.py' -v
           python3 ../asr-calibration/calibration_report.py --output "$RUNNER_TEMP/asr-calibration"
           python3 -O ../asr-calibration/calibration_report.py
+          python3 ../asr-calibration/noise_pilot_report.py --output "$RUNNER_TEMP/asr-calibration-noise"
+          python3 -O ../asr-calibration/noise_pilot_report.py
       - name: Normal build inventory contracts (no artifact or dependency downloads)
         run: |
           python3 -m unittest discover -s ../build-inventory -p 'test_*.py' -v
@@ -242,3 +244,12 @@ jobs:
           path: |
             ${{ runner.temp }}/asr-calibration/summary.json
             ${{ runner.temp }}/asr-calibration/summary.html
+      - name: Upload aggregate-only frozen calibrator noise comparison
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: asr-calibration-noise
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/asr-calibration-noise/summary.json
+            ${{ runner.temp }}/asr-calibration-noise/summary.html

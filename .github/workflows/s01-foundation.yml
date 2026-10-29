@@ -33,6 +33,8 @@ jobs:
         run: |
           python3 scripts/test_verify_ios_launch.py
           python3 -O scripts/test_verify_ios_launch.py
+          python3 scripts/test_ci_dependencies.py
+          python3 -O scripts/test_ci_dependencies.py
       - name: Pending requirement closure fixtures (offline, no release acceptance)
         run: |
           python3 -m unittest discover -s packages/release-evidence -p 'test_*.py'
@@ -66,7 +68,7 @@ jobs:
   android:
     if: github.event.repository.private == false
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     defaults:
       run:
         working-directory: Eilo
@@ -85,12 +87,13 @@ jobs:
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           sdkmanager 'platforms;android-37.0' 'build-tools;37.0.0' 'ndk;27.1.12297006' 'cmake;3.22.1' < <(yes)
           cd apps/mobile/android
+          python3 ../../../scripts/ci-dependencies.py android
           ./gradlew :app:assembleDebug :app:assembleRelease :app:testDebugUnitTest --max-workers=2
   ios-and-history:
     # Public repo: standard hosted runners. Private use requires a new cost review.
     if: github.event.repository.private == false
     runs-on: macos-26
-    timeout-minutes: 40
+    timeout-minutes: 50
     defaults:
       run:
         working-directory: Eilo
@@ -133,7 +136,7 @@ jobs:
           cd apps/mobile
           bundle install --jobs 4
           cd ios
-          bash ../../../scripts/install-ios-pods.sh
+          python3 ../../../scripts/ci-dependencies.py pods
       - name: Swift XCTest adapter fixtures
         working-directory: Eilo/packages/native-test-seam
         run: swift test
