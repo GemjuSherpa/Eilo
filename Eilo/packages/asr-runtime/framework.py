@@ -134,6 +134,16 @@ def xcframework_entries(path):
     need(set(result)=={'iphoneos','iphonesimulator'});return result
 
 
+def client_metadata(loads,commands):
+    # otool's first line is the inspected input filename, not a dependency.
+    dependencies=[line.strip().split(' (')[0] for line in loads.splitlines()[1:]]
+    need(INSTALL in dependencies)
+    need(all(d==INSTALL or d.startswith('/System/Library/Frameworks/') or d.startswith('/usr/lib/') or re.fullmatch(r'@rpath/libswift[A-Za-z0-9_]+\.dylib',d) for d in dependencies))
+    rpaths=re.findall(r'cmd LC_RPATH\s+cmdsize \d+\s+path (.*?) \(offset \d+\)',commands)
+    need(len(rpaths)==2 and set(rpaths)=={'/usr/lib/swift','@executable_path/Frameworks'})
+    return rpaths
+
+
 def build_llm(cache,cmake,out):
     directory=PACKAGES/'llm-runtime';record=read(directory/'provenance.json');source=cache/('llama.cpp-'+record['runtime']['commit'])
     archive=cache/'llama-v0.6.0.tar.gz';need(sha(archive)==record['runtime']['source_archive_sha256'])
@@ -176,9 +186,8 @@ def main():
          *sources,HERE/'framework_probe.swift',llm_obj,*llm_libraries,'-framework',NAME,'-framework','Accelerate','-framework','Foundation','-framework','AVFoundation','-framework','CryptoKit','-lc++',
          '-Xlinker','-rpath','-Xlinker','@executable_path/Frameworks','-o',original/'FrameworkProbe'])
     relocated=out/'relocated/FrameworkEvaluation.app';relocated.parent.mkdir();original.rename(relocated);need(not original.exists())
-    client=relocated/'FrameworkProbe';loads=run(['xcrun','otool','-L',client]).splitlines()[1:]
-    need(any(line.strip().split(' (')[0]==INSTALL for line in loads) and all(str(out) not in line for line in loads))
-    rpaths=run(['xcrun','otool','-l',client]);need('path @executable_path/Frameworks ' in rpaths)
+    client=relocated/'FrameworkProbe'
+    client_rpaths=client_metadata(run(['xcrun','otool','-L',client]),run(['xcrun','otool','-l',client]))
     need(inspect_bundle(relocated/'Frameworks'/bundles['iphonesimulator'].name,'iphonesimulator')==observations['iphonesimulator'])
     fixture=next(r for r in read(HERE/'tests/fixtures.json')['cases'] if r['id']=='question');audio=cache/'fixtures'/fixture['file'];need(sha(audio)==fixture['sha256'])
     with tempfile.TemporaryDirectory(prefix='eilo-framework-fixture-') as temp:
@@ -194,7 +203,7 @@ def main():
     need(sum(f.stat().st_size for f in out.rglob('*') if f.is_file())<5*1024**3)
     report=dict(schema_version=1,purpose='UNSIGNED_IOS_ASR_FRAMEWORK_EVALUATION',source_pins=before,asr_provenance_sha256=sha(HERE/'provenance.json'),
                 llm_provenance_sha256=sha(PACKAGES/'llm-runtime/provenance.json'),frameworks=observations,xcframework='TWO_ARM64_SLICES',
-                relocation='EXECUTED_WITH_ORIGINAL_CLIENT_DIRECTORY_ABSENT',framework_client_sha256=sha(client),fixture_sha256=fixture['sha256'],execution=execution,
+                relocation='EXECUTED_WITH_ORIGINAL_CLIENT_DIRECTORY_ABSENT',framework_client_sha256=sha(client),client_rpaths=client_rpaths,fixture_sha256=fixture['sha256'],execution=execution,
                 llm_static_archives=[dict(name=f.name,sha256=sha(f)) for f in llm_libraries],compiler=run(['xcrun','clang++','--version']).splitlines()[0],**FLAGS)
     from framework_report import validate
     validate(report);(out/'results.json').write_text(json.dumps(report,indent=2)+'\n')

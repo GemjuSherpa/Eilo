@@ -16,11 +16,12 @@ def digest(value):need(type(value) is str and re.fullmatch('[0-9a-f]{64}',value)
 
 
 def validate(r):
-    closed(r,'schema_version purpose source_pins asr_provenance_sha256 llm_provenance_sha256 frameworks xcframework relocation framework_client_sha256 fixture_sha256 execution llm_static_archives compiler '+' '.join(FLAGS))
+    closed(r,'schema_version purpose source_pins asr_provenance_sha256 llm_provenance_sha256 frameworks xcframework relocation framework_client_sha256 client_rpaths fixture_sha256 execution llm_static_archives compiler '+' '.join(FLAGS))
     need(type(r['schema_version']) is int and r['schema_version']==1 and r['purpose']=='UNSIGNED_IOS_ASR_FRAMEWORK_EVALUATION' and r['source_pins']==pins())
     for k,v in FLAGS.items():need(r[k]==v)
     need(r['asr_provenance_sha256']==sha(HERE/'provenance.json') and r['llm_provenance_sha256']==sha(PACKAGES/'llm-runtime/provenance.json'))
     need(r['xcframework']=='TWO_ARM64_SLICES' and r['relocation']=='EXECUTED_WITH_ORIGINAL_CLIENT_DIRECTORY_ABSENT')
+    need(type(r['client_rpaths']) is list and len(r['client_rpaths'])==2 and set(r['client_rpaths'])=={'/usr/lib/swift','@executable_path/Frameworks'})
     digest(r['framework_client_sha256']);need(type(r['compiler']) is str and r['compiler'].startswith('Apple clang version ') and len(r['compiler'])<300 and '/' not in r['compiler'])
     fixture=next(x for x in read(HERE/'tests/fixtures.json')['cases'] if x['id']=='question');need(r['fixture_sha256']==fixture['sha256'])
     frameworks=r['frameworks'];need(type(frameworks) is dict and set(frameworks)=={'iphoneos','iphonesimulator'})

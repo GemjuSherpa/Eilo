@@ -20,12 +20,19 @@ def fixture():
             header_sha256=f.sha(f.HERE/'include/eilo_asr.h'),module_sha256=hashlib.sha256(MODULE.encode()).hexdigest(),info_sha256=hashlib.sha256(plistlib.dumps(f.metadata(sdk))).hexdigest())
     return dict(schema_version=1,purpose='UNSIGNED_IOS_ASR_FRAMEWORK_EVALUATION',source_pins=f.pins(),asr_provenance_sha256=f.sha(f.HERE/'provenance.json'),
         llm_provenance_sha256=f.sha(f.PACKAGES/'llm-runtime/provenance.json'),frameworks=rows,xcframework='TWO_ARM64_SLICES',relocation='EXECUTED_WITH_ORIGINAL_CLIENT_DIRECTORY_ABSENT',framework_client_sha256='b'*64,
-        fixture_sha256=next(x['sha256'] for x in f.read(f.HERE/'tests/fixtures.json')['cases'] if x['id']=='question'),
+        client_rpaths=['/usr/lib/swift','@executable_path/Frameworks'],fixture_sha256=next(x['sha256'] for x in f.read(f.HERE/'tests/fixtures.json')['cases'] if x['id']=='question'),
         execution=dict(framework_asr_final=True,duplicate_final_rejected=True,stale_final_rejected=True,linked_llm_unloaded_gate_rejected=True,microphone='NOT_OPENED',llm_generation='NOT_RUN',physical='NOT_RUN'),
         llm_static_archives=[dict(name=n,sha256='c'*64) for n in ('libllama.a','libggml.a','libggml-cpu.a','libggml-base.a')],compiler='Apple clang version synthetic',**f.FLAGS)
 
 
 class FrameworkTests(unittest.TestCase):
+    def test_relocated_client_rejects_absolute_search_paths_not_filename_header(self):
+        loads='/private/build/FrameworkProbe:\n '+f.INSTALL+' (compatibility version 1.0)\n @rpath/libswiftCore.dylib (compatibility version 1.0)\n'
+        commands='cmd LC_RPATH\n cmdsize 32\n path /usr/lib/swift (offset 12)\n cmd LC_RPATH\n cmdsize 40\n path @executable_path/Frameworks (offset 12)\n'
+        self.assertEqual(len(f.client_metadata(loads,commands)),2)
+        with self.assertRaises(ValueError):f.client_metadata(loads,commands.replace('@executable_path/Frameworks','/private/build/Frameworks'))
+        with self.assertRaises(ValueError):f.client_metadata(loads.replace(f.INSTALL,'/private/build/CEiloAsr'),commands)
+
     def test_report_keeps_real_scope_closed(self):
         result=report.validate(fixture());self.assertEqual(len(result['frameworks']),2)
         self.assertEqual(result['release'],'HOLD');self.assertEqual(result['execution']['llm_generation'],'NOT_RUN')
