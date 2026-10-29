@@ -1,10 +1,10 @@
 name: VC-DATA synthetic evaluation
 on:
   pull_request:
-    paths: ['Eilo/scripts/ci-dependencies.py', 'Eilo/scripts/ci-resolve-android.gradle', 'Eilo/scripts/test_ci_dependencies.py', '.github/workflows/s01-foundation.yml', 'Eilo/packages/asr-calibration/**', 'Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/scripts/test_gitleaks_framework.py', 'Eilo/packages/asr-runtime/**', 'Eilo/scripts/ci-dependencies.py', 'Eilo/scripts/ci-resolve-android.gradle', 'Eilo/scripts/test_ci_dependencies.py', '.github/workflows/s01-foundation.yml', 'Eilo/packages/asr-calibration/**', 'Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
   push:
     branches: ['sprint/**', 'task/vc-data-**', 'task/vc-turn-04-**']
-    paths: ['Eilo/scripts/ci-dependencies.py', 'Eilo/scripts/ci-resolve-android.gradle', 'Eilo/scripts/test_ci_dependencies.py', '.github/workflows/s01-foundation.yml', 'Eilo/packages/asr-calibration/**', 'Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
+    paths: ['Eilo/scripts/test_gitleaks_framework.py', 'Eilo/packages/asr-runtime/**', 'Eilo/scripts/ci-dependencies.py', 'Eilo/scripts/ci-resolve-android.gradle', 'Eilo/scripts/test_ci_dependencies.py', '.github/workflows/s01-foundation.yml', 'Eilo/packages/asr-calibration/**', 'Eilo/packages/ios-privacy-audit/**', 'Eilo/packages/dependency-notices/**', 'Eilo/packages/build-inventory/**', 'Eilo/packages/asr-fresh-split/**', 'Eilo/packages/asr-corpus-score/**', 'Eilo/packages/asr-sdk-score-probe/**', 'Eilo/packages/asr-confidence-probe/**', 'Eilo/packages/physical-ios-trial/**', 'Eilo/packages/conversation-integration/**', 'Eilo/packages/dataset-evaluation/**', 'Eilo/packages/vad-runtime/**', 'Eilo/packages/native-test-seam/**', 'Eilo/apps/mobile/android/app/src/**', '.github/workflows/vc-data-evaluation.yml']
 permissions:
   contents: read
 concurrency:
@@ -68,6 +68,12 @@ jobs:
           python3 -O ../asr-calibration/noise_pilot_report.py
           python3 ../asr-calibration/negative_report.py --output "$RUNNER_TEMP/asr-negative-controls"
           python3 -O ../asr-calibration/negative_report.py
+      - name: ASR framework packaging observations (no native cache access)
+        run: |
+          python3 -m unittest discover -s ../asr-runtime -p 'test_*.py' -v
+          python3 -O -m unittest discover -s ../asr-runtime -p 'test_*.py' -v
+          python3 ../asr-runtime/framework_report.py --output "$RUNNER_TEMP/asr-framework"
+          python3 -O ../asr-runtime/framework_report.py
       - name: Normal build inventory contracts (no artifact or dependency downloads)
         run: |
           python3 -m unittest discover -s ../build-inventory -p 'test_*.py' -v
@@ -264,3 +270,12 @@ jobs:
           path: |
             ${{ runner.temp }}/asr-negative-controls/summary.json
             ${{ runner.temp }}/asr-negative-controls/summary.html
+      - name: Upload aggregate-only ASR framework observations
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ios-asr-framework
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/asr-framework/summary.json
+            ${{ runner.temp }}/asr-framework/summary.html

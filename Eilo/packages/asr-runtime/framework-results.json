@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "purpose": "UNSIGNED_IOS_ASR_FRAMEWORK_EVALUATION",
+  "source_pins": {
+    "asr-runtime/framework.py": "24a6fdbf1575fc29cad19864f97cfa632a9008284ec91a928e56ec039d4ebd34",
+    "asr-runtime/framework_probe.swift": "349ce3c4453358f06b423db62363ceec0178b50c8c05416eb7d5e6230a9460b6",
+    "asr-runtime/eilo_asr.cc": "1b5dd4274b93f8c972f2c1a27406377330e65d3e4290f26f2bc51a919ea02833",
+    "asr-runtime/include/eilo_asr.h": "416a71220bc5ea2e9c01df19e93dbd1ccaf2b3c38ccff4a55257cb658b2e6c30",
+    "asr-runtime/provenance.json": "3db28e00acafb37ffaae433f3f9696fd56a0b5678b45edf50a1401f2400a37dd",
+    "asr-runtime/tests/fixtures.json": "5f310e91b7cb36d33ab09252cc44f1dd045178cb172e65827a98eebe9ca78102",
+    "llm-runtime/eilo_llm.cc": "caca29fa8706736a0af5e25a3b36b0343093cc2857bcd66ff135e8571f039eb9",
+    "llm-runtime/include/eilo_llm.h": "9b21bed896237ea6070c88f02765cbd9e6148b7f60f0a1f9d5df241c42ef6ed4",
+    "llm-runtime/include/module.modulemap": "eb5661ef25e18846ee4c38c669077a38aefaa539caf0dd1602c8723835ba8a86",
+    "llm-runtime/provenance.json": "87ec4d03e2da09373edf9b3c5d0c8af56d0de6bd069a9aa276e9e5e9a0a6d6ce",
+    "llm-runtime/check_host.py": "e567fa2e5f2796459dab194894c3cffa969eba490c7e63495b224afaaea8e82f",
+    "llm-runtime/check_ios.py": "79cf0561e744b0f2664193635301f06391f9ad0d84273a8653977fb5bab8862a",
+    "native-test-seam/Sources/NativeTestSeam/AudioInterruption.swift": "b3e841aa8028a0fb39d741be85b6942b1f935dab33d06fc217f2e48d441c2541",
+    "native-test-seam/Sources/NativeTestSeam/BackgroundCapturePolicy.swift": "2a3a883f13b9c0aada3cb77475565bc7baeeb3053421011614620f86ef379d63",
+    "native-test-seam/Sources/NativeTestSeam/BoundedContinuation.swift": "1e9023749b0f0caaaf8b9bd4e5d07b4ff88826c9575e8a3c17cb7e731cde0bb9",
+    "native-test-seam/Sources/NativeTestSeam/CapabilityPolicy.swift": "8c3ed0af92d3be3d414ad67fa74e2da2cd7712971ac4fc4771d4d1dfdade636a",
+    "native-test-seam/Sources/NativeTestSeam/ConfirmedSpeechInterruption.swift": "a3d778311f7443cb088798473361014789e9f62ff340e7ce4343b19df682c9f1",
+    "native-test-seam/Sources/NativeTestSeam/DangerPolicy.swift": "861df20fe3830e887cac7a313a705fa3fc8fb6f8e703c0fecdbc51b55f2af2b0",
+    "native-test-seam/Sources/NativeTestSeam/EndpointDetector.swift": "2339f7471f3532cc93cb764e9b74e420f327987e412d185b4dc941377edf50cd",
+    "native-test-seam/Sources/NativeTestSeam/GenericSpokenTurn.swift": "0c9059f198e4a6a15cdaff2f7fdf259210055beb3e38ab8d4c3d0b117c667f86",
+    "native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift": "3636ed41e0b889457689212cbd29214071033edc82ff28e87fd8a0bf61241624",
+    "native-test-seam/Sources/NativeTestSeam/IOSConsentAuthentication.swift": "a38a6927002c917ac0804cf237656719cbead80b35137b2cc59fa162aa0ba660",
+    "native-test-seam/Sources/NativeTestSeam/IOSOfflineSpeech.swift": "956976c50309a5517696e96f8d39dd70756fec22ced3202008fec5540e3d7b39",
+    "native-test-seam/Sources/NativeTestSeam/LlmControllerJob.swift": "06b62272e56ef9a026964901cdf9790ee785c0acdfe04465940a0fb71d975ed4",
+    "native-test-seam/Sources/NativeTestSeam/LlmPackLease.swift": "2ca273a1de8b4c01c773a99bb6a96ffde520518d935387a21116c7554bc51a63",
+    "native-test-seam/Sources/NativeTestSeam/NativeAsrStream.swift": "b9a4c567f2a525c90c60eb31cb7af46a1ee4dee9d5f9bc63fdda9d7a541d2102",
+    "native-test-seam/Sources/NativeTestSeam/NativeClauseQueue.swift": "91d9d5c7292af764ee6a282efb3326b0cf57325ae6a7b3f3f5d09a940d0c5396",
+    "native-test-seam/Sources/NativeTestSeam/NativeConsentPolicy.swift": "684606cfb907d3efd9f80d71b81155a585b0f33a8d722a5e801105a53247a105",
+    "native-test-seam/Sources/NativeTestSeam/NativeController.swift": "379bdaaf10b2410f486832d3351484576dee0a6c8650f51e617546983cb8a62d",
+    "native-test-seam/Sources/NativeTestSeam/NativeIdleTimer.swift": "a63611df6f3da8c4b21cac78dab6bc9826dd12e8e3604f1cd9d48df61052cb76",
+    "native-test-seam/Sources/NativeTestSeam/NativeLlmStream.swift": "1161de6edda975a0c7fe5db2972efe5d150663b745332ee6939c66e495e852bd",
+    "native-test-seam/Sources/NativeTestSeam/NativePermission.swift": "c50065a791b830a6de6b7a4b9d62b11b27522823048e585a1cbeed68fddb5f6b",
+    "native-test-seam/Sources/NativeTestSeam/NativeSpeechPolicy.swift": "94cdf1d06882343ac8ea90c4adcdee41d26f8149a6b3609dc4a7456e0b327841",
+    "native-test-seam/Sources/NativeTestSeam/NativeVadStream.swift": "b0b204948bf9bd009c2a33ca913cdc04a9dd5c463059923f33cdeb9838c2e5ba",
+    "native-test-seam/Sources/NativeTestSeam/NativeWakeStream.swift": "414f9fe8f459afa430a15e6112d3a99d6af5043e51ec980022f4dcb99a323306",
+    "native-test-seam/Sources/NativeTestSeam/OfflineVoiceRegistry.swift": "c353831b41a27d007df5a4c2b81a8e9922c8534355506e167c745e584dce248d",
+    "native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift": "175fbf031ea11ed40b842662c4dd9e6416b66469d1cf68b55a0285f7b598167e",
+    "native-test-seam/Sources/NativeTestSeam/PackManifest.swift": "05a234a587f9ad511806011aea8c841fe13fed7aec4ea24906e37bcd8f5bc1c1",
+    "native-test-seam/Sources/NativeTestSeam/PackReadiness.swift": "c2476d7e896dc9b6192a8daaa7bf4f9d546462249704f1487c36a9c17972cbef",
+    "native-test-seam/Sources/NativeTestSeam/PackRecovery.swift": "437c402112c4f26c05c4145b5f4116113817a32e55bbd8820e76d57e13e349be",
+    "native-test-seam/Sources/NativeTestSeam/PackSignature.swift": "77de9d35f3b66aa9d7e3e85bab7b3f5754cfce6988598384305dd1bca746d031",
+    "native-test-seam/Sources/NativeTestSeam/PackStore.swift": "bbda23a0f07ef0295980e1166ca0f9ea346f4dd4aa09e90b2d317fbeb935b7e1",
+    "native-test-seam/Sources/NativeTestSeam/PackTransport.swift": "d4c8bd266fac63899aeff6e5506b3142302a305fdafbf8028e96a1e9cb47190e",
+    "native-test-seam/Sources/NativeTestSeam/PersonaPolicy.swift": "109e7a5b82693640f92ebb0395e0539840197fa1b71ee4c5813f1bafe2ae2489",
+    "native-test-seam/Sources/NativeTestSeam/PlaybackProgress.swift": "5ebdd6155d5767f48f6e4c41f034af7ce0338e1b5683aabd435a565f7f447551",
+    "native-test-seam/Sources/NativeTestSeam/PlaybackRejection.swift": "14b9ca877700fe17fe40f92c528fa48b85412fc03fed3c64aa0887bc986a224e",
+    "native-test-seam/Sources/NativeTestSeam/PromptBudget.swift": "8d3cddb37a9e2a524e7647ba8cb0b5b4efd652f033624e79c7de3833f1259b48",
+    "native-test-seam/Sources/NativeTestSeam/ProtectedKey.swift": "3a6e837bdb75fbf843653eaa7759444ce900d1ad2f66238fa7b259db290e3027",
+    "native-test-seam/Sources/NativeTestSeam/QwenTemplate.swift": "ab59ab8a438db4807447d2cfd67d7bd1261f1e65ae04452fe27801ee2fc0608e",
+    "native-test-seam/Sources/NativeTestSeam/RecognitionPolicy.swift": "a018aa05ad083f4d497b58b6994d186de2b7e582d8ce8d93629192a0fab2758f",
+    "native-test-seam/Sources/NativeTestSeam/SafeDiagnostics.swift": "fdce3ba96d5f5ae067f136056bec495757c2f9a3273b6398f8b5ed1aa1cbd46f",
+    "native-test-seam/Sources/NativeTestSeam/SpeechPackLease.swift": "6342f3b7a1c16bb5ed783d7adfbd3fde1def4fec56e933125289953e1c3c0ad6",
+    "native-test-seam/Sources/NativeTestSeam/StandbyAudioBuffer.swift": "f0038ab05e7badc51ce9373857870b45d0fd33a8309b001e37015b1976dec179",
+    "native-test-seam/Sources/NativeTestSeam/StreamingAsr.swift": "3c928fc338dbce24079e26ae8c156daa18c57498d8041b3db652bbc2bfe07560",
+    "native-test-seam/Sources/NativeTestSeam/StreamingRateConverter.swift": "324703b136a6335f14878f62112271977fbd5a8b29e04696229fce2e022b790c",
+    "native-test-seam/Sources/NativeTestSeam/TurnTestSeam.swift": "df2e280614d6e2bd43b6a4fcdb3b9beb19262d54fcfde4f88831d8e6f312f5f2",
+    "native-test-seam/Sources/NativeTestSeam/UntrustedMemory.swift": "88b86f050565632b6a599dfdd8f21a81efe76aea9c677b053091254a839d1585",
+    "native-test-seam/Sources/NativeTestSeam/VadAsrHandoff.swift": "a13a6421c9fed06806524c6786b45e630534da80275f6977e3157c98ad69a196",
+    "native-test-seam/Sources/NativeTestSeam/VadCaptureSlot.swift": "64e8961eafe227d4cba31221fc9160da5b754b8a1710af91835359658c7fa4dc",
+    "native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift": "f1e093f36959052aa0f9e8a3127be6b75b8720c7e6b93b64099f63b4c4c9a025",
+    "native-test-seam/Sources/NativeTestSeam/VadWindowDelivery.swift": "58883506c3de621707af7274deb71efbcdea03ce98d5922f4c7d4284d29fc12c",
+    "native-test-seam/Sources/NativeTestSeam/WakeDetector.swift": "ee657b8f051bc7e28c0bc7ba6dec92aa6859c38aa8e1862f63e9d5cc8a3d3c60",
+    "native-test-seam/Sources/NativeTestSeam/WakeFrameDelivery.swift": "ac0732c57e4434cf7a04d2df0de19d4cbc400ac1ea11609304abaa765526f842",
+    "native-test-seam/Sources/NativeTestSeam/WakeQuestionHandoff.swift": "b937e84a1a27cb192eaf184433a24ebb427ecb2a9d1680012a5247e467f9905f"
+  },
+  "asr_provenance_sha256": "3db28e00acafb37ffaae433f3f9696fd56a0b5678b45edf50a1401f2400a37dd",
+  "llm_provenance_sha256": "87ec4d03e2da09373edf9b3c5d0c8af56d0de6bd069a9aa276e9e5e9a0a6d6ce",
+  "frameworks": {
+    "iphoneos": {
+      "architecture": "arm64",
+      "platform": "IOS",
+      "minimum_os": "18.0",
+      "install_name": "@rpath/CEiloAsr.framework/CEiloAsr",
+      "exports": [
+        "_eilo_asr_accept",
+        "_eilo_asr_create",
+        "_eilo_asr_destroy",
+        "_eilo_asr_text"
+      ],
+      "namespace": "TWOLEVEL",
+      "code_signature": "UNSIGNED",
+      "dependencies": [
+        "@rpath/CEiloAsr.framework/CEiloAsr",
+        "/System/Library/Frameworks/Accelerate.framework/Accelerate",
+        "/System/Library/Frameworks/Foundation.framework/Foundation",
+        "/usr/lib/libc++.1.dylib",
+        "/usr/lib/libSystem.B.dylib",
+        "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
+      ],
+      "sha256": "2712f884f020fe5c3b5dcedadf87eb854d2154bf3c5c3ad42597db1cc26ed0b1",
+      "bytes": 24552752,
+      "header_sha256": "416a71220bc5ea2e9c01df19e93dbd1ccaf2b3c38ccff4a55257cb658b2e6c30",
+      "module_sha256": "38a34c6eecd6f52f08335072eaef6f86d918c4b7e73f45dfcb511846ac24e1ba",
+      "info_sha256": "667ba6de0644665412292ba8ecdefec93ce4c87a9cedcd2bbf35d27d7e7cfe34"
+    },
+    "iphonesimulator": {
+      "architecture": "arm64",
+      "platform": "IOSSIMULATOR",
+      "minimum_os": "18.0",
+      "install_name": "@rpath/CEiloAsr.framework/CEiloAsr",
+      "exports": [
+        "_eilo_asr_accept",
+        "_eilo_asr_create",
+        "_eilo_asr_destroy",
+        "_eilo_asr_text"
+      ],
+      "namespace": "TWOLEVEL",
+      "code_signature": "TOOLCHAIN_AD_HOC",
+      "dependencies": [
+        "@rpath/CEiloAsr.framework/CEiloAsr",
+        "/System/Library/Frameworks/Accelerate.framework/Accelerate",
+        "/System/Library/Frameworks/Foundation.framework/Foundation",
+        "/usr/lib/libc++.1.dylib",
+        "/usr/lib/libSystem.B.dylib",
+        "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
+      ],
+      "sha256": "a97d1ef048ec8c8e49bec7add5c4bc1c500bef51134b5ef735c8397d9c21e110",
+      "bytes": 24545800,
+      "header_sha256": "416a71220bc5ea2e9c01df19e93dbd1ccaf2b3c38ccff4a55257cb658b2e6c30",
+      "module_sha256": "38a34c6eecd6f52f08335072eaef6f86d918c4b7e73f45dfcb511846ac24e1ba",
+      "info_sha256": "f95e9dc42feea847f9c6a74def1935835733107ddbe6e44cc2185410b61f3d7b"
+    }
+  },
+  "xcframework": "TWO_ARM64_SLICES",
+  "relocation": "EXECUTED_WITH_ORIGINAL_CLIENT_DIRECTORY_ABSENT",
+  "framework_client_sha256": "258a3c83a06973d98e0081848a4ca7af14d6371972ed5cd42b55b438eec6f853",
+  "client_rpaths": [
+    "/usr/lib/swift",
+    "@executable_path/Frameworks"
+  ],
+  "fixture_sha256": "763fa4368b002d09fc0a52b17cc091568ef32346ba30f0cff1cdac226ac962d5",
+  "execution": {
+    "duplicate_final_rejected": true,
+    "framework_asr_final": true,
+    "linked_llm_unloaded_gate_rejected": true,
+    "llm_generation": "NOT_RUN",
+    "microphone": "NOT_OPENED",
+    "physical": "NOT_RUN",
+    "stale_final_rejected": true
+  },
+  "llm_static_archives": [
+    {
+      "name": "libllama.a",
+      "sha256": "6692bb02789ee7840bb8306e3a22b71299d18884bbef51815f4c95f4878d9446"
+    },
+    {
+      "name": "libggml.a",
+      "sha256": "4dd2bcf2d74ae1d941698f5a295b8f09df0b83d7dbdbb929057be274ddee9ff8"
+    },
+    {
+      "name": "libggml-cpu.a",
+      "sha256": "e1a41b879af9110b07e42198437e946a73b7f8937f4b4357261c94e79ee0c65a"
+    },
+    {
+      "name": "libggml-base.a",
+      "sha256": "e015a8006a0e46461ec175ea61c4513fe055cbffc25646df6cd12ea206edf406"
+    }
+  ],
+  "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "signing": "NOT_REVIEWED",
+  "distribution": "NOT_APPROVED",
+  "ordinary_app": "NOT_ENABLED",
+  "physical": "NOT_RUN",
+  "release": "HOLD",
+  "persistent_memory": "DISABLED",
+  "pack_trust": "SYNTHETIC_EVALUATOR_ONLY",
+  "confidence": "NOT_EVALUATED",
+  "production_embedding": "NOT_RUN"
+}

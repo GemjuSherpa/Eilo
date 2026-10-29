@@ -21,3 +21,15 @@ python3 packages/asr-runtime/check_android.py \
 Downloads and generated system-voice audio remain in ignored `.local/asr`. Publisher sizes/CRC32C protect the model's catalog artifacts; the recorded SHA256 values are local digests computed after that verification. Runtime archive SHA256 values are publisher checksums. Each evaluation checks pinned archives, extracted libraries, model files and synthetic WAV hashes before use. Different installed voice output fails fixture validation instead of rewriting the frozen set.
 
 Android evaluation registers invocation-only Debug instrumentation, temporarily packages models/libraries, checks real ART/JNI decoding and stale-final rejection, deletes temporary app files, then completes a normal Debug rebuild and restores that APK without clearing app data. Android vendor ABIs are arm64-v8a, armeabi-v7a and x86_64; x86 is unavailable. iOS compiles the wrapper for physical ARM64 and executes the real Swift binding in the selected simulator. A device compiler pass is distinct from physical execution. The recorded reports are synthetic-only; no microphone trial, accent diversity or physical quality pass is inferred.
+
+## Relocatable iOS framework evaluation
+
+`framework.py` creates a local two-slice ARM64 `CEiloAsr.xcframework` from approved caches and runs a relocated simulator client with the current ASR adapter and linked unloaded LLM. See [S07 review](../../docs/sprints/S07_ASR_FRAMEWORK_REVIEW.md). It downloads nothing and enables no normal-app runtime. Device signing/execution/distribution and full conversation acceptance remain open.
+
+```sh
+python3 packages/asr-runtime/framework.py --asr-cache "$ASR_CACHE" --llm-cache "$LLM_CACHE" --cmake "$CMAKE" --output "$NEW_OUTPUT" --udid "$BOOTED_SIMULATOR_UDID"
+python3 -m unittest discover -s packages/asr-runtime -p 'test_*.py' -v
+python3 packages/asr-runtime/framework_report.py --output "$NEW_REVIEW_DIRECTORY"
+```
+
+Both output directories must be new. Only the aggregate report/export is suitable for CI publication; compiled frameworks, models and logs stay local. Framework signing class is inspected: unsigned device and toolchain ad-hoc simulator are evaluator artifacts, not developer distribution signing.
