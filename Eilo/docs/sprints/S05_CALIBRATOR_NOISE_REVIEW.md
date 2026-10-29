@@ -18,3 +18,11 @@ Both score paths accept incorrect transcriptions under noise. At 0 dB the appare
 Validation: 20 unit/contract tests pass in normal and optimized Python. CI validates immutable source/model/baseline pins, denominators, approved noise inventory, aggregate metrics and forbidden qualification changes without accessing corpora or models. Only JSON/HTML aggregate summaries are uploaded for seven days. The full offline workflow and hosted application gates must pass before merge.
 
 Production confidence remains NOT_ENABLED; native calibration NOT_ESTABLISHED; threshold authorization NOT_GRANTED. Physical acceptance remains NOT_RUN / OPEN, S08 and release HOLD, persistent memory DISABLED. This is diagnostic evidence, not a release gate pass.
+
+## PR #106 CI download recovery
+
+The original push Android job failed twice reading the pinned React Native 0.87.1 release AAR from Maven Central. The corresponding PR job passed. The push iOS retry exhausted its 40-minute job budget while a CocoaPods tarball download remained at about 2 MB for over 25 minutes; Ruby gem installation itself completed. No ASR test failed.
+
+CI now separates Android external classpath preparation from the unchanged assembleDebug, assembleRelease and testDebugUnitTest gate. Preparation retains the existing dependency declarations/repositories and uses Gradle HTTP connection/read limits of 30/60 seconds. CocoaPods still uses the deployment lock and the existing checksum verification. Each preparation command has at most three eight-minute attempts, retaining completed cache entries. Timeout and cancellation stop its process group, including stalled downloader children. Builds and tests are never retried by this helper. Android/iOS job budgets become 45/50 minutes to accommodate bounded setup plus the full original build/test gates. This is a finite recovery allowance, not a successful-download guarantee.
+
+Six process-level regressions pass in normal and optimized Python: retry with retained progress, failure propagation, single execution on success, timeout child cleanup, cancellation cleanup, and locked dependency-only commands. The real Android preparation task also passes against existing caches in offline mode, including React Native included-build and Android artifact variant handling. Hosted checks on the updated exact head remain mandatory before merge.
