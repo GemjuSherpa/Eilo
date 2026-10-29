@@ -39,6 +39,10 @@ def validate(r):
         need(type(row['observed_word_bearing_fraction_all_cases']) in (int,float) and row['observed_word_bearing_fraction_all_cases']==row['observed_word_bearing']/total)
         reasons=row['unavailable_reasons'];need(type(reasons) is dict and set(reasons)<=REASONS)
         need(all(type(n) is int and 0<n<=total for n in reasons.values()) and sum(reasons.values())==row['unavailable'])
+    for i in range(0,6,2):
+        greedy,draft=rows[i:i+2]
+        need(draft['available']<=greedy['available'])
+        need(draft['unavailable_reasons'].get('GREEDY_UNAVAILABLE',0)==greedy['unavailable'])
     return dict(groups=rows,musan_labels=policy()['musan_labels'],synthetic_labels=policy()['synthetic_labels'],pairing=policy()['pairing'],
                 unavailable=policy()['unavailable'],**FLAGS)
 
