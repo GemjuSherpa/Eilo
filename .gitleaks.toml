@@ -28,3 +28,11 @@ condition = "AND"
 paths = ['''^Eilo/packages/vad-runtime/tests/asr-handoff-native-regression\.json$''']
 regexTarget = "line"
 regexes = ['''^\s*"packages/native-test-seam/Sources/NativeTestSeam/IOSConsentAuthentication\.swift": "[0-9a-f]{64}",?$''']
+
+[[allowlists]]
+description = "Framework evaluation source-file SHA256 pins, independently verified by report validation; not credentials"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^Eilo/packages/asr-runtime/framework-results\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"native-test-seam/Sources/NativeTestSeam/(IOSConsentAuthentication|ProtectedKey)\.swift": "[0-9a-f]{64}",?$''']

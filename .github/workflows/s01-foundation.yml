@@ -111,6 +111,8 @@ jobs:
           brew install ruby gitleaks
           echo "$(brew --prefix ruby)/bin" >> "$GITHUB_PATH"
           gitleaks git .. --redact=100 --no-banner --log-level error --config ../.gitleaks.toml
+          python3 scripts/test_gitleaks_framework.py
+          python3 -O scripts/test_gitleaks_framework.py
       - name: Strict native Swift device and simulator types
         run: |
           python3 scripts/check-native-ios-types.py
