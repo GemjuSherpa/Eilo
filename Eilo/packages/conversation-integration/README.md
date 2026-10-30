@@ -100,3 +100,26 @@ vary in digest/size; each signed evaluation pack records its own derived bytes.
 Controller readiness, permission state and ASR confidence are synthetic. Physical
 microphone/speaker, wake alignment, echo separation, latency, network and release
 acceptance remain open. Production trust and ordinary app activation are unchanged.
+
+
+### Joined iOS framework simulator execution
+
+`check_framework_capture.py` uses the reviewed `CEiloAsr.xcframework` simulator slice
+with real VAD, signed evaluator model installation, loaded Qwen CPU inference and
+SDK speech completion. The client is moved before execution, with the original
+client absent and only the embedded framework loader path available. Speech volume
+is zero in an evaluator-only sink; production speech behavior is unchanged.
+
+The three file-fed cases cover 16 kHz speech, a 48 kHz follow-up and silence. The
+first two must complete replies and retain two/four volatile context messages;
+silence must not start inference. Synthetic confidence 0.95, lab trust and exact
+voice/OS evidence remain explicit. This does not qualify confidence, offline voice
+availability, ordinary-app embedding, signing, physical behavior or release.
+
+Run `python3 framework_capture_report.py` and
+`python3 -m unittest discover -p test_capture_framework.py -v` to audit the committed
+aggregate without native caches; both also run with Python optimization in CI.
+The native runner requires `--asr-cache`, `--vad-cache`, `--vad-model`, `--llm-cache`,
+`--llm-model`, `--framework`, a fresh `--output` and a booted `--udid`. It downloads
+nothing and uses no microphone. Native models and logs stay in ignored local
+storage. CI uploads only the redacted JSON/HTML summary for seven days.
