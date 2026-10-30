@@ -33,3 +33,35 @@ python3 packages/asr-runtime/framework_report.py --output "$NEW_REVIEW_DIRECTORY
 ```
 
 Both output directories must be new. Only the aggregate report/export is suitable for CI publication; compiled frameworks, models and logs stay local. Framework signing class is inspected: unsigned device and toolchain ad-hoc simulator are evaluator artifacts, not developer distribution signing.
+
+
+### Opt-in app framework build
+
+`app_framework.py` builds the normal Eilo iOS simulator Release target using a
+temporary copy of the Xcode project. Xcode links and embeds the reviewed simulator
+framework through its normal Frameworks and Copy Files phases. Copy-phase stripping
+is disabled in this temporary project so the embedded binary must match the
+reviewed bytes exactly. The shipping project is not modified.
+
+The script requires existing local `node_modules`, a **regular private copy** of
+Pods at `apps/mobile/ios/Pods`, matching Podfile/Manifest locks, cached Release
+archives for React Core, React Native Dependencies and Hermes, and generated
+`build/rncore-facades`/`build/rndeps-facades`. A symlinked Pods directory is rejected
+because Xcode resolves its project-relative paths from the real location. Reuse
+approved local caches; do not run an installer or download missing dependencies.
+
+Supply `--framework /reviewed/CEiloAsr.xcframework --output /fresh/output --udid
+/already-booted-simulator-uuid`. The runner builds without developer signing,
+checks the required framework load, verifies there are no named model/audio
+resources, executes a separate Release guard probe, installs only on the named
+simulator and checks three fresh ten-second process launches. It does not tap
+Start, load a model, request microphone permission or establish UI/audio quality.
+The probe grants only synthetic permission and confirms that default missing-model
+readiness blocks capture and the Release ASR adapter remains unavailable.
+
+Use `python3 app_framework_report.py` and `python3 -m unittest discover -p
+'test_app_framework.py' -v` to audit
+aggregate evidence without native caches. CI runs normal/optimized validation and
+uploads only JSON/HTML summaries for seven days. All build products/logs and
+absolute input paths remain local. Ordinary voice, physical, signing, distribution
+and release acceptance remain open; persistent memory is disabled.

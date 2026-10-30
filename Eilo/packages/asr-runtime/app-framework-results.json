@@ -1,0 +1,412 @@
+{
+  "schema_version": 1,
+  "purpose": "OPT_IN_UNSIGNED_SIMULATOR_APP_FRAMEWORK",
+  "source_pins": [
+    {
+      "path": "apps/mobile/.eslintrc.js",
+      "sha256": "8fe461efa7c1066801e808ce4e3642868336a445aa25973063fd10563d41a2c1"
+    },
+    {
+      "path": "apps/mobile/.prettierrc.js",
+      "sha256": "ed7c5f7f2f0f21950c2acbb7425d212bbcf0d7ecd3bdd440af42c67cbb8d6851"
+    },
+    {
+      "path": "apps/mobile/app.json",
+      "sha256": "3e85f9ae1a9d0665b915c038a35f225f7eabc22c5fb5e4b2ce18af59d79412ff"
+    },
+    {
+      "path": "apps/mobile/babel.config.js",
+      "sha256": "d76a3a8625b204efa0f42c4bdd220f484211798f88a56f2e784bc082231cc292"
+    },
+    {
+      "path": "apps/mobile/index.js",
+      "sha256": "923f6db3c2996730bcab029422c7b4fe80b3060e5321bba97b7816b783015ddd"
+    },
+    {
+      "path": "apps/mobile/ios/Eilo/AppDelegate.swift",
+      "sha256": "92cf068869d3789eaefa7346d2cf2f203af3e946127e4c16597b6f46465e2151"
+    },
+    {
+      "path": "apps/mobile/ios/Eilo/EiloControl.mm",
+      "sha256": "83fbd2381ba4892cbbaebf8a238bf81d31c36de0c2e38eeab2ea95c0f00c15ac"
+    },
+    {
+      "path": "apps/mobile/ios/Eilo/EiloControlHost.swift",
+      "sha256": "4ace821b9db655851faf8661c918935fe317490d0be02b32b68567ac8a29ae92"
+    },
+    {
+      "path": "apps/mobile/ios/Eilo.xcodeproj/project.pbxproj",
+      "sha256": "c3e20639d9be66b84b877caccad8f53fa3325a6027eef75f17a6026f197ec299"
+    },
+    {
+      "path": "apps/mobile/ios/Podfile.lock",
+      "sha256": "bc3c04cd4615d9f537931e33109fd9dc489789fa4e610f5d52bd0c21d62facbb"
+    },
+    {
+      "path": "apps/mobile/jest.config.js",
+      "sha256": "342ee3a20712659d38591de2800e8d5eeee84c0feb693ef21dd2347fef4d9108"
+    },
+    {
+      "path": "apps/mobile/metro.config.js",
+      "sha256": "3f70745026c8ce9180cf9777ef16eafb485f7ab142fa506b345ee3935966a775"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "sha256": "30c2a554d2405222259662ec58a11897f3f7edc3a61b4bb96c0a54ffe2e2a8de"
+    },
+    {
+      "path": "apps/mobile/src/ControlClient.ts",
+      "sha256": "5642429100b50dd0a3245d11bc95596a525460c3a49b9b3071d2c37aa3ad7ba5"
+    },
+    {
+      "path": "apps/mobile/src/ConversationRipple.tsx",
+      "sha256": "2c7164ad756bbe28cbd564f4925e1a427a573c979697521e78d196271a2d6fd7"
+    },
+    {
+      "path": "apps/mobile/src/DisplaySettings.tsx",
+      "sha256": "e619b7c97fb1e95d9bfb9d101e2f436f5fad3ac02078152389b5fc01e19a78e1"
+    },
+    {
+      "path": "apps/mobile/src/Home.tsx",
+      "sha256": "7eb7b56866ba7fba20206b28a816c8a2a7d7fb5a570f66812b0d275571b85282"
+    },
+    {
+      "path": "apps/mobile/src/MemoryUnavailable.tsx",
+      "sha256": "f49aa95575c2b9f3d4849b9f1c8428695b01b7e8a45357395fe1de5f82a1791b"
+    },
+    {
+      "path": "apps/mobile/src/Onboarding.tsx",
+      "sha256": "3ece46ce38412d3fe67885cf2e4489317bf0cfc2ff5d0cf98d5973da01854c9e"
+    },
+    {
+      "path": "apps/mobile/src/ResultCards.tsx",
+      "sha256": "eab8db3f727ffd24fd9529de9c32337a90a1b11328884019ff2801f129b4d53b"
+    },
+    {
+      "path": "apps/mobile/src/SpokenPresentation.tsx",
+      "sha256": "2d7c29cbd1e7ae0b5da8e8f783cb3433bf1f0f9cfe188c304c30eae4068273f3"
+    },
+    {
+      "path": "apps/mobile/src/VisualInactivity.ts",
+      "sha256": "ea0148a5f2ead4c6315f5ea4a54f5a7ff3ae1ba0702450eb610f5ebdb5d8af39"
+    },
+    {
+      "path": "apps/mobile/src/VisualMotion.ts",
+      "sha256": "b6d8381c0a7cc6e4aed9ea1f2b3a11e8c7b4695d8063c8412ff9727001ce70fc"
+    },
+    {
+      "path": "apps/mobile/src/specs/NativeEiloControl.ts",
+      "sha256": "dfe03a524a3b2c89730284b546c728abbfd2b94f432249073f7051e90d15838f"
+    },
+    {
+      "path": "apps/mobile/tsconfig.json",
+      "sha256": "7ff097eeb3b8be9f47ecc2d87264fd46a75948cc768f03fd61b9a0614c4571c1"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "98d67e05815fe6868c12b1430ad9c241161c36ff3fa9d69f1e2382adc4e768fe"
+    },
+    {
+      "path": "packages/asr-runtime/app_framework.py",
+      "sha256": "23e5d4990be15f51722718036704605f29359fc2a61af434b050d83bf9582485"
+    },
+    {
+      "path": "packages/asr-runtime/app_framework_probe.swift",
+      "sha256": "5f085b56ae6bd91fb2d7e39dbc6f83b59300035dd515f1d5ef07398c70b0054c"
+    },
+    {
+      "path": "packages/asr-runtime/framework-results.json",
+      "sha256": "fe7878279f4269243434a89fb658bcf3e20d9305e7d01705398362e0ebe6cc7a"
+    },
+    {
+      "path": "packages/asr-runtime/framework.py",
+      "sha256": "24a6fdbf1575fc29cad19864f97cfa632a9008284ec91a928e56ec039d4ebd34"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/AudioInterruption.swift",
+      "sha256": "b3e841aa8028a0fb39d741be85b6942b1f935dab33d06fc217f2e48d441c2541"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/BackgroundCapturePolicy.swift",
+      "sha256": "2a3a883f13b9c0aada3cb77475565bc7baeeb3053421011614620f86ef379d63"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/BoundedContinuation.swift",
+      "sha256": "1e9023749b0f0caaaf8b9bd4e5d07b4ff88826c9575e8a3c17cb7e731cde0bb9"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/CapabilityPolicy.swift",
+      "sha256": "8c3ed0af92d3be3d414ad67fa74e2da2cd7712971ac4fc4771d4d1dfdade636a"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/ConfirmedSpeechInterruption.swift",
+      "sha256": "a3d778311f7443cb088798473361014789e9f62ff340e7ce4343b19df682c9f1"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/DangerPolicy.swift",
+      "sha256": "861df20fe3830e887cac7a313a705fa3fc8fb6f8e703c0fecdbc51b55f2af2b0"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/EndpointDetector.swift",
+      "sha256": "2339f7471f3532cc93cb764e9b74e420f327987e412d185b4dc941377edf50cd"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/GenericSpokenTurn.swift",
+      "sha256": "0c9059f198e4a6a15cdaff2f7fdf259210055beb3e38ab8d4c3d0b117c667f86"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift",
+      "sha256": "3636ed41e0b889457689212cbd29214071033edc82ff28e87fd8a0bf61241624"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/IOSConsentAuthentication.swift",
+      "sha256": "a38a6927002c917ac0804cf237656719cbead80b35137b2cc59fa162aa0ba660"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/IOSOfflineSpeech.swift",
+      "sha256": "956976c50309a5517696e96f8d39dd70756fec22ced3202008fec5540e3d7b39"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/LlmControllerJob.swift",
+      "sha256": "06b62272e56ef9a026964901cdf9790ee785c0acdfe04465940a0fb71d975ed4"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/LlmPackLease.swift",
+      "sha256": "2ca273a1de8b4c01c773a99bb6a96ffde520518d935387a21116c7554bc51a63"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeAsrStream.swift",
+      "sha256": "b9a4c567f2a525c90c60eb31cb7af46a1ee4dee9d5f9bc63fdda9d7a541d2102"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeClauseQueue.swift",
+      "sha256": "91d9d5c7292af764ee6a282efb3326b0cf57325ae6a7b3f3f5d09a940d0c5396"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeConsentPolicy.swift",
+      "sha256": "684606cfb907d3efd9f80d71b81155a585b0f33a8d722a5e801105a53247a105"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeController.swift",
+      "sha256": "379bdaaf10b2410f486832d3351484576dee0a6c8650f51e617546983cb8a62d"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeIdleTimer.swift",
+      "sha256": "a63611df6f3da8c4b21cac78dab6bc9826dd12e8e3604f1cd9d48df61052cb76"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeLlmStream.swift",
+      "sha256": "1161de6edda975a0c7fe5db2972efe5d150663b745332ee6939c66e495e852bd"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativePermission.swift",
+      "sha256": "c50065a791b830a6de6b7a4b9d62b11b27522823048e585a1cbeed68fddb5f6b"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeSpeechPolicy.swift",
+      "sha256": "94cdf1d06882343ac8ea90c4adcdee41d26f8149a6b3609dc4a7456e0b327841"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeVadStream.swift",
+      "sha256": "b0b204948bf9bd009c2a33ca913cdc04a9dd5c463059923f33cdeb9838c2e5ba"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/NativeWakeStream.swift",
+      "sha256": "414f9fe8f459afa430a15e6112d3a99d6af5043e51ec980022f4dcb99a323306"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/OfflineVoiceRegistry.swift",
+      "sha256": "c353831b41a27d007df5a4c2b81a8e9922c8534355506e167c745e584dce248d"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift",
+      "sha256": "175fbf031ea11ed40b842662c4dd9e6416b66469d1cf68b55a0285f7b598167e"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PackManifest.swift",
+      "sha256": "05a234a587f9ad511806011aea8c841fe13fed7aec4ea24906e37bcd8f5bc1c1"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PackReadiness.swift",
+      "sha256": "c2476d7e896dc9b6192a8daaa7bf4f9d546462249704f1487c36a9c17972cbef"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PackRecovery.swift",
+      "sha256": "437c402112c4f26c05c4145b5f4116113817a32e55bbd8820e76d57e13e349be"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PackSignature.swift",
+      "sha256": "77de9d35f3b66aa9d7e3e85bab7b3f5754cfce6988598384305dd1bca746d031"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PackStore.swift",
+      "sha256": "bbda23a0f07ef0295980e1166ca0f9ea346f4dd4aa09e90b2d317fbeb935b7e1"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PackTransport.swift",
+      "sha256": "d4c8bd266fac63899aeff6e5506b3142302a305fdafbf8028e96a1e9cb47190e"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PersonaPolicy.swift",
+      "sha256": "109e7a5b82693640f92ebb0395e0539840197fa1b71ee4c5813f1bafe2ae2489"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PlaybackProgress.swift",
+      "sha256": "5ebdd6155d5767f48f6e4c41f034af7ce0338e1b5683aabd435a565f7f447551"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PlaybackRejection.swift",
+      "sha256": "14b9ca877700fe17fe40f92c528fa48b85412fc03fed3c64aa0887bc986a224e"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/PromptBudget.swift",
+      "sha256": "8d3cddb37a9e2a524e7647ba8cb0b5b4efd652f033624e79c7de3833f1259b48"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/ProtectedKey.swift",
+      "sha256": "3a6e837bdb75fbf843653eaa7759444ce900d1ad2f66238fa7b259db290e3027"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/QwenTemplate.swift",
+      "sha256": "ab59ab8a438db4807447d2cfd67d7bd1261f1e65ae04452fe27801ee2fc0608e"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/RecognitionPolicy.swift",
+      "sha256": "a018aa05ad083f4d497b58b6994d186de2b7e582d8ce8d93629192a0fab2758f"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/SafeDiagnostics.swift",
+      "sha256": "fdce3ba96d5f5ae067f136056bec495757c2f9a3273b6398f8b5ed1aa1cbd46f"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/SpeechPackLease.swift",
+      "sha256": "6342f3b7a1c16bb5ed783d7adfbd3fde1def4fec56e933125289953e1c3c0ad6"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/StandbyAudioBuffer.swift",
+      "sha256": "f0038ab05e7badc51ce9373857870b45d0fd33a8309b001e37015b1976dec179"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/StreamingAsr.swift",
+      "sha256": "3c928fc338dbce24079e26ae8c156daa18c57498d8041b3db652bbc2bfe07560"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/StreamingRateConverter.swift",
+      "sha256": "324703b136a6335f14878f62112271977fbd5a8b29e04696229fce2e022b790c"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/TurnTestSeam.swift",
+      "sha256": "df2e280614d6e2bd43b6a4fcdb3b9beb19262d54fcfde4f88831d8e6f312f5f2"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/UntrustedMemory.swift",
+      "sha256": "88b86f050565632b6a599dfdd8f21a81efe76aea9c677b053091254a839d1585"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/VadAsrHandoff.swift",
+      "sha256": "a13a6421c9fed06806524c6786b45e630534da80275f6977e3157c98ad69a196"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureSlot.swift",
+      "sha256": "64e8961eafe227d4cba31221fc9160da5b754b8a1710af91835359658c7fa4dc"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift",
+      "sha256": "f1e093f36959052aa0f9e8a3127be6b75b8720c7e6b93b64099f63b4c4c9a025"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/VadWindowDelivery.swift",
+      "sha256": "58883506c3de621707af7274deb71efbcdea03ce98d5922f4c7d4284d29fc12c"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/WakeDetector.swift",
+      "sha256": "ee657b8f051bc7e28c0bc7ba6dec92aa6859c38aa8e1862f63e9d5cc8a3d3c60"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/WakeFrameDelivery.swift",
+      "sha256": "ac0732c57e4434cf7a04d2df0de19d4cbc400ac1ea11609304abaa765526f842"
+    },
+    {
+      "path": "packages/native-test-seam/Sources/NativeTestSeam/WakeQuestionHandoff.swift",
+      "sha256": "b937e84a1a27cb192eaf184433a24ebb427ecb2a9d1680012a5247e467f9905f"
+    },
+    {
+      "path": "scripts/verify-ios-launch.py",
+      "sha256": "eea50369651d0465b22e5b8fd7f34602c9809de479d0c757e4681ed766b5b2a4"
+    }
+  ],
+  "dependency_archives": [
+    {
+      "name": "ReactNativeCore-artifacts/reactnative-core-0.87.1-release.tar.gz",
+      "bytes": 30427373,
+      "sha256": "56c4a9a53a698a9c055262589015963ea521123bee41a4891b9914accd3f308b"
+    },
+    {
+      "name": "ReactNativeDependencies-artifacts/reactnative-dependencies-0.87.1-release.tar.gz",
+      "bytes": 31487168,
+      "sha256": "d5f4e5476c69bcbbd9ccf09166a047f798507fe957645fdfcaa81c804927406e"
+    },
+    {
+      "name": "hermes-engine-artifacts/hermes-ios-250829098.0.17-release.tar.gz",
+      "bytes": 25541302,
+      "sha256": "2967ee51b41bd433b3027dda875e96194354e2b4d715f9f186fd0c04ccef309d"
+    }
+  ],
+  "app": {
+    "binary_sha256": "86ff946f4cc0e242981f88645cf17ea00bc0664102c164e8882455b0a8ecab2d",
+    "tree_sha256": "bd65561da9c3feba1b324cc8703c6bb3a61cfed01b7cdcd06a31e204e860bc81",
+    "files": 138,
+    "framework_sha256": "a97d1ef048ec8c8e49bec7add5c4bc1c500bef51134b5ef735c8397d9c21e110",
+    "code_signature": "TOOLCHAIN_AD_HOC",
+    "platform": "iPhoneSimulator",
+    "configuration": "Release",
+    "architecture": "arm64",
+    "rpaths": [
+      "/usr/lib/swift",
+      "@executable_path/Frameworks",
+      "@loader_path/Frameworks"
+    ],
+    "required_framework_load": true,
+    "packaged_model_audio_extensions": "NONE_OBSERVED"
+  },
+  "cold_launches": 3,
+  "dwell_seconds": 10,
+  "release_gate_probe": "EXECUTED_UNAVAILABLE_ASR_AND_MISSING_MODELS_NO_CAPTURE",
+  "swift_runtime_evaluation_flags": "ABSENT",
+  "framework": {
+    "architecture": "arm64",
+    "platform": "IOSSIMULATOR",
+    "minimum_os": "18.0",
+    "install_name": "@rpath/CEiloAsr.framework/CEiloAsr",
+    "exports": [
+      "_eilo_asr_accept",
+      "_eilo_asr_create",
+      "_eilo_asr_destroy",
+      "_eilo_asr_text"
+    ],
+    "namespace": "TWOLEVEL",
+    "code_signature": "TOOLCHAIN_AD_HOC",
+    "dependencies": [
+      "@rpath/CEiloAsr.framework/CEiloAsr",
+      "/System/Library/Frameworks/Accelerate.framework/Accelerate",
+      "/System/Library/Frameworks/Foundation.framework/Foundation",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib",
+      "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
+    ],
+    "sha256": "a97d1ef048ec8c8e49bec7add5c4bc1c500bef51134b5ef735c8397d9c21e110",
+    "bytes": 24545800,
+    "header_sha256": "416a71220bc5ea2e9c01df19e93dbd1ccaf2b3c38ccff4a55257cb658b2e6c30",
+    "module_sha256": "38a34c6eecd6f52f08335072eaef6f86d918c4b7e73f45dfcb511846ac24e1ba",
+    "info_sha256": "f95e9dc42feea847f9c6a74def1935835733107ddbe6e44cc2185410b61f3d7b"
+  },
+  "project": "TEMPORARY_COPY_ONLY",
+  "physical": "NOT_RUN",
+  "ordinary_voice": "NOT_ENABLED",
+  "release": "HOLD",
+  "persistent_memory": "DISABLED",
+  "signing": "NOT_REVIEWED",
+  "distribution": "NOT_APPROVED",
+  "model_loading": "NOT_RUN",
+  "microphone": "NOT_OPENED"
+}
