@@ -71,3 +71,57 @@ Accepted-prefix cases require a new non-EOS token after a fully verified shorter
 The verification_row_scores count includes that first continuation token, whose score comes
 from the final verification row, plus accepted draft tokens. Later continuation rows are greedy.
 The report validator rejects a missing first-continuation score.
+
+
+## Isolated iOS source diagnostic
+
+`check_ios.py` now builds the same verified source/score overlay for ARM64 iOS
+Simulator 18+ without running upstream build/download scripts. The committed run
+uses `--runtime vendor-prelinked`: it thins the approved Moonshine simulator archive
+and links only its `prelinked_objects.o` runtime member, whose actual runtime
+reports ORT 1.23.2. The source C++ components remain those in SOURCE_REVIEW.md;
+only that archive member is linked; its full transitive notice inventory remains a
+release gate. The original source cache, ordinary app,
+prebuilt ASR framework and Android observations remain unchanged. The separate
+`cached-1.28.2` mode is exploratory; committed evidence validates the vendor mode.
+
+Six existing synthetic fixtures completed collection: 35 diagnostic paths, zero
+unavailable paths and one **NOT_EXERCISED** full-draft path (`name`). That fixture's
+step-greedy draft did not satisfy full-batch verification: three of nine rows were
+accepted, with one redecode. Its intended full-draft path receives no reported
+scores and is not a pass. Token/score equality and actual-row formula checks remain
+strict before this classification. The other five fixtures exercise full accepted
+drafts; all six exercise greedy, accepted-prefix, early/late-divergence and bias.
+All 54 deliberate fault cases and four invalid input cases reject usable scores.
+Initial ORT1.28.2/full-draft failures and an unsuccessful bounded draft-construction
+experiment remain in local logs/history; the initial aggregate is retained in
+`ios-initial-failure.json`. The cause of step/batch differences is NOT_ESTABLISHED.
+
+Darwin reports 53 mantissa bits for both double and long double. The real-row
+formula comparison is therefore **same precision**, not an extended-precision
+oracle. `ios_math.py` separately compiles the actual helper on iOS and checks eight
+small synthetic rows across all three path tags against Python Decimal at 80-digit
+precision. All 24 checks and six invalid guards pass; maximum absolute/relative
+errors are approximately 3.60e-17/1.32e-16. These controls do not verify every model
+row. Model shape differences remain: maximum batch-vs-step 0.116960167 and
+full-vs-prefix 0.106787172. Confidence sources/domains are not interchangeable.
+
+Validate committed aggregates without caches with `python3 ios_report.py` and
+`python3 -m unittest discover -p 'test_*.py' -v`, also under `python3 -O`. CI checks
+closed schemas, source/runtime pins, coverage-gap preservation, strict actual-row
+and fault guards, and independent Decimal controls; only JSON/HTML summaries are
+uploaded for seven days. No transcripts, token IDs, per-token rows, audio, models
+or binaries are committed/uploaded.
+
+Native reproduction requires existing approved `--source`, `--asr-cache`,
+`--ort-cache`, `--cmake`, fresh `--output`, booted `--udid`, and explicit
+`--runtime vendor-prelinked`. The ORT cache also verifies the retained 1.28.2
+candidate, but the vendor-mode run links only the approved prelinked member.
+Run `ios_math.py --output /fresh/output --udid /booted-simulator` for the separate
+no-model/no-audio Decimal controls. There is no installer/download fallback; the
+cumulative source experiment build cap remains 5 GiB.
+
+This is a source diagnostic with a coverage gap. Calibration NOT_ESTABLISHED,
+threshold NOT_GRANTED, calibration transfer NOT_AUTHORIZED, ordinary runtime
+NOT_REPLACED, physical OPEN/NOT_RUN, S08/release HOLD and memory DISABLED. No shipping
+confidence ABI, app activation, semantic quality or platform equivalence is granted.
