@@ -123,3 +123,37 @@ The native runner requires `--asr-cache`, `--vad-cache`, `--vad-model`, `--llm-c
 `--llm-model`, `--framework`, a fresh `--output` and a booted `--udid`. It downloads
 nothing and uses no microphone. Native models and logs stay in ignored local
 storage. CI uploads only the redacted JSON/HTML summary for seven days.
+
+
+### Frozen paired iOS noise replay
+
+`framework_noise.py` reuses the exact 18 approved MUSAN/synthetic control prefixes
+from the earlier direct-ASR diagnostic. A committed protocol appends 32,000 zeros,
+pads short inputs to 80,000 samples and caps at 480,000, all at 16 kHz. Each input
+runs through direct ASR and the signed VAD→ASR path using the same reviewed iOS
+framework/models; endpoint consumption differs. A known question exercises both
+paths as a positive runtime control. No microphone, wake, LLM or speech SDK runs.
+
+Actual observation: both paths returned empty final text for all 18 negative
+controls. VAD kept ASR closed for 16, while two weakly labelled MUSAN clips reached
+ASR and returned empty text. All six synthetic no-speech controls ended with
+noSpeech and no ASR open. The positive question produced nonempty text in both
+paths. This measures nonempty text and model opens, not word accuracy, calibrated
+confidence or system false activation. MUSAN category labels do not establish
+speech absence. These padded iOS inputs and runtime differ from the earlier raw
+Android score diagnostic, so the reports do not estimate an improvement over it.
+
+The protocol/runner/probe were committed before execution. Source, model, original
+control and transformed input hashes are checked, and all native handles close.
+Unavailable direct/joined results remain explicit unknowns in the exporter. CI
+runs report mutation tests and source/protocol checks without native caches and
+uploads only JSON/HTML summaries for seven days. No raw audio or text is committed.
+
+Reproduce aggregate validation with `python3 framework_noise_report.py` and
+`python3 -m unittest discover -p test_capture_noise.py -v`, also under `python3 -O`.
+Native execution requires explicit approved cache/manifest/model/framework paths,
+a booted simulator UUID, fresh output and `--protocol-commit` containing the exact
+runner/probe/protocol bytes. It refuses overwrite and has no download fallback.
+Physical remains OPEN/NOT_RUN, confidence NOT_EVALUATED, calibration
+NOT_ESTABLISHED, threshold NOT_GRANTED, full-system false activation NOT_MEASURED,
+S08/release HOLD and persistent memory DISABLED.
