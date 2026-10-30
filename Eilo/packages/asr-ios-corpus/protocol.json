@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "purpose": "IOS_EXPOSED_REFERENCE_NOISE_DIAGNOSTIC",
+  "manifests": [
+    {
+      "name": "exposed_original",
+      "path": "cv-frozen-native/manifest.json",
+      "canonical_sha256": "179aea3809003783b2b3121767c31922c9760b7ce30e0aa0d2b5e2ff3912e249",
+      "cases": 30
+    },
+    {
+      "name": "exposed_development",
+      "path": "cv-fresh-split-v2/dev/manifest.json",
+      "canonical_sha256": "feabbc90220d7c2dff83e891590daf7b8d5623b0e0a94e9dc6febf73920b1291",
+      "cases": 30
+    },
+    {
+      "name": "exposed_prior_test",
+      "path": "cv-fresh-split-v2/test/manifest.json",
+      "canonical_sha256": "21a4c67133712171ca7cdcf17feebda67e628441933715f18f5de72be8b155d5",
+      "cases": 30
+    },
+    {
+      "name": "exposed_audit_test",
+      "path": "cv-calibration-test-v2/test/manifest.json",
+      "canonical_sha256": "32752e24d5424480d8911b9991248fc9734313416cab7dbc3a51253db072586e",
+      "cases": 30
+    },
+    {
+      "name": "correlated_noise",
+      "path": "calibrator-noise-v1/manifest.json",
+      "canonical_sha256": "2653d9695c4f9176aee9326c88e2b11ea82d3a739cd434a303fec23508ade39a",
+      "cases": 90
+    },
+    {
+      "name": "musan_controls",
+      "path": "musan-frozen/manifest.json",
+      "canonical_sha256": "b6812fcdb073751f18475d9fcf908a599be078d2d0237d0682950809c8670fa9",
+      "cases": 12
+    }
+  ],
+  "negative_controls_sha256": "961e970693f78541100e107c94d2b71efdd0d3855040be94b3f819330c699e20",
+  "musan_manifest_sha256": "b6812fcdb073751f18475d9fcf908a599be078d2d0237d0682950809c8670fa9",
+  "clean_cases": 120,
+  "noise_cases": 90,
+  "negative_cases": 18,
+  "runtime": "APPROVED_VENDOR_PRELINKED_ORT_1_23_2",
+  "diagnostic_cutoff": 0.85,
+  "data_status": "PREVIOUSLY_EXPOSED_NOT_HELD_OUT",
+  "calibrator_refit": "NOT_PERFORMED",
+  "threshold_fitting": "NOT_PERFORMED",
+  "calibration": "NOT_ESTABLISHED",
+  "threshold": "NOT_GRANTED",
+  "calibration_transfer": "NOT_AUTHORIZED",
+  "training_overlap": "UNKNOWN",
+  "physical": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "microphone": "NOT_OPENED",
+  "speech": "NOT_STARTED",
+  "llm": "NOT_RUN",
+  "release": "HOLD",
+  "persistent_memory": "DISABLED",
+  "vad": "BYPASSED",
+  "end_to_end_false_activation": "NOT_MEASURED",
+  "negative_labels": "MUSAN_WEAK_LABELS_SYNTHETIC_NO_SPEECH_ONLY",
+  "noise_pairing": "SAME_30_EXPOSED_AUDIT_PARENTS_CORRELATED"
+}
