@@ -110,6 +110,8 @@ jobs:
           python3 -O ../conversation-integration/check_capture_evidence.py
           python3 ../conversation-integration/check_capture_android_evidence.py
           python3 -O ../conversation-integration/check_capture_android_evidence.py
+          python3 ../conversation-integration/framework_capture_report.py --output "$RUNNER_TEMP/framework-capture"
+          python3 -O ../conversation-integration/framework_capture_report.py
           python3 -m unittest discover -s ../conversation-integration -p test_speech_android.py -v
           python3 -O -m unittest discover -s ../conversation-integration -p test_speech_android.py -v
           python3 ../conversation-integration/check_speech_android_evidence.py
@@ -279,3 +281,13 @@ jobs:
           path: |
             ${{ runner.temp }}/asr-framework/summary.json
             ${{ runner.temp }}/asr-framework/summary.html
+
+      - name: Upload joined framework simulator observations
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-framework-capture
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/framework-capture/summary.json
+            ${{ runner.temp }}/framework-capture/summary.html
