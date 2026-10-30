@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "purpose": "IOS_HELPER_DECIMAL80_SYNTHETIC_CONTROLS",
+  "source_pins": [
+    {
+      "path": "asr-sdk-score-probe/ios_math.py",
+      "sha256": "f088786b2eed45c4a75b0935a599d47faeb5b1a919b1f9ac677900833936d32e"
+    },
+    {
+      "path": "asr-sdk-score-probe/ios/math-protocol.json",
+      "sha256": "2359ae65a900bcf7d0318b76d4564ebf713e875aae61fd60d178b8ef4e1c4adf"
+    },
+    {
+      "path": "asr-sdk-score-probe/score_trace.h",
+      "sha256": "3d289b3464fd31e5e3522c3a332cae3373f552533869a5bda6159d96c99b6cee"
+    },
+    {
+      "path": "asr-runtime/framework.py",
+      "sha256": "24a6fdbf1575fc29cad19864f97cfa632a9008284ec91a928e56ec039d4ebd34"
+    }
+  ],
+  "binary_sha256": "2269af7096bc2fae89350eff4d15fb1475fbae7702448d5a23178402f2f35f8d",
+  "execution": {
+    "points": [
+      {
+        "id": "equal",
+        "path": 0,
+        "probability": 0.5
+      },
+      {
+        "id": "equal",
+        "path": 1,
+        "probability": 0.5
+      },
+      {
+        "id": "equal",
+        "path": 2,
+        "probability": 0.5
+      },
+      {
+        "id": "large_gap",
+        "path": 0,
+        "probability": 3.257488532207521e-70
+      },
+      {
+        "id": "large_gap",
+        "path": 1,
+        "probability": 3.257488532207521e-70
+      },
+      {
+        "id": "large_gap",
+        "path": 2,
+        "probability": 3.257488532207521e-70
+      },
+      {
+        "id": "largest",
+        "path": 0,
+        "probability": 1
+      },
+      {
+        "id": "largest",
+        "path": 1,
+        "probability": 1
+      },
+      {
+        "id": "largest",
+        "path": 2,
+        "probability": 1
+      },
+      {
+        "id": "ascending",
+        "path": 0,
+        "probability": 0.08714431874203257
+      },
+      {
+        "id": "ascending",
+        "path": 1,
+        "probability": 0.08714431874203257
+      },
+      {
+        "id": "ascending",
+        "path": 2,
+        "probability": 0.08714431874203257
+      },
+      {
+        "id": "dyadic",
+        "path": 0,
+        "probability": 0.2738029615412568
+      },
+      {
+        "id": "dyadic",
+        "path": 1,
+        "probability": 0.2738029615412568
+      },
+      {
+        "id": "dyadic",
+        "path": 2,
+        "probability": 0.2738029615412568
+      },
+      {
+        "id": "seven_equal",
+        "path": 0,
+        "probability": 0.14285714285714285
+      },
+      {
+        "id": "seven_equal",
+        "path": 1,
+        "probability": 0.14285714285714285
+      },
+      {
+        "id": "seven_equal",
+        "path": 2,
+        "probability": 0.14285714285714285
+      },
+      {
+        "id": "negative",
+        "path": 0,
+        "probability": 0.37754066831376665
+      },
+      {
+        "id": "negative",
+        "path": 1,
+        "probability": 0.37754066831376665
+      },
+      {
+        "id": "negative",
+        "path": 2,
+        "probability": 0.37754066831376665
+      },
+      {
+        "id": "singleton",
+        "path": 0,
+        "probability": 1
+      },
+      {
+        "id": "singleton",
+        "path": 1,
+        "probability": 1
+      },
+      {
+        "id": "singleton",
+        "path": 2,
+        "probability": 1
+      }
+    ],
+    "invalid_rejected": 6
+  },
+  "physical": "NOT_RUN",
+  "calibrated": false,
+  "policy_authorized": false
+}
