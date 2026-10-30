@@ -25,7 +25,7 @@ FLAGS=dict(calibrated=False,policy_authorized=False,physical='NOT_RUN',ordinary_
 
 
 def pins():
-    paths=[HERE/n for n in ('check_ios.py','ios/CMakeLists.txt','ios/main.cpp','main.cpp','score_trace.h','overlay.py','overlay-expected.json','report.py')]
+    paths=[HERE/n for n in ('check_ios.py','ios/CMakeLists.txt','ios/main.cpp','main.cpp','score_trace.h','overlay.py','overlay-expected.json','report.py','ios-initial-failure.json')]
     paths += [PACKAGES/'asr-confidence-probe'/n for n in ('source-manifest.json','SOURCE_REVIEW.md')]
     paths += [PACKAGES/'asr-runtime'/n for n in ('framework.py','provenance.json','tests/fixtures.json')]
     paths += [PACKAGES/'wake-runtime/ios-provenance.json',HERE/'check_android.py']
@@ -77,7 +77,7 @@ def main():
     dependencies=[line.strip().split(' (')[0] for line in f.run(['xcrun','otool','-L',relocated]).splitlines()[1:]]
     f.need(all(d.startswith(('/System/Library/Frameworks/','/usr/lib/')) for d in dependencies))
     rpaths=re.findall(r'cmd LC_RPATH\s+cmdsize \d+\s+path (.*?) \(offset \d+\)',f.run(['xcrun','otool','-l',relocated]));f.need(not rpaths)
-    results=[]
+    results=[];numeric=None
     with tempfile.TemporaryDirectory(prefix='eilo-ios-score-') as folder:
         raw=Path(folder)/'input.f32'
         def invoke(data):
@@ -92,7 +92,10 @@ def main():
                 (out/'failed-case.json').write_text(json.dumps(dict(case=case['id'],native_returncode=result.returncode))+'\n')
                 raise RuntimeError('isolated iOS score fixture failed; inspect local diagnostic log')
             rows=[json.loads(line) for line in result.stdout.splitlines() if line.startswith('{')];f.need(len(rows)==8)
-            results.append(dict(case=case['id'],paths=rows[:6],shape_comparison=rows[6],faults=rows[7]))
+            draft=[json.loads(line.split('\t',1)[1]) for line in result.stdout.splitlines() if line.startswith('EILO_IOS_DRAFT\t')]
+            limits=[json.loads(line.split('\t',1)[1]) for line in result.stdout.splitlines() if line.startswith('EILO_IOS_NUMERIC\t')]
+            f.need(len(draft)==len(limits)==1 and (numeric is None or numeric==limits[0]));numeric=limits[0]
+            results.append(dict(case=case['id'],fixture_preparation=draft[0],paths=rows[:6],shape_comparison=rows[6],faults=rows[7]))
             (out/'progress.json').write_text(json.dumps(results,indent=2)+'\n');print('Verified iOS fixture:',case['id'],flush=True)
         rejected=[]
         for name,data in [('empty',b''),('unaligned',b'x'),('nan',struct.pack('<f',float('nan'))),('out_of_range',struct.pack('<f',2))]:
@@ -105,7 +108,7 @@ def main():
         source_commit=f.read(PACKAGES/'asr-confidence-probe/source-manifest.json')['commit'],source_pins=before,overlay_pins=overlay,
         ort_version='1.28.2',ort_archive_sha256=ort_record['sha256'],ort_binary_sha256=f.sha(ort),binary_sha256=f.sha(relocated),
         relocation='EXECUTED_WITH_ORIGINAL_BINARY_ABSENT',custom_dynamic_dependencies='NONE',rpaths=rpaths,
-        rejected_inputs=rejected,cases=results,**FLAGS)
+        rejected_inputs=rejected,cases=results,numeric=numeric,**FLAGS)
     (out/'results.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
     print('Isolated iOS source score diagnostic completed; no calibration or ordinary-runtime authorization.')
 

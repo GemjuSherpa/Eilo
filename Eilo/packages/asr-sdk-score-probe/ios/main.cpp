@@ -2,6 +2,7 @@
 #include "context-biaser.h"
 #include "score_trace.h"
 #include <cstdio>
+#include <cfloat>
 #include <fstream>
 #include <memory>
 #include <cstdlib>
@@ -70,8 +71,22 @@ int main(int argc,char** argv){
   require(model.load(argv[1],tokenizer.c_str(),4)==0);std::unique_ptr<MoonshineStreamingState> state(model.create_state());require(bool(state));
   int features=0,frames=0;require(model.process_audio_chunk(state.get(),audio.data(),audio.size(),&features)==0);require(model.encode(state.get(),true,&frames)==0);require(state->memory_len>0);
   auto greedy=decode(model,state.get(),{});require(greedy.size()>1);
+  std::printf("EILO_IOS_NUMERIC\t{\"double_mantissa_bits\":%d,\"long_double_mantissa_bits\":%d}\n",DBL_MANT_DIG,LDBL_MANT_DIG);
   stage="greedy";check_path(model,state.get(),{},0,false);
-  stage="accepted_draft";check_path(model,state.get(),greedy,int(greedy.size()),false);
+  stage="accepted_draft";
+  // A step-greedy draft need not match full-batch verification on this runtime.
+  // Construct a bounded, actually verified full draft; all score checks stay strict.
+  auto full_draft=greedy;bool full_found=false;int draft_attempts=0;
+  const int initial_verified=accepted_prefix(model,state.get(),greedy);
+  for(int attempt=0;attempt<8;++attempt){
+    ++draft_attempts;const int accepted=accepted_prefix(model,state.get(),full_draft);
+    auto output=decode(model,state.get(),full_draft);
+    if(accepted==int(full_draft.size()) && output==full_draft){full_found=true;break;}
+    full_draft=std::move(output);
+  }
+  require(full_found);
+  std::printf("EILO_IOS_DRAFT\t{\"attempts\":%d,\"initial_greedy_tokens\":%zu,\"initial_verified\":%d,\"final_verified_tokens\":%zu}\n",draft_attempts,greedy.size(),initial_verified,full_draft.size());
+  check_path(model,state.get(),full_draft,int(full_draft.size()),false);
   stage="accepted_prefix";std::vector<int> short_draft;bool prefix_found=false;
   for(size_t n=1;n<greedy.size();++n){
     short_draft.assign(greedy.begin(),greedy.begin()+n);
