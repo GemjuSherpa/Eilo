@@ -44,6 +44,8 @@ jobs:
           python3 -O -m unittest discover -s ../asr-sdk-score-probe -p 'test_*.py' -v
           python3 ../asr-sdk-score-probe/report.py
           python3 -O ../asr-sdk-score-probe/report.py
+          python3 ../asr-sdk-score-probe/ios_report.py --output "$RUNNER_TEMP/ios-source-score"
+          python3 -O ../asr-sdk-score-probe/ios_report.py
       - name: Common Voice score aggregates and privacy contracts (no corpus download)
         run: |
           python3 -m unittest discover -s ../asr-corpus-score -p 'test_*.py' -v
@@ -315,3 +317,13 @@ jobs:
           path: |
             ${{ runner.temp }}/framework-noise/summary.json
             ${{ runner.temp }}/framework-noise/summary.html
+
+      - name: Upload isolated iOS source score observations
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-source-score
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/ios-source-score/summary.json
+            ${{ runner.temp }}/ios-source-score/summary.html
