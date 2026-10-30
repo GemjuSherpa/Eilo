@@ -25,7 +25,7 @@ FLAGS=dict(calibrated=False,policy_authorized=False,physical='NOT_RUN',ordinary_
 
 
 def pins():
-    paths=[HERE/n for n in ('check_ios.py','ios/CMakeLists.txt','main.cpp','score_trace.h','overlay.py','overlay-expected.json','report.py')]
+    paths=[HERE/n for n in ('check_ios.py','ios/CMakeLists.txt','ios/main.cpp','main.cpp','score_trace.h','overlay.py','overlay-expected.json','report.py')]
     paths += [PACKAGES/'asr-confidence-probe'/n for n in ('source-manifest.json','SOURCE_REVIEW.md')]
     paths += [PACKAGES/'asr-runtime'/n for n in ('framework.py','provenance.json','tests/fixtures.json')]
     paths += [PACKAGES/'wake-runtime/ios-provenance.json',HERE/'check_android.py']

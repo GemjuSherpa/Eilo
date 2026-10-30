@@ -1,0 +1,16 @@
+{
+  "status": "IOS_FIXTURE_CONSTRUCTION_FAILED_NOT_SCORE_QUALIFICATION",
+  "platform": "ARM64_IOS_SIMULATOR",
+  "ort_version": "1.28.2",
+  "fixture": "name",
+  "stage": "accepted_draft",
+  "expected_verification_rows": 9,
+  "observed_verification_rows": 6,
+  "observed_redecoded": 1,
+  "observed_output_tokens": 10,
+  "diagnostic_source_sha256": "2238e8ffd210d9d1b9b311d4555478d68511f1467147c9ca225d2f3f604e4555",
+  "calibrated": false,
+  "policy_authorized": false,
+  "physical": "NOT_RUN",
+  "cause": "NOT_ESTABLISHED"
+}
