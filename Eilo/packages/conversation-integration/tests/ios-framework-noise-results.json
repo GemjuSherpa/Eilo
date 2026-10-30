@@ -1,0 +1,838 @@
+{
+  "schema_version": 1,
+  "purpose": "PAIRED_IOS_DIRECT_VAD_ASR_NOISE_DIAGNOSTIC",
+  "protocol_commit": "3ad3386727d5f4c65532c7fe80f8af3bafd74772",
+  "source_pins": [
+    {
+      "path": "asr-calibration/calibrate.py",
+      "sha256": "00d4b4a99f805e7c4f71c3d59f94ce5d099198e60abf67492a053ca37589da39"
+    },
+    {
+      "path": "asr-calibration/calibration_report.py",
+      "sha256": "88148c8c97af05c8a28656ef7bfbb673748a2a792afca607116eb534f6a740aa"
+    },
+    {
+      "path": "asr-calibration/freeze.json",
+      "sha256": "7ce7ae0da50dd3fcb4facc5510b0280099fcd511f47a66314964d8905045a4c1"
+    },
+    {
+      "path": "asr-calibration/negative-protocol.json",
+      "sha256": "571dbb77bbbbb59306b47789bf989d91c33c89325cfd0d5efc3b579717e42a43"
+    },
+    {
+      "path": "asr-calibration/negative-results.json",
+      "sha256": "7fe6649b771169040f6c311b1ba5ab6029cce19c86af646662ada03d0fe7c270"
+    },
+    {
+      "path": "asr-calibration/negative.py",
+      "sha256": "339cc40289efa5098206e467fd20406b809230d466c2ca42ac159527b4d4ac12"
+    },
+    {
+      "path": "asr-calibration/noise_pilot.py",
+      "sha256": "2cc226bde1e4767d6a69cac079ee1579ad9e047f1b425eca9c679389779d2430"
+    },
+    {
+      "path": "asr-corpus-score/CMakeLists.txt",
+      "sha256": "16252575fda74ae3b06a3cd987085fd8a2fbdc71dc749d0692f611fb35e08971"
+    },
+    {
+      "path": "asr-corpus-score/diagnostics.py",
+      "sha256": "7d0c0f33378fdda9d50aedd67eaf41247845dd3a0783f8c9770cdeaa38a487f9"
+    },
+    {
+      "path": "asr-corpus-score/main.cpp",
+      "sha256": "bc38ba7297af7313a1ba335f3b4fede01ec8f39446a7f2c223d8140420be2016"
+    },
+    {
+      "path": "asr-corpus-score/run_android.py",
+      "sha256": "23264aebec3388a87affbc71e71bf7e5a0853041eb2033a9fd51a805b9d554ee"
+    },
+    {
+      "path": "asr-runtime/eilo_asr.cc",
+      "sha256": "1b5dd4274b93f8c972f2c1a27406377330e65d3e4290f26f2bc51a919ea02833"
+    },
+    {
+      "path": "asr-runtime/framework-results.json",
+      "sha256": "fe7878279f4269243434a89fb658bcf3e20d9305e7d01705398362e0ebe6cc7a"
+    },
+    {
+      "path": "asr-runtime/framework.py",
+      "sha256": "24a6fdbf1575fc29cad19864f97cfa632a9008284ec91a928e56ec039d4ebd34"
+    },
+    {
+      "path": "asr-runtime/framework_probe.swift",
+      "sha256": "349ce3c4453358f06b423db62363ceec0178b50c8c05416eb7d5e6230a9460b6"
+    },
+    {
+      "path": "asr-runtime/include/eilo_asr.h",
+      "sha256": "416a71220bc5ea2e9c01df19e93dbd1ccaf2b3c38ccff4a55257cb658b2e6c30"
+    },
+    {
+      "path": "asr-runtime/include/module.modulemap",
+      "sha256": "0353badadab3e558428877d07a1c2e74b68ce0715d94beaa69cef3fb4afe775e"
+    },
+    {
+      "path": "asr-runtime/provenance.json",
+      "sha256": "3db28e00acafb37ffaae433f3f9696fd56a0b5678b45edf50a1401f2400a37dd"
+    },
+    {
+      "path": "asr-runtime/tests/fixtures.json",
+      "sha256": "5f310e91b7cb36d33ab09252cc44f1dd045178cb172e65827a98eebe9ca78102"
+    },
+    {
+      "path": "asr-sdk-score-probe/overlay-expected.json",
+      "sha256": "cdf21e144fa02f6a906e803315ebe8ded8965ba3842998788802684189f485cd"
+    },
+    {
+      "path": "asr-sdk-score-probe/overlay.py",
+      "sha256": "102a4ff3288b6420bd4e7ed9ffda3841d5c2e8f242bba6c854e907e8ba8b0e55"
+    },
+    {
+      "path": "asr-sdk-score-probe/score_trace.h",
+      "sha256": "3d289b3464fd31e5e3522c3a332cae3373f552533869a5bda6159d96c99b6cee"
+    },
+    {
+      "path": "conversation-integration/check_capture_ios.py",
+      "sha256": "3749af1b6f57c365e46feaa9600d70b13945fae0c4502b75903e999c9e40b6b9"
+    },
+    {
+      "path": "conversation-integration/check_framework_capture.py",
+      "sha256": "92c1710bb9ddef767fd1f0db845c2c2ec92a9c70e0151bcf1c7260f608cd9fc8"
+    },
+    {
+      "path": "conversation-integration/framework_noise.py",
+      "sha256": "947d63f0202333728dca8c23391869b7a777e478bf7baa88069e7f72d3fa8c82"
+    },
+    {
+      "path": "conversation-integration/noise-protocol.json",
+      "sha256": "a118905f2ca98c1efe723c2610503ec6c4f4aa35cb6e76e276d70cd9cecc66e7"
+    },
+    {
+      "path": "conversation-integration/tests/ios_capture.swift",
+      "sha256": "91d2536256e21db441bb27c2ccb57c7986c97b6438866fc16e292aed16572a1d"
+    },
+    {
+      "path": "conversation-integration/tests/ios_framework_capture.swift",
+      "sha256": "7bce9aa631830f3d4e294d2c93c44d06f70d0d19cb3589af29e052b04e64d5a7"
+    },
+    {
+      "path": "conversation-integration/tests/ios_framework_noise.swift",
+      "sha256": "54a984aafceb9c5604fa5e05fd6f480e0c6992377a0527949ff90aedea66e6f8"
+    },
+    {
+      "path": "dataset-evaluation/audio.py",
+      "sha256": "3e639578623c8345aec516c10c2732ab5a13fd8fd1e3fed1ce83d5ae448d0db4"
+    },
+    {
+      "path": "dataset-evaluation/benchmark.py",
+      "sha256": "025da2520d09468d683e05f3823bd77f8175be0a7dee6f048880f1c6ff6e6aab"
+    },
+    {
+      "path": "dataset-evaluation/manifests.py",
+      "sha256": "65cdf1411794a786329124551aab24854bb71180b609de8626292cd661d8abdf"
+    },
+    {
+      "path": "llm-runtime/check_host.py",
+      "sha256": "e567fa2e5f2796459dab194894c3cffa969eba490c7e63495b224afaaea8e82f"
+    },
+    {
+      "path": "llm-runtime/check_ios.py",
+      "sha256": "79cf0561e744b0f2664193635301f06391f9ad0d84273a8653977fb5bab8862a"
+    },
+    {
+      "path": "llm-runtime/eilo_llm.cc",
+      "sha256": "caca29fa8706736a0af5e25a3b36b0343093cc2857bcd66ff135e8571f039eb9"
+    },
+    {
+      "path": "llm-runtime/include/eilo_llm.h",
+      "sha256": "9b21bed896237ea6070c88f02765cbd9e6148b7f60f0a1f9d5df241c42ef6ed4"
+    },
+    {
+      "path": "llm-runtime/include/module.modulemap",
+      "sha256": "eb5661ef25e18846ee4c38c669077a38aefaa539caf0dd1602c8723835ba8a86"
+    },
+    {
+      "path": "llm-runtime/provenance.json",
+      "sha256": "87ec4d03e2da09373edf9b3c5d0c8af56d0de6bd069a9aa276e9e5e9a0a6d6ce"
+    },
+    {
+      "path": "llm-runtime/tests/ios-results.json",
+      "sha256": "c0d84e3bbf85b67278dd49ecb22b5d3f70902326820ec9504d173f224ad3f332"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/AudioInterruption.swift",
+      "sha256": "b3e841aa8028a0fb39d741be85b6942b1f935dab33d06fc217f2e48d441c2541"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/BackgroundCapturePolicy.swift",
+      "sha256": "2a3a883f13b9c0aada3cb77475565bc7baeeb3053421011614620f86ef379d63"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/BoundedContinuation.swift",
+      "sha256": "1e9023749b0f0caaaf8b9bd4e5d07b4ff88826c9575e8a3c17cb7e731cde0bb9"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/CapabilityPolicy.swift",
+      "sha256": "8c3ed0af92d3be3d414ad67fa74e2da2cd7712971ac4fc4771d4d1dfdade636a"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/ConfirmedSpeechInterruption.swift",
+      "sha256": "a3d778311f7443cb088798473361014789e9f62ff340e7ce4343b19df682c9f1"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/DangerPolicy.swift",
+      "sha256": "861df20fe3830e887cac7a313a705fa3fc8fb6f8e703c0fecdbc51b55f2af2b0"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/EndpointDetector.swift",
+      "sha256": "2339f7471f3532cc93cb764e9b74e420f327987e412d185b4dc941377edf50cd"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/GenericSpokenTurn.swift",
+      "sha256": "0c9059f198e4a6a15cdaff2f7fdf259210055beb3e38ab8d4c3d0b117c667f86"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/IOSCaptureEffects.swift",
+      "sha256": "3636ed41e0b889457689212cbd29214071033edc82ff28e87fd8a0bf61241624"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/IOSConsentAuthentication.swift",
+      "sha256": "a38a6927002c917ac0804cf237656719cbead80b35137b2cc59fa162aa0ba660"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/IOSOfflineSpeech.swift",
+      "sha256": "956976c50309a5517696e96f8d39dd70756fec22ced3202008fec5540e3d7b39"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/LlmControllerJob.swift",
+      "sha256": "06b62272e56ef9a026964901cdf9790ee785c0acdfe04465940a0fb71d975ed4"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/LlmPackLease.swift",
+      "sha256": "2ca273a1de8b4c01c773a99bb6a96ffde520518d935387a21116c7554bc51a63"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeAsrStream.swift",
+      "sha256": "b9a4c567f2a525c90c60eb31cb7af46a1ee4dee9d5f9bc63fdda9d7a541d2102"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeClauseQueue.swift",
+      "sha256": "91d9d5c7292af764ee6a282efb3326b0cf57325ae6a7b3f3f5d09a940d0c5396"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeConsentPolicy.swift",
+      "sha256": "684606cfb907d3efd9f80d71b81155a585b0f33a8d722a5e801105a53247a105"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeController.swift",
+      "sha256": "379bdaaf10b2410f486832d3351484576dee0a6c8650f51e617546983cb8a62d"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeIdleTimer.swift",
+      "sha256": "a63611df6f3da8c4b21cac78dab6bc9826dd12e8e3604f1cd9d48df61052cb76"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeLlmStream.swift",
+      "sha256": "1161de6edda975a0c7fe5db2972efe5d150663b745332ee6939c66e495e852bd"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativePermission.swift",
+      "sha256": "c50065a791b830a6de6b7a4b9d62b11b27522823048e585a1cbeed68fddb5f6b"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeSpeechPolicy.swift",
+      "sha256": "94cdf1d06882343ac8ea90c4adcdee41d26f8149a6b3609dc4a7456e0b327841"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeVadStream.swift",
+      "sha256": "b0b204948bf9bd009c2a33ca913cdc04a9dd5c463059923f33cdeb9838c2e5ba"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/NativeWakeStream.swift",
+      "sha256": "414f9fe8f459afa430a15e6112d3a99d6af5043e51ec980022f4dcb99a323306"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/OfflineVoiceRegistry.swift",
+      "sha256": "c353831b41a27d007df5a4c2b81a8e9922c8534355506e167c745e584dce248d"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PackIntegrity.swift",
+      "sha256": "175fbf031ea11ed40b842662c4dd9e6416b66469d1cf68b55a0285f7b598167e"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PackManifest.swift",
+      "sha256": "05a234a587f9ad511806011aea8c841fe13fed7aec4ea24906e37bcd8f5bc1c1"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PackReadiness.swift",
+      "sha256": "c2476d7e896dc9b6192a8daaa7bf4f9d546462249704f1487c36a9c17972cbef"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PackRecovery.swift",
+      "sha256": "437c402112c4f26c05c4145b5f4116113817a32e55bbd8820e76d57e13e349be"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PackSignature.swift",
+      "sha256": "77de9d35f3b66aa9d7e3e85bab7b3f5754cfce6988598384305dd1bca746d031"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PackStore.swift",
+      "sha256": "bbda23a0f07ef0295980e1166ca0f9ea346f4dd4aa09e90b2d317fbeb935b7e1"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PackTransport.swift",
+      "sha256": "d4c8bd266fac63899aeff6e5506b3142302a305fdafbf8028e96a1e9cb47190e"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PersonaPolicy.swift",
+      "sha256": "109e7a5b82693640f92ebb0395e0539840197fa1b71ee4c5813f1bafe2ae2489"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PlaybackProgress.swift",
+      "sha256": "5ebdd6155d5767f48f6e4c41f034af7ce0338e1b5683aabd435a565f7f447551"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PlaybackRejection.swift",
+      "sha256": "14b9ca877700fe17fe40f92c528fa48b85412fc03fed3c64aa0887bc986a224e"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/PromptBudget.swift",
+      "sha256": "8d3cddb37a9e2a524e7647ba8cb0b5b4efd652f033624e79c7de3833f1259b48"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/ProtectedKey.swift",
+      "sha256": "3a6e837bdb75fbf843653eaa7759444ce900d1ad2f66238fa7b259db290e3027"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/QwenTemplate.swift",
+      "sha256": "ab59ab8a438db4807447d2cfd67d7bd1261f1e65ae04452fe27801ee2fc0608e"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/RecognitionPolicy.swift",
+      "sha256": "a018aa05ad083f4d497b58b6994d186de2b7e582d8ce8d93629192a0fab2758f"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/SafeDiagnostics.swift",
+      "sha256": "fdce3ba96d5f5ae067f136056bec495757c2f9a3273b6398f8b5ed1aa1cbd46f"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/SpeechPackLease.swift",
+      "sha256": "6342f3b7a1c16bb5ed783d7adfbd3fde1def4fec56e933125289953e1c3c0ad6"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/StandbyAudioBuffer.swift",
+      "sha256": "f0038ab05e7badc51ce9373857870b45d0fd33a8309b001e37015b1976dec179"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/StreamingAsr.swift",
+      "sha256": "3c928fc338dbce24079e26ae8c156daa18c57498d8041b3db652bbc2bfe07560"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/StreamingRateConverter.swift",
+      "sha256": "324703b136a6335f14878f62112271977fbd5a8b29e04696229fce2e022b790c"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/TurnTestSeam.swift",
+      "sha256": "df2e280614d6e2bd43b6a4fcdb3b9beb19262d54fcfde4f88831d8e6f312f5f2"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/UntrustedMemory.swift",
+      "sha256": "88b86f050565632b6a599dfdd8f21a81efe76aea9c677b053091254a839d1585"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/VadAsrHandoff.swift",
+      "sha256": "a13a6421c9fed06806524c6786b45e630534da80275f6977e3157c98ad69a196"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/VadCaptureSlot.swift",
+      "sha256": "64e8961eafe227d4cba31221fc9160da5b754b8a1710af91835359658c7fa4dc"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/VadCaptureTransport.swift",
+      "sha256": "f1e093f36959052aa0f9e8a3127be6b75b8720c7e6b93b64099f63b4c4c9a025"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/VadWindowDelivery.swift",
+      "sha256": "58883506c3de621707af7274deb71efbcdea03ce98d5922f4c7d4284d29fc12c"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/WakeDetector.swift",
+      "sha256": "ee657b8f051bc7e28c0bc7ba6dec92aa6859c38aa8e1862f63e9d5cc8a3d3c60"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/WakeFrameDelivery.swift",
+      "sha256": "ac0732c57e4434cf7a04d2df0de19d4cbc400ac1ea11609304abaa765526f842"
+    },
+    {
+      "path": "native-test-seam/Sources/NativeTestSeam/WakeQuestionHandoff.swift",
+      "sha256": "b937e84a1a27cb192eaf184433a24ebb427ecb2a9d1680012a5247e467f9905f"
+    },
+    {
+      "path": "vad-runtime/check_installer.py",
+      "sha256": "13f14c8353df008e1cf394a9c25ff31946af88554d16a42c6da98ccbd49811f7"
+    },
+    {
+      "path": "vad-runtime/check_native.py",
+      "sha256": "00ad3243e99e29164dffe84e4d25259da8371e2c432ec0418b77a7066efdfc26"
+    },
+    {
+      "path": "vad-runtime/eilo_vad.cc",
+      "sha256": "18402a67ee703d446c5bd44c59e018981b181afd3288afccf2c4a1dc10f9f118"
+    },
+    {
+      "path": "vad-runtime/eilo_vad_onnx.cc",
+      "sha256": "c0962a35f9a5ca28da00fcafc050c201971dc7a82ef3bcd1556d1ace55a40051"
+    },
+    {
+      "path": "vad-runtime/include/eilo_vad.h",
+      "sha256": "0d08a66e8c8ee39f82fc1344832de2b2afe80f09a6508e78433829a102acf517"
+    },
+    {
+      "path": "vad-runtime/include/module.modulemap",
+      "sha256": "e15ea0239ea1606ae9ae6abe4758ff11efab74cf5e1a1043399b568630dd80e3"
+    },
+    {
+      "path": "vad-runtime/provenance.json",
+      "sha256": "e472e2e39fa2a273b9d02e879c6926b138cd0c8cfc5473b3125f04ebbbf207ac"
+    },
+    {
+      "path": "wake-runtime/ios-provenance.json",
+      "sha256": "b76675ac1ab875cfe0ac371075a78dbf46c7280bdf33316369875fd21ed84fef"
+    }
+  ],
+  "controls_sha256": "961e970693f78541100e107c94d2b71efdd0d3855040be94b3f819330c699e20",
+  "musan_manifest_sha256": "b6812fcdb073751f18475d9fcf908a599be078d2d0237d0682950809c8670fa9",
+  "framework": {
+    "architecture": "arm64",
+    "platform": "IOSSIMULATOR",
+    "minimum_os": "18.0",
+    "install_name": "@rpath/CEiloAsr.framework/CEiloAsr",
+    "exports": [
+      "_eilo_asr_accept",
+      "_eilo_asr_create",
+      "_eilo_asr_destroy",
+      "_eilo_asr_text"
+    ],
+    "namespace": "TWOLEVEL",
+    "code_signature": "TOOLCHAIN_AD_HOC",
+    "dependencies": [
+      "@rpath/CEiloAsr.framework/CEiloAsr",
+      "/System/Library/Frameworks/Accelerate.framework/Accelerate",
+      "/System/Library/Frameworks/Foundation.framework/Foundation",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib",
+      "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
+    ],
+    "sha256": "a97d1ef048ec8c8e49bec7add5c4bc1c500bef51134b5ef735c8397d9c21e110",
+    "bytes": 24545800,
+    "header_sha256": "416a71220bc5ea2e9c01df19e93dbd1ccaf2b3c38ccff4a55257cb658b2e6c30",
+    "module_sha256": "38a34c6eecd6f52f08335072eaef6f86d918c4b7e73f45dfcb511846ac24e1ba",
+    "info_sha256": "f95e9dc42feea847f9c6a74def1935835733107ddbe6e44cc2185410b61f3d7b"
+  },
+  "vad_model_sha256": "6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396",
+  "client_rpaths": [
+    "/usr/lib/swift",
+    "@executable_path/Frameworks"
+  ],
+  "relocation": "EXECUTED_WITH_ORIGINAL_CLIENT_DIRECTORY_ABSENT",
+  "binary_sha256": "d77d20ea29ad2bd4277de1569f4fd20ba6b3f5069c248ec67eccca4c92cfec93",
+  "execution": {
+    "cases": [
+      {
+        "consumed_samples": 29184,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": true,
+        "direct_opens": 1,
+        "group": "positive_question",
+        "input_samples": 80000,
+        "input_sha256": "6352c626c67d9abdb6fe8a8b1413fb31acddcae1f52c2cf258817ec69d0adf82",
+        "joined_closes": 1,
+        "joined_finals": 1,
+        "joined_nonempty": true,
+        "joined_opens": 1,
+        "metadata": 1,
+        "outcome": "complete",
+        "recognized": 1,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 115456,
+        "input_sha256": "5ca0986ca92002c4024e3863d65f5c87efec43e3c810bf0a1b8c3153fcb5062b",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 80000,
+        "input_sha256": "b463f8688e754d0f940bf48000d2f2ff0f9792a4e0e7684d4432a6911d267e7b",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 122240,
+        "input_sha256": "53aabccb2bc0c075e76467549e438d8f6b941720abea54c51cff401243888e2c",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 480000,
+        "input_sha256": "8f22cb219752be09b7099ac876bb488ff85a6ecd79073278b3848be68294e62b",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 480000,
+        "input_sha256": "2500062068749fef0417f694a2e7abeb86a03de28b184b1d4bbd19290c92ec88",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 480000,
+        "input_sha256": "abf283d0b44678ba6e3bca56d1a0c8dd5a6a314265aff202375dd513f4ba668c",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 480000,
+        "input_sha256": "6b463e303021979c4e2176233b9ab24b852ff735874adf2121e619745234d8db",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 23552,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 98000,
+        "input_sha256": "7362e21a4f1173c8c06e2efabe0476a23dce1b3d16717749c173a5909f3ad5a6",
+        "joined_closes": 1,
+        "joined_finals": 1,
+        "joined_nonempty": false,
+        "joined_opens": 1,
+        "metadata": 1,
+        "outcome": "complete",
+        "recognized": 1,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 13312,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 480000,
+        "input_sha256": "772740b69c5ed97bcde00c69e5050c8cfdfb08eaf4a9bee3647447d9e663ecfc",
+        "joined_closes": 1,
+        "joined_finals": 1,
+        "joined_nonempty": false,
+        "joined_opens": 1,
+        "metadata": 1,
+        "outcome": "complete",
+        "recognized": 1,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 480000,
+        "input_sha256": "93758170f291360cc19705632a57406e706cbab92fb69e79348833cd0c72a729",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 372480,
+        "input_sha256": "48d8b24b28ae5d028b5114899467fea0bd1f6a1d5eb643c15b462307dd326108",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "musan_weak_noise",
+        "input_samples": 318626,
+        "input_sha256": "b9c25ac1a8a4fb313ff46baef49f1b8eeae3409b7ae386bf7c707b47c105734d",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "digital_silence",
+        "input_samples": 80000,
+        "input_sha256": "ac2878215ad33205d1732578c89f25ededaad1b676911c540825bcf4baa42d9b",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "digital_silence",
+        "input_samples": 112000,
+        "input_sha256": "4ecbc1fdbaa22d336b5f943a66335726f594095a329684ebd0c6e66a5992bd90",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "digital_silence",
+        "input_samples": 192000,
+        "input_sha256": "351a8054b23144894668c6a51d5dbba82f56523ef43cc45b6f4d7060a969c31a",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "uniform_noise",
+        "input_samples": 80000,
+        "input_sha256": "461988ac6fddda3353491be8bfe21a8f2a2791d9141c0ab303f75d0be9cfe0d4",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "uniform_noise",
+        "input_samples": 80000,
+        "input_sha256": "9dbfeacfa4070eaa1467e57549246dd5d2a41dfe7350c6e5102bfbd998609a07",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      },
+      {
+        "consumed_samples": 80000,
+        "direct_available": true,
+        "direct_closes": 1,
+        "direct_finals": 1,
+        "direct_nonempty": false,
+        "direct_opens": 1,
+        "group": "uniform_noise",
+        "input_samples": 80000,
+        "input_sha256": "432bec5be0d7fd1bb18d618e115dbacb412f447f4e46ba7b5fc6a2bda3aeed7a",
+        "joined_closes": 0,
+        "joined_finals": 0,
+        "joined_nonempty": false,
+        "joined_opens": 0,
+        "metadata": 1,
+        "outcome": "noSpeech",
+        "recognized": 0,
+        "vad_closes": 1,
+        "vad_opens": 1
+      }
+    ],
+    "temporary_pack_removed": true,
+    "worker_verified": true
+  },
+  "physical": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "microphone": "NOT_OPENED",
+  "speech": "NOT_STARTED",
+  "llm": "NOT_RUN",
+  "confidence": "NOT_EVALUATED",
+  "calibration": "NOT_ESTABLISHED",
+  "threshold": "NOT_GRANTED",
+  "wake": "NOT_ATTACHED",
+  "end_to_end_false_activation": "NOT_MEASURED",
+  "pack_trust": "SYNTHETIC_EVALUATOR_ONLY",
+  "release": "HOLD",
+  "persistent_memory": "DISABLED"
+}
