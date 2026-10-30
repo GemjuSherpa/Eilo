@@ -104,7 +104,7 @@ def main():
             f.need(len(limits)==len(versions)==1 and (numeric is None or numeric==limits[0]) and (runtime_version is None or runtime_version==versions[0]))
             numeric=limits[0];runtime_version=versions[0]
             results.append(dict(case=case['id'],paths=rows[:6],shape_comparison=rows[6],faults=rows[7]))
-            (out/'progress.json').write_text(json.dumps(results,indent=2)+'\n');print('Verified iOS fixture:',case['id'],flush=True)
+            (out/'progress.json').write_text(json.dumps(results,indent=2)+'\n');print('Collected iOS fixture:',case['id'],flush=True)
         rejected=[]
         for name,data in [('empty',b''),('unaligned',b'x'),('nan',struct.pack('<f',float('nan'))),('out_of_range',struct.pack('<f',2))]:
             result=invoke(data);f.need(result.returncode!=0 and not any(line.startswith('{') for line in result.stdout.splitlines()));rejected.append(name)
