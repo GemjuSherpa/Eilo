@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "purpose": "PAIRED_IOS_DIRECT_VAD_ASR_NOISE_DIAGNOSTIC",
+  "trailing_silence_samples": 32000,
+  "minimum_input_samples": 80000,
+  "maximum_input_samples": 480000,
+  "base_controls_sha256": "961e970693f78541100e107c94d2b71efdd0d3855040be94b3f819330c699e20",
+  "musan_manifest_sha256": "b6812fcdb073751f18475d9fcf908a599be078d2d0237d0682950809c8670fa9",
+  "musan_labels": "CORPUS_CATEGORY_WEAK_LABEL_NOT_VERIFIED_SPEECH_ABSENCE",
+  "synthetic_labels": "NO_SPEECH_BY_CONSTRUCTION",
+  "pairing": "SAME_IOS_RUNTIME_AND_PADDED_INPUT_DIFFERENT_ENDPOINT_CONSUMPTION",
+  "text_measure": "NONEMPTY_NOT_WORD_ACCURACY",
+  "inputs": [
+    {
+      "group": "positive_question",
+      "samples": 80000,
+      "sha256": "6352c626c67d9abdb6fe8a8b1413fb31acddcae1f52c2cf258817ec69d0adf82"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 115456,
+      "sha256": "5ca0986ca92002c4024e3863d65f5c87efec43e3c810bf0a1b8c3153fcb5062b"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 80000,
+      "sha256": "b463f8688e754d0f940bf48000d2f2ff0f9792a4e0e7684d4432a6911d267e7b"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 122240,
+      "sha256": "53aabccb2bc0c075e76467549e438d8f6b941720abea54c51cff401243888e2c"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 480000,
+      "sha256": "8f22cb219752be09b7099ac876bb488ff85a6ecd79073278b3848be68294e62b"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 480000,
+      "sha256": "2500062068749fef0417f694a2e7abeb86a03de28b184b1d4bbd19290c92ec88"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 480000,
+      "sha256": "abf283d0b44678ba6e3bca56d1a0c8dd5a6a314265aff202375dd513f4ba668c"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 480000,
+      "sha256": "6b463e303021979c4e2176233b9ab24b852ff735874adf2121e619745234d8db"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 98000,
+      "sha256": "7362e21a4f1173c8c06e2efabe0476a23dce1b3d16717749c173a5909f3ad5a6"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 480000,
+      "sha256": "772740b69c5ed97bcde00c69e5050c8cfdfb08eaf4a9bee3647447d9e663ecfc"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 480000,
+      "sha256": "93758170f291360cc19705632a57406e706cbab92fb69e79348833cd0c72a729"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 372480,
+      "sha256": "48d8b24b28ae5d028b5114899467fea0bd1f6a1d5eb643c15b462307dd326108"
+    },
+    {
+      "group": "musan_weak_noise",
+      "samples": 318626,
+      "sha256": "b9c25ac1a8a4fb313ff46baef49f1b8eeae3409b7ae386bf7c707b47c105734d"
+    },
+    {
+      "group": "digital_silence",
+      "samples": 80000,
+      "sha256": "ac2878215ad33205d1732578c89f25ededaad1b676911c540825bcf4baa42d9b"
+    },
+    {
+      "group": "digital_silence",
+      "samples": 112000,
+      "sha256": "4ecbc1fdbaa22d336b5f943a66335726f594095a329684ebd0c6e66a5992bd90"
+    },
+    {
+      "group": "digital_silence",
+      "samples": 192000,
+      "sha256": "351a8054b23144894668c6a51d5dbba82f56523ef43cc45b6f4d7060a969c31a"
+    },
+    {
+      "group": "uniform_noise",
+      "samples": 80000,
+      "sha256": "461988ac6fddda3353491be8bfe21a8f2a2791d9141c0ab303f75d0be9cfe0d4"
+    },
+    {
+      "group": "uniform_noise",
+      "samples": 80000,
+      "sha256": "9dbfeacfa4070eaa1467e57549246dd5d2a41dfe7350c6e5102bfbd998609a07"
+    },
+    {
+      "group": "uniform_noise",
+      "samples": 80000,
+      "sha256": "432bec5be0d7fd1bb18d618e115dbacb412f447f4e46ba7b5fc6a2bda3aeed7a"
+    }
+  ],
+  "physical": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "microphone": "NOT_OPENED",
+  "speech": "NOT_STARTED",
+  "llm": "NOT_RUN",
+  "confidence": "NOT_EVALUATED",
+  "calibration": "NOT_ESTABLISHED",
+  "threshold": "NOT_GRANTED",
+  "wake": "NOT_ATTACHED",
+  "end_to_end_false_activation": "NOT_MEASURED",
+  "pack_trust": "SYNTHETIC_EVALUATOR_ONLY",
+  "release": "HOLD",
+  "persistent_memory": "DISABLED"
+}
