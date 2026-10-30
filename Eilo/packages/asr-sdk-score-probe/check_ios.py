@@ -54,13 +54,20 @@ def verify_fixtures(cache):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for n in ('source','asr-cache','ort-cache','cmake','output'):p.add_argument('--'+n,type=Path,required=True)
-    p.add_argument('--udid',required=True);a=p.parse_args()
+    p.add_argument('--runtime',choices=('cached-1.28.2','vendor-prelinked'),default='cached-1.28.2');p.add_argument('--udid',required=True);a=p.parse_args()
     source=a.source.resolve();cache=a.asr_cache.resolve();out=a.output.resolve();f.need(not out.exists())
     checker=module('ios_score_source_checker',HERE/'check_android.py');checker.verify_source(source)
     model,provenance=f.verify_asr(cache);ort,ort_record=verify_ort(a.ort_cache);fixtures=verify_fixtures(cache);before=pins()
     devices=json.loads(f.run(['xcrun','simctl','list','devices','booted','--json']))['devices']
     f.need(any(d['udid']==a.udid and d['state']=='Booted' and d.get('isAvailable') for ds in devices.values() for d in ds))
     out.mkdir(parents=True)
+    runtime_archive=ort_record['sha256']
+    if a.runtime=='vendor-prelinked':
+        vendor=cache/'ios-0.1.5/Moonshine.xcframework/ios-arm64_x86_64-simulator/libmoonshine.a'
+        thin=out/'vendor-arm64.a';f.run(['xcrun','lipo',vendor,'-thin','arm64','-output',thin])
+        ort=out/'prelinked_objects.o'
+        with ort.open('wb') as object_file:subprocess.run(['xcrun','ar','-p',str(thin),'prelinked_objects.o'],stdout=object_file,check=True,timeout=60)
+        f.need(ort.stat().st_size>0);runtime_archive=provenance['ios']['publisher_sha256']
     overlay=module('ios_score_overlay',HERE/'overlay.py').generate(source,out/'overlay')
     f.need(overlay==f.read(HERE/'overlay-expected.json'))
     sdk=f.run(['xcrun','--sdk','iphonesimulator','--show-sdk-path']).strip();build=out/'build'
@@ -77,7 +84,7 @@ def main():
     dependencies=[line.strip().split(' (')[0] for line in f.run(['xcrun','otool','-L',relocated]).splitlines()[1:]]
     f.need(all(d.startswith(('/System/Library/Frameworks/','/usr/lib/')) for d in dependencies))
     rpaths=re.findall(r'cmd LC_RPATH\s+cmdsize \d+\s+path (.*?) \(offset \d+\)',f.run(['xcrun','otool','-l',relocated]));f.need(not rpaths)
-    results=[];numeric=None
+    results=[];numeric=None;runtime_version=None
     with tempfile.TemporaryDirectory(prefix='eilo-ios-score-') as folder:
         raw=Path(folder)/'input.f32'
         def invoke(data):
@@ -92,10 +99,11 @@ def main():
                 (out/'failed-case.json').write_text(json.dumps(dict(case=case['id'],native_returncode=result.returncode))+'\n')
                 raise RuntimeError('isolated iOS score fixture failed; inspect local diagnostic log')
             rows=[json.loads(line) for line in result.stdout.splitlines() if line.startswith('{')];f.need(len(rows)==8)
-            draft=[json.loads(line.split('\t',1)[1]) for line in result.stdout.splitlines() if line.startswith('EILO_IOS_DRAFT\t')]
             limits=[json.loads(line.split('\t',1)[1]) for line in result.stdout.splitlines() if line.startswith('EILO_IOS_NUMERIC\t')]
-            f.need(len(draft)==len(limits)==1 and (numeric is None or numeric==limits[0]));numeric=limits[0]
-            results.append(dict(case=case['id'],fixture_preparation=draft[0],paths=rows[:6],shape_comparison=rows[6],faults=rows[7]))
+            versions=[line.split('\t',1)[1] for line in result.stdout.splitlines() if line.startswith('EILO_ORT_VERSION\t')]
+            f.need(len(limits)==len(versions)==1 and (numeric is None or numeric==limits[0]) and (runtime_version is None or runtime_version==versions[0]))
+            numeric=limits[0];runtime_version=versions[0]
+            results.append(dict(case=case['id'],paths=rows[:6],shape_comparison=rows[6],faults=rows[7]))
             (out/'progress.json').write_text(json.dumps(results,indent=2)+'\n');print('Verified iOS fixture:',case['id'],flush=True)
         rejected=[]
         for name,data in [('empty',b''),('unaligned',b'x'),('nan',struct.pack('<f',float('nan'))),('out_of_range',struct.pack('<f',2))]:
@@ -106,7 +114,7 @@ def main():
     local=PACKAGES.parent/'.local';f.need(sum(p.stat().st_size for name in ('asr-sdk-score','asr-confidence') for p in (local/name).rglob('*') if p.is_file())<5*1024**3)
     report=dict(schema_version=1,purpose='IOS_SOURCE_SDK_SCORE_DIAGNOSTIC_ONLY',platform='ARM64_IOS_SIMULATOR_18_MINIMUM',
         source_commit=f.read(PACKAGES/'asr-confidence-probe/source-manifest.json')['commit'],source_pins=before,overlay_pins=overlay,
-        ort_version='1.28.2',ort_archive_sha256=ort_record['sha256'],ort_binary_sha256=f.sha(ort),binary_sha256=f.sha(relocated),
+        ort_version=runtime_version,ort_origin=a.runtime,ort_archive_sha256=runtime_archive,ort_binary_sha256=f.sha(ort),binary_sha256=f.sha(relocated),
         relocation='EXECUTED_WITH_ORIGINAL_BINARY_ABSENT',custom_dynamic_dependencies='NONE',rpaths=rpaths,
         rejected_inputs=rejected,cases=results,numeric=numeric,**FLAGS)
     (out/'results.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
