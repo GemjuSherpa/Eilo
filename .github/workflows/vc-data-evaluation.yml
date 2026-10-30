@@ -74,6 +74,8 @@ jobs:
           python3 -O -m unittest discover -s ../asr-runtime -p 'test_*.py' -v
           python3 ../asr-runtime/framework_report.py --output "$RUNNER_TEMP/asr-framework"
           python3 -O ../asr-runtime/framework_report.py
+          python3 ../asr-runtime/app_framework_report.py --output "$RUNNER_TEMP/app-framework"
+          python3 -O ../asr-runtime/app_framework_report.py
       - name: Normal build inventory contracts (no artifact or dependency downloads)
         run: |
           python3 -m unittest discover -s ../build-inventory -p 'test_*.py' -v
@@ -291,3 +293,13 @@ jobs:
           path: |
             ${{ runner.temp }}/framework-capture/summary.json
             ${{ runner.temp }}/framework-capture/summary.html
+
+      - name: Upload unsigned simulator app framework observations
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app-framework
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/app-framework/summary.json
+            ${{ runner.temp }}/app-framework/summary.html
