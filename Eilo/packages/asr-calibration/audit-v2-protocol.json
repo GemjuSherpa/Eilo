@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "purpose": "OFFLINE_IOS_CONFIDENCE_AUDIT",
+  "dataset": "COMMON_VOICE_26_AUSTRALIAN_ENGLISH_ALREADY_APPROVED_LOCAL_COPY",
+  "selection_split": "TRAIN_ONLY_AFTER_PRIOR_EXCLUSIONS",
+  "seed": 20261030,
+  "development_cases": 200,
+  "validation_cases": 200,
+  "sealed_audit_cases": 200,
+  "max_clips_per_provided_client_id": 1,
+  "exclusions": [
+    "all previously evaluated Common Voice client IDs",
+    "all previously evaluated normalized utterances",
+    "all duplicate normalized utterances within the new cohort"
+  ],
+  "client_id_semantics": "OPAQUE_PARTITION_KEY_NOT_VERIFIED_PERSON_ID",
+  "audio": {
+    "sample_rate_hz": 16000,
+    "channels": 1,
+    "sample_format": "PCM16",
+    "maximum_seconds": 30,
+    "recipe": "pcm16-mono-area-downsample-linear-upsample-v1"
+  },
+  "label": "NORMALIZED_EXACT_TRANSCRIPTION",
+  "normalization": "EXISTING_COMMON_VOICE_BENCHMARK_NORMALIZATION",
+  "sources": [
+    "GREEDY_PREBIAS_MEAN_V1",
+    "SELF_DRAFT_PREBIAS_MEAN_V1"
+  ],
+  "fit": "SEPARATE_TIE_GROUPED_WEIGHTED_PAVA_EMPIRICAL_MEAN_PER_SOURCE",
+  "prediction": "RIGHT_CLOSED_UPPER_STEP_ENDPOINT_CLAMP",
+  "mapped_cutoff": 0.85,
+  "validation_rule": {
+    "minimum_coverage_of_all_attempts": 0.3,
+    "minimum_wilson_lower_bound_among_accepted": 0.85,
+    "confidence_level": 0.95,
+    "interval": "TWO_SIDED_WILSON_SCORE",
+    "per_source": true,
+    "attempts_per_source": 200,
+    "unavailable_scores_count_as_not_accepted": true
+  },
+  "stage_order": [
+    "FREEZE_SELECTION_CODE_PROTOCOL_AND_AUDIO_HASHES",
+    "RUN_DEVELOPMENT_ONLY",
+    "FIT_SEPARATE_SOURCE_MAPPINGS_AND_COMMIT_MAPPING_HASHES",
+    "RUN_VALIDATION_ONCE",
+    "OPEN_SEALED_AUDIT_ONLY_IF_BOTH_SOURCES_PASS_VALIDATION",
+    "RUN_SEALED_AUDIT_ONCE_WITH_FROZEN_MAPPINGS"
+  ],
+  "audit_refit": "PROHIBITED",
+  "failed_validation": "STOP_QUALIFICATION_KEEP_AUDIT_UNOPENED",
+  "failed_audit": "RETAIN_RESULT_NO_REFIT_OR_THRESHOLD_CHANGE",
+  "publish": "AGGREGATES_AND_HASHES_ONLY_NO_AUDIO_REFERENCES_HYPOTHESES_CLIENT_IDS_OR_MAPPING_KNOTS",
+  "model_training_overlap": "UNKNOWN",
+  "software_audit_qualification": "NOT_ESTABLISHED",
+  "native_calibration": "NOT_ESTABLISHED",
+  "threshold_authorization": "NOT_GRANTED",
+  "production": "NOT_ENABLED",
+  "physical": "NOT_RUN",
+  "release": "HOLD",
+  "persistent_memory": "DISABLED"
+}
