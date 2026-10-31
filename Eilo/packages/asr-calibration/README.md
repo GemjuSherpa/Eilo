@@ -69,6 +69,11 @@ cache/NDK/CMake/SDK paths and `--serial emulator-5554`. Use new build/output pat
 and tool versions are documented in `../asr-fresh-split` and `../asr-corpus-score`; do not fetch
 missing prerequisites automatically. The current run used the amended committed scope above.
 
+For the 600-case audit cohort, `select_audit_v2.py` defaults to the pinned `afconvert` interface;
+use `--decoder-kind ffmpeg` only with an already approved FFmpeg executable. The chosen kind and
+decoder executable hash are recorded in all three private frozen manifests. The selector never
+searches for, installs, or downloads a decoder.
+
 From Eilo, without corpus/model/device access:
 
 ```sh
