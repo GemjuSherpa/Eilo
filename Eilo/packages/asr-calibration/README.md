@@ -74,7 +74,11 @@ use `--decoder-kind ffmpeg` only with an already approved FFmpeg executable. The
 decoder executable hash are recorded in all three private frozen manifests. The selector never
 searches for, installs, or downloads a decoder.
 
-After development-only inference, run `evaluate_validation_v2.py fit-development` with the private
+After the 600-case cohort is frozen, run `freeze_selection_v2.py` with the ignored private
+selection inventory. It verifies all three manifests and writes only their hashes, the archive and
+receipt hashes, selector/preprocessor pins, the decoder hash and the frozen protocol gates to
+`packages/asr-calibration/selection-freeze-v2.json`. Commit this public record before any inference.
+Then run `evaluate_validation_v2.py fit-development` with the private
 attempts, selection inventory and development manifest. It fits separate PAVA models using only the
 200-case development phase and writes the knots to the ignored `.local` cache. Then run
 `evaluate_validation_v2.py freeze` with that private mapping file and the same development inputs;

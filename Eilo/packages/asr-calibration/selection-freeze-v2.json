@@ -1,0 +1,53 @@
+{
+  "archive_sha256": "ca484adf2c8290569043500ebae092071c07bf3372250c8b77c35968f3426e34",
+  "audio": {
+    "channels": 1,
+    "recipe": "pcm16-mono-area-downsample-linear-upsample-v1",
+    "sample_format": "PCM16",
+    "sample_rate_hz": 16000
+  },
+  "cases_per_phase": 200,
+  "cross_phase_id_overlap": 0,
+  "cross_phase_text_overlap": 0,
+  "decoder": {
+    "kind": "ffmpeg",
+    "sha256": "768609fb3f463ff9272bebac61478515f19e43c5343b0c60dde2e6230c40013e"
+  },
+  "excluded_prior_cases": 120,
+  "freeze_reporter_sha256": "a4fdfebe5677620ec52f4713690ee6ffbb89a4c52f45bd0e1ade1f12748569de",
+  "frozen_before_inference": true,
+  "inference": "NOT_RUN",
+  "model_training_overlap": "UNKNOWN",
+  "native_calibration": "NOT_ESTABLISHED",
+  "persistent_memory": "DISABLED",
+  "phase_manifest_sha256": {
+    "audit": "f0fa66fbaf0529df79a294b6360266fd5b233cc388fa37986c86d57617148b86",
+    "development": "ebf61ca300c39b824ff0a2170bcb58a6d0470443961db37a2d2642eabaf02870",
+    "validation": "b3fd03c3ce4ce693d1cf5368c9464b8f140ebd382dcdf68102865dfa8e4d6e46"
+  },
+  "physical": "NOT_RUN",
+  "prior_manifest_sha256": [
+    "32752e24d5424480d8911b9991248fc9734313416cab7dbc3a51253db072586e",
+    "feabbc90220d7c2dff83e891590daf7b8d5623b0e0a94e9dc6febf73920b1291",
+    "21a4c67133712171ca7cdcf17feebda67e628441933715f18f5de72be8b155d5",
+    "179aea3809003783b2b3121767c31922c9760b7ce30e0aa0d2b5e2ff3912e249"
+  ],
+  "production": "NOT_ENABLED",
+  "protocol_sha256": "2bf9bae60c6790b056ac0ee2338ea5a8e8a1717cabc88eb0bbc0eaa86fd7b651",
+  "purpose": "S05_VC_TURN_10_SELECTION_FREEZE",
+  "receipt_sha256": "9e3d2583fc33eea814d383651c519a37701ab5bebbf4201df628efa2e94dfb32",
+  "release": "HOLD",
+  "schema_version": 1,
+  "selection_code_pins": {
+    "packages/asr-calibration/audit-v2-protocol.json": "2bf9bae60c6790b056ac0ee2338ea5a8e8a1717cabc88eb0bbc0eaa86fd7b651",
+    "packages/asr-calibration/audit_v2.py": "d6b2bfa7dc8e10a3d5331776ab27c83afdcc460c50cc4d08f0b23379aaddc5ac",
+    "packages/asr-calibration/select_audit_v2.py": "0a146105acb0fab2a8ba36914bebade9320c219982d50247d4f6a9db7ce3fdd0",
+    "packages/dataset-evaluation/audio.py": "3e639578623c8345aec516c10c2732ab5a13fd8fd1e3fed1ce83d5ae448d0db4",
+    "packages/dataset-evaluation/benchmark.py": "025da2520d09468d683e05f3823bd77f8175be0a7dee6f048880f1c6ff6e6aab",
+    "packages/dataset-evaluation/extract_subset.py": "ef781ddc01490f24552d92b634a574c40d5271750c2d8913c748f3c00a27f70b",
+    "packages/dataset-evaluation/manifests.py": "65cdf1411794a786329124551aab24854bb71180b609de8626292cd661d8abdf",
+    "packages/dataset-evaluation/preprocess.py": "b45cd786f5c511c42d73649510af40990cc0dea8c064dc4dc6e751996f91e810"
+  },
+  "software_audit_qualification": "NOT_ESTABLISHED",
+  "threshold_authorization": "NOT_GRANTED"
+}
