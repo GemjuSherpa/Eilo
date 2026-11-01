@@ -74,6 +74,19 @@ use `--decoder-kind ffmpeg` only with an already approved FFmpeg executable. The
 decoder executable hash are recorded in all three private frozen manifests. The selector never
 searches for, installs, or downloads a decoder.
 
+After development-only inference, run `evaluate_validation_v2.py fit-development` with the private
+attempts, selection inventory and development manifest. It fits separate PAVA models using only the
+200-case development phase and writes the knots to the ignored `.local` cache. Then run
+`evaluate_validation_v2.py freeze` with that private mapping file and the same development inputs;
+it recomputes the fit before writing only the two mapping hashes and source/protocol pins to
+`packages/asr-calibration/mapping-freeze-v2.json`. Commit that public freeze before validation
+inference. After validation, `evaluate_validation_v2.py evaluate` requires the exact committed
+freeze blob, its full commit hash, the frozen selection inventory/validation manifest and local-only
+per-case attempts. It computes exact-match labels from local references/hypotheses and emits
+aggregate counts only; unavailable scores stay in the 200-attempt coverage denominator. The sealed
+audit remains closed unless both validation sources pass. This evaluator does not run model
+inference, open the sealed cohort, authorize confidence use, or alter physical/release gates.
+
 From Eilo, without corpus/model/device access:
 
 ```sh
