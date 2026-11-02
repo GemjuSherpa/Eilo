@@ -1,0 +1,46 @@
+{
+  "mapping_freeze_commit": "532657638bf68258ebd1e51dde91bb11d7c7d637",
+  "mapping_freeze_sha256": "30900a8617591aacbf304271d2922b4579bdc89bb0c90cfa9ec37e6f22454d02",
+  "mapping_sha256": {
+    "GREEDY_PREBIAS_MEAN_V1": "aa00b3fd13f0856824992f02bce9fe0c174fb5dacb88c58470aafb1d6c98ae62",
+    "SELF_DRAFT_PREBIAS_MEAN_V1": "d3788ed3cbd9b83809f258364ff121fde280f93830a4d5654fd6cdcc9c7a6e2f"
+  },
+  "native_calibration": "NOT_ESTABLISHED",
+  "overall": "NOT_QUALIFIED",
+  "persistent_memory": "DISABLED",
+  "physical": "NOT_RUN",
+  "production": "NOT_ENABLED",
+  "protocol_sha256": "2bf9bae60c6790b056ac0ee2338ea5a8e8a1717cabc88eb0bbc0eaa86fd7b651",
+  "purpose": "S05_CONFIDENCE_AUDIT_VALIDATION_AGGREGATE",
+  "release": "HOLD",
+  "schema_version": 1,
+  "sealed_audit": "CLOSED_UNTIL_BOTH_VALIDATION_SOURCES_PASS",
+  "software_audit_qualification": "NOT_ESTABLISHED",
+  "sources": [
+    {
+      "accepted": 80,
+      "accepted_correct": 66,
+      "attempted": 200,
+      "coverage": 0.4,
+      "passes": false,
+      "source": "GREEDY_PREBIAS_MEAN_V1",
+      "status": "FAIL",
+      "unavailable": 1,
+      "wilson_lower_95": 0.7274245802116867
+    },
+    {
+      "accepted": 100,
+      "accepted_correct": 81,
+      "attempted": 200,
+      "coverage": 0.5,
+      "passes": false,
+      "source": "SELF_DRAFT_PREBIAS_MEAN_V1",
+      "status": "FAIL",
+      "unavailable": 1,
+      "wilson_lower_95": 0.7222115462093563
+    }
+  ],
+  "stage": "VALIDATION",
+  "threshold_authorization": "NOT_GRANTED",
+  "validation_manifest_sha256": "b3fd03c3ce4ce693d1cf5368c9464b8f140ebd382dcdf68102865dfa8e4d6e46"
+}

@@ -13,6 +13,7 @@ import tempfile
 HERE = Path(__file__).resolve().parent
 EILO = HERE.parents[1]
 PACKAGES = EILO / 'packages'
+DECODER_KINDS = ('afconvert', 'ffmpeg')
 sys.path.insert(0, str(PACKAGES / 'dataset-evaluation'))
 from benchmark import normalize, validate_manifest
 from extract_subset import member_path, read_member
@@ -93,8 +94,19 @@ def pins():
     return {str(path.relative_to(EILO)): sha256(path) for path in files}
 
 
-def prepare(archive, receipt_path, prior_paths, decoder, output=None):
+def freeze_phases(selected, raw_roots, root, receipt, decoder, decoder_hash, decoder_kind):
+    require(decoder_kind in DECODER_KINDS, 'unsupported MP3 decoder kind')
+    manifests = {}
+    for phase in selected:
+        split = 'validation' if phase == 'validation' else 'test'
+        manifests[phase] = freeze('common_voice', raw_roots[phase], root / phase, receipt['version'],
+                                  receipt, split, 200, 20261030, decoder, decoder_hash, decoder_kind)
+    return manifests
+
+
+def prepare(archive, receipt_path, prior_paths, decoder, output=None, decoder_kind='afconvert'):
     archive, receipt_path, decoder = map(Path, (archive, receipt_path, decoder))
+    require(decoder_kind in DECODER_KINDS, 'unsupported MP3 decoder kind')
     receipt = json.loads(receipt_path.read_text(encoding='utf-8'))
     verify_receipt(receipt, archive)
     require(receipt['dataset'] == 'common_voice' and receipt['version'] ==
@@ -158,12 +170,8 @@ def prepare(archive, receipt_path, prior_paths, decoder, output=None):
                 destination = raw_roots[phase] / 'clips' / raw_relative
                 with destination.open('xb') as stream:
                     stream.write(read_member(source, member))
-        manifests = {}
-        for phase, raw in raw_roots.items():
-            split = 'validation' if phase == 'validation' else 'test'
-            manifest = freeze('common_voice', raw, root / phase, receipt['version'], receipt,
-                              split, 200, 20261030, decoder, decoder_hash, 'afconvert')
-            manifests[phase] = manifest
+        manifests = freeze_phases(selected, raw_roots, root, receipt, decoder, decoder_hash,
+                                   decoder_kind)
         # Reject exact prior-source or deterministic-PCM repeats even if metadata differs.
         seen_sources, seen_pcm, seen_speakers, seen_texts = set(prior_sources), set(prior_pcm), set(prior_speakers), set(prior_texts)
         for phase in ('development', 'validation', 'audit'):
@@ -217,9 +225,12 @@ def main():
     parser.add_argument('--prior-manifest', action='append', type=Path, required=True,
                         help='repeat exactly four times, one for each previously evaluated cohort')
     parser.add_argument('--decoder', type=Path, required=True,
-                        help='existing system afconvert binary; no installation or download')
+                        help='existing approved decoder executable; no automatic lookup or download')
+    parser.add_argument('--decoder-kind', choices=DECODER_KINDS, default='afconvert',
+                        help='explicit MP3 decoder interface; the executable SHA-256 is recorded')
     args = parser.parse_args()
-    result = prepare(args.archive, args.receipt, args.prior_manifest, args.decoder)
+    result = prepare(args.archive, args.receipt, args.prior_manifest, args.decoder,
+                     decoder_kind=args.decoder_kind)
     print(json.dumps({
         'purpose': result['purpose'],
         'phases': {key: {'cases': row['cases'], 'manifest_sha256': row['manifest_sha256']}

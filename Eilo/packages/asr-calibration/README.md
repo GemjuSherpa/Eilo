@@ -69,6 +69,28 @@ cache/NDK/CMake/SDK paths and `--serial emulator-5554`. Use new build/output pat
 and tool versions are documented in `../asr-fresh-split` and `../asr-corpus-score`; do not fetch
 missing prerequisites automatically. The current run used the amended committed scope above.
 
+For the 600-case audit cohort, `select_audit_v2.py` defaults to the pinned `afconvert` interface;
+use `--decoder-kind ffmpeg` only with an already approved FFmpeg executable. The chosen kind and
+decoder executable hash are recorded in all three private frozen manifests. The selector never
+searches for, installs, or downloads a decoder.
+
+After the 600-case cohort is frozen, run `freeze_selection_v2.py` with the ignored private
+selection inventory. It verifies all three manifests and writes only their hashes, the archive and
+receipt hashes, selector/preprocessor pins, the decoder hash and the frozen protocol gates to
+`packages/asr-calibration/selection-freeze-v2.json`. Commit this public record before any inference.
+Then run `evaluate_validation_v2.py fit-development` with the private
+attempts, selection inventory and development manifest. It fits separate PAVA models using only the
+200-case development phase and writes the knots to the ignored `.local` cache. Then run
+`evaluate_validation_v2.py freeze` with that private mapping file and the same development inputs;
+it recomputes the fit before writing only the two mapping hashes and source/protocol pins to
+`packages/asr-calibration/mapping-freeze-v2.json`. Commit that public freeze before validation
+inference. After validation, `evaluate_validation_v2.py evaluate` requires the exact committed
+freeze blob, its full commit hash, the frozen selection inventory/validation manifest and local-only
+per-case attempts. It computes exact-match labels from local references/hypotheses and emits
+aggregate counts only; unavailable scores stay in the 200-attempt coverage denominator. The sealed
+audit remains closed unless both validation sources pass. This evaluator does not run model
+inference, open the sealed cohort, authorize confidence use, or alter physical/release gates.
+
 From Eilo, without corpus/model/device access:
 
 ```sh

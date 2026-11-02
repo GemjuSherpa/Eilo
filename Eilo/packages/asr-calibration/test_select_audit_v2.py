@@ -1,6 +1,9 @@
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import call, patch
 
-from select_audit_v2 import select_rows
+from select_audit_v2 import DECODER_KINDS, freeze_phases, select_rows
 from preprocess import opaque
 
 
@@ -43,6 +46,34 @@ class AuditV2SelectionTests(unittest.TestCase):
         rows[0]['path'] = '../escape.mp3'
         with self.assertRaisesRegex(ValueError, 'unsafe clip path'):
             select_rows(rows, set(), set())
+
+    def test_explicit_decoder_kind_is_pinned_for_every_phase(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            selected = {'development': [], 'validation': [], 'audit': []}
+            raw_roots = {phase: root / f'raw-{phase}' for phase in selected}
+            receipt = {'version': 'approved-release'}
+            decoder = root / 'decoder'
+            for kind in DECODER_KINDS:
+                with self.subTest(kind=kind), patch('select_audit_v2.freeze', return_value={'ok': True}) as mocked:
+                    result = freeze_phases(selected, raw_roots, root, receipt, decoder, 'a' * 64, kind)
+                    self.assertEqual(result, {phase: {'ok': True} for phase in selected})
+                    self.assertEqual(mocked.call_count, 3)
+                    for phase, split in (('development', 'test'), ('validation', 'validation'),
+                                         ('audit', 'test')):
+                        self.assertIn(call('common_voice', raw_roots[phase], root / phase,
+                                           'approved-release', receipt, split, 200, 20261030,
+                                           decoder, 'a' * 64, kind), mocked.call_args_list)
+
+    def test_unsupported_decoder_kind_fails_before_freezing(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            with patch('select_audit_v2.freeze') as mocked:
+                with self.assertRaisesRegex(ValueError, 'unsupported MP3 decoder kind'):
+                    freeze_phases({'development': []}, {'development': root}, root,
+                                  {'version': 'approved-release'}, root / 'decoder', 'a' * 64,
+                                  'unreviewed')
+                mocked.assert_not_called()
 
 
 if __name__ == '__main__':
