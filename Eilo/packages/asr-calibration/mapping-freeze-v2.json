@@ -1,0 +1,20 @@
+{
+  "development_attempts_per_source": 200,
+  "frozen_before_validation": true,
+  "mapping_sha256": {
+    "GREEDY_PREBIAS_MEAN_V1": "aa00b3fd13f0856824992f02bce9fe0c174fb5dacb88c58470aafb1d6c98ae62",
+    "SELF_DRAFT_PREBIAS_MEAN_V1": "d3788ed3cbd9b83809f258364ff121fde280f93830a4d5654fd6cdcc9c7a6e2f"
+  },
+  "model_training_overlap": "UNKNOWN",
+  "protocol_sha256": "2bf9bae60c6790b056ac0ee2338ea5a8e8a1717cabc88eb0bbc0eaa86fd7b651",
+  "purpose": "S05_VC_TURN_10_CONFIDENCE_MAPPING_FREEZE",
+  "schema_version": 1,
+  "source_pins": {
+    "packages/asr-calibration/audit-v2-protocol.json": "2bf9bae60c6790b056ac0ee2338ea5a8e8a1717cabc88eb0bbc0eaa86fd7b651",
+    "packages/asr-calibration/audit_v2.py": "d6b2bfa7dc8e10a3d5331776ab27c83afdcc460c50cc4d08f0b23379aaddc5ac",
+    "packages/asr-calibration/calibrate.py": "00d4b4a99f805e7c4f71c3d59f94ce5d099198e60abf67492a053ca37589da39",
+    "packages/asr-calibration/evaluate_validation_v2.py": "75175961237260637f1a3dbebcbbef5197721807928f3a704762f3d286f72d30",
+    "packages/asr-fresh-split/shared.py": "8b9cc6de888577946e77a8c56e188d795ff2485a84e7b12c8b17aa529e1dc70d",
+    "packages/dataset-evaluation/benchmark.py": "025da2520d09468d683e05f3823bd77f8175be0a7dee6f048880f1c6ff6e6aab"
+  }
+}
