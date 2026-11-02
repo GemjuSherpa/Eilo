@@ -27,8 +27,6 @@ LOCAL_RUNTIME_OBJECT = LOCAL / 'asr-ios-corpus/run-v1/prelinked_objects.o'
 PUBLIC_BINARY_RECORD = PACKAGES / 'asr-ios-corpus/ios-reference-results.json'
 PUBLIC_FREEZE_RELATIVE = 'Eilo/packages/asr-calibration/selection-freeze-v2.json'
 RUNNER_RELATIVE = 'Eilo/packages/asr-calibration/run_development_v2.py'
-sys.path.insert(0, str(PACKAGES / 'asr-runtime'))
-import framework
 sys.path.insert(0, str(PACKAGES / 'asr-corpus-score'))
 import diagnostics
 sys.path.insert(0, str(PACKAGES / 'dataset-evaluation'))
@@ -54,10 +52,33 @@ def verify_committed_blob(commit, relative, path):
     return hashlib.sha256(committed).hexdigest()
 
 
-def verify_asr_stack(asr_cache):
-    asr_cache = Path(asr_cache).resolve()
-    need(asr_cache.is_relative_to(LOCAL.resolve()), 'ASR cache must be inside ignored local storage')
-    model, provenance = framework.verify_asr(asr_cache)
+def verify_model_directory(model_directory, provenance):
+    model_directory = Path(model_directory)
+    need(model_directory.is_dir() and not model_directory.is_symlink(),
+         'pinned Moonshine model directory is required')
+    model_directory = model_directory.resolve()
+    files = provenance.get('model', {}).get('files')
+    need(type(files) is list and len(files) == 8,
+         'reviewed Moonshine model file inventory changed')
+    for item in files:
+        need(type(item) is dict and set(item) >= {'file', 'bytes', 'local_sha256'},
+             'malformed model provenance entry')
+        path = model_directory / item['file']
+        need(path.parent == model_directory and path.is_file() and not path.is_symlink()
+             and path.stat().st_size == item['bytes'] and sha256(path) == item['local_sha256'],
+             'local Moonshine model file differs from reviewed provenance')
+    return len(files)
+
+
+def verify_asr_stack(model_directory):
+    model_directory = Path(model_directory)
+    need(not model_directory.is_symlink(), 'model directory symlinks are not accepted')
+    model_directory = model_directory.resolve()
+    need(model_directory.is_relative_to(LOCAL.resolve()),
+         'Moonshine model files must be read from ignored local storage')
+    provenance_path = PACKAGES / 'asr-runtime/provenance.json'
+    provenance = json.loads(provenance_path.read_text(encoding='utf-8'))
+    model_files = verify_model_directory(model_directory, provenance)
     record = json.loads(PUBLIC_BINARY_RECORD.read_text(encoding='utf-8'))
     need(record.get('purpose') == 'IOS_EXPOSED_REFERENCE_NOISE_DIAGNOSTIC'
          and record.get('physical') == 'NOT_RUN' and record.get('production') == 'NOT_ENABLED',
@@ -68,20 +89,19 @@ def verify_asr_stack(asr_cache):
     need(LOCAL_RUNTIME_OBJECT.is_file() and not LOCAL_RUNTIME_OBJECT.is_symlink()
          and sha256(LOCAL_RUNTIME_OBJECT) == record['runtime_object_sha256'],
          'local iOS runtime object differs from the reviewed runtime hash')
-    provenance_path = PACKAGES / 'asr-runtime/provenance.json'
     need(sha256(provenance_path) == record['model_provenance_sha256'],
          'reviewed model provenance changed')
     for pin in record['source_pins']:
         path = PACKAGES / pin['path']
         need(path.is_file() and sha256(path) == pin['sha256'],
              'reviewed iOS scorer source pins changed')
-    return model, {
+    return model_directory, {
         'binary_sha256': record['binary_sha256'],
         'runtime_object_sha256': record['runtime_object_sha256'],
         'model_provenance_sha256': record['model_provenance_sha256'],
         'model_provenance_schema_sha256': sha256(provenance_path),
-        'model_directory': str(model.relative_to(LOCAL.resolve())),
-        'model_files': len(provenance['model']['files']),
+        'model_directory': str(model_directory.relative_to(LOCAL.resolve())),
+        'model_files': model_files,
     }
 
 
@@ -239,14 +259,14 @@ def main():
                         help='full commit containing the exact public selection freeze')
     parser.add_argument('--runner-commit', required=True,
                         help='full commit containing this exact runner source')
-    parser.add_argument('--asr-cache', type=Path, required=True,
-                        help='already-approved local Moonshine runtime/model cache')
+    parser.add_argument('--model-dir', type=Path, required=True,
+                        help='existing local Moonshine model directory, verified against pinned hashes')
     parser.add_argument('--udid', required=True,
                         help='already-booted iOS simulator UDID')
     args = parser.parse_args()
     run_development(args.selection_private, args.selection_freeze,
                     args.selection_freeze_commit, args.runner_commit,
-                    args.asr_cache, args.udid)
+                    args.model_dir, args.udid)
 
 
 if __name__ == '__main__':

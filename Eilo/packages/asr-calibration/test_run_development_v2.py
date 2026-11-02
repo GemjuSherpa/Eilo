@@ -1,4 +1,5 @@
 import json
+import hashlib
 from pathlib import Path
 import struct
 import tempfile
@@ -95,6 +96,38 @@ class DevelopmentRunnerV2Tests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 runner.exclusive_json(path, {'stage': 'VALIDATION'})
             self.assertEqual(path.read_bytes(), original)
+
+    def test_model_directory_requires_exact_pinned_files_and_hashes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            entries = []
+            for index in range(8):
+                name = f'model-{index}.bin'
+                payload = f'pinned model file {index}'.encode()
+                (root / name).write_bytes(payload)
+                entries.append({'file': name, 'bytes': len(payload),
+                                'local_sha256': hashlib.sha256(payload).hexdigest()})
+            provenance = {'model': {'files': entries}}
+            self.assertEqual(runner.verify_model_directory(root, provenance), 8)
+            (root / 'model-0.bin').write_bytes(b'changed')
+            with self.assertRaisesRegex(ValueError, 'differs from reviewed provenance'):
+                runner.verify_model_directory(root, provenance)
+
+    def test_model_directory_rejects_missing_inventory_and_file_symlinks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with self.assertRaisesRegex(ValueError, 'inventory changed'):
+                runner.verify_model_directory(root, {'model': {'files': []}})
+            payload = root / 'target.bin'
+            payload.write_bytes(b'expected')
+            link = root / 'file-0.bin'
+            link.symlink_to(payload)
+            entries = [{'file': link.name, 'bytes': len(b'expected'),
+                        'local_sha256': hashlib.sha256(b'expected').hexdigest()}]
+            entries.extend({'file': f'missing-{index}', 'bytes': 0, 'local_sha256': '0' * 64}
+                           for index in range(7))
+            with self.assertRaisesRegex(ValueError, 'differs from reviewed provenance'):
+                runner.verify_model_directory(root, {'model': {'files': entries}})
 
 
 if __name__ == '__main__':
